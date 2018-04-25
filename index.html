@@ -12,12 +12,20 @@
         $(document).ready(function () {
             $('#tblJob').DataTable({
                 "ajax": {
-                    "url": "Scripts/Data/customer.json",
+                    "url": "Scripts/Data/job.js",                                                                                                                                        
                     "dataSrc":""
                 },
                 "columns": [
+                    { "data": "JNo" },
                     { "data": "CustCode" },
-                    { "data": "NameThai"}
+                    { "data": "InvNo" },
+                    { "data": "DeclareNumber" },
+                    { "data": "InvProduct" },
+                    { "data": "ImExDate" },
+                    { "data": "InvProductQty" },
+                    { "data": "InvProductUnit" },
+                    { "data": "InvTotal" },
+                    { "data": "InvCurUnit" }                
                 ]
             });
         });
@@ -86,8 +94,16 @@
                 <table id="tblJob" class="table display table-bordered table-responsive small">
                     <thead>
                         <tr>
-                            <th>CustCode</th>
-                            <th>NameThai</th>
+                            <th>JobNo</th>
+                            <th>Customer</th>
+                            <th>Inv.Customer</th>
+                            <th>DeclareNo</th>
+                            <th>Commodity</th>
+                            <th>Transit Date</th>
+                            <th>Qty</th>
+                            <th>Unit</th>
+                            <th>Inv.Total</th>
+                            <th>Currency</th>
                         </tr>
                     </thead>
                 </table>
