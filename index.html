@@ -12,8 +12,9 @@
         $(document).ready(function () {
             $('#tblJob').DataTable({
                 "ajax": {
-                    "url": "Scripts/Data/job.js",                                                                                                                                        
-                    "dataSrc":""
+                    "url": "./Scripts/Data/job.json",
+                    //"url": "http://jobwebdemo.azurewebsites.net/joborder/getjobjson",
+                    "dataSrc": "job.data"
                 },
                 "columns": [
                     { "data": "JNo" },
