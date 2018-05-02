@@ -1,0 +1,12 @@
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.exe.config
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.exe
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.pdb
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.xml
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbprojResolveAssemblyReference.cache
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.Form1.resources
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.Resources.resources
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbproj.GenerateResource.cache
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbproj.CoreCompileInputs.cache
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.exe
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.xml
+E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.pdb
