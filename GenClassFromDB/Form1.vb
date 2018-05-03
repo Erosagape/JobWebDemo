@@ -34,7 +34,7 @@ Public Class Form1
     Private Function ReadStructure(oTbl As DataTable) As String
         Dim strAll As String = ""
         strAll &= "Imports System.Data" & vbCrLf
-        strAll &= "Imports System.Data.OleDb" & vbCrLf
+        strAll &= "Imports System.Data.SqlClient" & vbCrLf
         strAll &= "Public Class " & TextBox4.Text & " " & vbCrLf
         strAll &= "Private m_ConnStr as String" & vbCrLf
         strAll &= "Public Sub New(pConnStr as String)" & vbCrLf
@@ -51,7 +51,9 @@ Public Class Form1
             If strWriter <> "" Then strWriter &= vbCrLf
             Select Case Replace(dc.DataType.FullName, "System.", "")
                 Case "String"
-                    strReader &= "row." & dc.ColumnName & " =rd.GetString(rd.GetOrdinal(""" & dc.ColumnName & """))"
+                    strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
+                    strReader &= "row." & dc.ColumnName & " =rd.GetString(rd.GetOrdinal(""" & dc.ColumnName & """)).ToString()" & vbCrLf
+                    strReader &= "End if"
                     strPrivate &= "Private m_" & dc.ColumnName & " as String"
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as String"
                     strProperty &= vbCrLf & "Get"
@@ -62,7 +64,9 @@ Public Class Form1
                     strProperty &= vbCrLf & "End Set"
                 Case "Double"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Double"
-                    strReader &= "row." & dc.ColumnName & " =rd.GetDouble(rd.GetOrdinal(""" & dc.ColumnName & """))"
+                    strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
+                    strReader &= "row." & dc.ColumnName & " =rd.GetDouble(rd.GetOrdinal(""" & dc.ColumnName & """))" & vbCrLf
+                    strReader &= "End if"
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as Double"
                     strProperty &= vbCrLf & "Get"
                     strProperty &= vbCrLf & "Return m_" & dc.ColumnName
@@ -72,7 +76,9 @@ Public Class Form1
                     strProperty &= vbCrLf & "End Set"
                 Case "DateTime"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Date"
-                    strReader &= "row." & dc.ColumnName & " =rd.GetDateTime(rd.GetOrdinal(""" & dc.ColumnName & """))"
+                    strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
+                    strReader &= "row." & dc.ColumnName & " =rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """))" & vbCrLf
+                    strReader &= "End if"
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as Date"
                     strProperty &= vbCrLf & "Get"
                     strProperty &= vbCrLf & "Return m_" & dc.ColumnName
@@ -82,7 +88,9 @@ Public Class Form1
                     strProperty &= vbCrLf & "End Set"
                 Case Else
                     strPrivate &= "Private m_" & dc.ColumnName & " as Integer"
-                    strReader &= "row." & dc.ColumnName & " =rd.Get" & Replace(dc.DataType.FullName, "System.", "") & "(rd.GetOrdinal(""" & dc.ColumnName & """))"
+                    strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
+                    strReader &= "row." & dc.ColumnName & " =rd.Get" & Replace(dc.DataType.FullName, "System.", "") & "(rd.GetOrdinal(""" & dc.ColumnName & """))" & vbCrLf
+                    strReader &= "End if"
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as Integer"
                     strProperty &= vbCrLf & "Get"
                     strProperty &= vbCrLf & "Return m_" & dc.ColumnName
@@ -98,11 +106,11 @@ Public Class Form1
         strAll = strAll & vbCrLf & strPrivate
         strAll = strAll & vbCrLf & "Public Function SaveData(pSQLWhere as string) as Boolean"
         strAll = strAll & vbCrLf & "dim bComplete as boolean=false"
-        strAll = strAll & vbCrLf & "using cn as new OledbConnection(m_ConnStr)"
+        strAll = strAll & vbCrLf & "using cn as new SqlConnection(m_ConnStr)"
         strAll = strAll & vbCrLf & "try"
         strAll = strAll & vbCrLf & "cn.Open"
-        strAll = strAll & vbCrLf & "using da as new OledbDataAdapter(""" & TextBox2.Text & """ & pSQLWhere,cn)"
-        strAll = strAll & vbCrLf & "using cb as new OledbCommandBuilder(da)"
+        strAll = strAll & vbCrLf & "using da as new SqlDataAdapter(""" & TextBox2.Text & """ & pSQLWhere,cn)"
+        strAll = strAll & vbCrLf & "using cb as new SqlCommandBuilder(da)"
         strAll = strAll & vbCrLf & "using dt as new DataTable"
         strAll = strAll & vbCrLf & "da.fill(dt)"
         strAll = strAll & vbCrLf & "dim dr as DataRow=dt.NewRow"
@@ -123,11 +131,11 @@ Public Class Form1
 
         strAll = strAll & vbCrLf & "Public Function GetData(pSQLWhere as string) as List(Of " & TextBox4.Text & " ) "
         strAll = strAll & vbCrLf & "Dim lst as new List(Of " & TextBox4.Text & " )"
-        strAll = strAll & vbCrLf & "using cn as new OledbConnection(m_ConnStr)"
+        strAll = strAll & vbCrLf & "using cn as new SqlConnection(m_ConnStr)"
         strAll = strAll & vbCrLf & "Dim row as " & TextBox4.Text & " "
         strAll = strAll & vbCrLf & "try"
         strAll = strAll & vbCrLf & "cn.Open"
-        strAll = strAll & vbCrLf & "Dim rd as OledbDataReader=new OledbCommand(""" & TextBox2.Text & """ & pSQLWhere,cn).ExecuteReader()"
+        strAll = strAll & vbCrLf & "Dim rd as SqlDataReader=new SqlCommand(""" & TextBox2.Text & """ & pSQLWhere,cn).ExecuteReader()"
         strAll = strAll & vbCrLf & "while rd.Read()"
         strAll = strAll & vbCrLf & "row=New " & TextBox4.Text & " (m_ConnStr)"
         strAll = strAll & vbCrLf & strReader
