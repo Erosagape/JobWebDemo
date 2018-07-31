@@ -4,10 +4,6 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class JobOrderController
         Inherits Controller
-        Private Const jsonContent As String = "application/json;charset=UTF-8"
-        Private Const xmlContent As String = "application/xml;charset=UTF-8"
-        Private Const jobDataPath As String = "~/App_Data/job_data.xml"
-        Private jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionString").ConnectionString
         Function CreateJob() As ActionResult
             Return View()
         End Function
@@ -82,10 +78,25 @@ Namespace Controllers
             Try
                 Dim oJob As New CJobOrder(jobWebConn)
                 Dim tSqlW As String = ""
-                If Not IsNothing(Request.QueryString("JNo")) Then
-                    tSqlW = " WHERE JNo='" & Request.QueryString("JNo") & "'"
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND JobType=" & Request.QueryString("JType") & ""
                 End If
-                Dim oData = oJob.GetData(tSqlW)
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlW &= " AND ShipBy=" & Request.QueryString("SBy") & ""
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlW &= " AND BranchCode='" & Request.QueryString("Branch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlW &= " AND JobStatus='" & Request.QueryString("Status") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("JNo")) Then
+                    tSqlW &= " AND JNo='" & Request.QueryString("JNo") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Year")) Then
+                    tSqlW &= " AND Year(DocDate)='" & Request.QueryString("Year") & "'"
+                End If
+                Dim oData = oJob.GetData(" WHERE JobStatus<>0 " & tSqlW)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""job"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)

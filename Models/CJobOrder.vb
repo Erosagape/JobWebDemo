@@ -989,7 +989,7 @@ Public Class CJobOrder
         End Using
         Return bComplete
     End Function
-    Public Function GetData(pSQLWhere As String) As List(Of CJobOrder)
+    Public Function GetData(Optional pSQLWhere As String = "") As List(Of CJobOrder)
         Dim lst As New List(Of CJobOrder)
         Using cn As New SqlConnection(m_ConnStr)
             Dim row As CJobOrder
