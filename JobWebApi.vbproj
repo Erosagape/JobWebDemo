@@ -264,6 +264,7 @@
     <Compile Include="Models\CBranch.vb" />
     <Compile Include="Models\CConfig.vb" />
     <Compile Include="Models\CJobOrder.vb" />
+    <Compile Include="Models\CUtil.vb" />
     <Compile Include="Models\cXMLData.vb" />
     <Compile Include="Models\dsJobOrder.Designer.vb">
       <AutoGen>True</AutoGen>

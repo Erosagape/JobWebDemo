@@ -2,6 +2,9 @@
 Imports System.Data.SqlClient
 Public Class CJobOrder
     Private m_ConnStr As String
+    Public Sub New()
+
+    End Sub
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub

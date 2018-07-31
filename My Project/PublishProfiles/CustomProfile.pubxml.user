@@ -17,13 +17,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/02/2018 14:42:15</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>07/31/2018 12:58:03</publishTime>
+      <publishTime>07/31/2018 15:18:06</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>07/31/2018 12:58:03</publishTime>
+      <publishTime>07/31/2018 15:18:06</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>07/31/2018 12:58:02</publishTime>
+      <publishTime>07/31/2018 15:18:06</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>05/02/2018 14:42:15</publishTime>
@@ -239,7 +239,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/26/2018 16:19:36</publishTime>
     </File>
     <File Include="index.html">
-      <publishTime>07/31/2018 13:19:43</publishTime>
+      <publishTime>07/31/2018 15:16:30</publishTime>
     </File>
     <File Include="Models/dsJobOrder.xsc">
       <publishTime>04/26/2018 16:54:37</publishTime>
@@ -548,7 +548,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/26/2018 16:25:45</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/31/2018 13:21:02</publishTime>
+      <publishTime>07/31/2018 15:18:07</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -104,5 +104,15 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        <HttpGet>
+        Function GetJobYear() As ActionResult
+            Try
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL("SELECT DISTINCT Year(DocDate) as JobYear from Job_Order")
+                Dim json As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
     End Class
 End Namespace
