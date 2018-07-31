@@ -290,7 +290,7 @@
             return '?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val() + '&Year='+ $('#cboYear').val() + '&Status=' + $('#cboStatus').val();
         }
         function OpenJob() {
-            window.open('joborder/showjob?JNo=' + $('#txtJobNo').val());
+            window.open('joborder/showjob?BranchCode='+$('#cboBranch').val()+'&JNo=' + $('#txtJobNo').val());
         }
         function CreateNewJob() {
             window.open('joborder/createjob?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val());

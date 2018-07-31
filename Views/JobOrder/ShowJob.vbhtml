@@ -9,6 +9,111 @@ End Code
     <link rel="stylesheet" href="~/Content/bootstrap.min.css">
     <script src="~/Scripts/jquery-3.2.1.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        //define variables
+        var path = '@Url.Content("~")';
+        $(document).ready(function () {
+            var br = getQueryString('BranchCode');
+            var jno = getQueryString('JNo');
+            if (br != "" && jno != "") {
+                $('#txtBranchCode').val(br);
+                $('#txtJNo').val(jno);
+                ShowJob(br, jno);
+            }
+        });
+        function ShowJob(Branch, Job) {
+            $.get(path + 'joborder/getjobsql?branchcode=' + Branch + '&jno=' + Job)
+                .done(function (r) {
+                    if (r.job.data.length > 0) {
+                        var dr = r.job.data[0];
+                        $('#txtCustCode').val(dr.CustCode);
+                        $('#txtCustBranch').val(dr.CustBranch);
+                        $('#txtRevised').val(dr.JRevised);
+                        $('#txtDocDate').val(JSDate(dr.DocDate));
+                        $('#txtQNo').val(dr.QNo);
+                        $('#txtQRevise').val(dr.Revised);
+                        $('#txtCustInvNo').val(dr.InvNo);
+                        $('#txtDeclareNo').val(dr.DeclareNumber);
+                        $('#txtManagerCode').val(dr.ManagerCode);
+                        $('#txtCommission').val(dr.Commission);
+                        $('#txtContactName').val(dr.CustContactName);
+                        $('#txtCSName').val(dr.CSCode);
+                        $('#txtConfirmDate').val(JSDate(dr.ConfirmDate));
+                        $('#txtCloseBy').val(dr.CloseJobBy);
+                        $('#txtJobCondition').val(dr.TRemark);
+                        $('#txtCloseDate').val(JSDate(dr.CloseJobDate));
+                        $('#txtCustPoNo').val(dr.CustRefNO);
+                        $('#txtDescription').val(dr.Description);
+                        $('#txtCancelReason').val(dr.CancelReson);
+                        $('#txtCancelBy').val(dr.CancelProve);
+                        $('#txtConsignee').val(dr.consigneecode);
+                        $('#txtCancelDate').val(JSDate(dr.CancelDate));
+                        $('#txtProjectName').val(dr.ProjectName);
+                        $('#txtInvProduct').val(dr.InvProduct);
+                        $('#txtInvQty').val(dr.InvProductQty);
+                        $('#txtInvUnit').val(dr.InvProductUnit);
+                        $('#txtInvPackQty').val(dr.TotalQty);
+                        $('#txtInvTotal').val(dr.InvTotal);
+                        $('#txtMeasurement').val(dr.Measurement);
+                        $('#txtNetWeight').val(dr.TotalNW);
+                        $('#txtGrossWeight').val(dr.TotalGW);
+                        $('#txtWeightUnit').val(dr.GWUnit);
+                        $('#txtInvCurrency').val(dr.InvCurUnit);
+                        $('#txtInvCurRate').val(dr.InvCurRate);
+                        $('#txtInvCountry').val(dr.InvCountry);
+                        $('#txtInvFCountry').val(dr.InvFCountry);
+                        $('#txtBookingNo').val(dr.BookingNo);
+                        $('#txtBLNo').val(dr.BLNo);
+                        $('#txtHAWB').val(dr.HAWB);
+                        $('#txtMAWB').val(dr.MAWB);
+                        $('#txtForwarder').val(dr.ForwarderCode);
+                        $('#txtVesselName').val(dr.VesselName);
+                        $('#txtMVesselName').val(dr.MVesselName);
+                        $('#txtInterPort').val(dr.InvInterPort);
+                        $('#txtTransporter').val(dr.AgentCode);
+                        $('#txtTotalCTN').val(dr.TotalContainer);
+                        $('#txtETDDate').val(JSDate(dr.ETDDate));
+                        $('#txtETADate').val(JSDate(dr.ETADate));
+                        $('#txtLoadDate').val(JSDate(dr.LoadDate));
+                        $('#txtDeliveryDate').val(dr.EstDeliverDate);
+                        $('#txtEDIDate').val(JSDate(dr.ImExDate));
+                        $('#txtReadyClearDate').val(JSDate(dr.ReadyToClearDate));
+                        $('#txtDutyDate').val(JSDate(dr.DutyDate));
+                        $('#txtClearDate').val(JSDate(dr.ClearDate));
+                        $('#txtDeclareType').val(dr.DeclareType);
+                        $('#txtDutyAmt').val(dr.DutyAmount);
+                        $('#txtShipping').val(dr.ShippingEmp);
+                        $('#txtShippingCmd').val(dr.ShippingCmd);
+
+                    }
+                });
+        }
+        //utility function
+        function getQueryString(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+        function JSDate(jsonDateString) {
+            try {
+                var jsDate = new Date(parseInt(jsonDateString.replace('/Date(', '')));
+                var month = jsDate.getMonth() + 1;
+                var day = jsDate.getDate();
+                var year = jsDate.getFullYear();
+                if (month <= 9) month = '0' + month;
+                if (day <= 9) day = '0' + day;
+                var date = year + "-" + month + "-" + day;
+                return date;
+            }
+            catch (e) {
+                return '';
+            }
+        }
+    </script>
 </head>
 <div Class="panel-body">
     <div class="container">
@@ -17,7 +122,7 @@ End Code
         <label for="txtJNo">Job No :</label><input type="text" style="width:120px" id="txtJNo" disabled />
         <label for="txtRevised">Revised :</label><input type="text" style="width:30px" id="txtRevised" disabled />
         <label for="txtDocDate">Open Date :</label><input type="text" style="width:80px" id="txtDocDate" disabled />
-        <label for="txtDocDate">Job Status :</label><input type="text" style="width:130px" id="txtJobStatus" disabled />
+        <label for="txtJobStatus">Job Status :</label><input type="text" style="width:130px" id="txtJobStatus" disabled />
 
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#home">Job Descriptions</a></li>
@@ -117,7 +222,7 @@ End Code
                         <textarea id="txtCancelReason" style="width:180px"></textarea>
                     </div>
                     <div class="col-md-4">
-                        <label for="txtCancelDate">Cancel By :</label>
+                        <label for="txtCancelBy">Cancel By :</label>
                         <input type="text" id="txtCancelBy" style="width:100px" disabled />
                     </div>
                 </div>
