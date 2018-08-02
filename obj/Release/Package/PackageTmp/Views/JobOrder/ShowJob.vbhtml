@@ -6,114 +6,13 @@ End Code
     <title>Show Job</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+    <link rel="stylesheet" href="~/Content/jquery.datatables.min.css" />
+    <title>Configuration</title>
     <script src="~/Scripts/jquery-3.2.1.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
-    <script type="text/javascript">
-        //define variables
-        var path = '@Url.Content("~")';
-        $(document).ready(function () {
-            var br = getQueryString('BranchCode');
-            var jno = getQueryString('JNo');
-            if (br != "" && jno != "") {
-                $('#txtBranchCode').val(br);
-                $('#txtJNo').val(jno);
-                ShowJob(br, jno);
-            }
-        });
-        function ShowJob(Branch, Job) {
-            $.get(path + 'joborder/getjobsql?branchcode=' + Branch + '&jno=' + Job)
-                .done(function (r) {
-                    if (r.job.data.length > 0) {
-                        var dr = r.job.data[0];
-                        $('#txtCustCode').val(dr.CustCode);
-                        $('#txtCustBranch').val(dr.CustBranch);
-                        $('#txtRevised').val(dr.JRevised);
-                        $('#txtDocDate').val(JSDate(dr.DocDate));
-                        $('#txtQNo').val(dr.QNo);
-                        $('#txtQRevise').val(dr.Revised);
-                        $('#txtCustInvNo').val(dr.InvNo);
-                        $('#txtDeclareNo').val(dr.DeclareNumber);
-                        $('#txtManagerCode').val(dr.ManagerCode);
-                        $('#txtCommission').val(dr.Commission);
-                        $('#txtContactName').val(dr.CustContactName);
-                        $('#txtCSName').val(dr.CSCode);
-                        $('#txtConfirmDate').val(JSDate(dr.ConfirmDate));
-                        $('#txtCloseBy').val(dr.CloseJobBy);
-                        $('#txtJobCondition').val(dr.TRemark);
-                        $('#txtCloseDate').val(JSDate(dr.CloseJobDate));
-                        $('#txtCustPoNo').val(dr.CustRefNO);
-                        $('#txtDescription').val(dr.Description);
-                        $('#txtCancelReason').val(dr.CancelReson);
-                        $('#txtCancelBy').val(dr.CancelProve);
-                        $('#txtConsignee').val(dr.consigneecode);
-                        $('#txtCancelDate').val(JSDate(dr.CancelDate));
-                        $('#txtProjectName').val(dr.ProjectName);
-                        $('#txtInvProduct').val(dr.InvProduct);
-                        $('#txtInvQty').val(dr.InvProductQty);
-                        $('#txtInvUnit').val(dr.InvProductUnit);
-                        $('#txtInvPackQty').val(dr.TotalQty);
-                        $('#txtInvTotal').val(dr.InvTotal);
-                        $('#txtMeasurement').val(dr.Measurement);
-                        $('#txtNetWeight').val(dr.TotalNW);
-                        $('#txtGrossWeight').val(dr.TotalGW);
-                        $('#txtWeightUnit').val(dr.GWUnit);
-                        $('#txtInvCurrency').val(dr.InvCurUnit);
-                        $('#txtInvCurRate').val(dr.InvCurRate);
-                        $('#txtInvCountry').val(dr.InvCountry);
-                        $('#txtInvFCountry').val(dr.InvFCountry);
-                        $('#txtBookingNo').val(dr.BookingNo);
-                        $('#txtBLNo').val(dr.BLNo);
-                        $('#txtHAWB').val(dr.HAWB);
-                        $('#txtMAWB').val(dr.MAWB);
-                        $('#txtForwarder').val(dr.ForwarderCode);
-                        $('#txtVesselName').val(dr.VesselName);
-                        $('#txtMVesselName').val(dr.MVesselName);
-                        $('#txtInterPort').val(dr.InvInterPort);
-                        $('#txtTransporter').val(dr.AgentCode);
-                        $('#txtTotalCTN').val(dr.TotalContainer);
-                        $('#txtETDDate').val(JSDate(dr.ETDDate));
-                        $('#txtETADate').val(JSDate(dr.ETADate));
-                        $('#txtLoadDate').val(JSDate(dr.LoadDate));
-                        $('#txtDeliveryDate').val(dr.EstDeliverDate);
-                        $('#txtEDIDate').val(JSDate(dr.ImExDate));
-                        $('#txtReadyClearDate').val(JSDate(dr.ReadyToClearDate));
-                        $('#txtDutyDate').val(JSDate(dr.DutyDate));
-                        $('#txtClearDate').val(JSDate(dr.ClearDate));
-                        $('#txtDeclareType').val(dr.DeclareType);
-                        $('#txtDutyAmt').val(dr.DutyAmount);
-                        $('#txtShipping').val(dr.ShippingEmp);
-                        $('#txtShippingCmd').val(dr.ShippingCmd);
-
-                    }
-                });
-        }
-        //utility function
-        function getQueryString(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-        function JSDate(jsonDateString) {
-            try {
-                var jsDate = new Date(parseInt(jsonDateString.replace('/Date(', '')));
-                var month = jsDate.getMonth() + 1;
-                var day = jsDate.getDate();
-                var year = jsDate.getFullYear();
-                if (month <= 9) month = '0' + month;
-                if (day <= 9) day = '0' + day;
-                var date = year + "-" + month + "-" + day;
-                return date;
-            }
-            catch (e) {
-                return '';
-            }
-        }
-    </script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Func/Util.js"></script>
 </head>
 <div Class="panel-body">
     <div class="container">
@@ -131,7 +30,102 @@ End Code
             <li><a data-toggle="tab" href="#menu3">Job Document Tracking</a></li>
             <li><a data-toggle="tab" href="#menu4">Other Controls</a></li>
         </ul>
-
+        <div id="frmSearchCust" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Customers</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbCust" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>code</th>
+                                    <th>key</th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmSearchCons" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Consignee</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbCons" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>code</th>
+                                    <th>key</th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmSearchProj" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Project</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbProj" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmSearchProd" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Product</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbProd" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="tab-content">
             <div id="home" class="tab-pane fade in active">
                 <div class="row">
@@ -139,7 +133,7 @@ End Code
                         <label for="txtCustCode">Customer :</label>
                         <input type="text" id="txtCustCode" style="width:100px" />
                         <input type="text" id="txtCustBranch" style="width:40px" />
-                        <input type="button" id="btnBrowseCust" value="..." />
+                        <input type="button" id="btnBrowseCust" value="..." onclick="SearchData('CUSTOMER')" />
                         <input type="text" id="txtCustName" style="width:450px" disabled />
                     </div>
                     <div class="col-md-4">
@@ -231,7 +225,7 @@ End Code
                         <label for="txtConsignee">Billing Place :</label>
                         <input type="text" id="txtConsignee" style="width:100px" />
                         <input type="text" id="txtConsBranch" style="width:40px" />
-                        <input type="button" id="btnBrowseCons" value="..." />
+                        <input type="button" id="btnBrowseCons" value="..." onclick="SearchData('CONSIGNEE')" />
                         <input type="text" id="txtConsignName" style="width:450px" disabled />
                     </div>
                     <div class="col-md-4">
@@ -259,14 +253,14 @@ End Code
                     <div class="col-md-7">
                         <label for="txtProjectName">Project Name :</label>
                         <input type="text" id="txtProjectName" style="width:800px" />
-                        <input type="button" id="btnBrowseProj" value="..." />
+                        <input type="button" id="btnBrowseProj" value="..." onclick="SearchData('ProjectName')" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-5">
                         <label for="txtInvProduct">Products :</label>
                         <input type="text" id="txtInvProduct" style="width:200px" />
-                        <input type="button" id="btnBrowseProd" value="..." />
+                        <input type="button" id="btnBrowseProd" value="..." onclick="SearchData('InvProduct')" />
                     </div>
                     <div class="col-md-7">
                         <label for="txtInvQty">Qty :</label>
@@ -393,7 +387,7 @@ End Code
                 <div class="row">
                     <div class="col-md-12">
                         <label for="txtDeliveryDate">Delivery Date :</label><input type="text" style="width:80px" id="txtDeliveryDate" />
-                        <input type="button" class="btn btn-success" value="Print Delivery Slip"/>
+                        <input type="button" class="btn btn-success" value="Print Delivery Slip" />
                     </div>
                 </div>
             </div>
@@ -492,118 +486,118 @@ End Code
                 </div>
                 <br />
                 <label>Advances Expenses Information :</label>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label style="font:bold">Company Paid By : </label>
-                                    </td>
-                                    <td>
-                                        Cheque:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtComPaidChq" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        Cash:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtComPaidCash" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        E-Payment:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtComPaidEPay" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        Others:<input type="text" id="txtComOthersPayBy" style="width:100px" />
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtComPaidOthers" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        Total Paid:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtComPaidTotal" style="width:100px" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label style="font:bold">Customer Paid By : </label>
-                                    </td>
-                                    <td>
-                                        Cheque:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtCustPaidChq" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        Tax-Card:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtCustPaidCard" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        E-Payment:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtCustPaidEPay" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        Bank Guarantee:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtCustBankGuarantee" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        Others:<input type="text" id="txtCustOthersPayBy" style="width:100px" />
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtCustPaidOthers" style="width:80px" /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        Total Paid:
-                                    </td>
-                                    <td>
-                                        <input type="text" id="txtCustPaidTotal" style="width:100px" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label style="font:bold">Company Paid By : </label>
+                                </td>
+                                <td>
+                                    Cheque:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtComPaidChq" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    Cash:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtComPaidCash" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    E-Payment:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtComPaidEPay" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    Others:<input type="text" id="txtComOthersPayBy" style="width:100px" />
+                                </td>
+                                <td>
+                                    <input type="text" id="txtComPaidOthers" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    Total Paid:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtComPaidTotal" style="width:100px" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label style="font:bold">Customer Paid By : </label>
+                                </td>
+                                <td>
+                                    Cheque:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtCustPaidChq" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    Tax-Card:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtCustPaidCard" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    E-Payment:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtCustPaidEPay" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    Bank Guarantee:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtCustBankGuarantee" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    Others:<input type="text" id="txtCustOthersPayBy" style="width:100px" />
+                                </td>
+                                <td>
+                                    <input type="text" id="txtCustPaidOthers" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    Total Paid:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtCustPaidTotal" style="width:100px" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -715,4 +709,320 @@ End Code
 
     </div>
 </div>
+<script type="text/javascript">
+    //define variables
+    var path = '@Url.Content("~")';
+    $(document).ready(function () {
+        var br = getQueryString('BranchCode');
+        var jno = getQueryString('JNo');
+        if (br != "" && jno != "") {
+            $('#txtBranchCode').val(br);
+            ShowBranch(br);
+            $('#txtJNo').val(jno);
+            ShowJob(br, jno);
+        }
+        $('#txtCustBranch').keydown(function (event) {
+            if (event.which == 13) {
+                ShowCustomer($('#txtCustCode').val(), $('#txtCustBranch').val(), false);
+            }
+        });
+    });
+    function SearchData(type) {
+        switch (type) {
+            case 'CUSTOMER':
+                //popup for search data
+                $('#tbCust').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetCompany', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'company.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "CustCode", title: "รหัส" },
+                        { data: "Branch", title: "สาขา" },
+                        { data: "NameThai", title: "คำอธิบาย" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbCust tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbCust', this);
+                    $('#txtCustCode').val(dt.CustCode);
+                    $('#txtCustBranch').val(dt.Branch);
+                    ShowCustomer(dt.CustCode, dt.Branch, false);
+                    $('#frmSearchCust').modal('hide');
+                });
+                $('#tbCust tbody').on('click', 'tr', function () {
+                    $('#tbCust tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchCust').modal('show');
+                break;
+            case 'CONSIGNEE':
+                //popup for search data
+                $('#tbCons').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetCompany', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'company.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "CustCode", title: "รหัส" },
+                        { data: "Branch", title: "สาขา" },
+                        { data: "NameThai", title: "คำอธิบาย" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbCons tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbCons', this);
+                    $('#txtConsignee').val(dt.CustCode);
+                    $('#txtConsBranch').val(dt.Branch);
+                    ShowCustomer(dt.CustCode, dt.Branch, true);
+                    $('#frmSearchCons').modal('hide');
+                });
+                $('#tbCons tbody').on('click', 'tr', function () {
+                    $('#tbCons tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchCons').modal('show');
+                break;
+            case 'ProjectName':
+                //popup for search data
+                $.get(path + 'joborder/getjobdatadistinct?field=' + type)
+                    .done(function (r) {
+                        var dr = r[0].Table;
+                        if (dr.length > 0) {
+                            $('#tbProj').DataTable({
+                                data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                                selected: true, //ให้สามารถเลือกแถวได้
+                                columns: [ //กำหนด property ของ header column
+                                    { data: null, title: "#" },
+                                    { data: "val", title: "ชื่อโครงการ" }
+                                ],
+                                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                                    {
+                                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                                        "data": null,
+                                        "render": function (data, type, full, meta) {
+                                            var html = "<button class='btn btn-warning'>Select</button>";
+                                            return html;
+                                        }
+                                    }
+                                ],
+                                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                            });
+                            $('#tbProj tbody').on('click', 'button', function () {
+                                var dt = GetSelect('#tbProj', this);
+                                $('#txtProjectName').val(dt.val);
+                                $('#frmSearchProj').modal('hide');
+                            });
+                            $('#tbProj tbody').on('click', 'tr', function () {
+                                $('#tbProj tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                                $(this).addClass('selected'); //select row ใหม่
+                            });
+                            $('#frmSearchProj').modal('show');
+                        }
+                    });
+                break;
+            case 'InvProduct':
+                //popup for search data
+                $.get(path + 'joborder/getjobdatadistinct?field=' + type)
+                    .done(function (r) {
+                        var dr = r[0].Table;
+                        if (dr.length > 0) {
+                            $('#tbProd').DataTable({
+                                data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                                selected: true, //ให้สามารถเลือกแถวได้
+                                columns: [ //กำหนด property ของ header column
+                                    { data: null, title: "#" },
+                                    { data: "val", title: "ชื่อสินค้า" }
+                                ],
+                                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                                    {
+                                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                                        "data": null,
+                                        "render": function (data, type, full, meta) {
+                                            var html = "<button class='btn btn-warning'>Select</button>";
+                                            return html;
+                                        }
+                                    }
+                                ],
+                                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                            });
+                            $('#tbProd tbody').on('click', 'button', function () {
+                                var dt = GetSelect('#tbProd', this);
+                                $('#txtInvProduct').val(dt.val);
+                                $('#frmSearchProd').modal('hide');
+                            });
+                            $('#tbProd tbody').on('click', 'tr', function () {
+                                $('#tbProd tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                                $(this).addClass('selected'); //select row ใหม่
+                            });
+                            $('#frmSearchProd').modal('show');
+                        }
+                    });
+                break;
 
+        }
+    }
+    function ShowBranch(Branch) {
+        $('#txtBranchName').val('');
+        $.get(path + 'Config/GetBranch?Code=' + Branch)
+            .done(function (r) {
+                if (r.branch.data.length > 0) {
+                    var b = r.branch.data[0];
+                    $('#txtBranchName').val(b.BrName);
+                }
+            });
+    }
+    function ShowJobTypeShipBy(jt, sb, js) {
+        $('#txtJobType').val('');
+        $('#txtShipBy').val('');
+        $('#txtJobStatus').val('');
+        if (jt < 10) jt = '0' + jt;
+        if (sb < 10) sb = '0' + sb;
+        if (js < 10) js = '0' + js;
+        $.get(path + 'Config/GetConfig?Code=JOB_TYPE&Key=' + jt)
+            .done(function (r) {
+                var b = r.config.data;
+                if (b.length > 0) {
+                    $('#txtJobType').val(b[0].ConfigValue);
+                }
+            });
+        $.get(path + 'Config/GetConfig?Code=SHIP_BY&Key=' + sb)
+            .done(function (r) {
+                var b = r.config.data;
+                if (b.length > 0) {
+                    $('#txtShipBy').val(b[0].ConfigValue);
+                }
+            });
+        $.get(path + 'Config/GetConfig?Code=JOB_STATUS&Key=' + js)
+            .done(function (r) {
+                var b = r.config.data;
+                if (b.length > 0) {
+                    $('#txtJobStatus').val(b[0].ConfigValue);
+                }
+            });
+    }
+    function ShowCustomer(Code, Branch, isCons) {
+        if ((Code + Branch).length > 0) {
+            if (isCons == true) {
+                $('#txtConsignName').val('');
+                $('#txtBillEAddress').val('');
+                $('#txtBillTAddress').val('');
+            }
+            if (isCons == false) {
+                $('#txtCustName').val('');
+                $('#txtEAddress').val('');
+                $('#txtTAddress').val('');
+                $('#txtPhoneFax').val('');
+            }
+            $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
+                .done(function (r) {
+                    if (r.company.data.length > 0) {
+                        var c = r.company.data[0];
+                        if (isCons == true) {
+                            $('#txtConsignName').val(c.NameThai);
+                            $('#txtBillEAddress').val((c.EAddress1 + ' ' + c.EAddress2).trim());
+                            $('#txtBillTAddress').val((c.TAddress1 + ' ' + c.TAddress2).trim());
+                        }
+                        if (isCons == false) {
+                            $('#txtCustName').val(c.NameThai);
+                            $('#txtEAddress').val((c.EAddress1 + ' ' + c.EAddress2).trim());
+                            $('#txtTAddress').val((c.TAddress1 + ' ' + c.TAddress2).trim());
+                            $('#txtPhoneFax').val(c.Phone);
+                        }
+                    }
+                });
+        }
+    }
+    function ShowJob(Branch, Job) {
+        $.get(path + 'joborder/getjobsql?branchcode=' + Branch + '&jno=' + Job)
+            .done(function (r) {
+                if (r.job.data.length > 0) {
+                    var dr = r.job.data[0];
+                    $('#txtCustCode').val(dr.CustCode);
+                    $('#txtCustBranch').val(dr.CustBranch);
+                    ShowCustomer(dr.CustCode, dr.CustBranch, false);
+                    ShowJobTypeShipBy(dr.JobType, dr.ShipBy, dr.JobStatus)
+                    $('#txtRevised').val(dr.JRevised);
+                    $('#txtDocDate').val(JSDate(dr.DocDate));
+                    $('#txtQNo').val(dr.QNo);
+                    $('#txtQRevise').val(dr.Revised);
+                    $('#txtCustInvNo').val(dr.InvNo);
+                    $('#txtDeclareNo').val(dr.DeclareNumber);
+                    $('#txtManagerCode').val(dr.ManagerCode);
+                    $('#txtCommission').val(dr.Commission);
+                    $('#txtContactName').val(dr.CustContactName);
+                    $('#txtCSName').val(dr.CSCode);
+                    $('#txtConfirmDate').val(JSDate(dr.ConfirmDate));
+                    $('#txtCloseBy').val(dr.CloseJobBy);
+                    $('#txtJobCondition').val(dr.TRemark);
+                    $('#txtCloseDate').val(JSDate(dr.CloseJobDate));
+                    $('#txtCustPoNo').val(dr.CustRefNO);
+                    $('#txtDescription').val(dr.Description);
+                    $('#txtCancelReason').val(dr.CancelReson);
+                    $('#txtCancelBy').val(dr.CancelProve);
+                    $('#txtConsignee').val(dr.consigneecode);
+                    $('#txtCancelDate').val(JSDate(dr.CancelDate));
+                    $('#txtProjectName').val(dr.ProjectName);
+                    $('#txtInvProduct').val(dr.InvProduct);
+                    $('#txtInvQty').val(dr.InvProductQty);
+                    $('#txtInvUnit').val(dr.InvProductUnit);
+                    $('#txtInvPackQty').val(dr.TotalQty);
+                    $('#txtInvTotal').val(dr.InvTotal);
+                    $('#txtMeasurement').val(dr.Measurement);
+                    $('#txtNetWeight').val(dr.TotalNW);
+                    $('#txtGrossWeight').val(dr.TotalGW);
+                    $('#txtWeightUnit').val(dr.GWUnit);
+                    $('#txtInvCurrency').val(dr.InvCurUnit);
+                    $('#txtInvCurRate').val(dr.InvCurRate);
+                    $('#txtInvCountry').val(dr.InvCountry);
+                    $('#txtInvFCountry').val(dr.InvFCountry);
+                    $('#txtBookingNo').val(dr.BookingNo);
+                    $('#txtBLNo').val(dr.BLNo);
+                    $('#txtHAWB').val(dr.HAWB);
+                    $('#txtMAWB').val(dr.MAWB);
+                    $('#txtForwarder').val(dr.ForwarderCode);
+                    $('#txtVesselName').val(dr.VesselName);
+                    $('#txtMVesselName').val(dr.MVesselName);
+                    $('#txtInterPort').val(dr.InvInterPort);
+                    $('#txtTransporter').val(dr.AgentCode);
+                    $('#txtTotalCTN').val(dr.TotalContainer);
+                    $('#txtETDDate').val(JSDate(dr.ETDDate));
+                    $('#txtETADate').val(JSDate(dr.ETADate));
+                    $('#txtLoadDate').val(JSDate(dr.LoadDate));
+                    $('#txtDeliveryDate').val(dr.EstDeliverDate);
+                    $('#txtEDIDate').val(JSDate(dr.ImExDate));
+                    $('#txtReadyClearDate').val(JSDate(dr.ReadyToClearDate));
+                    $('#txtDutyDate').val(JSDate(dr.DutyDate));
+                    $('#txtClearDate').val(JSDate(dr.ClearDate));
+                    $('#txtDeclareType').val(dr.DeclareType);
+                    $('#txtDutyAmt').val(dr.DutyAmount);
+                    $('#txtShipping').val(dr.ShippingEmp);
+                    $('#txtShippingCmd').val(dr.ShippingCmd);
+                }
+            });
+    }
+</script>

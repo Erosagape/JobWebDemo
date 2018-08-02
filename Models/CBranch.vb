@@ -7,13 +7,13 @@ Public Class CBranch
     End Sub
     Public Property Code As String
     Public Property BrName As String
-    Public Function GetData() As List(Of CBranch)
+    Public Function GetData(Optional SQLW As String = "") As List(Of CBranch)
         Dim lst As New List(Of CBranch)
         Try
             Using cn As New SqlConnection(m_ConnStr)
                 cn.Open()
 
-                Using rd As SqlDataReader = New SqlCommand("SELECT * FROM Mas_Branch", cn).ExecuteReader
+                Using rd As SqlDataReader = New SqlCommand("SELECT * FROM Mas_Branch " & SQLW, cn).ExecuteReader
                     While rd.Read
                         Dim data As New CBranch(m_ConnStr)
                         data.Code = rd.GetString(0)

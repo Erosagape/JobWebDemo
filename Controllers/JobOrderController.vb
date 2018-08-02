@@ -114,5 +114,19 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        <HttpGet>
+        Function GetJobDataDistinct() As ActionResult
+            Try
+                Dim tSqlW As String = ""
+                If IsNothing(Request.QueryString("Field")) Then
+                    Return Content("[]", jsonContent)
+                End If
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL("SELECT DISTINCT " + Request.QueryString("Field").ToString() + " as val from Job_Order")
+                Dim json As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
     End Class
 End Namespace

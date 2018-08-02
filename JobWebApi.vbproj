@@ -231,6 +231,8 @@
     <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
+    <Content Include="Scripts\Func\combo.js" />
+    <Content Include="Scripts\Func\util.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
@@ -256,12 +258,14 @@
     <Compile Include="App_Start\RouteConfig.vb" />
     <Compile Include="App_Start\WebApiConfig.vb" />
     <Compile Include="Controllers\ConfigController.vb" />
+    <Compile Include="Controllers\MasterController.vb" />
     <Compile Include="Controllers\JobOrderController.vb" />
     <Compile Include="Controllers\Main.vb" />
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CBranch.vb" />
+    <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
     <Compile Include="Models\CJobOrder.vb" />
     <Compile Include="Models\CUtil.vb" />
@@ -335,6 +339,7 @@
     <Content Include="Views\JobOrder\CreateJob.vbhtml" />
     <Content Include="Views\JobOrder\ShowJob.vbhtml" />
     <Content Include="Views\Config\Index.vbhtml" />
+    <Content Include="Views\Master\Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

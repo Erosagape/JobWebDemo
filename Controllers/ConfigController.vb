@@ -58,7 +58,11 @@ Namespace Controllers
         End Function
         Function GetBranch() As ActionResult
             Try
-                Dim oData = New CBranch(jobWebConn).GetData()
+                Dim tSql As String = ""
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSql = String.Format(" WHERE [Code]='{0}'", Request.QueryString("Code").ToString())
+                End If
+                Dim oData = New CBranch(jobWebConn).GetData(tSql)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""branch"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
