@@ -30,6 +30,103 @@ End Code
             <li><a data-toggle="tab" href="#menu3">Job Document Tracking</a></li>
             <li><a data-toggle="tab" href="#menu4">Other Controls</a></li>
         </ul>
+        <div id="frmSearchDType" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Declare Type</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbDType" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>code</th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmSearchCPort" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Customs Port</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbCPort" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>code</th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmSearchSUnt" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Service Type</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbSUnt" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>code</th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnApplyCons">Apply</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmSearchCurr" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"></button>
+                        <h4 class="modal-title"><label id="lblHeader">Search Currency</label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbCurr" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>code</th>
+                                    <th>name</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="frmSearchCust" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -291,7 +388,7 @@ End Code
                     <div class="col-md-5">
                         <label for="txtInvCurrency">Currency :</label>
                         <input type="text" id="txtInvCurrency" style="width:40px" />
-                        <input type="button" id="btnBrowseRate" value="..." />
+                        <input type="button" id="btnBrowseRate" value="..." onclick="SearchData('CURRENCY')" />
                         <label for="txtInvCurRate">Exchange Rate :</label>
                         <input type="text" id="txtInvCurRate" style="width:60px" />
                     </div>
@@ -358,7 +455,7 @@ End Code
                     <div class="col-md-5">
                         <label for="txtTotalCTN">Total Containers :</label>
                         <input type="text" id="txtTotalCTN" style="width:80px" />
-                        <input type="button" id="btnGetCTN" value="..." />
+                        <input type="button" id="btnGetCTN" value="..." onclick="SearchData('SERVUNIT')" />
                         <label for="cboSelCtnType">Term : </label>
                         <select id="cboSelCtnType" class="dropdown">
                             <option value="LCL" selected>LCL</option>
@@ -414,7 +511,7 @@ End Code
                     <div class="col-md-6">
                         <label for="txtDeclareType">Declare Type :</label>
                         <input type="text" id="txtDeclareType" style="width:80px" />
-                        <input type="button" id="btnBrowseDCType" value="..." />
+                        <input type="button" id="btnBrowseDCType" value="..." onclick="SearchData('RFDCT')" />
                         <input type="text" id="txtDeclareTypeName" style="width:200px" disabled />
                     </div>
                     <div class="col-md-3">
@@ -466,7 +563,7 @@ End Code
                     <div class="col-md-7">
                         <label for="txtReleasePort">Release Port :</label>
                         <input type="text" id="txtReleasePort" style="width:50px" />
-                        <input type="button" id="btnBrowseLCPort" value="..." />
+                        <input type="button" id="btnBrowseLCPort" value="..." onclick="SearchData('RFARS')" />
                         <input type="text" id="txtReleasePortName" style="width:200px" disabled />
                         <label for="txtPortNo">PORT#</label>
                         <input type="text" id="txtPortNo" style="width:30px" />
@@ -726,9 +823,160 @@ End Code
                 ShowCustomer($('#txtCustCode').val(), $('#txtCustBranch').val(), false);
             }
         });
+        $('#txtReleasePort').keydown(function (event) {
+            if (event.which == 13) {
+                ShowReleasePort($('#txtReleasePort').val());
+            }
+        });
+        $('#txtDeclareType').keydown(function (event) {
+            if (event.which == 13) {
+                ShowDeclareType($('#txtDeclareType').val());
+            }
+        });
     });
     function SearchData(type) {
         switch (type) {
+            case 'RFDCT':
+                $('#tbDType').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetDeclareType', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'RFDCT.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "Type", title: "รหัส" },
+                        { data: "Description", title: "คำอธิบาย" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbDType tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbDType', this);
+                    $('#txtDeclareType').val(dt.Type);
+                    $('#txtDeclareTypeName').val(dt.Description);
+                    $('#frmSearchDType').modal('hide');
+                });
+                $('#tbDType tbody').on('click', 'tr', function () {
+                    $('#tbDtype tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchDType').modal('show');
+                break;
+            case 'RFARS':
+                //popup for search data
+                $('#tbCPort').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetCustomsPort', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'RFARS.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "AreaCode", title: "รหัส" },
+                        { data: "AreaName", title: "คำอธิบาย" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbCPort tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbCPort', this);
+                    $('#txtReleasePort').val(dt.AreaCode);
+                    $('#txtReleasePortName').val(dt.AreaName);
+                    $('#frmSearchCPort').modal('hide');
+                });
+                $('#tbCPort tbody').on('click', 'tr', function () {
+                    $('#tbCPort tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchCPort').modal('show');
+                break;
+
+            case 'SERVUNIT':
+                //popup for search data
+                $('#tbSUnt').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetServUnit', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'servunit.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "UnitType", title: "รหัส" },
+                        { data: "UName", title: "คำอธิบาย" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<input type='text' class='QtyCons' id='txtServices'/>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+
+                $('#btnApplyCons').on('click', function () {  
+                    $('#frmSearchSUnt').modal('hide');
+                });
+                $('#frmSearchSUnt').modal('show');
+                break;
+            case 'CURRENCY':
+                //popup for search data
+                $('#tbCurr').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetCurrency', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'currency.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "Code", title: "รหัส" },
+                        { data: "TName", title: "คำอธิบาย" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbCurr tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbCurr', this);
+                    $('#txtInvCurrency').val(dt.Code);                    
+                    $('#frmSearchCurr').modal('hide');
+                });
+                $('#tbCurr tbody').on('click', 'tr', function () {
+                    $('#tbCurr tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchCurr').modal('show');
+                break;
             case 'CUSTOMER':
                 //popup for search data
                 $('#tbCust').DataTable({
@@ -896,6 +1144,26 @@ End Code
                 }
             });
     }
+    function ShowDeclareType(Code) {
+        $('#txtDeclareTypeName').val('');
+        $.get(path + 'Master/GetDeclareType?Code=' + Code)
+            .done(function (r) {
+                if (r.RFDCT.data.length > 0) {
+                    var b = r.RFDCT.data[0];
+                    $('#txtDeclareTypeName').val(b.Description);
+                }
+            });
+    }
+    function ShowReleasePort(Code) {
+        $('#txtReleasePortName').val('');
+        $.get(path + 'Master/GetCustomsPort?Code=' + Code)
+            .done(function (r) {
+                if (r.RFARS.data.length > 0) {
+                    var b = r.RFARS.data[0];
+                    $('#txtReleasePortName').val(b.AreaName);
+                }
+            });
+    }
     function ShowJobTypeShipBy(jt, sb, js) {
         $('#txtJobType').val('');
         $('#txtShipBy').val('');
@@ -1019,6 +1287,9 @@ End Code
                     $('#txtDutyDate').val(JSDate(dr.DutyDate));
                     $('#txtClearDate').val(JSDate(dr.ClearDate));
                     $('#txtDeclareType').val(dr.DeclareType);
+                    ShowDeclareType(dr.DeclareType);
+                    $('#txtReleasePort').val(dr.ClearPort);
+                    ShowReleasePort(dr.ClearPort);
                     $('#txtDutyAmt').val(dr.DutyAmount);
                     $('#txtShipping').val(dr.ShippingEmp);
                     $('#txtShippingCmd').val(dr.ShippingCmd);

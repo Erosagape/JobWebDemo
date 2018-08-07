@@ -4,4 +4,5 @@
     Friend Const textContent As String = "text/html"
     Friend Const jobDataPath As String = "~/App_Data/job_data.xml"
     Friend jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionString").ConnectionString
+    Friend jobMasConn As String = ConfigurationManager.ConnectionStrings("JobMasConnectionString").ConnectionString
 End Module

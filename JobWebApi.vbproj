@@ -267,7 +267,11 @@
     <Compile Include="Models\CBranch.vb" />
     <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
+    <Compile Include="Models\CCurrency.vb" />
+    <Compile Include="Models\CCustomsPort.vb" />
+    <Compile Include="Models\CDeclareType.vb" />
     <Compile Include="Models\CJobOrder.vb" />
+    <Compile Include="Models\CServUnit.vb" />
     <Compile Include="Models\CUtil.vb" />
     <Compile Include="Models\cXMLData.vb" />
     <Compile Include="Models\dsJobOrder.Designer.vb">

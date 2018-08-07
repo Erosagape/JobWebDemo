@@ -8,6 +8,67 @@ Namespace Controllers
         Function Index() As ActionResult
             Return View()
         End Function
+        Function GetServUnit() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [UnitType]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [UnitType]='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CServUnit(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""servunit"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
+        End Function
+        Function GetCustomsPort() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [AreaCode]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [AreaCode]='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CCustomsPort(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""RFARS"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
+        End Function
+        Function GetDeclareType() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [Type]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Type]='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CDeclareType(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""RFDCT"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
+        End Function
+
+        Function GetCurrency() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code]='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CCurrency(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""currency"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
+        End Function
         Function GetCompany() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE CustCode<>'' "
