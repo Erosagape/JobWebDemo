@@ -31,3 +31,19 @@ function JSDate(jsonDateString) {
         return '';
     }
 }
+function CDate(sqlDateString) {
+    try {
+        var jsDate = sqlDateString.substr(0, 10);
+        var month = jsDate.substr(5,2);
+        var day = jsDate.substr(8, 2);
+        var year = jsDate.substr(0, 4);
+        if (year < '2000') {
+            return '';
+        }
+        var date = day + "/" + month + "/" + year;
+        return date;
+    }
+    catch (e) {
+        return '';
+    }
+}

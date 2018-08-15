@@ -70,5 +70,53 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function ListValue() As ActionResult
+            Dim Head As String = Request.QueryString("Head").ToString()
+            Dim ID As String = Request.QueryString("ID").ToString()
+            Dim Flds As String = Request.QueryString("FLD").ToString()
+            Dim List As New List(Of String)
+            If Flds.IndexOf(",") > 0 Then
+                For Each Str As String In Flds.Split(",")
+                    List.Add(Str)
+                Next
+            Else
+                List.Add(Flds)
+            End If
+            Dim htmlStr As String = GetLOV(Head, ID, List.ToArray)
+            Return Content(htmlStr, textContent)
+        End Function
+        Private Function GetListTable(arr As String())
+            Dim html As String = ""
+            For Each str As String In arr
+                html &= "<th>" & str & "</th>" & vbCrLf
+            Next
+            Return html
+        End Function
+        Private Function GetLOV(captionStr As String, tblStr As String, fldList As String()) As String
+            Return "
+            <div class=""modal-dialog"">
+                <div class=""modal-content"">
+                    <div class=""modal-header"">
+                        <button type=""button"" class=""close"" data-dismiss=""modal""></button>
+                        <h4 class=""modal-title""><label id=""lblHeader"">Search " & captionStr & "</label></h4>
+                    </div>
+                    <div class=""modal-body"">
+                        <table id=""" & tblStr & """ class=""table table-responsive"">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    " & GetListTable(fldList) & "
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class=""modal-footer"">
+                        <button type=""button"" class=""btn btn-danger"" data-dismiss=""modal"">Close</button>
+                    </div>
+                </div>
+            </div>
+"
+        End Function
+
     End Class
 End Namespace

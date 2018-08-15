@@ -128,5 +128,25 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        <HttpGet>
+        Function GetFormJobLOV() As ActionResult
+            Dim html As String = "
+            <div id=""frmSearchCurr"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchUser"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchCust"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchCons"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchProj"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchProd"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchVessel"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchMVessel"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchDType"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchCPort"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchIUnt"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchWUnt"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchCountry"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchFCountry"" class=""modal fade"" role=""dialog""></div>
+"
+            Return Content(html, textContent)
+        End Function
     End Class
 End Namespace

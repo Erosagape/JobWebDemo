@@ -24,60 +24,12 @@ End Code
         <label for="txtJobStatus">Job Status :</label><input type="text" style="width:130px" id="txtJobStatus" disabled />
 
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#home">Job Descriptions</a></li>
-            <li><a data-toggle="tab" href="#menu1">Invoice Description</a></li>
-            <li><a data-toggle="tab" href="#menu2">Customs Description</a></li>
-            <li><a data-toggle="tab" href="#menu3">Job Document Tracking</a></li>
-            <li><a data-toggle="tab" href="#menu4">Other Controls</a></li>
+            <li class="active"><a data-toggle="tab" href="#tabinfo">Job Descriptions</a></li>
+            <li><a data-toggle="tab" href="#tabinv">Invoice Description</a></li>
+            <li><a data-toggle="tab" href="#tabdeclare">Customs Description</a></li>
+            <li><a data-toggle="tab" href="#tabtracking">Job Document Tracking</a></li>
+            <li><a data-toggle="tab" href="#tabremark">Other Controls</a></li>
         </ul>
-        <div id="frmSearchDType" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"></button>
-                        <h4 class="modal-title"><label id="lblHeader">Search Declare Type</label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tbDType" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>code</th>
-                                    <th>name</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="frmSearchCPort" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"></button>
-                        <h4 class="modal-title"><label id="lblHeader">Search Customs Port</label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tbCPort" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>code</th>
-                                    <th>name</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div id="frmSearchSUnt" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -103,128 +55,9 @@ End Code
                 </div>
             </div>
         </div>
-        <div id="frmSearchCurr" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"></button>
-                        <h4 class="modal-title"><label id="lblHeader">Search Currency</label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tbCurr" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>code</th>
-                                    <th>name</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="frmSearchCust" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"></button>
-                        <h4 class="modal-title"><label id="lblHeader">Search Customers</label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tbCust" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>code</th>
-                                    <th>key</th>
-                                    <th>name</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="frmSearchCons" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"></button>
-                        <h4 class="modal-title"><label id="lblHeader">Search Consignee</label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tbCons" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>code</th>
-                                    <th>key</th>
-                                    <th>name</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="frmSearchProj" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"></button>
-                        <h4 class="modal-title"><label id="lblHeader">Search Project</label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tbProj" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>name</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="frmSearchProd" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"></button>
-                        <h4 class="modal-title"><label id="lblHeader">Search Product</label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tbProd" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>name</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="frmLOVs"></div>
         <div class="tab-content">
-            <div id="home" class="tab-pane fade in active">
+            <div id="tabinfo" class="tab-pane fade in active">
                 <div class="row">
                     <div class="col-md-8">
                         <label for="txtCustCode">Customer :</label>
@@ -341,7 +174,7 @@ End Code
                     </div>
                 </div>
             </div>
-            <div id="menu1" class="tab-pane fade">
+            <div id="tabinv" class="tab-pane fade">
                 <div class="row">
                     <div class="col-md-5">
                         <label for="txtCustInvNo">Cust.Invoice No :</label>
@@ -363,7 +196,7 @@ End Code
                         <label for="txtInvQty">Qty :</label>
                         <input type="text" id="txtInvQty" style="width:80px" />
                         <input type="text" id="txtInvUnit" style="width:40px" />
-                        <input type="button" id="btnBrowseUnit" value="..." />
+                        <input type="button" id="btnBrowseUnit" value="..." onclick="SearchData('invproductunit')"/>
                         <label for="txtInvPackQty">Package.Total :</label>
                         <input type="text" id="txtInvPackQty" style="width:80px" />
                     </div>
@@ -381,7 +214,7 @@ End Code
                         <label for="txtGrossWeight">Gross Weight :</label>
                         <input type="text" id="txtGrossWeight" style="width:60px" />
                         <input type="text" id="txtWeightUnit" style="width:40px" />
-                        <input type="button" id="btnBrowseMeas" value="..." />
+                        <input type="button" id="btnBrowseMeas" value="..." onclick="SearchData('GWUnit')"/>
                     </div>
                 </div>
                 <div class="row">
@@ -394,11 +227,13 @@ End Code
                     </div>
                     <div class="col-md-7">
                         <label for="txtInvFCountry">From Country :</label>
+                        <input type="hidden" id="txtInvFCountryCode" />
                         <input type="text" id="txtInvFCountry" style="width:130px" disabled />
-                        <input type="button" id="btnBrowseFCountry" value="..." />
+                        <input type="button" id="btnBrowseFCountry" value="..." onclick="SearchData('fcountry')"/>
                         <label for="txtInvCountry">To :</label>
+                        <input type="hidden" id="txtInvCountryCode" />
                         <input type="text" id="txtInvCountry" style="width:130px" disabled />
-                        <input type="button" id="btnBrowseCountry" value="..." />
+                        <input type="button" id="btnBrowseCountry" value="..." onclick="SearchData('country')"/>
                     </div>
                 </div>
                 <div class="row">
@@ -429,12 +264,12 @@ End Code
                     <div class="col-md-5">
                         <label for="txtVesselName">Vessel Name :</label>
                         <input type="text" id="txtVesselName" style="width:200px" />
-                        <input type="button" id="btnBrowseVsl1" value="..." />
+                        <input type="button" id="btnBrowseVsl1" value="..." onclick="SearchData('vessel')" />
                     </div>
                     <div class="col-md-7">
                         <label for="txtMVesselName">Master Vessel Name :</label>
                         <input type="text" id="txtMVesselName" style="width:200px" />
-                        <input type="button" id="btnBrowseVsl2" value="..." />
+                        <input type="button" id="btnBrowseVsl2" value="..." onclick="SearchData('mvessel')" />
                     </div>
                 </div>
                 <div class="row">
@@ -488,7 +323,7 @@ End Code
                     </div>
                 </div>
             </div>
-            <div id="menu2" class="tab-pane fade">
+            <div id="tabdeclare" class="tab-pane fade">
                 <div class="row">
                     <div class="col-md-3">
                         <label for="txtEDIDate">EDI Date :</label>
@@ -573,7 +408,7 @@ End Code
                     <div class="col-md-6">
                         <label for="txtShipping">Shipping Staff :</label>
                         <input type="text" id="txtShipping" style="width:80px" />
-                        <input type="button" id="btnBrowseShipping" value="..." />
+                        <input type="button" id="btnBrowseShipping" value="..." onclick="SearchData('user')" />
                         <input type="text" id="txtShippingName" style="width:200px" disabled />
                     </div>
                     <div class="col-md-6">
@@ -651,6 +486,15 @@ End Code
                             <tr>
                                 <td></td>
                                 <td>
+                                    Cash:
+                                </td>
+                                <td>
+                                    <input type="text" id="txtCustPaidCash" style="width:80px" /><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
                                     Tax-Card:
                                 </td>
                                 <td>
@@ -672,7 +516,7 @@ End Code
                                     Bank Guarantee:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustBankGuarantee" style="width:80px" /><br />
+                                    <input type="text" id="txtCustPaidBank" style="width:80px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -705,7 +549,7 @@ End Code
                     </div>
                 </div>
             </div>
-            <div id="menu3" class="tab-pane fade">
+            <div id="tabtracking" class="tab-pane fade">
                 <table class="table table-responsive">
                     <thead>
                         <tr>
@@ -754,7 +598,7 @@ End Code
                     </tbody>
                 </table>
             </div>
-            <div id="menu4" class="tab-pane fade">
+            <div id="tabremark" class="tab-pane fade">
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-responsive">
@@ -803,13 +647,17 @@ End Code
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 <script type="text/javascript">
     //define variables
     var path = '@Url.Content("~")';
     $(document).ready(function () {
+        $.get(path + 'JobOrder/GetFormJobLOV', function (response) {
+            $('#frmLOVs').html(response);
+            SetLOVs();
+        });
+
         var br = getQueryString('BranchCode');
         var jno = getQueryString('JNo');
         if (br != "" && jno != "") {
@@ -818,6 +666,11 @@ End Code
             $('#txtJNo').val(jno);
             ShowJob(br, jno);
         }
+        $('#txtShipping').keydown(function (event) {
+            if (event.which == 13) {
+                ShowUser($('#txtShipping').val(),'#txtShippingName');
+            }
+        });
         $('#txtCustBranch').keydown(function (event) {
             if (event.which == 13) {
                 ShowCustomer($('#txtCustCode').val(), $('#txtCustBranch').val(), false);
@@ -834,8 +687,307 @@ End Code
             }
         });
     });
+    function SetLOVs() {
+        //3 Fields Show
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
+            var ListCons = response.replace('tbX', 'tbCons').replace('cpX', 'Consignees');
+            $('#frmSearchCust').html(ListCust);
+            $('#frmSearchCons').html(ListCons);
+        });
+        //2 Fields Show
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
+            var ListDType = response.replace('tbX', 'tbDType').replace('cpX', 'Declaration Type');
+            var ListCPort = response.replace('tbX', 'tbCPort').replace('cpX', 'Customs Inspection At');
+            var ListCurr = response.replace('tbX', 'tbCurr').replace('cpX', 'Currencys');
+            var ListUser = response.replace('tbX', 'tbUser').replace('cpX', 'Users');
+            var ListCountry = response.replace('tbX', 'tbCountry').replace('cpX', 'Country');
+            var ListFCountry = response.replace('tbX', 'tbFCountry').replace('cpX', 'Country');
+            $('#frmSearchUser').html(ListUser);
+            $('#frmSearchDType').html(ListDType);
+            $('#frmSearchCPort').html(ListCPort);
+            $('#frmSearchCurr').html(ListCurr);
+            $('#frmSearchCountry').html(ListCountry);
+            $('#frmSearchFCountry').html(ListFCountry);
+        });
+        //1 Fields Show
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=name', function (response) {
+            var ListProj = response.replace('tbX', 'tbProj').replace('cpX', 'Project Name');
+            var ListProd = response.replace('tbX', 'tbProd').replace('cpX', 'Products');
+            var ListVessel = response.replace('tbX', 'tbVessel').replace('cpX', 'Vessels');
+            var ListMVessel = response.replace('tbX', 'tbMVessel').replace('cpX', 'Vessels');
+            var ListInvUnit = response.replace('tbX', 'tbIUnt').replace('cpX', 'Invoice Units');
+            var ListWeightUnit = response.replace('tbX', 'tbWUnt').replace('cpX', 'Weight Units');
+            $('#frmSearchProj').html(ListProj);
+            $('#frmSearchProd').html(ListProd);
+            $('#frmSearchVessel').html(ListVessel);
+            $('#frmSearchMVessel').html(ListMVessel);
+            $('#frmSearchIUnt').html(ListInvUnit);
+            $('#frmSearchWUnt').html(ListWeightUnit);
+        });
+    }
     function SearchData(type) {
         switch (type) {
+            case 'country':
+                $('#tbCountry').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetCountry', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'country.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "CTYCODE", title: "รหัส" },
+                        { data: "CTYName", title: "ชื่อประเทศ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbCountry tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbCountry', this);
+                    $('#txtInvCountry').val(dt.CTYName);
+                    $('#txtInvCountryCode').val(dt.CTYCODE);
+                    $('#frmSearchCountry').modal('hide');
+                });
+                $('#tbCountry tbody').on('click', 'tr', function () {
+                    $('#tbCountry tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchCountry').modal('show');
+                break;
+            case 'fcountry':
+                $('#tbFCountry').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetCountry', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'country.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "CTYCODE", title: "รหัส" },
+                        { data: "CTYName", title: "ชื่อประเทศ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbFCountry tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbFCountry', this);
+                    $('#txtInvFCountry').val(dt.CTYName);
+                    $('#txtInvFCountryCode').val(dt.CTYCODE);
+                    $('#frmSearchFCountry').modal('hide');
+                });
+                $('#tbFCountry tbody').on('click', 'tr', function () {
+                    $('#tbFCountry tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchFCountry').modal('show');
+                break;
+            case 'GWUnit':
+                //popup for search data
+                $.get(path + 'joborder/getjobdatadistinct?field=' + type)
+                    .done(function (r) {
+                        var dr = r[0].Table;
+                        if (dr.length > 0) {
+                            $('#tbWUnt').DataTable({
+                                data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                                selected: true, //ให้สามารถเลือกแถวได้
+                                columns: [ //กำหนด property ของ header column
+                                    { data: null, title: "#" },
+                                    { data: "val", title: "ชื่อหน่วย" }
+                                ],
+                                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                                    {
+                                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                                        "data": null,
+                                        "render": function (data, type, full, meta) {
+                                            var html = "<button class='btn btn-warning'>Select</button>";
+                                            return html;
+                                        }
+                                    }
+                                ],
+                                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                            });
+                            $('#tbWUnt tbody').on('click', 'button', function () {
+                                var dt = GetSelect('#tbWUnt', this);
+                                $('#txtWeightUnit').val(dt.val);
+                                $('#frmSearchWUnt').modal('hide');
+                            });
+                            $('#tbWUnt tbody').on('click', 'tr', function () {
+                                $('#tbWUnt tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                                $(this).addClass('selected'); //select row ใหม่
+                            });
+                            $('#frmSearchWUnt').modal('show');
+                        }
+                    });
+                break;
+            case 'invproductunit':
+                //popup for search data
+                $.get(path + 'joborder/getjobdatadistinct?field='+type)
+                    .done(function (r) {
+                        var dr = r[0].Table;
+                        if (dr.length > 0) {
+                            $('#tbIUnt').DataTable({
+                                data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                                selected: true, //ให้สามารถเลือกแถวได้
+                                columns: [ //กำหนด property ของ header column
+                                    { data: null, title: "#" },
+                                    { data: "val", title: "ชื่อหน่วย" }
+                                ],
+                                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                                    {
+                                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                                        "data": null,
+                                        "render": function (data, type, full, meta) {
+                                            var html = "<button class='btn btn-warning'>Select</button>";
+                                            return html;
+                                        }
+                                    }
+                                ],
+                                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                            });
+                            $('#tbIUnt tbody').on('click', 'button', function () {
+                                var dt = GetSelect('#tbIUnt', this);
+                                $('#txtInvUnit').val(dt.val);
+                                $('#frmSearchIUnt').modal('hide');
+                            });
+                            $('#tbIUnt tbody').on('click', 'tr', function () {
+                                $('#tbIUnt tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                                $(this).addClass('selected'); //select row ใหม่
+                            });
+                            $('#frmSearchIUnt').modal('show');
+                        }
+                    });
+                break;
+            case 'mvessel':
+                //popup for search data
+                $.get(path + 'joborder/getjobdatadistinct?field=MVesselName')
+                    .done(function (r) {
+                        var dr = r[0].Table;
+                        if (dr.length > 0) {
+                            $('#tbMVessel').DataTable({
+                                data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                                selected: true, //ให้สามารถเลือกแถวได้
+                                columns: [ //กำหนด property ของ header column
+                                    { data: null, title: "#" },
+                                    { data: "val", title: "ชื่อยานพาหนะ" }
+                                ],
+                                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                                    {
+                                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                                        "data": null,
+                                        "render": function (data, type, full, meta) {
+                                            var html = "<button class='btn btn-warning'>Select</button>";
+                                            return html;
+                                        }
+                                    }
+                                ],
+                                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                            });
+                            $('#tbMVessel tbody').on('click', 'button', function () {
+                                var dt = GetSelect('#tbMVessel', this);
+                                $('#txtMVesselName').val(dt.val);
+                                $('#frmSearchMVessel').modal('hide');
+                            });
+                            $('#tbMVessel tbody').on('click', 'tr', function () {
+                                $('#tbMVessel tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                                $(this).addClass('selected'); //select row ใหม่
+                            });
+                            $('#frmSearchMVessel').modal('show');
+                        }
+                    });
+                break;
+            case 'vessel':
+                //popup for search data
+                $.get(path + 'joborder/getjobdatadistinct?field=VesselName')
+                    .done(function (r) {
+                        var dr = r[0].Table;
+                        if (dr.length > 0) {
+                            $('#tbVessel').DataTable({
+                                data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                                selected: true, //ให้สามารถเลือกแถวได้
+                                columns: [ //กำหนด property ของ header column
+                                    { data: null, title: "#" },
+                                    { data: "val", title: "ชื่อยานพาหนะ" }
+                                ],
+                                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                                    {
+                                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                                        "data": null,
+                                        "render": function (data, type, full, meta) {
+                                            var html = "<button class='btn btn-warning'>Select</button>";
+                                            return html;
+                                        }
+                                    }
+                                ],
+                                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                            });
+                            $('#tbVessel tbody').on('click', 'button', function () {
+                                var dt = GetSelect('#tbVessel', this);
+                                $('#txtVesselName').val(dt.val);
+                                $('#frmSearchVessel').modal('hide');
+                            });
+                            $('#tbVessel tbody').on('click', 'tr', function () {
+                                $('#tbVessel tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                                $(this).addClass('selected'); //select row ใหม่
+                            });
+                            $('#frmSearchVessel').modal('show');
+                        }
+                    });
+                break;
+            case 'user':
+                $('#tbUser').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetUser', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'user.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "UserID", title: "รหัส" },
+                        { data: "TName", title: "ชื่อ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbUser tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbUser', this);
+                    $('#txtShipping').val(dt.UserID);
+                    $('#txtShippingName').val(dt.TName);
+                    $('#frmSearchUser').modal('hide');
+                });
+                $('#tbUser tbody').on('click', 'tr', function () {
+                    $('#tbUser tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchUser').modal('show');
+                break;
             case 'RFDCT':
                 $('#tbDType').DataTable({
                     ajax: {
@@ -1134,6 +1286,30 @@ End Code
 
         }
     }
+    function ShowCountry(CountryID,ControlID) {
+        $(ControlID).val('');
+        if (CountryID != "") {
+            $.get(path + 'Master/GetCountry?Code=' + CountryID)
+                .done(function (r) {
+                    if (r.country.data.length > 0) {
+                        var b = r.country.data[0];
+                        $(ControlID).val(b.CTYName);
+                    }
+                });
+        }
+    }
+    function ShowUser(UserID, ControlID) {
+        $(ControlID).val('');
+        if (UserID != "") {
+            $.get(path + 'Master/GetUser?Code=' + UserID)
+                .done(function (r) {
+                    if (r.user.data.length > 0) {
+                        var b = r.user.data[0];
+                        $(ControlID).val(b.TName);
+                    }
+                });
+        }
+    }
     function ShowBranch(Branch) {
         $('#txtBranchName').val('');
         $.get(path + 'Config/GetBranch?Code=' + Branch)
@@ -1235,25 +1411,29 @@ End Code
                     ShowCustomer(dr.CustCode, dr.CustBranch, false);
                     ShowJobTypeShipBy(dr.JobType, dr.ShipBy, dr.JobStatus)
                     $('#txtRevised').val(dr.JRevised);
-                    $('#txtDocDate').val(JSDate(dr.DocDate));
+                    $('#txtDocDate').val(CDate(dr.DocDate));
                     $('#txtQNo').val(dr.QNo);
                     $('#txtQRevise').val(dr.Revised);
                     $('#txtCustInvNo').val(dr.InvNo);
                     $('#txtDeclareNo').val(dr.DeclareNumber);
-                    $('#txtManagerCode').val(dr.ManagerCode);
+                    //$('#txtManagerCode').val(dr.ManagerCode);
+                    ShowUser(dr.ManagerCode, '#txtManagerCode');
                     $('#txtCommission').val(dr.Commission);
                     $('#txtContactName').val(dr.CustContactName);
-                    $('#txtCSName').val(dr.CSCode);
-                    $('#txtConfirmDate').val(JSDate(dr.ConfirmDate));
-                    $('#txtCloseBy').val(dr.CloseJobBy);
+                    //$('#txtCSName').val(dr.CSCode);
+                    ShowUser(dr.CSCode, '#txtCSName');
+                    $('#txtConfirmDate').val(CDate(dr.ConfirmDate));
+                    //$('#txtCloseBy').val(dr.CloseJobBy);
+                    ShowUser(dr.CloseJobBy, '#txtCloseBy');
                     $('#txtJobCondition').val(dr.TRemark);
-                    $('#txtCloseDate').val(JSDate(dr.CloseJobDate));
+                    $('#txtCloseDate').val(CDate(dr.CloseJobDate));
                     $('#txtCustPoNo').val(dr.CustRefNO);
                     $('#txtDescription').val(dr.Description);
                     $('#txtCancelReason').val(dr.CancelReson);
-                    $('#txtCancelBy').val(dr.CancelProve);
+                    //$('#txtCancelBy').val(dr.CancelProve);
+                    ShowUser(dr.CancelProve, '#txtCancelBy');
                     $('#txtConsignee').val(dr.consigneecode);
-                    $('#txtCancelDate').val(JSDate(dr.CancelDate));
+                    $('#txtCancelDate').val(CDate(dr.CancelDate));
                     $('#txtProjectName').val(dr.ProjectName);
                     $('#txtInvProduct').val(dr.InvProduct);
                     $('#txtInvQty').val(dr.InvProductQty);
@@ -1266,8 +1446,10 @@ End Code
                     $('#txtWeightUnit').val(dr.GWUnit);
                     $('#txtInvCurrency').val(dr.InvCurUnit);
                     $('#txtInvCurRate').val(dr.InvCurRate);
-                    $('#txtInvCountry').val(dr.InvCountry);
-                    $('#txtInvFCountry').val(dr.InvFCountry);
+                    $('#txtInvCountryCode').val(dr.InvCountry);
+                    $('#txtInvFCountryCode').val(dr.InvFCountry);
+                    ShowCountry(dr.InvCountry, '#txtInvCountry');
+                    ShowCountry(dr.InvFCountry, '#txtInvFCountry');
                     $('#txtBookingNo').val(dr.BookingNo);
                     $('#txtBLNo').val(dr.BLNo);
                     $('#txtHAWB').val(dr.HAWB);
@@ -1278,21 +1460,38 @@ End Code
                     $('#txtInterPort').val(dr.InvInterPort);
                     $('#txtTransporter').val(dr.AgentCode);
                     $('#txtTotalCTN').val(dr.TotalContainer);
-                    $('#txtETDDate').val(JSDate(dr.ETDDate));
-                    $('#txtETADate').val(JSDate(dr.ETADate));
-                    $('#txtLoadDate').val(JSDate(dr.LoadDate));
-                    $('#txtDeliveryDate').val(dr.EstDeliverDate);
-                    $('#txtEDIDate').val(JSDate(dr.ImExDate));
-                    $('#txtReadyClearDate').val(JSDate(dr.ReadyToClearDate));
-                    $('#txtDutyDate').val(JSDate(dr.DutyDate));
-                    $('#txtClearDate').val(JSDate(dr.ClearDate));
+                    $('#txtETDDate').val(CDate(dr.ETDDate));
+                    $('#txtETADate').val(CDate(dr.ETADate));
+                    $('#txtLoadDate').val(CDate(dr.LoadDate));
+                    $('#txtDeliveryDate').val(CDate(dr.EstDeliverDate));
+                    $('#txtEDIDate').val(CDate(dr.ImExDate));
+                    $('#txtReadyClearDate').val(CDate(dr.ReadyToClearDate));
+                    $('#txtDutyDate').val(CDate(dr.DutyDate));
+                    $('#txtClearDate').val(CDate(dr.ClearDate));
                     $('#txtDeclareType').val(dr.DeclareType);
                     ShowDeclareType(dr.DeclareType);
                     $('#txtReleasePort').val(dr.ClearPort);
                     ShowReleasePort(dr.ClearPort);
                     $('#txtDutyAmt').val(dr.DutyAmount);
                     $('#txtShipping').val(dr.ShippingEmp);
+                    ShowUser(dr.ShippingEmp, '#txtShippingName');
                     $('#txtShippingCmd').val(dr.ShippingCmd);
+
+                    $('#txtComPaidChq').val(dr.DutyLtdPayChqAmt);
+                    $('#txtComPaidCash').val(dr.DutyLtdPayCashAmt);
+                    $('#txtComPaidEPay').val(dr.DutyLtdPayEPAYAmt);
+                    $('#txtComPaidOthers').val(dr.DutyLtdPayOtherAmt);
+                    $('#txtComOthersPayBy').val(dr.DutyLtdPayOther);
+                    $('#txtComPaidTotal').val(dr.DutyLtdPayChqAmt + dr.DutyLtdPayCashAmt + dr.DutyLtdPayEPAYAmt + dr.DutyLtdPayOtherAmt);
+
+                    $('#txtCustPaidChq').val(dr.DutyCustPayChqAmt);
+                    $('#txtCustPaidCash').val(dr.DutyCustPayCashAmt);
+                    $('#txtCustPaidCard').val(dr.DutyCustPayCardAmt);
+                    $('#txtCustPaidBank').val(dr.DutyCustPayBankAmt);
+                    $('#txtCustPaidEPay').val(dr.DutyCustPayEPAYAmt);
+                    $('#txtCustPaidOthers').val(dr.DutyCustPayOtherAmt);
+                    $('#txtCustOthersPayBy').val(dr.DutyCustPayOther);
+                    $('#txtCustPaidTotal').val(dr.DutyCustPayChqAmt + dr.DutyCustPayCashAmt + dr.DutyCustPayEPAYAmt + dr.DutyCustPayOtherAmt+ dr.DutyCustPayCardAmt+dr.DutyCustPayBankAmt);
                 }
             });
     }

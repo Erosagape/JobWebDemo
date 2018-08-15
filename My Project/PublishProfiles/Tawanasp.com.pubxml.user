@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA+bYs3trr+kmHzuCQIPmf8gAAAAACAAAAAAAQZgAAAAEAACAAAACLFhOwuL4FERcPF/ftDMsCjCzwYdq5kTLRnx0v4RTtYQAAAAAOgAAAAAIAACAAAAAHo1ntasvd1GB3ZhES+xMiiVOH47S2GaJSBVWyJ6iG9iAAAACEAqpxjQidmNxQ1xud58kL/N5Pifu4YI5QON3AIN/K/kAAAACKHXjwV2UDJUsa59aKohvzR7dfLtWQkKqTrqHNFijc2YFZylJfJCkdpNGQzPospPRm85BtQS7Zv84wzHxYYDXA</EncryptedPassword>
+    <_PublishTargetUrl>ftp://tawanasp.com/jobdemo.tawanasp.com</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>02/22/2013 08:43:40</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.pdb">
+      <publishTime>02/22/2013 08:43:40</publishTime>
+    </File>
+    <File Include="bin/JobWebApi.dll">
+      <publishTime>08/15/2018 17:13:03</publishTime>
+    </File>
+    <File Include="bin/JobWebApi.pdb">
+      <publishTime>08/15/2018 17:13:03</publishTime>
+    </File>
+    <File Include="bin/JobWebApi.xml">
+      <publishTime>08/15/2018 17:13:02</publishTime>
+    </File>
+    <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
+      <publishTime>10/16/2017 14:14:32</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>07/25/2012 11:48:56</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>03/08/2014 20:33:56</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.exe">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.exe.config">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.rsp">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.exe">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.exe.config">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.rsp">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Build.Tasks.CodeAnalysis.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.Scripting.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.Scripting.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.VisualBasic.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CSharp.Core.targets">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.DiaSymReader.Native.amd64.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.DiaSymReader.Native.x86.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.VisualBasic.Core.targets">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Win32.Primitives.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.AppContext.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Collections.Immutable.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Console.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.FileVersionInfo.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.Process.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.StackTrace.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.Compression.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.DriveInfo.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.Primitives.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.Pipes.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Reflection.Metadata.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.AccessControl.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Claims.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Algorithms.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Encoding.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Primitives.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.X509Certificates.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Principal.Windows.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Text.Encoding.CodePages.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Threading.Thread.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.ValueTuple.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.ReaderWriter.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XmlDocument.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XPath.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XPath.XDocument.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.exe">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.exe.config">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.rsp">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe.config">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>01/28/2015 04:02:42</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>01/28/2015 04:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/28/2015 04:02:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/28/2015 04:03:46</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>01/28/2015 04:02:18</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>11/02/2014 15:26:04</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>01/28/2015 04:02:32</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>01/28/2015 04:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>01/28/2015 04:04:30</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>01/28/2015 04:04:30</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>07/17/2013 17:03:52</publishTime>
+    </File>
+    <File Include="Content/bootstrap.css">
+      <publishTime>04/26/2018 16:25:47</publishTime>
+    </File>
+    <File Include="Content/bootstrap.min.css">
+      <publishTime>04/26/2018 16:25:47</publishTime>
+    </File>
+    <File Include="Content/jquery.datatables.min.css">
+      <publishTime>03/05/2018 15:08:41</publishTime>
+    </File>
+    <File Include="Content/Site.css">
+      <publishTime>04/26/2018 16:25:46</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.eot">
+      <publishTime>04/26/2018 16:25:47</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.svg">
+      <publishTime>04/26/2018 16:25:47</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.ttf">
+      <publishTime>04/26/2018 16:25:47</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.woff">
+      <publishTime>04/26/2018 16:25:47</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>04/26/2018 16:19:36</publishTime>
+    </File>
+    <File Include="index.html">
+      <publishTime>02/08/2018 16:49:59</publishTime>
+    </File>
+    <File Include="Models/dsJobOrder.xsc">
+      <publishTime>04/26/2018 16:54:37</publishTime>
+    </File>
+    <File Include="Models/dsJobOrder.xss">
+      <publishTime>04/26/2018 16:54:37</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.js">
+      <publishTime>02/05/2018 14:21:15</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.min.js">
+      <publishTime>02/05/2018 14:21:15</publishTime>
+    </File>
+    <File Include="Scripts/Data/job.txt">
+      <publishTime>02/05/2018 14:22:49</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.bootstrap.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.bootstrap.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.bootstrap4.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.bootstrap4.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.foundation.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.foundation.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.jqueryui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.jqueryui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.semanticui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/autoFill.semanticui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.bootstrap.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.bootstrap.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.bootstrap4.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.bootstrap4.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.colVis.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.colVis.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.flash.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.flash.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.foundation.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.foundation.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.html5.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.html5.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.jqueryui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.jqueryui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.print.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.print.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.semanticui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/buttons.semanticui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.autoFill.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.autoFill.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.bootstrap.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.bootstrap.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.bootstrap4.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.bootstrap4.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.buttons.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.buttons.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.colReorder.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.colReorder.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.fixedColumns.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.fixedColumns.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.fixedHeader.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.fixedHeader.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.foundation.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.foundation.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.jqueryui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.jqueryui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.keyTable.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.keyTable.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.material.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.material.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.responsive.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.responsive.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.rowGroup.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.rowGroup.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.rowReorder.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.rowReorder.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.scroller.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.scroller.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.select.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.select.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.semanticui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.semanticui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.uikit.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/dataTables.uikit.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/jquery.dataTables.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/jquery.dataTables.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.bootstrap.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.bootstrap.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.bootstrap4.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.bootstrap4.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.foundation.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.foundation.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.jqueryui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.jqueryui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.semanticui.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/DataTables/responsive.semanticui.min.js">
+      <publishTime>02/05/2018 14:20:40</publishTime>
+    </File>
+    <File Include="Scripts/Func/combo.js">
+      <publishTime>02/08/2018 16:49:10</publishTime>
+    </File>
+    <File Include="Scripts/Func/util.js">
+      <publishTime>08/15/2018 11:08:25</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.10.2.js">
+      <publishTime>04/26/2018 16:25:48</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.10.2.min.js">
+      <publishTime>04/26/2018 16:25:48</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.10.2.min.map">
+      <publishTime>04/26/2018 16:25:48</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.2.1.js">
+      <publishTime>02/05/2018 14:21:15</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.2.1.min.js">
+      <publishTime>02/05/2018 14:21:16</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.2.1.min.map">
+      <publishTime>02/05/2018 14:21:16</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.2.1.slim.js">
+      <publishTime>02/05/2018 14:21:16</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.2.1.slim.min.js">
+      <publishTime>02/05/2018 14:21:16</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.2.1.slim.min.map">
+      <publishTime>02/05/2018 14:21:12</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.js">
+      <publishTime>04/26/2018 16:25:49</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.min.js">
+      <publishTime>04/26/2018 16:25:49</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.js">
+      <publishTime>04/26/2018 16:25:49</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.min.js">
+      <publishTime>04/26/2018 16:25:49</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.6.2.js">
+      <publishTime>04/26/2018 16:25:53</publishTime>
+    </File>
+    <File Include="Views/Config/Index.vbhtml">
+      <publishTime>02/08/2018 17:43:32</publishTime>
+    </File>
+    <File Include="Views/JobOrder/CreateJob.vbhtml">
+      <publishTime>07/26/2018 12:17:49</publishTime>
+    </File>
+    <File Include="Views/JobOrder/ShowJob.vbhtml">
+      <publishTime>08/15/2018 17:18:15</publishTime>
+    </File>
+    <File Include="Views/Master/Index.vbhtml">
+      <publishTime>02/08/2018 11:39:35</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.vbhtml">
+      <publishTime>04/26/2018 16:25:42</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.vbhtml">
+      <publishTime>07/26/2018 12:18:55</publishTime>
+    </File>
+    <File Include="Views/web.config">
+      <publishTime>04/26/2018 16:25:46</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.vbhtml">
+      <publishTime>04/26/2018 16:25:45</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>08/15/2018 17:13:04</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

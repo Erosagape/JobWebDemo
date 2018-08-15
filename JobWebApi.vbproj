@@ -151,9 +151,9 @@
     <Content Include="index.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="My Project\PublishProfiles\CustomProfile.pubxml" />
     <None Include="My Project\PublishProfiles\JobWebDemo - Web Deploy.pubxml" />
     <Content Include="Scripts\Data\job.txt" />
+    <None Include="My Project\PublishProfiles\Tawanasp.com.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -267,11 +267,13 @@
     <Compile Include="Models\CBranch.vb" />
     <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
+    <Compile Include="Models\CCountry.vb" />
     <Compile Include="Models\CCurrency.vb" />
     <Compile Include="Models\CCustomsPort.vb" />
     <Compile Include="Models\CDeclareType.vb" />
     <Compile Include="Models\CJobOrder.vb" />
     <Compile Include="Models\CServUnit.vb" />
+    <Compile Include="Models\CUser.vb" />
     <Compile Include="Models\CUtil.vb" />
     <Compile Include="Models\cXMLData.vb" />
     <Compile Include="Models\dsJobOrder.Designer.vb">

@@ -69,6 +69,37 @@ Namespace Controllers
             End Try
 
         End Function
+        Function GetUser() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE UserID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND UserID='{0}'", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Pass")) Then
+                    tSqlw &= String.Format("AND UPassword='{0}'", Request.QueryString("Pass").ToString)
+                End If
+                Dim oData = New CUser(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""user"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetCountry() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE CTYCODE<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND CTYCODE='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CCountry(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""country"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetCompany() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE CustCode<>'' "
