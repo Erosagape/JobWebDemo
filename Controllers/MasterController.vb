@@ -117,5 +117,36 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetVender() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE VenCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND VenCode='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CVender(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""vender"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetInterPort() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE CountryCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND PortCode='{0}'", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Key")) Then
+                    tSqlw &= String.Format("AND CountryCode='{0}'", Request.QueryString("Key").ToString)
+                End If
+                Dim oData = New CInterPort(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""interport"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
     End Class
 End Namespace

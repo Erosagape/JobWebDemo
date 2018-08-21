@@ -145,6 +145,9 @@ Namespace Controllers
             <div id=""frmSearchWUnt"" class=""modal fade"" role=""dialog""></div>
             <div id=""frmSearchCountry"" class=""modal fade"" role=""dialog""></div>
             <div id=""frmSearchFCountry"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchVend"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchForw"" class=""modal fade"" role=""dialog""></div>
+            <div id=""frmSearchIPort"" class=""modal fade"" role=""dialog""></div>
 "
             Return Content(html, textContent)
         End Function

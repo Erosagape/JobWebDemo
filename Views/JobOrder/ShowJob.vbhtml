@@ -4,15 +4,6 @@
 End Code
 <head>
     <title>Show Job</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="~/Content/bootstrap.css" />
-    <link rel="stylesheet" href="~/Content/jquery.datatables.min.css" />
-    <title>Configuration</title>
-    <script src="~/Scripts/jquery-3.2.1.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
-    <script src="~/Scripts/Func/Util.js"></script>
 </head>
 <div Class="panel-body">
     <div class="container">
@@ -256,7 +247,7 @@ End Code
                     <div class="col-md-7">
                         <label for="txtForwarder">Agent:</label>
                         <input type="text" id="txtForwarder" style="width:100px" />
-                        <input type="button" id="btnBrowseFwdr" value="..." />
+                        <input type="button" id="btnBrowseFwdr" value="..." onclick="SearchData('forwarder')"/>
                         <input type="text" id="txtForwarderName" style="width:300px" disabled />
                     </div>
                 </div>
@@ -276,13 +267,13 @@ End Code
                     <div class="col-md-5">
                         <label for="txtInterPort">Inter Port:</label>
                         <input type="text" id="txtInterPort" style="width:80px" />
-                        <input type="button" id="btnBrowseIPort" value="..." />
+                        <input type="button" id="btnBrowseIPort" value="..." onclick="SearchData('interport')"/>
                         <input type="text" id="txtInterPortName" style="width:160px" disabled />
                     </div>
                     <div class="col-md-7">
                         <label for="txtTransporter">Transporter :</label>
                         <input type="text" id="txtTransporter" style="width:80px" />
-                        <input type="button" id="btnBrowseTrans" value="..." />
+                        <input type="button" id="btnBrowseTrans" value="..." onclick="SearchData('agent')" />
                         <input type="text" id="txtTransporterName" style="width:250px" disabled />
                     </div>
                 </div>
@@ -653,11 +644,13 @@ End Code
     //define variables
     var path = '@Url.Content("~")';
     $(document).ready(function () {
+        //load list of values
         $.get(path + 'JobOrder/GetFormJobLOV', function (response) {
             $('#frmLOVs').html(response);
             SetLOVs();
         });
-
+        SetEvents();
+        //check parameters
         var br = getQueryString('BranchCode');
         var jno = getQueryString('JNo');
         if (br != "" && jno != "") {
@@ -666,9 +659,21 @@ End Code
             $('#txtJNo').val(jno);
             ShowJob(br, jno);
         }
+    });
+    function SetEvents() {
+        $('#txtTransporter').keydown(function (event) {
+            if (event.which == 13) {
+                ShowVender($('#txtTransporter').val(), '#txtTransporterName');
+            }
+        });
+        $('#txtForwarder').keydown(function (event) {
+            if (event.which == 13) {
+                ShowVender($('#txtForwarder').val(), '#txtForwarderName');
+            }
+        });
         $('#txtShipping').keydown(function (event) {
             if (event.which == 13) {
-                ShowUser($('#txtShipping').val(),'#txtShippingName');
+                ShowUser($('#txtShipping').val(), '#txtShippingName');
             }
         });
         $('#txtCustBranch').keydown(function (event) {
@@ -681,53 +686,249 @@ End Code
                 ShowReleasePort($('#txtReleasePort').val());
             }
         });
+        $('#txtInterPort').keydown(function (event) {
+            if (event.which == 13) {
+                if ($('#txtJobType').val() == 'IMPORT') {
+                    ShowInterPort($('#txtInvCountryCode').val(), $('#txtInterPort').val());
+                } else {
+                    ShowInterPort($('#txtInvFCountryCode').val(), $('#txtInterPort').val());
+                }
+            }
+        });
         $('#txtDeclareType').keydown(function (event) {
             if (event.which == 13) {
                 ShowDeclareType($('#txtDeclareType').val());
             }
         });
-    });
+    }
     function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
-            var ListCons = response.replace('tbX', 'tbCons').replace('cpX', 'Consignees');
+            //Customers
+            var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');            
             $('#frmSearchCust').html(ListCust);
+            $('#frmSearchCust').on('shown.bs.modal', function () {
+                $('#tbCust_filter input').focus();
+            });
+            //Consignee
+            var ListCons = response.replace('tbX', 'tbCons').replace('cpX', 'Consignees');
             $('#frmSearchCons').html(ListCons);
+            $('#frmSearchCons').on('shown.bs.modal', function () {
+                $('#tbCons_filter input').focus();
+            });
+            //Inter Port
+            var ListIPort = response.replace('tbX', 'tbIPort').replace('cpX', 'Inter Port');
+            $('#frmSearchIPort').html(ListIPort);
+            $('#frmSearchIPort').on('shown.bs.modal', function () {
+                $('#tbIPort_filter input').focus();
+            });
         });
         //2 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
-            var ListDType = response.replace('tbX', 'tbDType').replace('cpX', 'Declaration Type');
-            var ListCPort = response.replace('tbX', 'tbCPort').replace('cpX', 'Customs Inspection At');
-            var ListCurr = response.replace('tbX', 'tbCurr').replace('cpX', 'Currencys');
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {           
+            //Users
             var ListUser = response.replace('tbX', 'tbUser').replace('cpX', 'Users');
-            var ListCountry = response.replace('tbX', 'tbCountry').replace('cpX', 'Country');
-            var ListFCountry = response.replace('tbX', 'tbFCountry').replace('cpX', 'Country');
             $('#frmSearchUser').html(ListUser);
+            $('#frmSearchUser').on('shown.bs.modal', function () {
+                $('#tbUser_filter input').focus();
+            });
+            //Declare Type
+            var ListDType = response.replace('tbX', 'tbDType').replace('cpX', 'Declaration Type');
             $('#frmSearchDType').html(ListDType);
+            $('#frmSearchDType').on('shown.bs.modal', function () {
+                $('#tbDType_filter input').focus();
+            });
+            //Customs Port
+            var ListCPort = response.replace('tbX', 'tbCPort').replace('cpX', 'Customs Inspection At');
             $('#frmSearchCPort').html(ListCPort);
+            $('#frmSearchCPort').on('shown.bs.modal', function () {
+                $('#tbCPort_filter input').focus();
+            });
+            //Currency
+            var ListCurr = response.replace('tbX', 'tbCurr').replace('cpX', 'Currencys');
             $('#frmSearchCurr').html(ListCurr);
+            $('#frmSearchCurr').on('shown.bs.modal', function () {
+                $('#tbCurr_filter input').focus();
+            });
+            //Country
+            var ListCountry = response.replace('tbX', 'tbCountry').replace('cpX', 'Country');
             $('#frmSearchCountry').html(ListCountry);
+            $('#frmSearchCountry').on('shown.bs.modal', function () {
+                $('#tbCountry_filter input').focus();
+            });
+            //FCountry
+            var ListFCountry = response.replace('tbX', 'tbFCountry').replace('cpX', 'Country');
             $('#frmSearchFCountry').html(ListFCountry);
+            $('#frmSearchFCountry').on('shown.bs.modal', function () {
+                $('#tbFCountry_filter input').focus();
+            });
+            //Agent
+            var ListAgent = response.replace('tbX', 'tbVend').replace('cpX', 'Agent');
+            $('#frmSearchVend').html(ListAgent);
+            $('#frmSearchVend').on('shown.bs.modal', function () {
+                $('#tbVend_filter input').focus();
+            });
+            //Forwarder/Transporter
+            var ListForwarder = response.replace('tbX', 'tbForw').replace('cpX', 'Transporter');
+            $('#frmSearchForw').html(ListForwarder);
+            $('#frmSearchForw').on('shown.bs.modal', function () {
+                $('#tbForw_filter input').focus();
+            });
         });
         //1 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=name', function (response) {
+            //Projects Name
             var ListProj = response.replace('tbX', 'tbProj').replace('cpX', 'Project Name');
-            var ListProd = response.replace('tbX', 'tbProd').replace('cpX', 'Products');
-            var ListVessel = response.replace('tbX', 'tbVessel').replace('cpX', 'Vessels');
-            var ListMVessel = response.replace('tbX', 'tbMVessel').replace('cpX', 'Vessels');
-            var ListInvUnit = response.replace('tbX', 'tbIUnt').replace('cpX', 'Invoice Units');
-            var ListWeightUnit = response.replace('tbX', 'tbWUnt').replace('cpX', 'Weight Units');
             $('#frmSearchProj').html(ListProj);
+            $('#frmSearchProj').on('shown.bs.modal', function () {
+                $('#tbProj_filter input').focus();
+            });
+            //Products
+            var ListProd = response.replace('tbX', 'tbProd').replace('cpX', 'Products');
             $('#frmSearchProd').html(ListProd);
+            $('#frmSearchProd').on('shown.bs.modal', function () {
+                $('#tbProd_filter input').focus();
+            });
+            //Vessel
+            var ListVessel = response.replace('tbX', 'tbVessel').replace('cpX', 'Vessels');
             $('#frmSearchVessel').html(ListVessel);
+            $('#frmSearchVessel').on('shown.bs.modal', function () {
+                $('#tbVessel_filter input').focus();
+            });
+            //Mother Vessel
+            var ListMVessel = response.replace('tbX', 'tbMVessel').replace('cpX', 'Vessels');
             $('#frmSearchMVessel').html(ListMVessel);
+            $('#frmSearchMVessel').on('shown.bs.modal', function () {
+                $('#tbMVessel_filter input').focus();
+            });
+            //Inv Units
+            var ListInvUnit = response.replace('tbX', 'tbIUnt').replace('cpX', 'Invoice Units');
             $('#frmSearchIUnt').html(ListInvUnit);
+            $('#frmSearchIUnt').on('shown.bs.modal', function () {
+                $('#tbIUnt_filter input').focus();
+            });
+            //Weights Unit
+            var ListWeightUnit = response.replace('tbX', 'tbWUnt').replace('cpX', 'Weight Units');
             $('#frmSearchWUnt').html(ListWeightUnit);
+            $('#frmSearchWUnt').on('shown.bs.modal', function () {
+                $('#tbWUnt_filter input').focus();
+            });
         });
     }
     function SearchData(type) {
         switch (type) {
+            case 'interport':
+                var CountryID = $('#txtInvFCountryCode').val();
+                if ($('#txtJobType').val() == "IMPORT") {
+                    CountryID = $('#txtInvCountryCode').val();
+                }
+                $('#tbIPort').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetInterPort?Key=' + CountryID, //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'interport.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "PortCode", title: "รหัส" },
+                        { data: "CountryCode", title: "ประเทศ" },
+                        { data: "PortName", title: "ชื่อ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbIPort tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbIPort', this);
+                    $('#txtInterPort').val(dt.PortCode);
+                    $('#txtInterPortName').val(dt.PortName);
+                    $('#frmSearchIPort').modal('hide');
+                });
+                $('#tbIPort tbody').on('click', 'tr', function () {
+                    $('#tbIPort tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchIPort').modal('show');
+                break;
+            case 'agent':
+                $('#tbVend').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetVender', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'vender.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "VenCode", title: "รหัส" },
+                        { data: "TName", title: "ชื่อ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbVend tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbVend', this);
+                    $('#txtTransporter').val(dt.VenCode);
+                    $('#txtTransporterName').val(dt.TName);
+                    $('#frmSearchVend').modal('hide');
+                });
+                $('#tbVend tbody').on('click', 'tr', function () {
+                    $('#tbVend tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });                
+                $('#frmSearchVend').modal('show');
+                break;
+            case 'forwarder':
+                $('#tbForw').DataTable({
+                    ajax: {
+                        url: path + 'Master/GetVender', //web service ที่จะ call ไปดึงข้อมูลมา
+                        dataSrc: 'vender.data'
+                    },
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "VenCode", title: "รหัส" },
+                        { data: "TName", title: "ชื่อ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbForw tbody').on('click', 'button', function () {
+                    var dt = GetSelect('#tbForw', this);
+                    $('#txtForwarder').val(dt.VenCode);
+                    $('#txtForwarderName').val(dt.TName);
+                    $('#frmSearchForw').modal('hide');
+                });
+                $('#tbForw tbody').on('click', 'tr', function () {
+                    $('#tbForw tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                    $(this).addClass('selected'); //select row ใหม่
+                });
+                $('#frmSearchForw').modal('show');
+                break;
             case 'country':
                 $('#tbCountry').DataTable({
                     ajax: {
@@ -1284,6 +1485,28 @@ End Code
                     });
                 break;
 
+        }        
+    }
+    function ShowInterPort(CountryID, PortCode) {
+        $('#txtInterPortName').val('');
+        $.get(path + 'Master/GetInterPort?Code=' + PortCode + '&Key=' + CountryID)
+            .done(function (r) {
+                if (r.interport.data.length > 0) {
+                    var b = r.interport.data[0];
+                    $('#txtInterPortName').val(b.PortName);
+                }
+            });
+    }
+    function ShowVender(VenderID, ControlID) {
+        $(ControlID).val('');
+        if (VenderID != "") {
+            $.get(path + 'Master/GetVender?Code=' + VenderID)
+                .done(function (r) {
+                    if (r.vender.data.length > 0) {
+                        var b = r.vender.data[0];
+                        $(ControlID).val(b.TName);
+                    }
+                });
         }
     }
     function ShowCountry(CountryID,ControlID) {
@@ -1416,21 +1639,17 @@ End Code
                     $('#txtQRevise').val(dr.Revised);
                     $('#txtCustInvNo').val(dr.InvNo);
                     $('#txtDeclareNo').val(dr.DeclareNumber);
-                    //$('#txtManagerCode').val(dr.ManagerCode);
                     ShowUser(dr.ManagerCode, '#txtManagerCode');
                     $('#txtCommission').val(dr.Commission);
                     $('#txtContactName').val(dr.CustContactName);
-                    //$('#txtCSName').val(dr.CSCode);
                     ShowUser(dr.CSCode, '#txtCSName');
                     $('#txtConfirmDate').val(CDate(dr.ConfirmDate));
-                    //$('#txtCloseBy').val(dr.CloseJobBy);
                     ShowUser(dr.CloseJobBy, '#txtCloseBy');
                     $('#txtJobCondition').val(dr.TRemark);
                     $('#txtCloseDate').val(CDate(dr.CloseJobDate));
                     $('#txtCustPoNo').val(dr.CustRefNO);
                     $('#txtDescription').val(dr.Description);
                     $('#txtCancelReason').val(dr.CancelReson);
-                    //$('#txtCancelBy').val(dr.CancelProve);
                     ShowUser(dr.CancelProve, '#txtCancelBy');
                     $('#txtConsignee').val(dr.consigneecode);
                     $('#txtCancelDate').val(CDate(dr.CancelDate));
@@ -1455,10 +1674,17 @@ End Code
                     $('#txtHAWB').val(dr.HAWB);
                     $('#txtMAWB').val(dr.MAWB);
                     $('#txtForwarder').val(dr.ForwarderCode);
+                    ShowVender(dr.ForwarderCode, '#txtForwarderName');
                     $('#txtVesselName').val(dr.VesselName);
                     $('#txtMVesselName').val(dr.MVesselName);
                     $('#txtInterPort').val(dr.InvInterPort);
+                    if (dr.JobType==1) {
+                        ShowInterPort(dr.InvCountry, dr.InvInterPort);
+                    } else {
+                        ShowInterPort(dr.InvFCountry, dr.InvInterPort);
+                    }
                     $('#txtTransporter').val(dr.AgentCode);
+                    ShowVender(dr.AgentCode, '#txtTransporterName');
                     $('#txtTotalCTN').val(dr.TotalContainer);
                     $('#txtETDDate').val(CDate(dr.ETDDate));
                     $('#txtETADate').val(CDate(dr.ETADate));
@@ -1483,7 +1709,6 @@ End Code
                     $('#txtComPaidOthers').val(dr.DutyLtdPayOtherAmt);
                     $('#txtComOthersPayBy').val(dr.DutyLtdPayOther);
                     $('#txtComPaidTotal').val(dr.DutyLtdPayChqAmt + dr.DutyLtdPayCashAmt + dr.DutyLtdPayEPAYAmt + dr.DutyLtdPayOtherAmt);
-
                     $('#txtCustPaidChq').val(dr.DutyCustPayChqAmt);
                     $('#txtCustPaidCash').val(dr.DutyCustPayCashAmt);
                     $('#txtCustPaidCard').val(dr.DutyCustPayCardAmt);
