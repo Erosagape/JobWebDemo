@@ -92,5 +92,34 @@ Namespace Controllers
 "
             Return Content(html, textContent)
         End Function
+        <HttpGet>
+        Function GetNewJob() As ActionResult
+            Try
+                Dim oJob As New CJobOrder(jobWebConn)
+                Dim prefix As String = "TJOB"
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    oJob.JobType = Convert.ToInt16("" & Request.QueryString("JType"))
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    oJob.ShipBy = Convert.ToInt16("" & Request.QueryString("SBy"))
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    oJob.BranchCode = "" & Request.QueryString("Branch")
+                Else
+                    oJob.BranchCode = "00"
+                End If
+                If Not IsNothing(Request.QueryString("Prefix")) Then
+                    prefix = "" & Request.QueryString("Prefix")
+                End If
+                oJob.AddNew(prefix & DateTime.Now.ToString("yyMM") & "____")
+                Dim result As String = oJob.SaveData(" WHERE BranchCode='" & oJob.BranchCode & "' And JNo='" & oJob.JNo & "'")
+
+                Dim json As String = JsonConvert.SerializeObject(oJob)
+                json = "{""job"":{""data"":" & json & ",""result"":""" & result & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""job"":{""data"":[],""result"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
     End Class
 End Namespace

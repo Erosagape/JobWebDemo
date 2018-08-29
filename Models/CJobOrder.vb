@@ -873,124 +873,186 @@ Public Class CJobOrder
             m_privilegests = value
         End Set
     End Property
-    Public Function SaveData(pSQLWhere As String) As Boolean
-        Dim bComplete As Boolean = False
+    Public Sub AddNew(pFormatSQL As String)
+        Dim retStr As String = ""
+        Try
+            Using cn As New SqlConnection(m_ConnStr)
+                cn.Open()
+                Using rd As SqlDataReader = New SqlCommand(String.Format("SELECT MAX(JNo) as Ret FROM Job_Order WHERE JNo Like '{0}'", pFormatSQL), cn).ExecuteReader
+                    If rd.Read Then
+                        If rd.HasRows Then
+                            Dim numStr As String = ""
+                            Dim formatStr As String = ""
+                            Dim i As Integer = 0
+                            For i = 1 To rd.GetString(0).Length
+                                If IsNumeric(rd.GetString(0).Substring(rd.GetString(0).Length - i, 1)) Then
+                                    numStr = rd.GetString(0).Substring(rd.GetString(0).Length - i, 1) & numStr
+                                    formatStr &= "0"
+                                Else
+                                    Exit For
+                                End If
+                            Next
+                            If numStr <> "" Then
+                                retStr = rd.GetString(0).Substring(0, rd.GetString(0).Length - i + 1) & Format(CLng(numStr) + 1, formatStr)
+                            End If
+                        End If
+                    End If
+                    rd.Close()
+                End Using
+                cn.Close()
+            End Using
+        Catch ex As Exception
+
+        End Try
+        If retStr = "" Then
+            Dim j As Integer = pFormatSQL.Count(Function(c As Char) c = "_")
+            retStr = Replace(pFormatSQL, Strings.StrDup(j, "_"), Format(1, Strings.StrDup(j, "0")))
+        End If
+        m_JNo = retStr
+        m_CancelDate = SqlTypes.SqlDateTime.MinValue
+        m_CancelProveDate = SqlTypes.SqlDateTime.MinValue
+        m_DocDate = SqlTypes.SqlDateTime.MinValue
+        m_ClearDate = SqlTypes.SqlDateTime.MinValue
+        m_CloseJobDate = SqlTypes.SqlDateTime.MinValue
+        m_ConfirmChqDate = SqlTypes.SqlDateTime.MinValue
+        m_ConfirmDate = SqlTypes.SqlDateTime.MinValue
+        m_DutyDate = SqlTypes.SqlDateTime.MinValue
+        m_EstDeliverDate = SqlTypes.SqlDateTime.MinValue
+        m_EstDeliverTime = SqlTypes.SqlDateTime.MinValue
+        m_ETADate = SqlTypes.SqlDateTime.MinValue
+        m_ETDDate = SqlTypes.SqlDateTime.MinValue
+        m_ImExDate = SqlTypes.SqlDateTime.MinValue
+        m_LoadDate = SqlTypes.SqlDateTime.MinValue
+        m_ReadyToClearDate = SqlTypes.SqlDateTime.MinValue
+        m_CancelProveTime = SqlTypes.SqlDateTime.MinValue
+        m_CancelTime = SqlTypes.SqlDateTime.MinValue
+        m_CloseJobTime = SqlTypes.SqlDateTime.MinValue
+        m_ETTime = SqlTypes.SqlDateTime.MinValue
+    End Sub
+    Public Function SaveData(pSQLWhere As String) As String
+        Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
-
                 Using da As New SqlDataAdapter("SELECT * FROM Job_Order" & pSQLWhere, cn)
                     Using cb As New SqlCommandBuilder(da)
                         Using dt As New DataTable
                             da.Fill(dt)
                             Dim dr As DataRow = dt.NewRow
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
-                            dr("BranchCode") = Me.BranchCode
-                            dr("JNo") = Me.JNo
-                            dr("JRevise") = Me.JRevise
-                            dr("ConfirmDate") = Me.ConfirmDate
-                            dr("CPolicyCode") = Me.CPolicyCode
-                            dr("DocDate") = Me.DocDate
-                            dr("CustCode") = Me.CustCode
-                            dr("CustBranch") = Me.CustBranch
-                            dr("CustContactName") = Me.CustContactName
-                            dr("QNo") = Me.QNo
-                            dr("Revise") = Me.Revise
-                            dr("ManagerCode") = Me.ManagerCode
-                            dr("CSCode") = Me.CSCode
-                            dr("Description") = Me.Description
-                            dr("TRemark") = Me.TRemark
-                            dr("JobStatus") = Me.JobStatus
-                            dr("JobType") = Me.JobType
-                            dr("ShipBy") = Me.ShipBy
-                            dr("InvNo") = Me.InvNo
-                            dr("InvTotal") = Me.InvTotal
-                            dr("InvProduct") = Me.InvProduct
-                            dr("InvCountry") = Me.InvCountry
-                            dr("InvFCountry") = Me.InvFCountry
-                            dr("InvInterPort") = Me.InvInterPort
-                            dr("InvProductQty") = Me.InvProductQty
-                            dr("InvProductUnit") = Me.InvProductUnit
-                            dr("InvCurUnit") = Me.InvCurUnit
-                            dr("InvCurRate") = Me.InvCurRate
-                            dr("ImExDate") = Me.ImExDate
-                            dr("BLNo") = Me.BLNo
-                            dr("BookingNo") = Me.BookingNo
-                            dr("ClearPort") = Me.ClearPort
-                            dr("ClearPortNo") = Me.ClearPortNo
-                            dr("ClearDate") = Me.ClearDate
-                            dr("LoadDate") = Me.LoadDate
-                            dr("ForwarderCode") = Me.ForwarderCode
-                            dr("AgentCode") = Me.AgentCode
-                            dr("VesselName") = Me.VesselName
-                            dr("ETDDate") = Me.ETDDate
-                            dr("ETADate") = Me.ETADate
-                            dr("ETTime") = Me.ETTime
-                            dr("FNetPrice") = Me.FNetPrice
-                            dr("BNetPrice") = Me.BNetPrice
-                            dr("CancelReson") = Me.CancelReson
-                            dr("CancelDate") = Me.CancelDate
-                            dr("CancelTime") = Me.CancelTime
-                            dr("CancelProve") = Me.CancelProve
-                            dr("CancelProveDate") = Me.CancelProveDate
-                            dr("CancelProveTime") = Me.CancelProveTime
-                            dr("CloseJobDate") = Me.CloseJobDate
-                            dr("CloseJobTime") = Me.CloseJobTime
-                            dr("CloseJobBy") = Me.CloseJobBy
-                            dr("DeclareType") = Me.DeclareType
-                            dr("DeclareNumber") = Me.DeclareNumber
-                            dr("DeclareStatus") = Me.DeclareStatus
-                            dr("TyAuthorSp") = Me.TyAuthorSp
-                            dr("Ty19BIS") = Me.Ty19BIS
-                            dr("TyClearTax") = Me.TyClearTax
-                            dr("TyClearTaxReson") = Me.TyClearTaxReson
-                            dr("EstDeliverDate") = Me.EstDeliverDate
-                            dr("EstDeliverTime") = Me.EstDeliverTime
-                            dr("TotalContainer") = Me.TotalContainer
-                            dr("DutyDate") = Me.DutyDate
-                            dr("DutyAmount") = Me.DutyAmount
-                            dr("DutyCustPayOther") = Me.DutyCustPayOther
-                            dr("DutyCustPayChqAmt") = Me.DutyCustPayChqAmt
-                            dr("DutyCustPayBankAmt") = Me.DutyCustPayBankAmt
-                            dr("DutyCustPayEPAYAmt") = Me.DutyCustPayEPAYAmt
-                            dr("DutyCustPayCardAmt") = Me.DutyCustPayCardAmt
-                            dr("DutyCustPayCashAmt") = Me.DutyCustPayCashAmt
-                            dr("DutyCustPayOtherAmt") = Me.DutyCustPayOtherAmt
-                            dr("DutyLtdPayOther") = Me.DutyLtdPayOther
-                            dr("DutyLtdPayChqAmt") = Me.DutyLtdPayChqAmt
-                            dr("DutyLtdPayEPAYAmt") = Me.DutyLtdPayEPAYAmt
-                            dr("DutyLtdPayCashAmt") = Me.DutyLtdPayCashAmt
-                            dr("DutyLtdPayOtherAmt") = Me.DutyLtdPayOtherAmt
-                            dr("ConfirmChqDate") = Me.ConfirmChqDate
-                            dr("ShippingEmp") = Me.ShippingEmp
-                            dr("ShippingCmd") = Me.ShippingCmd
-                            dr("TotalGW") = Me.TotalGW
-                            dr("GWUnit") = Me.GWUnit
-                            dr("TSRequest") = Me.TSRequest
-                            dr("ShipmentType") = Me.ShipmentType
-                            dr("ReadyToClearDate") = Me.ReadyToClearDate
-                            dr("Commission") = Me.Commission
-                            dr("CommPayTo") = Me.CommPayTo
-                            dr("ProjectName") = Me.ProjectName
-                            dr("MVesselName") = Me.MVesselName
-                            dr("TotalNW") = Me.TotalNW
-                            dr("Measurement") = Me.Measurement
-                            dr("CustRefNO") = Me.CustRefNO
-                            dr("TotalQty") = Me.TotalQty
-                            dr("HAWB") = Me.HAWB
-                            dr("MAWB") = Me.MAWB
-                            dr("consigneecode") = Me.consigneecode
-                            dr("privilegests") = Me.privilegests
+                            Try
+                                dr("BranchCode") = Me.BranchCode
+                                dr("JNo") = Me.JNo
+                                dr("JRevise") = Me.JRevise
+                                dr("ConfirmDate") = Me.ConfirmDate
+                                dr("CPolicyCode") = Me.CPolicyCode
+                                dr("DocDate") = Me.DocDate
+                                dr("CustCode") = Me.CustCode
+                                dr("CustBranch") = Me.CustBranch
+                                dr("CustContactName") = Me.CustContactName
+                                dr("QNo") = Me.QNo
+                                dr("Revise") = Me.Revise
+                                dr("ManagerCode") = Me.ManagerCode
+                                dr("CSCode") = Me.CSCode
+                                dr("Description") = Me.Description
+                                dr("TRemark") = Me.TRemark
+                                dr("JobStatus") = Me.JobStatus
+                                dr("JobType") = Me.JobType
+                                dr("ShipBy") = Me.ShipBy
+                                dr("InvNo") = Me.InvNo
+                                dr("InvTotal") = Me.InvTotal
+                                dr("InvProduct") = Me.InvProduct
+                                dr("InvCountry") = Me.InvCountry
+                                dr("InvFCountry") = Me.InvFCountry
+                                dr("InvInterPort") = Me.InvInterPort
+                                dr("InvProductQty") = Me.InvProductQty
+                                dr("InvProductUnit") = Me.InvProductUnit
+                                dr("InvCurUnit") = Me.InvCurUnit
+                                dr("InvCurRate") = Me.InvCurRate
+                                dr("ImExDate") = Me.ImExDate
+                                dr("BLNo") = Me.BLNo
+                                dr("BookingNo") = Me.BookingNo
+                                dr("ClearPort") = Me.ClearPort
+                                dr("ClearPortNo") = Me.ClearPortNo
+                                dr("ClearDate") = Me.ClearDate
+                                dr("LoadDate") = Me.LoadDate
+                                dr("ForwarderCode") = Me.ForwarderCode
+                                dr("AgentCode") = Me.AgentCode
+                                dr("VesselName") = Me.VesselName
+                                dr("ETDDate") = Me.ETDDate
+                                dr("ETADate") = Me.ETADate
+                                dr("ETTime") = Me.ETTime
+                                dr("FNetPrice") = Me.FNetPrice
+                                dr("BNetPrice") = Me.BNetPrice
+                                dr("CancelReson") = Me.CancelReson
+                                dr("CancelDate") = Me.CancelDate
+                                dr("CancelTime") = Me.CancelTime
+                                dr("CancelProve") = Me.CancelProve
+                                dr("CancelProveDate") = Me.CancelProveDate
+                                dr("CancelProveTime") = Me.CancelProveTime
+                                dr("CloseJobDate") = Me.CloseJobDate
+                                dr("CloseJobTime") = Me.CloseJobTime
+                                dr("CloseJobBy") = Me.CloseJobBy
+                                dr("DeclareType") = Me.DeclareType
+                                dr("DeclareNumber") = Me.DeclareNumber
+                                dr("DeclareStatus") = Me.DeclareStatus
+                                dr("TyAuthorSp") = Me.TyAuthorSp
+                                dr("Ty19BIS") = Me.Ty19BIS
+                                dr("TyClearTax") = Me.TyClearTax
+                                dr("TyClearTaxReson") = Me.TyClearTaxReson
+                                dr("EstDeliverDate") = Me.EstDeliverDate
+                                dr("EstDeliverTime") = Me.EstDeliverTime
+                                dr("TotalContainer") = Me.TotalContainer
+                                dr("DutyDate") = Me.DutyDate
+                                dr("DutyAmount") = Me.DutyAmount
+                                dr("DutyCustPayOther") = Me.DutyCustPayOther
+                                dr("DutyCustPayChqAmt") = Me.DutyCustPayChqAmt
+                                dr("DutyCustPayBankAmt") = Me.DutyCustPayBankAmt
+                                dr("DutyCustPayEPAYAmt") = Me.DutyCustPayEPAYAmt
+                                dr("DutyCustPayCardAmt") = Me.DutyCustPayCardAmt
+                                dr("DutyCustPayCashAmt") = Me.DutyCustPayCashAmt
+                                dr("DutyCustPayOtherAmt") = Me.DutyCustPayOtherAmt
+                                dr("DutyLtdPayOther") = Me.DutyLtdPayOther
+                                dr("DutyLtdPayChqAmt") = Me.DutyLtdPayChqAmt
+                                dr("DutyLtdPayEPAYAmt") = Me.DutyLtdPayEPAYAmt
+                                dr("DutyLtdPayCashAmt") = Me.DutyLtdPayCashAmt
+                                dr("DutyLtdPayOtherAmt") = Me.DutyLtdPayOtherAmt
+                                dr("ConfirmChqDate") = Me.ConfirmChqDate
+                                dr("ShippingEmp") = Me.ShippingEmp
+                                dr("ShippingCmd") = Me.ShippingCmd
+                                dr("TotalGW") = Me.TotalGW
+                                dr("GWUnit") = Me.GWUnit
+                                dr("TSRequest") = Me.TSRequest
+                                dr("ShipmentType") = Me.ShipmentType
+                                dr("ReadyToClearDate") = Me.ReadyToClearDate
+                                dr("Commission") = Me.Commission
+                                dr("CommPayTo") = Me.CommPayTo
+                                dr("ProjectName") = Me.ProjectName
+                                dr("MVesselName") = Me.MVesselName
+                                dr("TotalNW") = Me.TotalNW
+                                dr("Measurement") = Me.Measurement
+                                dr("CustRefNO") = Me.CustRefNO
+                                dr("TotalQty") = Me.TotalQty
+                                dr("HAWB") = Me.HAWB
+                                dr("MAWB") = Me.MAWB
+                                dr("consigneecode") = Me.consigneecode
+                                dr("privilegests") = Me.privilegests
+
+                            Catch ex As Exception
+                                msg = "[exception]" & ex.Message
+                            End Try
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            bComplete = True
+                            msg = "Save Complete"
                         End Using
                     End Using
+                    cn.Close()
                 End Using
-            Catch ex As Exception
+            Catch e As Exception
+                msg = "[error]" & e.Message
             End Try
         End Using
-        Return bComplete
+        Return msg
     End Function
     Public Function GetData(Optional pSQLWhere As String = "") As List(Of CJobOrder)
         Dim lst As New List(Of CJobOrder)

@@ -691,9 +691,9 @@ End Code
         $('#txtInterPort').keydown(function (event) {
             if (event.which == 13) {
                 if ($('#txtJobType').val() == 'IMPORT') {
-                    ShowInterPort($('#txtInvCountryCode').val(), $('#txtInterPort').val());
-                } else {
                     ShowInterPort($('#txtInvFCountryCode').val(), $('#txtInterPort').val());
+                } else {
+                    ShowInterPort($('#txtInvCountryCode').val(), $('#txtInterPort').val());
                 }
             }
         });
@@ -819,9 +819,9 @@ End Code
     function SearchData(type) {
         switch (type) {
             case 'interport':
-                var CountryID = $('#txtInvFCountryCode').val();
+                var CountryID = $('#txtInvCountryCode').val();
                 if ($('#txtJobType').val() == "IMPORT") {
-                    CountryID = $('#txtInvCountryCode').val();
+                    CountryID = $('#txtInvFCountryCode').val();
                 }
                 $('#tbIPort').DataTable({
                     ajax: {
