@@ -8,7 +8,9 @@ Public Class CJobOrder
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
-
+    Public Sub SetConnect(pConnStr As String)
+        m_ConnStr = pConnStr
+    End Sub
     Private m_BranchCode As String
     Public Property BranchCode As String
         Get
@@ -931,6 +933,7 @@ Public Class CJobOrder
     End Sub
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
+        Dim pass As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
@@ -944,9 +947,17 @@ Public Class CJobOrder
                                 dr("BranchCode") = Me.BranchCode
                                 dr("JNo") = Me.JNo
                                 dr("JRevise") = Me.JRevise
-                                dr("ConfirmDate") = Me.ConfirmDate
+                                If Me.ConfirmDate.Year > 2000 Then
+                                    dr("ConfirmDate") = Me.ConfirmDate
+                                End If
+                                pass = "1"
                                 dr("CPolicyCode") = Me.CPolicyCode
-                                dr("DocDate") = Me.DocDate
+                                If Me.DocDate.Year > 2000 Then
+                                    dr("DocDate") = Me.DocDate
+                                Else
+                                    dr("DocDate") = DateTime.Today
+                                End If
+                                pass = "2"
                                 dr("CustCode") = Me.CustCode
                                 dr("CustBranch") = Me.CustBranch
                                 dr("CustContactName") = Me.CustContactName
@@ -969,29 +980,50 @@ Public Class CJobOrder
                                 dr("InvProductUnit") = Me.InvProductUnit
                                 dr("InvCurUnit") = Me.InvCurUnit
                                 dr("InvCurRate") = Me.InvCurRate
-                                dr("ImExDate") = Me.ImExDate
+                                If Me.ImExDate.Year > 2000 Then
+                                    dr("ImExDate") = Me.ImExDate
+                                End If
+                                pass = "3"
                                 dr("BLNo") = Me.BLNo
                                 dr("BookingNo") = Me.BookingNo
                                 dr("ClearPort") = Me.ClearPort
                                 dr("ClearPortNo") = Me.ClearPortNo
-                                dr("ClearDate") = Me.ClearDate
-                                dr("LoadDate") = Me.LoadDate
+                                If Me.ClearDate.Year > 2000 Then
+                                    dr("ClearDate") = Me.ClearDate
+                                End If
+                                If Me.LoadDate.Year > 2000 Then
+                                    dr("LoadDate") = Me.LoadDate
+                                End If
+                                pass = "4"
                                 dr("ForwarderCode") = Me.ForwarderCode
                                 dr("AgentCode") = Me.AgentCode
                                 dr("VesselName") = Me.VesselName
-                                dr("ETDDate") = Me.ETDDate
-                                dr("ETADate") = Me.ETADate
+                                If Me.ETDDate.Year > 2000 Then
+                                    dr("ETDDate") = Me.ETDDate
+                                End If
+                                If Me.ETADate.Year > 2000 Then
+                                    dr("ETADate") = Me.ETADate
+                                End If
+                                pass = "5"
                                 dr("ETTime") = Me.ETTime
                                 dr("FNetPrice") = Me.FNetPrice
                                 dr("BNetPrice") = Me.BNetPrice
                                 dr("CancelReson") = Me.CancelReson
-                                dr("CancelDate") = Me.CancelDate
-                                dr("CancelTime") = Me.CancelTime
+                                If Me.CancelDate.Year > 2000 Then
+                                    dr("CancelDate") = Me.CancelDate
+                                    dr("CancelTime") = Me.CancelTime
+                                End If
+                                pass = "6"
                                 dr("CancelProve") = Me.CancelProve
-                                dr("CancelProveDate") = Me.CancelProveDate
-                                dr("CancelProveTime") = Me.CancelProveTime
-                                dr("CloseJobDate") = Me.CloseJobDate
-                                dr("CloseJobTime") = Me.CloseJobTime
+                                If Me.CancelProveDate.Year > 2000 Then
+                                    dr("CancelProveDate") = Me.CancelProveDate
+                                    dr("CancelProveTime") = Me.CancelProveTime
+                                End If
+                                If Me.CloseJobDate.Year > 2000 Then
+                                    dr("CloseJobDate") = Me.CloseJobDate
+                                    dr("CloseJobTime") = Me.CloseJobTime
+                                End If
+                                pass = "7"
                                 dr("CloseJobBy") = Me.CloseJobBy
                                 dr("DeclareType") = Me.DeclareType
                                 dr("DeclareNumber") = Me.DeclareNumber
@@ -1000,10 +1032,15 @@ Public Class CJobOrder
                                 dr("Ty19BIS") = Me.Ty19BIS
                                 dr("TyClearTax") = Me.TyClearTax
                                 dr("TyClearTaxReson") = Me.TyClearTaxReson
-                                dr("EstDeliverDate") = Me.EstDeliverDate
-                                dr("EstDeliverTime") = Me.EstDeliverTime
+                                If Me.EstDeliverDate.Year > 2000 Then
+                                    dr("EstDeliverDate") = Me.EstDeliverDate
+                                    dr("EstDeliverTime") = Me.EstDeliverTime
+                                End If
+                                pass = "8"
                                 dr("TotalContainer") = Me.TotalContainer
-                                dr("DutyDate") = Me.DutyDate
+                                If Me.DutyDate.Year > 2000 Then
+                                    dr("DutyDate") = Me.DutyDate
+                                End If
                                 dr("DutyAmount") = Me.DutyAmount
                                 dr("DutyCustPayOther") = Me.DutyCustPayOther
                                 dr("DutyCustPayChqAmt") = Me.DutyCustPayChqAmt
@@ -1017,7 +1054,10 @@ Public Class CJobOrder
                                 dr("DutyLtdPayEPAYAmt") = Me.DutyLtdPayEPAYAmt
                                 dr("DutyLtdPayCashAmt") = Me.DutyLtdPayCashAmt
                                 dr("DutyLtdPayOtherAmt") = Me.DutyLtdPayOtherAmt
-                                dr("ConfirmChqDate") = Me.ConfirmChqDate
+                                If Me.ConfirmChqDate.Year > 2000 Then
+                                    dr("ConfirmChqDate") = Me.ConfirmChqDate
+                                End If
+                                pass = "9"
                                 dr("ShippingEmp") = Me.ShippingEmp
                                 dr("ShippingCmd") = Me.ShippingCmd
                                 dr("TotalGW") = Me.TotalGW
@@ -1037,19 +1077,20 @@ Public Class CJobOrder
                                 dr("MAWB") = Me.MAWB
                                 dr("consigneecode") = Me.consigneecode
                                 dr("privilegests") = Me.privilegests
-
+                                pass = "10"
                             Catch ex As Exception
                                 msg = "[exception]" & ex.Message
                             End Try
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            msg = "Save Complete"
+                            pass = "11"
+                            msg = "Save " & Me.JNo & " Complete"
                         End Using
                     End Using
                     cn.Close()
                 End Using
             Catch e As Exception
-                msg = "[error]" & e.Message
+                msg = "[error" & pass & "]" & e.Message
             End Try
         End Using
         Return msg

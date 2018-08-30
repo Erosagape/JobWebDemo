@@ -1,5 +1,7 @@
-﻿Imports System.Web.Mvc
-Imports System.Xml
+﻿Imports System.Net
+Imports System.Net.Http
+Imports System.Web.Http
+Imports System.Web.Mvc
 Imports Newtonsoft.Json
 Namespace Controllers
     Public Class JobOrderController
@@ -10,11 +12,9 @@ Namespace Controllers
         Function ShowJob() As ActionResult
             Return View()
         End Function
-        <HttpGet()>
         Function GetAll() As ActionResult
             Return Content("Hi API is Running")
         End Function
-        <HttpGet()>
         Function GetJobSQL() As ActionResult
             Try
                 Dim oJob As New CJobOrder(jobWebConn)
@@ -37,7 +37,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Year")) Then
                     tSqlW &= " AND Year(DocDate)='" & Request.QueryString("Year") & "'"
                 End If
-                Dim oData = oJob.GetData(" WHERE JobStatus<>0 " & tSqlW)
+                Dim oData = oJob.GetData(" WHERE JNo<>'' " & tSqlW)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""job"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
@@ -45,7 +45,6 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
-        <HttpGet>
         Function GetJobYear() As ActionResult
             Try
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL("SELECT DISTINCT Year(DocDate) as JobYear from Job_Order")
@@ -55,7 +54,6 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
-        <HttpGet>
         Function GetJobDataDistinct() As ActionResult
             Try
                 Dim tSqlW As String = ""
@@ -69,7 +67,6 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
-        <HttpGet>
         Function GetFormJobLOV() As ActionResult
             Dim html As String = "
             <div id=""frmSearchCurr"" class=""modal fade"" role=""dialog""></div>
@@ -92,7 +89,6 @@ Namespace Controllers
 "
             Return Content(html, textContent)
         End Function
-        <HttpGet>
         Function GetNewJob() As ActionResult
             Try
                 Dim oJob As New CJobOrder(jobWebConn)
@@ -120,6 +116,15 @@ Namespace Controllers
             Catch ex As Exception
                 Return Content("{""job"":{""data"":[],""result"":""" & ex.Message & """}}", jsonContent)
             End Try
+        End Function
+        Function SaveJobData(<FromBody()> ByVal data As CJobOrder) As ActionResult
+            If Not IsNothing(data) Then
+                data.SetConnect(jobWebConn)
+                Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", data.BranchCode, data.JNo))
+                Return Content(msg, textContent)
+            Else
+                Return Content("No data to save", textContent)
+            End If
         End Function
     End Class
 End Namespace

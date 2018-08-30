@@ -17,13 +17,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:36:16</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>08/29/2018 16:41:34</publishTime>
+      <publishTime>08/30/2018 17:20:20</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>08/29/2018 16:41:34</publishTime>
+      <publishTime>08/30/2018 17:20:20</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>08/29/2018 16:41:33</publishTime>
+      <publishTime>08/30/2018 17:20:19</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>05/24/2018 13:38:22</publishTime>
@@ -269,7 +269,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 15:59:57</publishTime>
     </File>
     <File Include="index.html">
-      <publishTime>02/08/2018 16:49:59</publishTime>
+      <publishTime>08/30/2018 13:12:03</publishTime>
     </File>
     <File Include="Models/dsJobOrder.xsc">
       <publishTime>04/26/2018 16:54:37</publishTime>
@@ -557,10 +557,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:00:14</publishTime>
     </File>
     <File Include="Scripts/Func/combo.js">
-      <publishTime>08/21/2018 16:00:15</publishTime>
+      <publishTime>08/30/2018 14:14:19</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>08/21/2018 16:00:15</publishTime>
+      <publishTime>08/30/2018 16:50:25</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.js">
       <publishTime>04/26/2018 16:25:48</publishTime>
@@ -680,13 +680,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 17:26:53</publishTime>
     </File>
     <File Include="Views/index.html">
-      <publishTime>08/21/2018 17:44:01</publishTime>
+      <publishTime>08/30/2018 13:12:03</publishTime>
     </File>
     <File Include="Views/JobOrder/CreateJob.vbhtml">
-      <publishTime>08/29/2018 17:47:47</publishTime>
+      <publishTime>08/30/2018 17:20:06</publishTime>
     </File>
     <File Include="Views/JobOrder/ShowJob.vbhtml">
-      <publishTime>08/22/2018 11:30:32</publishTime>
+      <publishTime>08/30/2018 17:10:21</publishTime>
     </File>
     <File Include="Views/Master/Index.vbhtml">
       <publishTime>08/21/2018 17:26:53</publishTime>
@@ -695,7 +695,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:00:15</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.vbhtml">
-      <publishTime>08/21/2018 17:38:56</publishTime>
+      <publishTime>08/30/2018 12:47:02</publishTime>
     </File>
     <File Include="Views/web.config">
       <publishTime>08/21/2018 16:00:15</publishTime>
@@ -704,7 +704,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:00:15</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>08/29/2018 16:42:28</publishTime>
+      <publishTime>08/30/2018 16:23:06</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -1,16 +1,16 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>EasyShipping.NET</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Content/bootstrap.min.css">
-    <link rel="stylesheet" href="Content/jquery.datatables.min.css">
+    <link rel="stylesheet" href="Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="/Content/jquery.datatables.min.css" />
+    <title>Demo Job</title>
     <script src="Scripts/jquery-3.2.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
     <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="Scripts/Func/Util.js"></script>
-    <script src="Scripts/DataTables/jquery.dataTables.js"></script>
-    <script src="Scripts/Func/combo.js"></script>
 </head>
 <body>
     <div id="main" class="container">
@@ -215,7 +215,7 @@
         });
         function loadCombo() {
             loadBranch();
-            loadConfig('#cboJobType','JOB_TYPE');
+            loadConfig('#cboJobType', 'JOB_TYPE');
             loadConfig('#cboShipBy', 'SHIP_BY');
             loadConfig('#cboStatus', 'JOB_STATUS');
             loadYear();
@@ -258,6 +258,44 @@
         }
         function CreateNewJob() {
             window.open('joborder/createjob?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val());
+        }
+        function loadBranch() {
+            $('#cboBranch').empty();
+            $.get('Config/getBranch').done(function (r) {
+                var dr = r.branch.data;
+                if (dr.length > 0) {
+                    for (var i = 0; i < dr.length; i++) {
+                        $('#cboBranch')
+                            .append($('<option>', { value: dr[i].Code })
+                                .text(dr[i].Code + ' / ' + dr[i].BrName));
+                    }
+                }
+            });
+        }
+        function loadConfig(e, code) {
+            $(e).empty();
+            $.get('Config/getConfig?Code=' + code).done(function (r) {
+                var dr = r.config.data;
+                if (dr.length > 0) {
+                    for (var i = 0; i < dr.length; i++) {
+                        $(e).append($('<option>', { value: dr[i].ConfigKey })
+                            .text(dr[i].ConfigKey + ' / ' + dr[i].ConfigValue));
+                    }
+                }
+            });
+        }
+        function loadYear() {
+            $('#cboYear').empty();
+            $.get('joborder/getjobyear').done(function (r) {
+                var dr = r[0].Table;
+                if (dr.length > 0) {
+                    for (var i = 0; i < dr.length; i++) {
+                        $('#cboYear')
+                            .append($('<option>', { value: dr[i].JobYear })
+                                .text(dr[i].JobYear));
+                    }
+                }
+            });
         }
     </script>
 </body>

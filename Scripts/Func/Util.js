@@ -47,3 +47,10 @@ function CDate(sqlDateString) {
         return '';
     }
 }
+function CNum(data) {
+    if (data == '') {
+        return 0;
+    } else {
+        return data;
+    }
+}

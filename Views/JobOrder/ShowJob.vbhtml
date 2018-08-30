@@ -635,11 +635,14 @@ End Code
                 </div>
             </div>
         </div>
+        <hr/>
+        <button id="btnSave" class="btn btn-default" onclick="SaveData()">Save</button>
     </div>
 </div>
 <script type="text/javascript">
     //define variables
     var path = '@Url.Content("~")';
+    var rec = {};
     $(document).ready(function () {
         //load list of values
         $.get(path + 'JobOrder/GetFormJobLOV', function (response) {
@@ -1631,6 +1634,7 @@ End Code
             .done(function (r) {
                 if (r.job.data.length > 0) {
                     var dr = r.job.data[0];
+                    rec = dr;
                     $('#txtCustCode').val(dr.CustCode);
                     $('#txtCustBranch').val(dr.CustBranch);
                     ShowCustomer(dr.CustCode, dr.CustBranch, false);
@@ -1682,7 +1686,7 @@ End Code
                     $('#txtVesselName').val(dr.VesselName);
                     $('#txtMVesselName').val(dr.MVesselName);
                     $('#txtInterPort').val(dr.InvInterPort);
-                    if (dr.JobType==1) {
+                    if (dr.JobType=="1") {
                         ShowInterPort(dr.InvCountry, dr.InvInterPort);
                     } else {
                         ShowInterPort(dr.InvFCountry, dr.InvInterPort);
@@ -1723,5 +1727,108 @@ End Code
                     $('#txtCustPaidTotal').val(dr.DutyCustPayChqAmt + dr.DutyCustPayCashAmt + dr.DutyCustPayEPAYAmt + dr.DutyCustPayOtherAmt+ dr.DutyCustPayCardAmt+dr.DutyCustPayBankAmt);
                 }
             });
+    }
+    function GetDataSave(dr) {
+        dr.CustCode = $('#txtCustCode').val();
+        dr.CustBranch = $('#txtCustBranch').val();
+        dr.JRevised = $('#txtRevised').val();
+        dr.DocDate= $('#txtDocDate').val();
+        dr.QNo=$('#txtQNo').val();
+        dr.Revised=$('#txtQRevise').val();
+        dr.InvNo=$('#txtCustInvNo').val();
+        dr.DeclareNumber=$('#txtDeclareNo').val();        
+        dr.Commission=$('#txtCommission').val();
+        dr.CustContactName=$('#txtContactName').val();
+        if ($('#txtConfirmDate').val()!="") dr.ConfirmDate=$('#txtConfirmDate').val();
+        
+        dr.TRemark = $('#txtJobCondition').val();
+
+        if ($('#txtCloseDate').val() != "") dr.CloseJobDate = $('#txtCloseDate').val();
+        
+        dr.CustRefNO=$('#txtCustPoNo').val();
+        dr.Description=$('#txtDescription').val();
+        dr.CancelReson=$('#txtCancelReason').val();
+        
+        dr.consigneecode=$('#txtConsignee').val();        
+
+        if ($('#txtCancelDate').val() != "") dr.CancelDate = $('#txtCancelDate').val();
+        
+        dr.ProjectName=$('#txtProjectName').val();
+        dr.InvProduct=$('#txtInvProduct').val();
+        dr.InvProductQty = CNum($('#txtInvQty').val());
+        dr.InvProductUnit=$('#txtInvUnit').val();
+        dr.TotalQty = CNum($('#txtInvPackQty').val());
+        dr.InvTotal = CNum($('#txtInvTotal').val());
+        dr.Measurement=$('#txtMeasurement').val();
+        dr.TotalNW = CNum($('#txtNetWeight').val());
+        dr.TotalGW = CNum($('#txtGrossWeight').val());
+        dr.GWUnit=$('#txtWeightUnit').val();
+        dr.InvCurUnit=$('#txtInvCurrency').val();
+        dr.InvCurRate = CNum($('#txtInvCurRate').val());
+        dr.InvCountry=$('#txtInvCountryCode').val();
+        dr.InvFCountry = $('#txtInvFCountryCode').val();
+
+        dr.BookingNo=$('#txtBookingNo').val();
+        dr.BLNo=$('#txtBLNo').val();
+        dr.HAWB=$('#txtHAWB').val();
+        dr.MAWB=$('#txtMAWB').val();
+        dr.ForwarderCode=$('#txtForwarder').val();
+        
+        dr.VesselName=$('#txtVesselName').val();
+        dr.MVesselName=$('#txtMVesselName').val();
+        dr.InvInterPort=$('#txtInterPort').val();
+        dr.AgentCode=$('#txtTransporter').val();
+        
+        dr.TotalContainer = $('#txtTotalCTN').val();
+
+        if ($('#txtETDDate').val() != "") dr.ETDDate = $('#txtETDDate').val();
+        if ($('#txtETADate').val() != "") dr.ETADate = $('#txtETADate').val();
+        if ($('#txtLoadDate').val() != "") dr.LoadDate = $('#txtLoadDate').val();
+        if ($('#txtDeliveryDate').val() != "") dr.EstDeliverDate = $('#txtDeliveryDate').val();
+        if ($('#txtEDIDate').val() != "") dr.ImExDate = $('#txtEDIDate').val();
+        if ($('#txtReadyClearDate').val() != "") dr.ReadyToClearDate = $('#txtReadyClearDate').val();
+        if ($('#txtDutyDate').val() != "") dr.DutyDate = $('#txtDutyDate').val();
+        if ($('#txtClearDate').val() != "") dr.ClearDate = $('#txtClearDate').val();
+        
+        dr.DeclareType=$('#txtDeclareType').val();        
+        dr.ClearPort=$('#txtReleasePort').val();
+        
+        dr.DutyAmount = CNum($('#txtDutyAmt').val());
+        dr.ShippingEmp=$('#txtShipping').val();
+        
+        dr.ShippingCmd=$('#txtShippingCmd').val();
+
+        dr.DutyLtdPayChqAmt = CNum($('#txtComPaidChq').val());
+        dr.DutyLtdPayCashAmt = CNum($('#txtComPaidCash').val());
+        dr.DutyLtdPayEPAYAmt = CNum($('#txtComPaidEPay').val());
+        dr.DutyLtdPayOtherAmt = CNum($('#txtComPaidOthers').val());
+        dr.DutyLtdPayOther = CNum($('#txtComOthersPayBy').val());
+        
+        dr.DutyCustPayChqAmt = CNum($('#txtCustPaidChq').val());
+        dr.DutyCustPayCashAmt = CNum($('#txtCustPaidCash').val());
+        dr.DutyCustPayCardAmt = CNum($('#txtCustPaidCard').val());
+        dr.DutyCustPayBankAmt = CNum($('#txtCustPaidBank').val());
+        dr.DutyCustPayEPAYAmt = CNum($('#txtCustPaidEPay').val());
+        dr.DutyCustPayOtherAmt = CNum($('#txtCustPaidOthers').val());
+        dr.DutyCustPayOther = CNum($('#txtCustOthersPayBy').val());
+        
+        return dr;
+    }
+
+    function SaveData() {
+        if (rec.JNo != undefined) {
+            var obj = GetDataSave(rec);
+            $.ajax({
+                url: "@Url.Action("SaveJobData", "JobOrder")",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ data: obj }),
+                success: function (response) {
+                    alert(response);                    
+                }
+            });
+        } else {
+            alert('No data to save');
+        }
     }
 </script>
