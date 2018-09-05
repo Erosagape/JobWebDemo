@@ -147,9 +147,12 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\jquery.datatables.min.css" />
+    <Content Include="Content\sheets-of-paper-a4.css" />
+    <Content Include="Content\sheets-of-paper.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
+    <Content Include="PrintJob.html" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />

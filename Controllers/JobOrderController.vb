@@ -12,7 +12,7 @@ Namespace Controllers
         Function ShowJob() As ActionResult
             Return View()
         End Function
-        Function GetAll() As ActionResult
+        Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function
         Function GetJobSQL() As ActionResult
