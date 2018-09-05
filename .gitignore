@@ -234,3 +234,8 @@ obj/Release/JobWebApi.dll
 obj/Release/_WPPLastBuildInfo.txt
 Bin/release/JobWebApi.pdb
 Bin/release/JobWebApi.dll
+*.cache
+obj/Release/JobWebApi.vbprojResolveAssemblyReference.cache
+obj/Release/JobWebApi.dll
+obj/Release/JobWebApi.pdb
+obj/Release/JobWebApi.vbprojResolveAssemblyReference.cache
