@@ -111,16 +111,17 @@ Namespace Controllers
                 Dim result As String = oJob.SaveData(" WHERE BranchCode='" & oJob.BranchCode & "' And JNo='" & oJob.JNo & "'")
 
                 Dim json As String = JsonConvert.SerializeObject(oJob)
-                json = "{""job"":{""data"":" & json & ",""result"":""" & result & """}}"
+                json = "{""job"":{""data"":" & json & ",""status"":""Y"",""result"":""" & result & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("{""job"":{""data"":[],""result"":""" & ex.Message & """}}", jsonContent)
+                Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function SaveJobData(<FromBody()> ByVal data As CJobOrder) As ActionResult
             If Not IsNothing(data) Then
                 data.SetConnect(jobWebConn)
                 Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", data.BranchCode, data.JNo))
+                'Dim msg = JsonConvert.SerializeObject(data)
                 Return Content(msg, textContent)
             Else
                 Return Content("No data to save", textContent)

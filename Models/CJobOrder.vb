@@ -1011,17 +1011,17 @@ Public Class CJobOrder
                                 dr("CancelReson") = Me.CancelReson
                                 If Me.CancelDate.Year > 2000 Then
                                     dr("CancelDate") = Me.CancelDate
-                                    dr("CancelTime") = Me.CancelTime
+                                    'dr("CancelTime") = Me.CancelTime
                                 End If
                                 pass = "6"
                                 dr("CancelProve") = Me.CancelProve
                                 If Me.CancelProveDate.Year > 2000 Then
                                     dr("CancelProveDate") = Me.CancelProveDate
-                                    dr("CancelProveTime") = Me.CancelProveTime
+                                    'dr("CancelProveTime") = Me.CancelProveTime
                                 End If
                                 If Me.CloseJobDate.Year > 2000 Then
                                     dr("CloseJobDate") = Me.CloseJobDate
-                                    dr("CloseJobTime") = Me.CloseJobTime
+                                    'dr("CloseJobTime") = Me.CloseJobTime
                                 End If
                                 pass = "7"
                                 dr("CloseJobBy") = Me.CloseJobBy
@@ -1034,7 +1034,7 @@ Public Class CJobOrder
                                 dr("TyClearTaxReson") = Me.TyClearTaxReson
                                 If Me.EstDeliverDate.Year > 2000 Then
                                     dr("EstDeliverDate") = Me.EstDeliverDate
-                                    dr("EstDeliverTime") = Me.EstDeliverTime
+                                    'dr("EstDeliverTime") = Me.EstDeliverTime
                                 End If
                                 pass = "8"
                                 dr("TotalContainer") = Me.TotalContainer

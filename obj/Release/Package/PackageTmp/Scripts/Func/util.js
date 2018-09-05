@@ -13,18 +13,32 @@ function getQueryString(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
-function JSDate(jsonDateString) {
+function JSDate(sqlDateString) {
     try {
-        var jsDate = new Date(parseInt(jsonDateString.replace('/Date(', '')));
-        var month = jsDate.getMonth() + 1;
-        var day = jsDate.getDate();
-        var year = jsDate.getFullYear();
-        if (year < 2000) {
+        var jsDate = sqlDateString.substr(0, 10);
+        var month = jsDate.substr(5, 2);
+        var day = jsDate.substr(8, 2);
+        var year = jsDate.substr(0, 4);
+        if (year < '2000') {
             return '';
         }
-        if (month <= 9) month = '0' + month;
-        if (day <= 9) day = '0' + day;
-        var date = year + "-" + month + "-" + day;
+        var date = Number(year)+543 + "-" + month + "-" + day;
+        return date;
+    }
+    catch (e) {
+        return '';
+    }
+}
+function JSTime(jsonDateString) {
+    try {
+        var jsDate = new Date(parseInt(jsonDateString.replace('/Date(', '')));
+        var hour = jsDate.getHours();
+        var min = jsDate.getMinutes();
+        var sec = jsDate.getSeconds();
+        if (hour <= 9) hour = '0' + hour;
+        if (min <= 9) min = '0' + min;
+        if (sec <= 9) sec = '0' + sec;
+        var date = hour + ":" + min + ":" + sec;
         return date;
     }
     catch (e) {
@@ -41,6 +55,22 @@ function CDate(sqlDateString) {
             return '';
         }
         var date = day + "/" + month + "/" + year;
+        return date;
+    }
+    catch (e) {
+        return '';
+    }
+}
+function SQLDate(sqldateString) {
+    try {
+        var jsDate = sqldateString.substr(0, 10);
+        var month = jsDate.substr(5, 2);
+        var day = jsDate.substr(8, 2);
+        var year = jsDate.substr(0, 4);
+        if (year < '2000') {
+            return '';
+        }
+        var date = year + "-" + month + "-" + day;
         return date;
     }
     catch (e) {

@@ -144,6 +144,7 @@ End Code
             <div class="modal-body">
                 <input id="txtJNo" type="text" disabled />
                 <button class="btn btn-primary" id="btnViewJob" onclick="OpenJob()">VIEW JOB</button>
+                <div id="dvResp"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -476,41 +477,51 @@ End Code
             });
     }
     function CreateJob() {
-        var str = '?Prefix=JIDE';
-        str += '&Branch=' + $('#txtBranchCode').val();
-        str += '&JType=' + $('#cboJobType').val().substr(0,2);
-        str += '&SBy=' + $('#cboShipBy').val().substr(0,2);
-        //alert(str);
-        $.get(path + 'JobOrder/GetNewJob' + str)
+        var strParam = path + 'JobOrder/GetNewJob?Prefix=JIDE';
+        strParam += '&Branch=' + $('#txtBranchCode').val();
+        strParam += '&JType=' + $('#cboJobType').val().substr(0,2);
+        strParam += '&SBy=' + $('#cboShipBy').val().substr(0,2);
+        $.get(strParam)
             .done(function (r) {
-                var data = r.job.data;
+                if (r.length == 0) {
+                    alert(strParam);
+                    return;
+                }
+                if (r.job.status == "Y") {
+                    var data = r.job.data;
 
-                data.CustCode = $('#txtCustCode').val();
-                data.CustBranch = $('#txtCustBranch').val();
-                data.CSCode = $('#txtCSCode').val();
-                data.DocDate = $('#txtJobDate').val();
-                data.consigneecode = $('#txtConsignee').val();
-                data.CustContactName = $('#txtContactPerson').val();
-                data.QNo = $('#txtQNo').val();
-                data.Revise = $('#txtRevise').val();
-                data.InvNo = $('#txtCustInv').val();
-                data.CustRefNO = $('#txtCustPO').val();
-                data.HAWB = $('#txtHAWB').val();
-                data.MAWB = $('#txtMAWB').val();
-                $('#txtJNo').val(data.JNo);
-                PostData(data);
+                    data.CustCode = $('#txtCustCode').val();
+                    data.CustBranch = $('#txtCustBranch').val();
+                    data.CSCode = $('#txtCSCode').val();
+                    data.DocDate = JSDate($('#txtJobDate').val());
+                    data.consigneecode = $('#txtConsignee').val();
+                    data.CustContactName = $('#txtContactPerson').val();
+                    data.QNo = $('#txtQNo').val();
+                    data.Revise = $('#txtRevise').val();
+                    data.InvNo = $('#txtCustInv').val();
+                    data.CustRefNO = $('#txtCustPO').val();
+                    data.HAWB = $('#txtHAWB').val();
+                    data.MAWB = $('#txtMAWB').val();
+                    $('#txtJNo').val(data.JNo);
+                    PostData(data);
+                } else {
+                    alert(r.job.result);
+                }
                 //alert(r.job.result + '=>' + data.JNo);
             });
     }
     function PostData(obj) {
+        var jsonString = JSON.stringify({ data: obj });
+        //alert(jsonString);
         $.ajax({
             url: "@Url.Action("SaveJobData", "JobOrder")",
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({ data: obj }),
+            data: jsonString,
             success: function (response) {                
+                //alert(response);
+                $('#dvResp').html(response);
                 $('#frmShowJob').modal('show');
-                alert(response);
             }
         });
     }

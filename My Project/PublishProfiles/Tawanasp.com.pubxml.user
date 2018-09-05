@@ -17,13 +17,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:36:16</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>08/30/2018 17:20:20</publishTime>
+      <publishTime>09/05/2018 15:29:47</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>08/30/2018 17:20:20</publishTime>
+      <publishTime>09/05/2018 15:29:47</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>08/30/2018 17:20:19</publishTime>
+      <publishTime>09/05/2018 15:29:47</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>05/24/2018 13:38:22</publishTime>
@@ -560,7 +560,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/30/2018 14:14:19</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>08/30/2018 16:50:25</publishTime>
+      <publishTime>05/09/2018 15:14:42</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.js">
       <publishTime>04/26/2018 16:25:48</publishTime>
@@ -683,10 +683,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/30/2018 13:12:03</publishTime>
     </File>
     <File Include="Views/JobOrder/CreateJob.vbhtml">
-      <publishTime>08/30/2018 17:20:06</publishTime>
+      <publishTime>05/09/2018 14:40:38</publishTime>
     </File>
     <File Include="Views/JobOrder/ShowJob.vbhtml">
-      <publishTime>08/30/2018 17:10:21</publishTime>
+      <publishTime>05/09/2018 14:59:46</publishTime>
     </File>
     <File Include="Views/Master/Index.vbhtml">
       <publishTime>08/21/2018 17:26:53</publishTime>
@@ -704,7 +704,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:00:15</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>08/30/2018 16:23:06</publishTime>
+      <publishTime>09/05/2018 14:13:16</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -5,10 +5,10 @@ End Code
 <div Class="panel-body">
     <div class="container">
         <label for="txtBranchCode">Branch :</label><input type="text" style="width:30px" id="txtBranchCode" disabled />
-        <input type="text" style="width:120px" id="txtBranchName" disabled />
-        <label for="txtJNo">Job No :</label><input type="text" style="width:120px" id="txtJNo" disabled />
+        <input type="text" style="width:130px" id="txtBranchName" disabled />
+        <label for="txtJNo">Job No :</label><input type="text" style="width:130px" id="txtJNo" disabled />
         <label for="txtRevised">Revised :</label><input type="text" style="width:30px" id="txtRevised" disabled />
-        <label for="txtDocDate">Open Date :</label><input type="text" style="width:80px" id="txtDocDate" disabled />
+        <label for="txtDocDate">Open Date :</label><input type="date" style="width:130px" id="txtDocDate" disabled />
         <label for="txtJobStatus">Job Status :</label><input type="text" style="width:130px" id="txtJobStatus" disabled />
 
         <ul class="nav nav-tabs">
@@ -49,14 +49,14 @@ End Code
                 <div class="row">
                     <div class="col-md-8">
                         <label for="txtCustCode">Customer :</label>
-                        <input type="text" id="txtCustCode" style="width:100px" />
+                        <input type="text" id="txtCustCode" style="width:130px" />
                         <input type="text" id="txtCustBranch" style="width:40px" />
                         <input type="button" id="btnBrowseCust" value="..." onclick="SearchData('CUSTOMER')" />
                         <input type="text" id="txtCustName" style="width:450px" disabled />
                     </div>
                     <div class="col-md-4">
                         <label for="txtQNo">Quotation : </label>
-                        <input type="text" id="txtQNo" style="width:120px" />
+                        <input type="text" id="txtQNo" style="width:130px" />
                         <input type="text" id="txtQRevise" style="width:40px" />
                     </div>
                 </div>
@@ -68,7 +68,7 @@ End Code
                     </div>
                     <div class="col-md-4">
                         <label for="txtManagerCode">Sales By :</label>
-                        <input type="text" id="txtManagerCode" style="width:100px" disabled />
+                        <input type="text" id="txtManagerCode" style="width:130px" disabled />
                     </div>
                 </div>
                 <div class="row">
@@ -80,7 +80,7 @@ End Code
                     </div>
                     <div class="col-md-4">
                         <label for="txtCommission">Commission :</label>
-                        <input type="text" id="txtCommission" style="width:100px" />
+                        <input type="text" id="txtCommission" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
@@ -92,7 +92,7 @@ End Code
                     </div>
                     <div class="col-md-4">
                         <label for="txtConfirmDate">Confirm Date :</label>
-                        <input type="text" id="txtConfirmDate" style="width:80px" />
+                        <input type="date" id="txtConfirmDate" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
@@ -104,7 +104,7 @@ End Code
                     </div>
                     <div class="col-md-4">
                         <label for="txtCloseBy">Close By :</label>
-                        <input type="text" id="txtCloseBy" style="width:100px" disabled />
+                        <input type="text" id="txtCloseBy" style="width:130px" disabled />
                     </div>
                 </div>
                 <div class="row">
@@ -114,7 +114,7 @@ End Code
                     </div>
                     <div class="col-md-4">
                         <label for="txtCloseDate">Close Date : </label>
-                        <input type="text" id="txtCloseDate" style="width:80px" disabled />
+                        <input type="date" id="txtCloseDate" style="width:130px" disabled />
                     </div>
                 </div>
                 <div class="row">
@@ -123,7 +123,7 @@ End Code
                         <input type="text" id="txtCustPoNo" style="width:300px" />
                     </div>
                     <div class="col-md-4">
-                        <input type="button" id="btnCloseJob" class="btn btn-warning" value="Close/Reopen" style="width:100px" />
+                        <input type="button" id="btnCloseJob" class="btn btn-warning" value="Close/Reopen" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
@@ -135,20 +135,20 @@ End Code
                     </div>
                     <div class="col-md-4">
                         <label for="txtCancelBy">Cancel By :</label>
-                        <input type="text" id="txtCancelBy" style="width:100px" disabled />
+                        <input type="text" id="txtCancelBy" style="width:130px" disabled />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8">
                         <label for="txtConsignee">Billing Place :</label>
-                        <input type="text" id="txtConsignee" style="width:100px" />
+                        <input type="text" id="txtConsignee" style="width:130px" />
                         <input type="text" id="txtConsBranch" style="width:40px" />
                         <input type="button" id="btnBrowseCons" value="..." onclick="SearchData('CONSIGNEE')" />
                         <input type="text" id="txtConsignName" style="width:450px" disabled />
                     </div>
                     <div class="col-md-4">
                         <label for="txtCancelDate">Cancel Date :</label>
-                        <input type="text" id="txtCancelDate" style="width:80px" disabled />
+                        <input type="date" id="txtCancelDate" style="width:130px" disabled />
                     </div>
                 </div>
                 <div class="row">
@@ -158,7 +158,7 @@ End Code
                         <textarea id="txtBillEAddress" style="width:200px" disabled></textarea>
                     </div>
                     <div class="col-md-4">
-                        <input type="button" id="btnCancelJob" class="btn btn-danger" value="Cancel Job" style="width:100px" />
+                        <input type="button" id="btnCancelJob" class="btn btn-danger" value="Cancel Job" style="width:130px" />
                     </div>
                 </div>
             </div>
@@ -182,17 +182,17 @@ End Code
                     </div>
                     <div class="col-md-7">
                         <label for="txtInvQty">Qty :</label>
-                        <input type="text" id="txtInvQty" style="width:80px" />
+                        <input type="text" id="txtInvQty" style="width:130px" />
                         <input type="text" id="txtInvUnit" style="width:40px" />
                         <input type="button" id="btnBrowseUnit" value="..." onclick="SearchData('invproductunit')" />
                         <label for="txtInvPackQty">Package.Total :</label>
-                        <input type="text" id="txtInvPackQty" style="width:80px" />
+                        <input type="text" id="txtInvPackQty" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-5">
                         <label for="txtInvTotal">Inv.Total :</label>
-                        <input type="text" id="txtInvTotal" style="width:100px" />
+                        <input type="text" id="txtInvTotal" style="width:130px" />
                         <label for="txtMeasurement">Measurement(M3) :</label>
                         <input type="text" id="txtMeasurement" style="width:40px" />
                     </div>
@@ -231,9 +231,9 @@ End Code
                     </div>
                     <div class="col-md-7">
                         <label for="txtHAWB">House BL/AWB :</label>
-                        <input type="text" id="txtHAWB" style="width:100px" />
+                        <input type="text" id="txtHAWB" style="width:130px" />
                         <label for="txtMAWB">Master BL/AWB :</label>
-                        <input type="text" id="txtMAWB" style="width:100px" />
+                        <input type="text" id="txtMAWB" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
@@ -243,7 +243,7 @@ End Code
                     </div>
                     <div class="col-md-7">
                         <label for="txtForwarder">Agent:</label>
-                        <input type="text" id="txtForwarder" style="width:100px" />
+                        <input type="text" id="txtForwarder" style="width:130px" />
                         <input type="button" id="btnBrowseFwdr" value="..." onclick="SearchData('forwarder')" />
                         <input type="text" id="txtForwarderName" style="width:300px" disabled />
                     </div>
@@ -263,13 +263,13 @@ End Code
                 <div class="row">
                     <div class="col-md-5">
                         <label for="txtInterPort">Inter Port:</label>
-                        <input type="text" id="txtInterPort" style="width:80px" />
+                        <input type="text" id="txtInterPort" style="width:130px" />
                         <input type="button" id="btnBrowseIPort" value="..." onclick="SearchData('interport')" />
                         <input type="text" id="txtInterPortName" style="width:160px" disabled />
                     </div>
                     <div class="col-md-7">
                         <label for="txtTransporter">Transporter :</label>
-                        <input type="text" id="txtTransporter" style="width:80px" />
+                        <input type="text" id="txtTransporter" style="width:130px" />
                         <input type="button" id="btnBrowseTrans" value="..." onclick="SearchData('agent')" />
                         <input type="text" id="txtTransporterName" style="width:250px" disabled />
                     </div>
@@ -277,7 +277,7 @@ End Code
                 <div class="row">
                     <div class="col-md-5">
                         <label for="txtTotalCTN">Total Containers :</label>
-                        <input type="text" id="txtTotalCTN" style="width:80px" />
+                        <input type="text" id="txtTotalCTN" style="width:130px" />
                         <input type="button" id="btnGetCTN" value="..." onclick="SearchData('SERVUNIT')" />
                         <label for="cboSelCtnType">Term : </label>
                         <select id="cboSelCtnType" class="dropdown">
@@ -287,9 +287,9 @@ End Code
                         </select>
                     </div>
                     <div class="col-md-7">
-                        <label for="txtETDDate">ETD Date:</label><input type="text" style="width:80px" id="txtETDDate" />
-                        <label for="txtETADate">ETA Date:</label><input type="text" style="width:80px" id="txtETADate" />
-                        <label for="txtLoadDate">Load Date:</label><input type="text" style="width:80px" id="txtLoadDate" />
+                        <label for="txtETDDate">ETD Date:</label><input type="date" style="width:130px" id="txtETDDate" />
+                        <label for="txtETADate">ETA Date:</label><input type="date" style="width:130px" id="txtETADate" />
+                        <label for="txtLoadDate">Load Date:</label><input type="date" style="width:130px" id="txtLoadDate" />
                     </div>
                 </div>
                 <div class="row">
@@ -306,7 +306,7 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="txtDeliveryDate">Delivery Date :</label><input type="text" style="width:80px" id="txtDeliveryDate" />
+                        <label for="txtDeliveryDate">Delivery Date :</label><input type="date" style="width:130px" id="txtDeliveryDate" />
                         <input type="button" class="btn btn-success" value="Print Delivery Slip" />
                     </div>
                 </div>
@@ -315,35 +315,35 @@ End Code
                 <div class="row">
                     <div class="col-md-3">
                         <label for="txtEDIDate">EDI Date :</label>
-                        <input type="text" id="txtEDIDate" style="width:80px" />
+                        <input type="date" id="txtEDIDate" style="width:130px" />
                     </div>
                     <div class="col-md-3">
                         <label for="txtReadyClearDate">Ready Clear :</label>
-                        <input type="text" id="txtReadyClearDate" style="width:80px" />
+                        <input type="date" id="txtReadyClearDate" style="width:130px" />
                     </div>
                     <div class="col-md-3">
                         <label for="txtDutyDate">Duty Date :</label>
-                        <input type="text" id="txtDutyDate" style="width:80px" />
+                        <input type="date" id="txtDutyDate" style="width:130px" />
                     </div>
                     <div class="col-md-3">
                         <label for="txtClearDate">Clear Date :</label>
-                        <input type="text" id="txtClearDate" style="width:80px" />
+                        <input type="date" id="txtClearDate" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <label for="txtDeclareType">Declare Type :</label>
-                        <input type="text" id="txtDeclareType" style="width:80px" />
+                        <input type="text" id="txtDeclareType" style="width:130px" />
                         <input type="button" id="btnBrowseDCType" value="..." onclick="SearchData('RFDCT')" />
                         <input type="text" id="txtDeclareTypeName" style="width:200px" disabled />
                     </div>
                     <div class="col-md-3">
                         <label for="txtDeclareNo">Declare No :</label>
-                        <input type="text" id="txtDeclareNo" style="width:100px" />
+                        <input type="text" id="txtDeclareNo" style="width:130px" />
                     </div>
                     <div class="col-md-3">
                         <label for="txtDutyAmt">Duty Amt :</label>
-                        <input type="text" id="txtDutyAmt" style="width:100px" />
+                        <input type="text" id="txtDutyAmt" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
@@ -395,7 +395,7 @@ End Code
                 <div class="row">
                     <div class="col-md-6">
                         <label for="txtShipping">Shipping Staff :</label>
-                        <input type="text" id="txtShipping" style="width:80px" />
+                        <input type="text" id="txtShipping" style="width:130px" />
                         <input type="button" id="btnBrowseShipping" value="..." onclick="SearchData('user')" />
                         <input type="text" id="txtShippingName" style="width:200px" disabled />
                     </div>
@@ -417,7 +417,7 @@ End Code
                                     Cheque:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidChq" style="width:80px" /><br />
+                                    <input type="text" id="txtComPaidChq" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -426,7 +426,7 @@ End Code
                                     Cash:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidCash" style="width:80px" /><br />
+                                    <input type="text" id="txtComPaidCash" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -435,16 +435,16 @@ End Code
                                     E-Payment:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidEPay" style="width:80px" /><br />
+                                    <input type="text" id="txtComPaidEPay" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>
-                                    Others:<input type="text" id="txtComOthersPayBy" style="width:100px" />
+                                    Others:<input type="text" id="txtComOthersPayBy" style="width:130px" />
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidOthers" style="width:80px" /><br />
+                                    <input type="text" id="txtComPaidOthers" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -453,7 +453,7 @@ End Code
                                     Total Paid:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidTotal" style="width:100px" />
+                                    <input type="text" id="txtComPaidTotal" style="width:130px" />
                                 </td>
                             </tr>
                         </table>
@@ -468,7 +468,7 @@ End Code
                                     Cheque:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidChq" style="width:80px" /><br />
+                                    <input type="text" id="txtCustPaidChq" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -477,7 +477,7 @@ End Code
                                     Cash:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidCash" style="width:80px" /><br />
+                                    <input type="text" id="txtCustPaidCash" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -486,7 +486,7 @@ End Code
                                     Tax-Card:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidCard" style="width:80px" /><br />
+                                    <input type="text" id="txtCustPaidCard" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -495,7 +495,7 @@ End Code
                                     E-Payment:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidEPay" style="width:80px" /><br />
+                                    <input type="text" id="txtCustPaidEPay" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -504,16 +504,16 @@ End Code
                                     Bank Guarantee:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidBank" style="width:80px" /><br />
+                                    <input type="text" id="txtCustPaidBank" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>
-                                    Others:<input type="text" id="txtCustOthersPayBy" style="width:100px" />
+                                    Others:<input type="text" id="txtCustOthersPayBy" style="width:130px" />
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidOthers" style="width:80px" /><br />
+                                    <input type="text" id="txtCustPaidOthers" style="width:130px" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -522,7 +522,7 @@ End Code
                                     Total Paid:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidTotal" style="width:100px" />
+                                    <input type="text" id="txtCustPaidTotal" style="width:130px" />
                                 </td>
                             </tr>
                         </table>
@@ -1640,7 +1640,7 @@ End Code
                     ShowCustomer(dr.CustCode, dr.CustBranch, false);
                     ShowJobTypeShipBy(dr.JobType, dr.ShipBy, dr.JobStatus)
                     $('#txtRevised').val(dr.JRevised);
-                    $('#txtDocDate').val(CDate(dr.DocDate));
+                    $('#txtDocDate').val(SQLDate(dr.DocDate));
                     $('#txtQNo').val(dr.QNo);
                     $('#txtQRevise').val(dr.Revised);
                     $('#txtCustInvNo').val(dr.InvNo);
@@ -1649,10 +1649,10 @@ End Code
                     $('#txtCommission').val(dr.Commission);
                     $('#txtContactName').val(dr.CustContactName);
                     ShowUser(dr.CSCode, '#txtCSName');
-                    $('#txtConfirmDate').val(CDate(dr.ConfirmDate));
+                    $('#txtConfirmDate').val(SQLDate(dr.ConfirmDate));
                     ShowUser(dr.CloseJobBy, '#txtCloseBy');
                     $('#txtJobCondition').val(dr.TRemark);
-                    $('#txtCloseDate').val(CDate(dr.CloseJobDate));
+                    $('#txtCloseDate').val(SQLDate(dr.CloseJobDate));
                     $('#txtCustPoNo').val(dr.CustRefNO);
                     $('#txtDescription').val(dr.Description);
                     $('#txtCancelReason').val(dr.CancelReson);
@@ -1660,7 +1660,7 @@ End Code
                     $('#txtConsignee').val(dr.consigneecode);
                     $('#txtConsBranch').val(dr.CustBranch);
                     ShowCustomer(dr.consigneecode, dr.CustBranch,true);
-                    $('#txtCancelDate').val(CDate(dr.CancelDate));
+                    $('#txtCancelDate').val(SQLDate(dr.CancelDate));
                     $('#txtProjectName').val(dr.ProjectName);
                     $('#txtInvProduct').val(dr.InvProduct);
                     $('#txtInvQty').val(dr.InvProductQty);
@@ -1694,14 +1694,14 @@ End Code
                     $('#txtTransporter').val(dr.AgentCode);
                     ShowVender(dr.AgentCode, '#txtTransporterName');
                     $('#txtTotalCTN').val(dr.TotalContainer);
-                    $('#txtETDDate').val(CDate(dr.ETDDate));
-                    $('#txtETADate').val(CDate(dr.ETADate));
-                    $('#txtLoadDate').val(CDate(dr.LoadDate));
-                    $('#txtDeliveryDate').val(CDate(dr.EstDeliverDate));
-                    $('#txtEDIDate').val(CDate(dr.ImExDate));
-                    $('#txtReadyClearDate').val(CDate(dr.ReadyToClearDate));
-                    $('#txtDutyDate').val(CDate(dr.DutyDate));
-                    $('#txtClearDate').val(CDate(dr.ClearDate));
+                    $('#txtETDDate').val(SQLDate(dr.ETDDate));
+                    $('#txtETADate').val(SQLDate(dr.ETADate));
+                    $('#txtLoadDate').val(SQLDate(dr.LoadDate));
+                    $('#txtDeliveryDate').val(SQLDate(dr.EstDeliverDate));
+                    $('#txtEDIDate').val(SQLDate(dr.ImExDate));
+                    $('#txtReadyClearDate').val(SQLDate(dr.ReadyToClearDate));
+                    $('#txtDutyDate').val(SQLDate(dr.DutyDate));
+                    $('#txtClearDate').val(SQLDate(dr.ClearDate));
                     $('#txtDeclareType').val(dr.DeclareType);
                     ShowDeclareType(dr.DeclareType);
                     $('#txtReleasePort').val(dr.ClearPort);
@@ -1732,18 +1732,18 @@ End Code
         dr.CustCode = $('#txtCustCode').val();
         dr.CustBranch = $('#txtCustBranch').val();
         dr.JRevised = $('#txtRevised').val();
-        dr.DocDate= $('#txtDocDate').val();
+        dr.DocDate= JSDate($('#txtDocDate').val());
         dr.QNo=$('#txtQNo').val();
         dr.Revised=$('#txtQRevise').val();
         dr.InvNo=$('#txtCustInvNo').val();
         dr.DeclareNumber=$('#txtDeclareNo').val();        
         dr.Commission=$('#txtCommission').val();
         dr.CustContactName=$('#txtContactName').val();
-        if ($('#txtConfirmDate').val()!="") dr.ConfirmDate=$('#txtConfirmDate').val();
+        dr.ConfirmDate=JSDate($('#txtConfirmDate').val());
         
         dr.TRemark = $('#txtJobCondition').val();
 
-        if ($('#txtCloseDate').val() != "") dr.CloseJobDate = $('#txtCloseDate').val();
+        dr.CloseJobDate = JSDate($('#txtCloseDate').val());
         
         dr.CustRefNO=$('#txtCustPoNo').val();
         dr.Description=$('#txtDescription').val();
@@ -1751,7 +1751,7 @@ End Code
         
         dr.consigneecode=$('#txtConsignee').val();        
 
-        if ($('#txtCancelDate').val() != "") dr.CancelDate = $('#txtCancelDate').val();
+        dr.CancelDate = JSDate($('#txtCancelDate').val());
         
         dr.ProjectName=$('#txtProjectName').val();
         dr.InvProduct=$('#txtInvProduct').val();
@@ -1781,14 +1781,14 @@ End Code
         
         dr.TotalContainer = $('#txtTotalCTN').val();
 
-        if ($('#txtETDDate').val() != "") dr.ETDDate = $('#txtETDDate').val();
-        if ($('#txtETADate').val() != "") dr.ETADate = $('#txtETADate').val();
-        if ($('#txtLoadDate').val() != "") dr.LoadDate = $('#txtLoadDate').val();
-        if ($('#txtDeliveryDate').val() != "") dr.EstDeliverDate = $('#txtDeliveryDate').val();
-        if ($('#txtEDIDate').val() != "") dr.ImExDate = $('#txtEDIDate').val();
-        if ($('#txtReadyClearDate').val() != "") dr.ReadyToClearDate = $('#txtReadyClearDate').val();
-        if ($('#txtDutyDate').val() != "") dr.DutyDate = $('#txtDutyDate').val();
-        if ($('#txtClearDate').val() != "") dr.ClearDate = $('#txtClearDate').val();
+        dr.ETDDate = JSDate($('#txtETDDate').val());
+        dr.ETADate = JSDate($('#txtETADate').val());
+        dr.LoadDate = JSDate($('#txtLoadDate').val());
+        dr.EstDeliverDate = JSDate($('#txtDeliveryDate').val());
+        dr.ImExDate = JSDate($('#txtEDIDate').val());
+        dr.ReadyToClearDate = JSDate($('#txtReadyClearDate').val());
+        dr.DutyDate = JSDate($('#txtDutyDate').val());
+        dr.ClearDate = JSDate($('#txtClearDate').val());
         
         dr.DeclareType=$('#txtDeclareType').val();        
         dr.ClearPort=$('#txtReleasePort').val();
@@ -1818,13 +1818,18 @@ End Code
     function SaveData() {
         if (rec.JNo != undefined) {
             var obj = GetDataSave(rec);
+            var jsonText = JSON.stringify({ data: obj });
+            //alert(jsonText);
             $.ajax({
                 url: "@Url.Action("SaveJobData", "JobOrder")",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({ data: obj }),
+                data: jsonText,
                 success: function (response) {
                     alert(response);                    
+                },
+                error: function (e) {
+                    alert(e);
                 }
             });
         } else {
