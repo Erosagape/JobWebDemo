@@ -123,7 +123,7 @@ End Code
                         <input type="text" id="txtCustPoNo" style="width:300px" />
                     </div>
                     <div class="col-md-4">
-                        <input type="button" id="btnCloseJob" class="btn btn-warning" value="Close/Reopen" style="width:130px" />
+                        <input type="button" id="btnCloseJob" class="btn btn-warning" value="Close/Reopen" onclick="CloseJob()" style="width:130px" />
                     </div>
                 </div>
                 <div class="row">
@@ -158,7 +158,7 @@ End Code
                         <textarea id="txtBillEAddress" style="width:200px" disabled></textarea>
                     </div>
                     <div class="col-md-4">
-                        <input type="button" id="btnCancelJob" class="btn btn-danger" value="Cancel Job" style="width:130px" />
+                        <input type="button" id="btnCancelJob" class="btn btn-danger" value="Cancel Job" onclick="CancelJob()" style="width:130px" />
                     </div>
                 </div>
             </div>
@@ -635,8 +635,9 @@ End Code
                 </div>
             </div>
         </div>
-        <hr/>
-        <button id="btnSave" class="btn btn-default" onclick="SaveData()">Save</button>
+        <hr />
+        <button id="btnSave" class="btn btn-info" onclick="SaveData()">Save</button>
+        <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print</button>
     </div>
 </div>
 <script type="text/javascript">
@@ -1746,7 +1747,8 @@ End Code
         dr.CloseJobDate = JSDate($('#txtCloseDate').val());
         
         dr.CustRefNO=$('#txtCustPoNo').val();
-        dr.Description=$('#txtDescription').val();
+        dr.Description = $('#txtDescription').val();
+
         dr.CancelReson=$('#txtCancelReason').val();
         
         dr.consigneecode=$('#txtConsignee').val();        
@@ -1814,7 +1816,25 @@ End Code
         
         return dr;
     }
-
+    function PrintData() {
+        window.open(path + 'PrintJob.html?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(),'','');
+    }
+    function CancelJob() {
+        rec.JobStatus = 99;
+        rec.CancelBy = 'Admin';
+        $('#txtCancelBy').val("ADMINISTRATOR");
+        $('#txtCancelDate').val(SQLDate(GetToday()));
+        ShowJobTypeShipBy(rec.JobType, rec.ShipBy, rec.JobStatus);
+        SaveData();
+    }
+    function CloseJob() {
+        rec.JobStatus = 3;
+        rec.CloseBy = 'Admin';
+        $('#txtCloseBy').val("ADMINISTRATOR");
+        $('#txtCloseDate').val(SQLDate(GetToday()));
+        ShowJobTypeShipBy(rec.JobType, rec.ShipBy, rec.JobStatus);
+        SaveData();
+    }
     function SaveData() {
         if (rec.JNo != undefined) {
             var obj = GetDataSave(rec);

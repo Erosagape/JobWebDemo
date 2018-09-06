@@ -949,6 +949,8 @@ Public Class CJobOrder
                                 dr("JRevise") = Me.JRevise
                                 If Me.ConfirmDate.Year > 2000 Then
                                     dr("ConfirmDate") = Me.ConfirmDate
+                                Else
+                                    dr("ConfirmDate") = System.DBNull.Value
                                 End If
                                 pass = "1"
                                 dr("CPolicyCode") = Me.CPolicyCode
@@ -982,6 +984,8 @@ Public Class CJobOrder
                                 dr("InvCurRate") = Me.InvCurRate
                                 If Me.ImExDate.Year > 2000 Then
                                     dr("ImExDate") = Me.ImExDate
+                                Else
+                                    dr("ImExDate") = System.DBNull.Value
                                 End If
                                 pass = "3"
                                 dr("BLNo") = Me.BLNo
@@ -990,9 +994,13 @@ Public Class CJobOrder
                                 dr("ClearPortNo") = Me.ClearPortNo
                                 If Me.ClearDate.Year > 2000 Then
                                     dr("ClearDate") = Me.ClearDate
+                                Else
+                                    dr("ClearDate") = System.DBNull.Value
                                 End If
                                 If Me.LoadDate.Year > 2000 Then
                                     dr("LoadDate") = Me.LoadDate
+                                Else
+                                    dr("LoadDate") = System.DBNull.Value
                                 End If
                                 pass = "4"
                                 dr("ForwarderCode") = Me.ForwarderCode
@@ -1000,9 +1008,13 @@ Public Class CJobOrder
                                 dr("VesselName") = Me.VesselName
                                 If Me.ETDDate.Year > 2000 Then
                                     dr("ETDDate") = Me.ETDDate
+                                Else
+                                    dr("ETDDate") = System.DBNull.Value
                                 End If
                                 If Me.ETADate.Year > 2000 Then
                                     dr("ETADate") = Me.ETADate
+                                Else
+                                    dr("ETADate") = System.DBNull.Value
                                 End If
                                 pass = "5"
                                 dr("ETTime") = Me.ETTime
@@ -1012,16 +1024,22 @@ Public Class CJobOrder
                                 If Me.CancelDate.Year > 2000 Then
                                     dr("CancelDate") = Me.CancelDate
                                     'dr("CancelTime") = Me.CancelTime
+                                Else
+                                    dr("CancelDate") = System.DBNull.Value
                                 End If
                                 pass = "6"
                                 dr("CancelProve") = Me.CancelProve
                                 If Me.CancelProveDate.Year > 2000 Then
                                     dr("CancelProveDate") = Me.CancelProveDate
                                     'dr("CancelProveTime") = Me.CancelProveTime
+                                Else
+                                    dr("CancelProveDate") = System.DBNull.Value
                                 End If
                                 If Me.CloseJobDate.Year > 2000 Then
                                     dr("CloseJobDate") = Me.CloseJobDate
                                     'dr("CloseJobTime") = Me.CloseJobTime
+                                Else
+                                    dr("CloseJobDate") = System.DBNull.Value
                                 End If
                                 pass = "7"
                                 dr("CloseJobBy") = Me.CloseJobBy
@@ -1035,11 +1053,15 @@ Public Class CJobOrder
                                 If Me.EstDeliverDate.Year > 2000 Then
                                     dr("EstDeliverDate") = Me.EstDeliverDate
                                     'dr("EstDeliverTime") = Me.EstDeliverTime
+                                Else
+                                    dr("EstDeliverDate") = System.DBNull.Value
                                 End If
                                 pass = "8"
                                 dr("TotalContainer") = Me.TotalContainer
                                 If Me.DutyDate.Year > 2000 Then
                                     dr("DutyDate") = Me.DutyDate
+                                Else
+                                    dr("DutyDate") = System.DBNull.Value
                                 End If
                                 dr("DutyAmount") = Me.DutyAmount
                                 dr("DutyCustPayOther") = Me.DutyCustPayOther
@@ -1056,6 +1078,8 @@ Public Class CJobOrder
                                 dr("DutyLtdPayOtherAmt") = Me.DutyLtdPayOtherAmt
                                 If Me.ConfirmChqDate.Year > 2000 Then
                                     dr("ConfirmChqDate") = Me.ConfirmChqDate
+                                Else
+                                    dr("ConfirmChqDate") = System.DBNull.Value
                                 End If
                                 pass = "9"
                                 dr("ShippingEmp") = Me.ShippingEmp
@@ -1064,7 +1088,11 @@ Public Class CJobOrder
                                 dr("GWUnit") = Me.GWUnit
                                 dr("TSRequest") = Me.TSRequest
                                 dr("ShipmentType") = Me.ShipmentType
-                                dr("ReadyToClearDate") = Me.ReadyToClearDate
+                                If Me.ReadyToClearDate.Year > 2000 Then
+                                    dr("ReadyToClearDate") = Me.ReadyToClearDate
+                                Else
+                                    dr("ReadyToClearDate") = System.DBNull.Value
+                                End If
                                 dr("Commission") = Me.Commission
                                 dr("CommPayTo") = Me.CommPayTo
                                 dr("ProjectName") = Me.ProjectName

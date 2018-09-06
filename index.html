@@ -177,7 +177,7 @@
                                 <input type="text" class="form-control" id="txtJobNo" />
                             </td>
                             <td>
-                                <button id="btnJobSlip" class="btn btn-info">Print Slip</button>
+                                <button id="btnJobSlip" class="btn btn-info" onclick="PrintJob()">Print Slip</button>
                             </td>
                             <td>
                                 <button class="btn btn-success" id="btnInfoJob" onclick="OpenJob()">View JOB</button>
@@ -197,11 +197,6 @@
                             <th>Inv.Customer</th>
                             <th>DeclareNo</th>
                             <th>Commodity</th>
-                            <th>Transit Date</th>
-                            <th>Qty</th>
-                            <th>Unit</th>
-                            <th>Inv.Total</th>
-                            <th>Currency</th>
                         </tr>
                     </thead>
                 </table>
@@ -234,12 +229,7 @@
                     { "data": "CustCode", "title": "Customer" },
                     { "data": "InvNo", "title": "Customer Inv." },
                     { "data": "DeclareNumber", "title": "Declare No." },
-                    { "data": "InvProduct", "title": "Commodity" },
-                    { "data": "ImExDate", "title": "Operation Date" },
-                    { "data": "InvProductQty", "title": "Inv.Qty" },
-                    { "data": "InvProductUnit", "title": "Inv.Units" },
-                    { "data": "InvTotal", "title": "Inv.Total" },
-                    { "data": "InvCurUnit", "title": "Currency" }
+                    { "data": "InvProduct", "title": "Commodity" }
                 ]
             });
             $('#tblJob tbody').on('click', 'tr', function () {
@@ -255,6 +245,9 @@
         }
         function OpenJob() {
             window.open('joborder/showjob?BranchCode='+$('#cboBranch').val()+'&JNo=' + $('#txtJobNo').val());
+        }
+        function PrintJob() {
+            window.open('PrintJob.html?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val());
         }
         function CreateNewJob() {
             window.open('joborder/createjob?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val());

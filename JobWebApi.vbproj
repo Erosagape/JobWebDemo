@@ -153,6 +153,7 @@
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="PrintJob.html" />
+    <Content Include="Resource\logo-idl.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
