@@ -106,7 +106,6 @@ E:\Boat\JobWebDemo\JobWebDemo\bin\release\System.Web.Razor.xml
 E:\Boat\JobWebDemo\JobWebDemo\bin\release\System.Web.WebPages.xml
 E:\Boat\JobWebDemo\JobWebDemo\bin\release\System.Web.WebPages.Deployment.xml
 E:\Boat\JobWebDemo\JobWebDemo\bin\release\System.Web.WebPages.Razor.xml
-E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.vbprojResolveAssemblyReference.cache
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.Resources.resources
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.vbproj.GenerateResource.cache
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.vbproj.CoreCompileInputs.cache
@@ -114,3 +113,4 @@ E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.vbproj.CopyComplete
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.dll
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.xml
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.pdb
+E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.vbprojResolveAssemblyReference.cache

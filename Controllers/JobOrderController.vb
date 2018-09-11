@@ -6,6 +6,12 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class JobOrderController
         Inherits Controller
+        Function Index() As ActionResult
+            Return View()
+        End Function
+        Function ListJob() As ActionResult
+            Return View()
+        End Function
         Function CreateJob() As ActionResult
             Return View()
         End Function
