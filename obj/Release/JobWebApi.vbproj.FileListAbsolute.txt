@@ -113,4 +113,3 @@ E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.vbproj.CopyComplete
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.dll
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.xml
 E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.pdb
-E:\Boat\JobWebDemo\JobWebDemo\obj\Release\JobWebApi.vbprojResolveAssemblyReference.cache

@@ -94,7 +94,7 @@ Namespace Controllers
         End Function
         Private Function GetLOV(captionStr As String, tblStr As String, fldList As String()) As String
             Return "
-            <div class=""modal-dialog"">
+            <div class=""modal-dialog modal-lg"">
                 <div class=""modal-content"">
                     <div class=""modal-header"">
                         <button type=""button"" class=""close"" data-dismiss=""modal""></button>

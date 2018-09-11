@@ -10,9 +10,9 @@ Public Module RouteConfig
         routes.IgnoreRoute("{resource}.axd/{*pathInfo}")
 
         routes.MapRoute(
-            name := "Default",
-            url := "{controller}/{action}/{id}",
-            defaults := New With {.action = "Index", .id = UrlParameter.Optional}
+            name:="JobOrder",
+            url:="{controller}/{action}/{id}",
+            defaults:=New With {.action = "Index", .id = UrlParameter.Optional}
         )
     End Sub
 End Module

@@ -9,287 +9,233 @@
     <script src="Scripts/jquery-3.2.1.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="Scripts/bootstrap.js"></script>
-    <script src="Scripts/DataTables/jquery.dataTables.min.js"></script>
-    <script src="Scripts/Func/Util.js"></script>
 </head>
 <body>
-    <div id="main" class="container">
-        <div class="row">
-            <div class="panel-group">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            Main Task
-                        </h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-sm-12">
-                            <div class="col-sm-2">
-                                <label id="lblBranch">Branch</label>
-                                <select id="cboBranch" class="form-control dropdown">
-                                </select>
-                            </div>
-                            <div class="col-sm-2">
-                                <label id="lblJObType">Job Type</label>
-                                <select id="cboJobType" class="form-control dropdown">
-                                </select>
-                            </div>
-                            <div class="col-sm-2">
-                                <label id="lblShipBy">Ship By</label>
-                                <select id="cboShipBy" class="form-control dropdown">
-                                </select>
-                            </div>
-                            <div class="col-sm-2">
-                                <label id="lblYear">Year</label>
-                                <select id="cboYear" class="form-control dropdown">
-                                </select>
-                            </div>
-                            <div class="col-sm-3">
-                                <label id="lblStatus">Status</label>
-                                <select id="cboStatus" class="form-control dropdown">
-                                </select>
-                            </div>
-                            <div class="col-sm-1">
-                                <button class="btn btn-warning" id="btnRefresh" onclick="getJobdata()">แสดงข้อมูล</button>
-                                <button class="btn btn-danger" id="btnGenJob" onclick="CreateNewJob()">สร้างงานใหม่</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <div id="navbar" class="navbar navbar-collapse">
-                    <div class="panel-group" id="accordion">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#mnuMkt">
-                                        Marketing Works
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="mnuMkt" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMkt">จัดการใบเสนอราคา</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#mnuShp">
-                                        Shipping Works
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="mnuShp" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบเบิกหลาย job</a>
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบปิดหลาย job</a>
-                                    <br />
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบเบิกค่าใช้จ่าย</a>
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบปิดค่าใช้จ่าย</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#mnuFin">
-                                        Finance & Accounting Works
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="mnuFin" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <a href="#mnuSubFin" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานการเงิน</a>
-                                    <div class="collapse" id="mnuSubFin">
-                                        <a href="#" class="list-group-item glyphicon-minus">จ่ายเงินตามใบเบิก</a>
-                                        <a href="#" class="list-group-item glyphicon-minus">รับเคลียร์เงินตามใบปิด</a>
-                                    </div>
-                                    <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
-                                    <div class="collapse" id="mnuSubAcc">
-                                        <a href="#" class="list-group-item glyphicon-minus">ใบแจ้งหนี้</a>
-                                        <a href="#" class="list-group-item glyphicon-minus">ใบเสร็จรับเงิน</a>
-                                        <a href="#" class="list-group-item glyphicon-minus">ใบกำกับภาษี</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <div class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#mnuAppr">
-                                        Approving Documents
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="mnuAppr" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบเบิก</a>
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบปิด</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <div class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#mnuTrack">
-                                        Tracking Information
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="mnuTrack" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">รายงานต่างๆ</a>
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">ตรวจสอบการทำงาน</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <div class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#mnuMas">
-                                        Master Files
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="mnuMas" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
-                                    <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="window.open('Config/Index');">ค่าคงที่ต่างๆ</a>
-                                </div>
-                            </div>
-                        </div>
+    <script type="text/javascript">
+        var userID = '';
+        $(document).ready(function () {
+            CheckLogin();
+        });
+        function CheckLogin() {
+            if (userID == '') {
+                $('#dvLogin').modal('show');
+            } else {
+
+            }
+        }
+        function Login() {
+            userID = $('#txtUserID').val();
+            var Password = $('#txtPassword').val();
+            if (userID != '') {
+                $.get('Master/GetUser?Code=' + userID +'&Pass=' + Password)
+                    .done(function (r) {
+                        if (r.user.data.length > 0) {
+                            var b = r.user.data[0];
+                            userID = b.UserID;
+                            $('#lblUserID').text(b.TName);
+                        } else {
+                            userID = '';
+                            $('#lblUserID').text('Please Login');
+                            alert('User ID or Password Incorrect');
+                        }
+
+                    });
+            }
+            var compID = $('#txtCompanyID').val();
+            if (compID != '') {
+                $('#lblCompanyName').text(compID);
+            }
+            $('#dvLogin').modal('hide');
+        }
+        function CheckRights(mnuID) {
+            if (userID.toUpperCase() == 'ADMIN') {
+                return 'Y';
+            }
+            return 'N';
+        }
+        function OpenMenu(mnuID) {
+            if (userID != '') {
+                if (CheckRights(mnuID) == 'N') {
+                    alert('You are not authorized');
+                    return;
+                }
+                switch (mnuID) {
+                    case 'Constant':
+                        window.open('Config/Index');
+                        break;
+                    case 'CreateJob':
+                        window.open('JobOrder/CreateJob');
+                        break;
+                    case 'SearchJob':
+                        window.open('Master/Index');
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                alert('Please login first');
+            }
+        }
+    </script>
+    <div id="dvLogin" class="modal" style="width:100%">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:black">
+                    <div class="modal-title" style="color:white;text-align:center">
+                        Logon Information
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-9">
-                <div class="panel panel-heading">
-                    <table>
-                        <tr>
-                            <td>
-                                Enter Job >>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="txtJobNo" />
-                            </td>
-                            <td>
-                                <button id="btnJobSlip" class="btn btn-info" onclick="PrintJob()">Print Slip</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-success" id="btnInfoJob" onclick="OpenJob()">View JOB</button>
-                            </td>
-                        </tr>
-                    </table>
-                    <button class="btn btn-default" id="btnAdvJob">Advance</button>
-                    <button class="btn btn-default" id="btnClrJob">Clearance</button>
-                    <button class="btn btn-default" id="btnInvJob">Invoices</button>
-                    <button class="btn btn-default" id="btnRcvJob">Receipts</button>
+                <div class="modal-body">
+                    Company ID : <input type="text" class="form-control" id="txtCompanyID" value="jobdemo" disabled />
+                    User ID : <input type="text" class="form-control" id="txtUserID" />
+                    Password : <input type="password" class="form-control" id="txtPassword" />
                 </div>
-                <table id="tblJob" class="table display table-bordered table-responsive small">
-                    <thead>
-                        <tr>
-                            <th>JobNo</th>
-                            <th>Customer</th>
-                            <th>Inv.Customer</th>
-                            <th>DeclareNo</th>
-                            <th>Commodity</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="btnLogin" onclick="Login()">Log in</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            loadCombo();
-            getJobdata();
-        });
-        function loadCombo() {
-            loadBranch();
-            loadConfig('#cboJobType', 'JOB_TYPE');
-            loadConfig('#cboShipBy', 'SHIP_BY');
-            loadConfig('#cboStatus', 'JOB_STATUS');
-            loadYear();
-        }
-        function getJobdata() {
-            var strParam = GetCliteria();
-            var table = $('#tblJob').DataTable({
-                "ajax": {
-                    //"url": "joborder/getjobjson" + strParam,
-                    "url": "joborder/getjobsql" + strParam,
-                    "dataSrc": "job.data"
-                },
-                "destroy":true,
-                "columns": [
-                    { "data": "JNo","title":"Job Number" },
-                    { "data": "CustCode", "title": "Customer" },
-                    { "data": "InvNo", "title": "Customer Inv." },
-                    { "data": "DeclareNumber", "title": "Declare No." },
-                    { "data": "InvProduct", "title": "Commodity" }
-                ]
-            });
-            $('#tblJob tbody').on('click', 'tr', function () {
-                $('#tblJob tbody > tr').removeClass('selected');
-                $(this).addClass('selected');
-
-                var data = $('#tblJob').DataTable().row(this).data();
-                $('#txtJobNo').val(data.JNo);
-            });
-        }
-        function GetCliteria() {
-            return '?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val() + '&Year='+ $('#cboYear').val() + '&Status=' + $('#cboStatus').val();
-        }
-        function OpenJob() {
-            window.open('joborder/showjob?BranchCode='+$('#cboBranch').val()+'&JNo=' + $('#txtJobNo').val());
-        }
-        function PrintJob() {
-            window.open('PrintJob.html?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val());
-        }
-        function CreateNewJob() {
-            window.open('joborder/createjob?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val());
-        }
-        function loadBranch() {
-            $('#cboBranch').empty();
-            $.get('Config/getBranch').done(function (r) {
-                var dr = r.branch.data;
-                if (dr.length > 0) {
-                    for (var i = 0; i < dr.length; i++) {
-                        $('#cboBranch')
-                            .append($('<option>', { value: dr[i].Code })
-                                .text(dr[i].Code + ' / ' + dr[i].BrName));
-                    }
-                }
-            });
-        }
-        function loadConfig(e, code) {
-            $(e).empty();
-            $.get('Config/getConfig?Code=' + code).done(function (r) {
-                var dr = r.config.data;
-                if (dr.length > 0) {
-                    for (var i = 0; i < dr.length; i++) {
-                        $(e).append($('<option>', { value: dr[i].ConfigKey })
-                            .text(dr[i].ConfigKey + ' / ' + dr[i].ConfigValue));
-                    }
-                }
-            });
-        }
-        function loadYear() {
-            $('#cboYear').empty();
-            $.get('joborder/getjobyear').done(function (r) {
-                var dr = r[0].Table;
-                if (dr.length > 0) {
-                    for (var i = 0; i < dr.length; i++) {
-                        $('#cboYear')
-                            .append($('<option>', { value: dr[i].JobYear })
-                                .text(dr[i].JobYear));
-                    }
-                }
-            });
-        }
-    </script>
+    <div id="dvUser">
+        <p>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <img src="Resource/logo-tawan.jpg" style="width:100px" />
+                    </td>
+                    <td align="right">
+                        <h5><label id="lblCompanyName" style="text-align:right">Shipping Control System</label></h5>
+                    </td>
+                </tr>
+            </table>
+        </p>
+    </div>
+    <div id="dvMain" class="row" style="background-color:black">
+        <div class="col-sm-3" style="text-align:center">
+            <label id="lblUserID" style="color:white">Please Login</label>
+            <div id="navbar" class="navbar navbar-collapse;text" style="text-align:left">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuMkt">
+                                    Marketing Works
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="mnuMkt" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMkt">จัดการใบเสนอราคา</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuCS">
+                                    CS Works
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="mnuCS" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('CreateJob');">เปิดงานใหม่</a>
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('SearchJob');">ค้นหางาน</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuShp">
+                                    Shipping Works
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="mnuShp" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบเบิกค่าใช้จ่าย</a>
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบปิดค่าใช้จ่าย</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuFin">
+                                    Finance & Accounting Works
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="mnuFin" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="#mnuSubFin" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานการเงิน</a>
+                                <div class="collapse" id="mnuSubFin">
+                                    <a href="#" class="list-group-item glyphicon-minus">จ่ายเงินตามใบเบิก</a>
+                                    <a href="#" class="list-group-item glyphicon-minus">รับเคลียร์เงินตามใบปิด</a>
+                                </div>
+                                <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
+                                <div class="collapse" id="mnuSubAcc">
+                                    <a href="#" class="list-group-item glyphicon-minus">ใบแจ้งหนี้</a>
+                                    <a href="#" class="list-group-item glyphicon-minus">ใบเสร็จรับเงิน</a>
+                                    <a href="#" class="list-group-item glyphicon-minus">ใบกำกับภาษี</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuAppr">
+                                    Approving Documents
+                                </a>
+                            </div>
+                        </div>
+                        <div id="mnuAppr" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบเบิก</a>
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบปิด</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuTrack">
+                                    Tracking Information
+                                </a>
+                            </div>
+                        </div>
+                        <div id="mnuTrack" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">รายงานต่างๆ</a>
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">ตรวจสอบการทำงาน</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuMas">
+                                    Master Files
+                                </a>
+                            </div>
+                        </div>
+                        <div id="mnuMas" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('Constant')">ค่าคงที่ต่างๆ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <img src="Resource/jobtawan_bg.jpg" style="width:100%" onclick="CheckLogin()" />
+        </div>
+    </div>
 </body>
+
 </html>
