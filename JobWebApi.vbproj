@@ -292,6 +292,7 @@
     <Compile Include="App_Start\FilterConfig.vb" />
     <Compile Include="App_Start\RouteConfig.vb" />
     <Compile Include="App_Start\WebApiConfig.vb" />
+    <Compile Include="Controllers\AdvanceController.vb" />
     <Compile Include="Controllers\ConfigController.vb" />
     <Compile Include="Controllers\MasterController.vb" />
     <Compile Include="Controllers\JobOrderController.vb" />
@@ -299,6 +300,8 @@
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CAdvDetail.vb" />
+    <Compile Include="Models\CAdvHeader.vb" />
     <Compile Include="Models\CBranch.vb" />
     <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
@@ -371,6 +374,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Advance\Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
