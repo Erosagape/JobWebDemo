@@ -33,6 +33,15 @@ Public Class CAdvHeader
             m_JobType = value
         End Set
     End Property
+    Private m_ShipBy As Integer
+    Public Property ShipBy As Integer
+        Get
+            Return m_ShipBy
+        End Get
+        Set(value As Integer)
+            m_ShipBy = value
+        End Set
+    End Property
     Private m_AdvDate As Date
     Public Property AdvDate As Date
         Get
@@ -58,6 +67,24 @@ Public Class CAdvHeader
         End Get
         Set(value As String)
             m_EmpCode = value
+        End Set
+    End Property
+    Private m_CustCode As String
+    Public Property CustCode As String
+        Get
+            Return m_CustCode
+        End Get
+        Set(value As String)
+            m_CustCode = value
+        End Set
+    End Property
+    Private m_CustBranch As String
+    Public Property CustBranch As String
+        Get
+            Return m_CustBranch
+        End Get
+        Set(value As String)
+            m_CustBranch = value
         End Set
     End Property
     Private m_JNo As String
@@ -308,7 +335,10 @@ Public Class CAdvHeader
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("AdvNo") = Me.AdvNo
+                            dr("CustCode") = Me.CustCode
+                            dr("CustBranch") = Me.CustBranch
                             dr("JobType") = Me.JobType
+                            dr("ShipBy") = Me.ShipBy
                             dr("AdvDate") = Me.AdvDate
                             dr("AdvType") = Me.AdvType
                             dr("EmpCode") = Me.EmpCode
@@ -364,8 +394,17 @@ Public Class CAdvHeader
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AdvNo"))) = False Then
                         row.AdvNo = rd.GetString(rd.GetOrdinal("AdvNo")).ToString()
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("CustCode"))) = False Then
+                        row.CustCode = rd.GetString(rd.GetOrdinal("CustCode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("CustBranch"))) = False Then
+                        row.CustBranch = rd.GetString(rd.GetOrdinal("CustBranch")).ToString()
+                    End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("JobType"))) = False Then
                         row.JobType = rd.GetByte(rd.GetOrdinal("JobType"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ShipBy"))) = False Then
+                        row.ShipBy = rd.GetByte(rd.GetOrdinal("ShipBy"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AdvDate"))) = False Then
                         row.AdvDate = rd.GetValue(rd.GetOrdinal("AdvDate"))

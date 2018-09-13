@@ -23,6 +23,15 @@ Public Class CAdvDetail
             m_AdvNo = value
         End Set
     End Property
+    Private m_ForJNo As String
+    Public Property ForJNo As String
+        Get
+            Return m_ForJNo
+        End Get
+        Set(value As String)
+            m_ForJNo = value
+        End Set
+    End Property
     Private m_ItemNo As Integer
     Public Property ItemNo As Integer
         Get
@@ -146,6 +155,7 @@ Public Class CAdvDetail
                             dr("BranchCode") = Me.BranchCode
                             dr("AdvNo") = Me.AdvNo
                             dr("ItemNo") = Me.ItemNo
+                            dr("ForJNo") = Me.ForJNo
                             dr("STCode") = Me.STCode
                             dr("SICode") = Me.SICode
                             dr("AdvAmount") = Me.AdvAmount
@@ -182,6 +192,9 @@ Public Class CAdvDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AdvNo"))) = False Then
                         row.AdvNo = rd.GetString(rd.GetOrdinal("AdvNo")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ForJNo"))) = False Then
+                        row.ForJNo = rd.GetString(rd.GetOrdinal("ForJNo")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ItemNo"))) = False Then
                         row.ItemNo = rd.GetByte(rd.GetOrdinal("ItemNo"))

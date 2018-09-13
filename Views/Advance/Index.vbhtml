@@ -1,7 +1,7 @@
 ﻿
 @Code
-    ViewBag.Title = "Advance Controller"
+    ViewBag.Title = "Advance"
 End Code
 <div> 
-
+Hi There
 </div>

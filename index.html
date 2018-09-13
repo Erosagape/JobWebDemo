@@ -60,6 +60,9 @@
                     return;
                 }
                 switch (mnuID) {
+                    case 'Advance':
+                        window.open('Advance/Index');
+                        break;
                     case 'Constant':
                         window.open('Config/Index');
                         break;
@@ -155,7 +158,7 @@
                         </div>
                         <div id="mnuShp" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบเบิกค่าใช้จ่าย</a>
+                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Advance');">ใบเบิกค่าใช้จ่าย</a>
                                 <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบปิดค่าใช้จ่าย</a>
                             </div>
                         </div>
