@@ -171,11 +171,11 @@
         ShowCompany();
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
-        if (br != "" && ano != "") {
+        if (br !== "" && ano !== "") {
             GetAdv(br, ano);
         } else {
-            //var r = GetDummy();
-            //ShowData(r);
+            var r = GetDummy();
+            ShowData(r);
         }
     });
     function GetAdv(Branch, Doc) {

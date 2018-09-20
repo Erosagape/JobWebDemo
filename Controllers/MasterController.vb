@@ -8,6 +8,9 @@ Namespace Controllers
         Function Index() As ActionResult
             Return View()
         End Function
+        Function ServiceCode() As ActionResult
+            Return View()
+        End Function
         Function GetServUnit() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE [UnitType]<>'' "
@@ -152,7 +155,7 @@ Namespace Controllers
             Try
                 Dim tSqlw As String = " WHERE SICode<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND SICode='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND SICode Like '{0}%'", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CServiceCode(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
