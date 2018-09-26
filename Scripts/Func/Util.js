@@ -29,38 +29,6 @@ function JSDate(sqlDateString) {
         return '';
     }
 }
-function JSTime(jsonDateString) {
-    try {
-        var jsDate = new Date(parseInt(jsonDateString.replace('/Date(', '')));
-        var hour = jsDate.getHours();
-        var min = jsDate.getMinutes();
-        var sec = jsDate.getSeconds();
-        if (hour <= 9) hour = '0' + hour;
-        if (min <= 9) min = '0' + min;
-        if (sec <= 9) sec = '0' + sec;
-        var date = hour + ":" + min + ":" + sec;
-        return date;
-    }
-    catch (e) {
-        return '';
-    }
-}
-function CDate(sqlDateString) {
-    try {
-        var jsDate = sqlDateString.substr(0, 10);
-        var month = jsDate.substr(5,2);
-        var day = jsDate.substr(8, 2);
-        var year = jsDate.substr(0, 4);
-        if (year < '2000') {
-            return '-';
-        }
-        var date = day + "/" + month + "/" + year;
-        return date;
-    }
-    catch (e) {
-        return '-';
-    }
-}
 function SQLDate(sqldateString) {
     try {
         var jsDate = sqldateString.substr(0, 10);
@@ -87,6 +55,22 @@ function CNum(data) {
 function CCurrency(data) {
     return data.replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
+function CDate(sqlDateString) {
+    try {
+        var jsDate = sqlDateString.substr(0, 10);
+        var month = jsDate.substr(5, 2);
+        var day = jsDate.substr(8, 2);
+        var year = jsDate.substr(0, 4);
+        if (year < '2000') {
+            return '-';
+        }
+        var date = day + "/" + month + "/" + year;
+        return date;
+    }
+    catch (e) {
+        return '-';
+    }
+}
 function GetToday() {
     var d = new Date(),
         month = '' + (d.getMonth() + 1),
@@ -97,6 +81,24 @@ function GetToday() {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+}
+function GetTime() {
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        min = d.getMinutes(),
+        sec = d.getSeconds();
+    if (hour <= 9) hour = '0' + hour;
+    if (min <= 9) min = '0' + min;
+    if (sec <= 9) sec = '0' + sec;
+    var time = hour + ":" + min + ":" + sec;
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year+543, month, day].join('-') + ' ' + time;
 }
 function CNumEng(s) {
     // Convert numbers to words

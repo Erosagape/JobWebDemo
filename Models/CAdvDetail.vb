@@ -2,8 +2,18 @@
 Imports System.Data.SqlClient
 Public Class CAdvDetail
     Private m_ConnStr As String
+    Public Sub New()
+
+    End Sub
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
+    End Sub
+    Public Sub SetConnect(pConnStr As String)
+        m_ConnStr = pConnStr
+    End Sub
+    Public Sub AddNew()
+        Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(ItemNo) as t FROM Job_AdvHeader WHERE BranchCode='{0}' And AdvNo ='{1}' ", m_BranchCode, m_ItemNo), "_")
+        m_ItemNo = retStr
     End Sub
     Private m_BranchCode As String
     Public Property BranchCode As String
@@ -140,8 +150,8 @@ Public Class CAdvDetail
             m_Doc50Tavi = value
         End Set
     End Property
-    Public Function SaveData(pSQLWhere As String) As Boolean
-        Dim bComplete As Boolean = False
+    Public Function SaveData(pSQLWhere As String) As String
+        Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
@@ -169,14 +179,15 @@ Public Class CAdvDetail
                             dr("Doc50Tavi") = Me.Doc50Tavi
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            bComplete = True
+                            msg = String.Format("Save '{0}' Item {1} Complete", Me.AdvNo, Me.ItemNo)
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                msg = ex.Message
             End Try
         End Using
-        Return bComplete
+        Return msg
     End Function
     Public Function GetData(pSQLWhere As String) As List(Of CAdvDetail)
         Dim lst As New List(Of CAdvDetail)

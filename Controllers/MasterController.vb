@@ -1,11 +1,24 @@
-﻿Imports System.Web.Mvc
+﻿Imports System.Web.Http
+Imports System.Web.Mvc
 Imports Newtonsoft.Json
 Namespace Controllers
     Public Class MasterController
         Inherits Controller
-
+        Private Sub CheckSession()
+            If IsNothing(Session("CurrUser")) Then
+                Session("CurrUser") = ""
+            End If
+            ViewBag.User = Session("CurrUser")
+        End Sub
+        Private Function GetView(vName As String) As ActionResult
+            If IsNothing(Session("CurrUser")) Then
+                Return View("Index")
+            End If
+            Return View(vName)
+        End Function
         ' GET: Customer
         Function Index() As ActionResult
+            CheckSession()
             Return View()
         End Function
         Function ServiceCode() As ActionResult
@@ -71,6 +84,33 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
 
+        End Function
+        Function SetLogin() As ActionResult
+            Try
+                Dim chk As Integer = 0
+                Dim tSqlw As String = " WHERE UserID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND UserID='{0}'", Request.QueryString("Code").ToString)
+                    chk += 1
+                End If
+                If Not IsNothing(Request.QueryString("Pass")) Then
+                    tSqlw &= String.Format("AND UPassword='{0}'", Request.QueryString("Pass").ToString)
+                    chk += 1
+                End If
+                Dim oData = New CUser(jobWebConn).GetData(tSqlw)
+                If chk = 2 And oData.Count > 0 Then
+                    ViewBag.User = oData(0).UserID
+                    Session("CurrUser") = ViewBag.User
+                Else
+                    ViewBag.User = ""
+                    Session("CurrUser") = ""
+                End If
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                    json = "{""user"":{""data"":" & json & "}}"
+                    Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
         End Function
         Function GetUser() As ActionResult
             Try
@@ -164,6 +204,31 @@ Namespace Controllers
             Catch ex As Exception
                 Return Content("[]", jsonContent)
             End Try
+        End Function
+        Function GetNewServiceCode() As ActionResult
+            Try
+                Dim Code As String = ""
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    Code = Request.QueryString("Code").ToString
+                End If
+                Dim oData = New CServiceCode(jobWebConn)
+                oData.AddNew(Code & "___")
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""servicecode"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetServiceCode(<FromBody()> data As CServiceCode) As ActionResult
+            If Not IsNothing(data) Then
+                data.SetConnect(jobWebConn)
+                Dim msg = data.SaveData(String.Format(" WHERE SICode='{0}' ", data.SICode))
+                'Dim msg = JsonConvert.SerializeObject(data)
+                Return Content(msg, textContent)
+            Else
+                Return Content("No data to save", textContent)
+            End If
         End Function
     End Class
 End Namespace

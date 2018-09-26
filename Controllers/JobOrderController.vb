@@ -1,23 +1,37 @@
-﻿Imports System.Net
-Imports System.Net.Http
-Imports System.Web.Http
+﻿Imports System.Web.Http
 Imports System.Web.Mvc
 Imports Newtonsoft.Json
 Namespace Controllers
     Public Class JobOrderController
         Inherits Controller
-        Function CreateJob() As ActionResult
+        Private Sub CheckSession()
+            If IsNothing(Session("CurrUser")) Then
+                Session("CurrUser") = ""
+            End If
+            ViewBag.User = Session("CurrUser")
+        End Sub
+        Private Function GetView(vName As String) As ActionResult
+            If IsNothing(Session("CurrUser")) Then
+                Return View("Index")
+            End If
+            Return View(vName)
+        End Function
+        Function Index() As ActionResult
+            CheckSession()
             Return View()
         End Function
+        Function CreateJob() As ActionResult
+            CheckSession()
+            Return GetView("CreateJob")
+        End Function
         Function ShowJob() As ActionResult
-            Return View()
+            CheckSession()
+            Return GetView("ShowJob")
         End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function
-        Function Index() As ActionResult
-            Return View()
-        End Function
+
         Function GetJobSQL() As ActionResult
             Try
                 Dim oJob As New CJobOrder(jobWebConn)
@@ -110,7 +124,17 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Prefix")) Then
                     prefix = "" & Request.QueryString("Prefix")
                 End If
-                oJob.AddNew(prefix & DateTime.Now.ToString("yyMM") & "____")
+                Dim CopyFrom As String = ""
+                If Not IsNothing(Request.QueryString("CopyFrom")) Then
+                    CopyFrom = "" & Request.QueryString("CopyFrom")
+                End If
+                If CopyFrom <> "" Then
+                    Dim FindJob = oJob.GetData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", oJob.BranchCode, CopyFrom))
+                    If FindJob.Count > 0 Then
+                        oJob = FindJob(0)
+                    End If
+                End If
+                oJob.AddNew(prefix & DateTime.Now.ToString("yyMM") & "____", IIf(CopyFrom <> "", False, True))
                 Dim result As String = oJob.SaveData(" WHERE BranchCode='" & oJob.BranchCode & "' And JNo='" & oJob.JNo & "'")
 
                 Dim json As String = JsonConvert.SerializeObject(oJob)

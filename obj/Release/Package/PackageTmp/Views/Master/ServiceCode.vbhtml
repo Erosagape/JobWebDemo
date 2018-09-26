@@ -131,7 +131,7 @@ End Code
         $('#dvSearch').modal('show');
     }
     function SaveData() {
-
+        alert('VAT=' + $('#chkIsTaxCharge').prop('checked') + ' (' + $('input:radio[name=optVAT]:checked').val() + ') TAX=' + $('#chkIs50Tavi').prop('checked') + ' (' + $('input:radio[name=optWHT]:checked').val()+')');
     }
     function RefreshGrid() {
         //popup for search data

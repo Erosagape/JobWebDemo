@@ -2,10 +2,19 @@
 Imports System.Data.SqlClient
 Public Class CAdvHeader
     Private m_ConnStr As String
+    Public Sub New()
+
+    End Sub
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
-
+    Public Sub SetConnect(pConnStr As String)
+        m_ConnStr = pConnStr
+    End Sub
+    Public Sub AddNew(pformatSQL As String)
+        Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(AdvNo) as t FROM Job_AdvHeader WHERE BranchCode='{0}' And AdvNo Like '%{1}' ", m_BranchCode, pformatSQL), pformatSQL)
+        m_AdvNo = retStr
+    End Sub
     Private m_BranchCode As String
     Public Property BranchCode As String
         Get
@@ -321,8 +330,8 @@ Public Class CAdvHeader
             m_Doc50Tavi = value
         End Set
     End Property
-    Public Function SaveData(pSQLWhere As String) As Boolean
-        Dim bComplete As Boolean = False
+    Public Function SaveData(pSQLWhere As String) As String
+        Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
@@ -339,7 +348,7 @@ Public Class CAdvHeader
                             dr("CustBranch") = Me.CustBranch
                             dr("JobType") = Me.JobType
                             dr("ShipBy") = Me.ShipBy
-                            dr("AdvDate") = Me.AdvDate
+                            dr("AdvDate") = Main.GetDBDate(Me.AdvDate, True)
                             dr("AdvType") = Me.AdvType
                             dr("EmpCode") = Me.EmpCode
                             dr("JNo") = Me.JNo
@@ -351,33 +360,34 @@ Public Class CAdvHeader
                             dr("Total50Tavi") = Me.Total50Tavi
                             dr("TRemark") = Me.TRemark
                             dr("ApproveBy") = Me.ApproveBy
-                            dr("ApproveDate") = Me.ApproveDate
-                            dr("ApproveTime") = Me.ApproveTime
+                            dr("ApproveDate") = Main.GetDBDate(Me.ApproveDate)
+                            dr("ApproveTime") = Main.GetDBTime(Me.ApproveTime)
                             dr("PaymentBy") = Me.PaymentBy
-                            dr("PaymentDate") = Me.PaymentDate
-                            dr("PaymentTime") = Me.PaymentTime
+                            dr("PaymentDate") = Main.GetDBDate(Me.PaymentDate)
+                            dr("PaymentTime") = Main.GetDBTime(Me.PaymentTime)
                             dr("PaymentRef") = Me.PaymentRef
                             dr("CancelReson") = Me.CancelReson
                             dr("CancelProve") = Me.CancelProve
-                            dr("CancelDate") = Me.CancelDate
-                            dr("CancelTime") = Me.CancelTime
+                            dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
+                            dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
                             dr("AdvCash") = Me.AdvCash
                             dr("AdvChqCash") = Me.AdvChqCash
                             dr("AdvChq") = Me.AdvChq
                             dr("AdvCred") = Me.AdvCred
                             dr("PayChqTo") = Me.PayChqTo
-                            dr("PayChqDate") = Me.PayChqDate
+                            dr("PayChqDate") = Main.GetDBDate(Me.PayChqDate)
                             dr("Doc50Tavi") = Me.Doc50Tavi
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            bComplete = True
+                            msg = String.Format("Save '{0}' Complete", Me.AdvNo)
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                msg = ex.Message
             End Try
         End Using
-        Return bComplete
+        Return msg
     End Function
     Public Function GetData(pSQLWhere As String) As List(Of CAdvHeader)
         Dim lst As New List(Of CAdvHeader)

@@ -7,9 +7,21 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class ConfigController
         Inherits Controller
-
+        Private Sub CheckSession()
+            If IsNothing(Session("CurrUser")) Then
+                Session("CurrUser") = ""
+            End If
+            ViewBag.User = Session("CurrUser")
+        End Sub
+        Private Function GetView(vName As String) As ActionResult
+            If IsNothing(Session("CurrUser")) Then
+                Return View("Index")
+            End If
+            Return View(vName)
+        End Function
         ' GET: Config
         Function Index() As ActionResult
+            CheckSession()
             Return View()
         End Function
         Public Function SetConfig(<FromBody()> ByVal data As CConfig) As HttpResponseMessage

@@ -378,6 +378,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Advance\Index.vbhtml" />
     <Content Include="Views\Master\ServiceCode.vbhtml" />
+    <Content Include="Views\JobOrder\Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

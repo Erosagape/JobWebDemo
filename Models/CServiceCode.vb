@@ -1,11 +1,20 @@
-﻿Imports System.Data
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Public Class CServiceCode
     Private m_ConnStr As String
+    Public Sub New()
+
+    End Sub
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
 
+    Public Sub SetConnect(pConnStr As String)
+        m_ConnStr = pConnStr
+    End Sub
+    Public Sub AddNew(pformatSQL As String)
+        Dim retStr As String = Main.GetMaxByMask(jobWebConn, "SELECT MAX(SICode) as t FROM Job_SrvSingle WHERE SICode Like '%" + pformatSQL + "'", pformatSQL)
+        m_SICode = retStr
+    End Sub
     Private m_SICode As String
     Public Property SICode As String
         Get

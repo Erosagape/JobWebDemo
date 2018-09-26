@@ -875,61 +875,32 @@ Public Class CJobOrder
             m_privilegests = value
         End Set
     End Property
-    Public Sub AddNew(pFormatSQL As String)
-        Dim retStr As String = ""
-        Try
-            Using cn As New SqlConnection(m_ConnStr)
-                cn.Open()
-                Using rd As SqlDataReader = New SqlCommand(String.Format("SELECT MAX(JNo) as Ret FROM Job_Order WHERE JNo Like '{0}'", pFormatSQL), cn).ExecuteReader
-                    If rd.Read Then
-                        If rd.HasRows Then
-                            Dim numStr As String = ""
-                            Dim formatStr As String = ""
-                            Dim i As Integer = 0
-                            For i = 1 To rd.GetString(0).Length
-                                If IsNumeric(rd.GetString(0).Substring(rd.GetString(0).Length - i, 1)) Then
-                                    numStr = rd.GetString(0).Substring(rd.GetString(0).Length - i, 1) & numStr
-                                    formatStr &= "0"
-                                Else
-                                    Exit For
-                                End If
-                            Next
-                            If numStr <> "" Then
-                                retStr = rd.GetString(0).Substring(0, rd.GetString(0).Length - i + 1) & Format(CLng(numStr) + 1, formatStr)
-                            End If
-                        End If
-                    End If
-                    rd.Close()
-                End Using
-                cn.Close()
-            End Using
-        Catch ex As Exception
+    Public Sub AddNew(pFormatSQL As String, Optional pClearAll As Boolean = True)
 
-        End Try
-        If retStr = "" Then
-            Dim j As Integer = pFormatSQL.Count(Function(c As Char) c = "_")
-            retStr = Replace(pFormatSQL, Strings.StrDup(j, "_"), Format(1, Strings.StrDup(j, "0")))
-        End If
+        Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(JNo) as Ret FROM Job_Order WHERE JNo Like '{0}'", pFormatSQL), pFormatSQL)
         m_JNo = retStr
-        m_CancelDate = SqlTypes.SqlDateTime.MinValue
-        m_CancelProveDate = SqlTypes.SqlDateTime.MinValue
-        m_DocDate = SqlTypes.SqlDateTime.MinValue
-        m_ClearDate = SqlTypes.SqlDateTime.MinValue
-        m_CloseJobDate = SqlTypes.SqlDateTime.MinValue
-        m_ConfirmChqDate = SqlTypes.SqlDateTime.MinValue
-        m_ConfirmDate = SqlTypes.SqlDateTime.MinValue
-        m_DutyDate = SqlTypes.SqlDateTime.MinValue
-        m_EstDeliverDate = SqlTypes.SqlDateTime.MinValue
-        m_EstDeliverTime = SqlTypes.SqlDateTime.MinValue
-        m_ETADate = SqlTypes.SqlDateTime.MinValue
-        m_ETDDate = SqlTypes.SqlDateTime.MinValue
-        m_ImExDate = SqlTypes.SqlDateTime.MinValue
-        m_LoadDate = SqlTypes.SqlDateTime.MinValue
-        m_ReadyToClearDate = SqlTypes.SqlDateTime.MinValue
-        m_CancelProveTime = SqlTypes.SqlDateTime.MinValue
-        m_CancelTime = SqlTypes.SqlDateTime.MinValue
-        m_CloseJobTime = SqlTypes.SqlDateTime.MinValue
-        m_ETTime = SqlTypes.SqlDateTime.MinValue
+        If pClearAll Then
+            m_CancelDate = SqlTypes.SqlDateTime.MinValue
+            m_CancelProveDate = SqlTypes.SqlDateTime.MinValue
+            m_DocDate = SqlTypes.SqlDateTime.MinValue
+            m_ClearDate = SqlTypes.SqlDateTime.MinValue
+            m_CloseJobDate = SqlTypes.SqlDateTime.MinValue
+            m_ConfirmChqDate = SqlTypes.SqlDateTime.MinValue
+            m_ConfirmDate = SqlTypes.SqlDateTime.MinValue
+            m_DutyDate = SqlTypes.SqlDateTime.MinValue
+            m_EstDeliverDate = SqlTypes.SqlDateTime.MinValue
+            m_EstDeliverTime = SqlTypes.SqlDateTime.MinValue
+            m_ETADate = SqlTypes.SqlDateTime.MinValue
+            m_ETDDate = SqlTypes.SqlDateTime.MinValue
+            m_ImExDate = SqlTypes.SqlDateTime.MinValue
+            m_LoadDate = SqlTypes.SqlDateTime.MinValue
+            m_ReadyToClearDate = SqlTypes.SqlDateTime.MinValue
+
+            m_CancelProveTime = SqlTypes.SqlDateTime.MinValue
+            m_CancelTime = SqlTypes.SqlDateTime.MinValue
+            m_CloseJobTime = SqlTypes.SqlDateTime.MinValue
+            m_ETTime = SqlTypes.SqlDateTime.MinValue
+        End If
     End Sub
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
@@ -944,21 +915,14 @@ Public Class CJobOrder
                             Dim dr As DataRow = dt.NewRow
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             Try
+                                pass = "0"
                                 dr("BranchCode") = Me.BranchCode
                                 dr("JNo") = Me.JNo
                                 dr("JRevise") = Me.JRevise
-                                If Me.ConfirmDate.Year > 2000 Then
-                                    dr("ConfirmDate") = Me.ConfirmDate
-                                Else
-                                    dr("ConfirmDate") = System.DBNull.Value
-                                End If
+                                dr("ConfirmDate") = Main.GetDBDate(Me.ConfirmDate)
                                 pass = "1"
                                 dr("CPolicyCode") = Me.CPolicyCode
-                                If Me.DocDate.Year > 2000 Then
-                                    dr("DocDate") = Me.DocDate
-                                Else
-                                    dr("DocDate") = DateTime.Today
-                                End If
+                                dr("DocDate") = Main.GetDBDate(Me.DocDate, True)
                                 pass = "2"
                                 dr("CustCode") = Me.CustCode
                                 dr("CustBranch") = Me.CustBranch
@@ -982,65 +946,35 @@ Public Class CJobOrder
                                 dr("InvProductUnit") = Me.InvProductUnit
                                 dr("InvCurUnit") = Me.InvCurUnit
                                 dr("InvCurRate") = Me.InvCurRate
-                                If Me.ImExDate.Year > 2000 Then
-                                    dr("ImExDate") = Me.ImExDate
-                                Else
-                                    dr("ImExDate") = System.DBNull.Value
-                                End If
+                                dr("ImExDate") = Main.GetDBDate(Me.ImExDate)
                                 pass = "3"
+
                                 dr("BLNo") = Me.BLNo
                                 dr("BookingNo") = Me.BookingNo
                                 dr("ClearPort") = Me.ClearPort
                                 dr("ClearPortNo") = Me.ClearPortNo
-                                If Me.ClearDate.Year > 2000 Then
-                                    dr("ClearDate") = Me.ClearDate
-                                Else
-                                    dr("ClearDate") = System.DBNull.Value
-                                End If
-                                If Me.LoadDate.Year > 2000 Then
-                                    dr("LoadDate") = Me.LoadDate
-                                Else
-                                    dr("LoadDate") = System.DBNull.Value
-                                End If
+                                dr("ClearDate") = Main.GetDBDate(Me.ClearDate)
+                                dr("LoadDate") = Main.GetDBDate(Me.LoadDate)
                                 pass = "4"
+
                                 dr("ForwarderCode") = Me.ForwarderCode
                                 dr("AgentCode") = Me.AgentCode
                                 dr("VesselName") = Me.VesselName
-                                If Me.ETDDate.Year > 2000 Then
-                                    dr("ETDDate") = Me.ETDDate
-                                Else
-                                    dr("ETDDate") = System.DBNull.Value
-                                End If
-                                If Me.ETADate.Year > 2000 Then
-                                    dr("ETADate") = Me.ETADate
-                                Else
-                                    dr("ETADate") = System.DBNull.Value
-                                End If
+                                dr("ETDDate") = Main.GetDBDate(Me.ETDDate)
+                                dr("ETADate") = Main.GetDBDate(Me.ETADate)
+
                                 pass = "5"
                                 dr("ETTime") = Me.ETTime
                                 dr("FNetPrice") = Me.FNetPrice
                                 dr("BNetPrice") = Me.BNetPrice
                                 dr("CancelReson") = Me.CancelReson
-                                If Me.CancelDate.Year > 2000 Then
-                                    dr("CancelDate") = Me.CancelDate
-                                    'dr("CancelTime") = Me.CancelTime
-                                Else
-                                    dr("CancelDate") = System.DBNull.Value
-                                End If
+                                dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
+
                                 pass = "6"
                                 dr("CancelProve") = Me.CancelProve
-                                If Me.CancelProveDate.Year > 2000 Then
-                                    dr("CancelProveDate") = Me.CancelProveDate
-                                    'dr("CancelProveTime") = Me.CancelProveTime
-                                Else
-                                    dr("CancelProveDate") = System.DBNull.Value
-                                End If
-                                If Me.CloseJobDate.Year > 2000 Then
-                                    dr("CloseJobDate") = Me.CloseJobDate
-                                    'dr("CloseJobTime") = Me.CloseJobTime
-                                Else
-                                    dr("CloseJobDate") = System.DBNull.Value
-                                End If
+                                dr("CancelProveDate") = Main.GetDBDate(Me.CancelProveDate)
+                                dr("CloseJobDate") = Main.GetDBDate(Me.CloseJobDate)
+
                                 pass = "7"
                                 dr("CloseJobBy") = Me.CloseJobBy
                                 dr("DeclareType") = Me.DeclareType
@@ -1050,19 +984,12 @@ Public Class CJobOrder
                                 dr("Ty19BIS") = Me.Ty19BIS
                                 dr("TyClearTax") = Me.TyClearTax
                                 dr("TyClearTaxReson") = Me.TyClearTaxReson
-                                If Me.EstDeliverDate.Year > 2000 Then
-                                    dr("EstDeliverDate") = Me.EstDeliverDate
-                                    'dr("EstDeliverTime") = Me.EstDeliverTime
-                                Else
-                                    dr("EstDeliverDate") = System.DBNull.Value
-                                End If
+                                dr("EstDeliverDate") = Main.GetDBDate(Me.EstDeliverDate)
+
                                 pass = "8"
                                 dr("TotalContainer") = Me.TotalContainer
-                                If Me.DutyDate.Year > 2000 Then
-                                    dr("DutyDate") = Me.DutyDate
-                                Else
-                                    dr("DutyDate") = System.DBNull.Value
-                                End If
+                                dr("DutyDate") = Main.GetDBDate(Me.DutyDate)
+
                                 dr("DutyAmount") = Me.DutyAmount
                                 dr("DutyCustPayOther") = Me.DutyCustPayOther
                                 dr("DutyCustPayChqAmt") = Me.DutyCustPayChqAmt
@@ -1076,23 +1003,24 @@ Public Class CJobOrder
                                 dr("DutyLtdPayEPAYAmt") = Me.DutyLtdPayEPAYAmt
                                 dr("DutyLtdPayCashAmt") = Me.DutyLtdPayCashAmt
                                 dr("DutyLtdPayOtherAmt") = Me.DutyLtdPayOtherAmt
-                                If Me.ConfirmChqDate.Year > 2000 Then
-                                    dr("ConfirmChqDate") = Me.ConfirmChqDate
-                                Else
-                                    dr("ConfirmChqDate") = System.DBNull.Value
-                                End If
+                                dr("ConfirmChqDate") = Main.GetDBDate(Me.ConfirmChqDate)
                                 pass = "9"
+
+                                dr("CancelProveTime") = Main.GetDBTime(Me.CancelProveTime)
+                                dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
+                                dr("CloseJobTime") = Main.GetDBTime(Me.CloseJobTime)
+                                dr("ETTime") = Main.GetDBTime(Me.ETTime)
+
+                                pass = "10"
+
                                 dr("ShippingEmp") = Me.ShippingEmp
                                 dr("ShippingCmd") = Me.ShippingCmd
                                 dr("TotalGW") = Me.TotalGW
                                 dr("GWUnit") = Me.GWUnit
                                 dr("TSRequest") = Me.TSRequest
                                 dr("ShipmentType") = Me.ShipmentType
-                                If Me.ReadyToClearDate.Year > 2000 Then
-                                    dr("ReadyToClearDate") = Me.ReadyToClearDate
-                                Else
-                                    dr("ReadyToClearDate") = System.DBNull.Value
-                                End If
+                                dr("ReadyToClearDate") = Main.GetDBDate(Me.ReadyToClearDate)
+
                                 dr("Commission") = Me.Commission
                                 dr("CommPayTo") = Me.CommPayTo
                                 dr("ProjectName") = Me.ProjectName
@@ -1105,9 +1033,10 @@ Public Class CJobOrder
                                 dr("MAWB") = Me.MAWB
                                 dr("consigneecode") = Me.consigneecode
                                 dr("privilegests") = Me.privilegests
-                                pass = "10"
+
+                                pass = "11"
                             Catch ex As Exception
-                                msg = "[exception]" & ex.Message
+                                msg = "[exception]:" & ex.Message
                             End Try
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)

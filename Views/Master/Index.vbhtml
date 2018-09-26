@@ -78,6 +78,7 @@ End Code
 </div>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
+    var user = '@ViewBag.User';
     $(document).ready(function () {
         loadCombo();
         getJobdata();

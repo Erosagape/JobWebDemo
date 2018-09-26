@@ -19,15 +19,13 @@
         function CheckLogin() {
             if (userID == '') {
                 $('#dvLogin').modal('show');
-            } else {
-
             }
         }
         function Login() {
             userID = $('#txtUserID').val();
             var Password = $('#txtPassword').val();
             if (userID != '') {
-                $.get('Master/GetUser?Code=' + userID +'&Pass=' + Password)
+                $.get('Master/SetLogin?Code=' + userID +'&Pass=' + Password)
                     .done(function (r) {
                         if (r.user.data.length > 0) {
                             var b = r.user.data[0];
