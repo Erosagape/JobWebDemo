@@ -20,7 +20,7 @@ Namespace Controllers
         ' GET: Advance
         Function Index() As ActionResult
             CheckSession()
-            Return View()
+            Return GetView("Advance")
         End Function
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
             If Not IsNothing(data) Then
@@ -60,7 +60,7 @@ Namespace Controllers
                 oAdvH.AddNew(prefix & "-" & DateTime.Now.ToString("yyMM") & "____")
                 Dim msg As String = oAdvH.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdVNo='{1}'", oAdvH.BranchCode, oAdvH.AdvNo))
                 Dim jsonh As String = JsonConvert.SerializeObject(oAdvH)
-                Dim json = "{""adv"":{""header"":" & jsonh & ",""result"":" & msg & "}}"
+                Dim json = "{""adv"":{""header"":" & jsonh & ",""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
@@ -82,7 +82,7 @@ Namespace Controllers
                 oAdvD.AddNew()
                 Dim msg As String = oAdvD.SaveData(String.Format(" WHERE BranchCode='{0}' And AdvNo='{1}' And ItemNo={2}", oAdvD.BranchCode, oAdvD.AdvNo, oAdvD.ItemNo))
                 Dim jsonh As String = JsonConvert.SerializeObject(oAdvD)
-                Dim json = "{""adv"":{""detail"":" & jsonh & ",""result"":" & msg & "}}"
+                Dim json = "{""adv"":{""detail"":" & jsonh & ",""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

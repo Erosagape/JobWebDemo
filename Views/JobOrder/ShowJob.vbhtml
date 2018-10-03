@@ -1,5 +1,4 @@
-﻿
-@Code
+﻿@Code
     ViewBag.Title = "Job Information"
 End Code
 <div Class="panel-body">

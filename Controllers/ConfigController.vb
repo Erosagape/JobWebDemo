@@ -11,7 +11,7 @@ Namespace Controllers
             If IsNothing(Session("CurrUser")) Then
                 Session("CurrUser") = ""
             End If
-            ViewBag.User = Session("CurrUser")
+            ViewBag.User = Session("CurrUser").ToString()
         End Sub
         Private Function GetView(vName As String) As ActionResult
             If IsNothing(Session("CurrUser")) Then
@@ -22,7 +22,7 @@ Namespace Controllers
         ' GET: Config
         Function Index() As ActionResult
             CheckSession()
-            Return View()
+            Return GetView("Index")
         End Function
         Public Function SetConfig(<FromBody()> ByVal data As CConfig) As HttpResponseMessage
             If Not IsNothing(data) Then
@@ -128,6 +128,55 @@ Namespace Controllers
                 </div>
             </div>
 "
+        End Function
+        Function GetLogin() As ActionResult
+            CheckSession()
+            Dim oData
+            If ViewBag.User <> "" Then
+                oData = New CUser(jobWebConn).GetData(String.Format(" WHERE UserID='{0}'", ViewBag.User))
+                If oData.Count > 0 Then
+                    oData = oData(0)
+                Else
+                    oData = New CUser(jobWebConn)
+                End If
+            Else
+                oData = New CUser(jobWebConn)
+            End If
+            Dim json As String = JsonConvert.SerializeObject(oData)
+            json = "{""user"":{""data"":" & json & "}}"
+            Return Content(json, jsonContent)
+        End Function
+        Function SetLogOut() As ActionResult
+            ViewBag.User = ""
+            Session("CurrUser") = ""
+            Return Content("Y", textContent)
+        End Function
+        Function SetLogin() As ActionResult
+            Try
+                Dim chk As Integer = 0
+                Dim tSqlw As String = " WHERE UserID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND UserID='{0}'", Request.QueryString("Code").ToString)
+                    chk += 1
+                End If
+                If Not IsNothing(Request.QueryString("Pass")) Then
+                    tSqlw &= String.Format("AND UPassword='{0}'", Request.QueryString("Pass").ToString)
+                    chk += 1
+                End If
+                Dim oData = New CUser(jobWebConn).GetData(tSqlw)
+                If chk = 2 And oData.Count > 0 Then
+                    ViewBag.User = oData(0).UserID
+                    Session("CurrUser") = ViewBag.User
+                Else
+                    ViewBag.User = ""
+                    Session("CurrUser") = ""
+                End If
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""user"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
         End Function
 
     End Class

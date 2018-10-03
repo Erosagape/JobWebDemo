@@ -22,7 +22,8 @@ Namespace Controllers
             Return View()
         End Function
         Function ServiceCode() As ActionResult
-            Return View()
+            CheckSession()
+            Return GetView("ServiceCode")
         End Function
         Function GetServUnit() As ActionResult
             Try
@@ -84,33 +85,6 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
 
-        End Function
-        Function SetLogin() As ActionResult
-            Try
-                Dim chk As Integer = 0
-                Dim tSqlw As String = " WHERE UserID<>'' "
-                If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND UserID='{0}'", Request.QueryString("Code").ToString)
-                    chk += 1
-                End If
-                If Not IsNothing(Request.QueryString("Pass")) Then
-                    tSqlw &= String.Format("AND UPassword='{0}'", Request.QueryString("Pass").ToString)
-                    chk += 1
-                End If
-                Dim oData = New CUser(jobWebConn).GetData(tSqlw)
-                If chk = 2 And oData.Count > 0 Then
-                    ViewBag.User = oData(0).UserID
-                    Session("CurrUser") = ViewBag.User
-                Else
-                    ViewBag.User = ""
-                    Session("CurrUser") = ""
-                End If
-                Dim json As String = JsonConvert.SerializeObject(oData)
-                    json = "{""user"":{""data"":" & json & "}}"
-                    Return Content(json, jsonContent)
-            Catch ex As Exception
-                Return Content("[]", jsonContent)
-            End Try
         End Function
         Function GetUser() As ActionResult
             Try
@@ -191,6 +165,21 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function DelServiceCode() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE SICode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND SICode Like '{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData As New CServiceCode(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""servicecode"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetServiceCode() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE SICode<>'' "
@@ -207,14 +196,23 @@ Namespace Controllers
         End Function
         Function GetNewServiceCode() As ActionResult
             Try
-                Dim Code As String = ""
+                Dim Code As String = "SNG-"
                 If Not IsNothing(Request.QueryString("Code")) Then
                     Code = Request.QueryString("Code").ToString
                 End If
+                Dim IsSave As String = "Y"
+                If Not IsNothing(Request.QueryString("Save")) Then
+                    IsSave = Request.QueryString("Save").ToString
+                End If
                 Dim oData = New CServiceCode(jobWebConn)
-                oData.AddNew(Code & "___")
+                Dim msg As String = "OK"
+                If IsSave = "Y" Then
+                    oData.AddNew(Code & "___")
+                    msg = oData.SaveData(String.Format(" WHERE SICode='{0}' ", oData.SICode))
+                End If
+
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""servicecode"":{""data"":" & json & "}}"
+                json = "{""servicecode"":{""data"":[" & json & "],""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

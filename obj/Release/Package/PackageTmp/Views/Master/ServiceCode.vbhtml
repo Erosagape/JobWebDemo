@@ -82,7 +82,10 @@ End Code
             <label for="chkIsUsedCoSlip">Used for Co-person</label>
         </div>
     </div>
+    <button id="btnAdd" class="btn btn-warning" onclick="AddData()">Add</button>
     <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
+    <button id="btnAdd" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+
 </div>
 <div id="dvSearch" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -107,7 +110,11 @@ End Code
 </div>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
+    var row = {};
     $(document).ready(function () {
+        SetEvents();
+    });
+    function SetEvents() {
         $('#chkIsTaxCharge').change(function () {
             if (this.checked) {
                 $('input:radio[name=optVAT][value=1]').prop('checked', true);
@@ -125,13 +132,187 @@ End Code
         $('#dvSearch').on('shown.bs.modal', function () {
             $('#tbGrid_filter input').focus();
         });
-    });
+        $('#txtSICode').keydown(function (e) {
+            if (e.which === 13) {
+                SearchData($('#txtSICode').val());
+            }
+        });
+    }
+    function SearchData(code) {
+        $.get(path + 'master/getservicecode?code=' + code).done(function (r) {
+            if (r.servicecode.data.length > 0) {
+                row = r.servicecode.data[0];
+                LoadData(row);
+                return;
+            } else {
+                alert('Data not found');
+            }
+        });
+    }
+
     function ShowSearch() {
         RefreshGrid();
         $('#dvSearch').modal('show');
     }
+    function AddData() {
+        var code = $('#cboType').val();
+        $.get(path + 'master/getnewservicecode?code=' + code + '-',function (r) {
+                if (r.servicecode.data.length>0) {
+                    row = r.servicecode.data[0];
+                    LoadData(row);
+                    return;
+                }
+            });
+    }
+    function DeleteData() {
+        var code = $('#txtSICode').val();
+        $.get(path + 'master/delservicecode?code=' + code, function (r) {
+            alert(r.servicecode.result);
+            row = r.servicecode.data[0];
+            LoadData(row);
+        });
+    }
+    function LoadData(dt) {
+        $('#txtSICode').val(dt.SICode);
+        $('#txtNameThai').val(dt.NameThai);
+        $('#txtNameEng').val(dt.NameEng);
+        $('#txtStdPrice').val(dt.StdPrice);
+        $('#txtUnitCharge').val(dt.UnitCharge);
+        $('#txtCurrencyCode').val(dt.CurrencyCode);
+        $('#txtDefaultVender').val(dt.DefaultVender);
+        $('#txtProcessDesc').val(dt.ProcessDesc);
+        $('#txtGLAccountCodeSales').val(dt.GLAccountCodeSales);
+        $('#txtGLAccountCodeCost').val(dt.GLAccountCodeCost);
+
+        $('input:radio[name=optVAT]:checked').prop('checked', false);
+        if (dt.IsTaxCharge === 0) {
+            $('#chkIsTaxCharge').prop('checked', false);
+        } else {
+            $('#chkIsTaxCharge').prop('checked', true);
+            $('input:radio[name=optVAT][value="' + dt.IsTaxCharge + '"]').prop('checked', true);
+        }
+
+        $('input:radio[name=optWHT]:checked').prop('checked', false);
+        if (dt.Is50Tavi === 0) {
+            $('#chkIs50Tavi').prop('checked', false);
+        } else {
+            $('#chkIs50Tavi').prop('checked', true);
+        }
+        if (dt.IsLtdAdv50Tavi === 1) $('input:radio[name=optWHT][value=1]').prop('checked', true);
+        if (dt.IsPay50TaviTo === 1) $('input:radio[name=optWHT][value=2]').prop('checked', true);
+
+        $('#txtRate50Tavi').val(dt.Rate50Tavi);
+
+        if (dt.IsHaveSlip === 0) {
+            $('#chkIsHaveSlip').prop('checked', false);
+        } else {
+            $('#chkIsHaveSlip').prop('checked', true);
+        }
+
+        if (dt.IsCredit === 0) {
+            $('#chkIsCredit').prop('checked', false);
+        } else {
+            $('#chkIsCredit').prop('checked', true);
+        }
+
+        if (dt.IsExpense === 0) {
+            $('#chkIsExpense').prop('checked', false);
+        } else {
+            $('#chkIsExpense').prop('checked', true);
+        }
+
+        if (dt.IsShowPrice === 0) {
+            $('#chkIsShowPrice').prop('checked', false);
+        } else {
+            $('#chkIsShowPrice').prop('checked', true);
+        }
+
+        if (dt.IsUsedCoSlip === 0) {
+            $('#chkIsUsedCoSlip').prop('checked', false);
+        } else {
+            $('#chkIsUsedCoSlip').prop('checked', true);
+        }
+    }
+    function GetDataSave(dt) {
+        dt.SICode=$('#txtSICode').val();
+        dt.NameThai=$('#txtNameThai').val();
+        dt.NameEng=$('#txtNameEng').val();
+        dt.StdPrice=CNum($('#txtStdPrice').val());
+        dt.UnitCharge=$('#txtUnitCharge').val();
+        dt.CurrencyCode=$('#txtCurrencyCode').val();
+        dt.DefaultVender=$('#txtDefaultVender').val();
+        dt.ProcessDesc=$('#txtProcessDesc').val();
+        dt.GLAccountCodeSales=$('#txtGLAccountCodeSales').val();
+        dt.GLAccountCodeCost=$('#txtGLAccountCodeCost').val();
+
+       
+        if ($('#chkIsTaxCharge').prop('checked') == false) {
+            dt.IsTaxCharge = 0;
+        } else {
+            dt.IsTaxCharge = 0;
+            if ($('input:radio[name=optVAT]:checked').val() == '1') dt.IsTaxCharge = 1;
+            if ($('input:radio[name=optVAT]:checked').val() == '2') dt.IsTaxCharge = 2;
+        }
+        if ($('#chkIs50Tavi').prop('checked') == true) {
+            dt.Is50Tavi = 1;
+        } else {
+            dt.Is50Tavi = 0;
+        }
+        dt.IsLtdAdv50Tavi = 0;
+        dt.IsPay50TaviTo = 0;
+        if ($('input:radio[name=optWHT]:checked').val() == '1') dt.IsLtdAdv50Tavi = 1;
+        if ($('input:radio[name=optWHT]:checked').val() == '2') dt.IsPay50TaviTo = 1;
+
+        dt.Rate50Tavi = CNum($('#txtRate50Tavi').val());
+
+        if ($('#chkIsHaveSlip').prop('checked') === true) {
+            dt.IsHaveSlip = 1;
+        } else {
+            dt.IsHaveSlip = 0;
+        }
+        if ($('#chkIsCredit').prop('checked') === true) {
+            dt.IsCredit = 1;
+        } else {
+            dt.IsCredit = 0;
+        }
+        if ($('#chkIsExpense').prop('checked') === true) {
+            dt.IsExpense = 1;
+        } else {
+            dt.IsExpense = 0;
+        }
+        if ($('#chkIsShowPrice').prop('checked') === true) {
+            dt.IsShowPrice = 1;
+        } else {
+            dt.IsShowPrice = 0;
+        }
+        if ($('#chkIsUsedCoSlip').prop('checked') === true) {
+            dt.IsUsedCoSlip = 1;
+        } else {
+            dt.IsUsedCoSlip = 0;
+        }
+        return dt;
+    }
     function SaveData() {
-        alert('VAT=' + $('#chkIsTaxCharge').prop('checked') + ' (' + $('input:radio[name=optVAT]:checked').val() + ') TAX=' + $('#chkIs50Tavi').prop('checked') + ' (' + $('input:radio[name=optWHT]:checked').val()+')');
+        if (row.SICode != undefined) {
+            var obj = GetDataSave(row);
+            var jsonText = JSON.stringify({ data: obj });
+            //alert(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetServiceCode", "Master")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        } else {
+            alert('No data to save');
+        }
+        //alert('VAT=' + $('#chkIsTaxCharge').prop('checked') + ' (' + $('input:radio[name=optVAT]:checked').val() + ') TAX=' + $('#chkIs50Tavi').prop('checked') + ' (' + $('input:radio[name=optWHT]:checked').val()+')');
     }
     function RefreshGrid() {
         //popup for search data
@@ -151,68 +332,11 @@ End Code
             $('#tbGrid tbody tr.selected').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
             $(this).addClass('selected'); //select row ใหม่
 
-            var dt = $('#tbGrid').DataTable().row(this).data();
-
-            $('#txtSICode').val(dt.SICode);
-            $('#txtNameThai').val(dt.NameThai);
-            $('#txtNameEng').val(dt.NameEng);
-            $('#txtStdPrice').val(dt.StdPrice);
-            $('#txtUnitCharge').val(dt.UnitCharge);
-            $('#txtCurrencyCode').val(dt.CurrencyCode);
-            $('#txtDefaultVender').val(dt.DefaultVender);
-            $('#txtProcessDesc').val(dt.ProcessDesc);
-            $('#txtGLAccountCodeSales').val(dt.GLAccountCodeSales);
-            $('#txtGLAccountCodeCost').val(dt.GLAccountCodeCost);
-
-            $('input:radio[name=optVAT]:checked').prop('checked', false);
-            if (dt.IsTaxCharge === 0) {
-                $('#chkIsTaxCharge').prop('checked', false);
-            } else {
-                $('#chkIsTaxCharge').prop('checked', true);
-                $('input:radio[name=optVAT][value="'+ dt.IsTaxCharge +'"]').prop('checked', true);
-            }
-
-            $('input:radio[name=optWHT]:checked').prop('checked', false);
-            if (dt.Is50Tavi === 0) {
-                $('#chkIs50Tavi').prop('checked', false);
-            } else {
-                $('#chkIs50Tavi').prop('checked', true);
-                if (dt.IsLtdAdv50Tavi === 1) $('input:radio[name=optWHT][value=1]').prop('checked', true);
-                if (dt.IsPay50TaviTo === 1) $('input:radio[name=optWHT][value=2]').prop('checked', true);
-            }
-            $('#txtRate50Tavi').val(dt.Rate50Tavi);
-
-            if (dt.IsHaveSlip === 0) {
-                $('#chkIsHaveSlip').prop('checked', false);
-            } else {
-                $('#chkIsHaveSlip').prop('checked', true);
-            }
-
-            if (dt.IsCredit === 0) {
-                $('#chkIsCredit').prop('checked', false);
-            } else {
-                $('#chkIsCredit').prop('checked', true);
-            }
-
-            if (dt.IsExpense === 0) {
-                $('#chkIsExpense').prop('checked', false);
-            } else {
-                $('#chkIsExpense').prop('checked', true);
-            }
-
-            if (dt.IsShowPrice === 0) {
-                $('#chkIsShowPrice').prop('checked', false);
-            } else {
-                $('#chkIsShowPrice').prop('checked', true);
-            }
-
-            if (dt.IsUsedCoSlip === 0) {
-                $('#chkIsUsedCoSlip').prop('checked', false);
-            } else {
-                $('#chkIsUsedCoSlip').prop('checked', true);
-            }
+            row = $('#tbGrid').DataTable().row(this).data();
+            LoadData(row);
 
             $('#dvSearch').modal('hide');
         });
     }
+
 </script>

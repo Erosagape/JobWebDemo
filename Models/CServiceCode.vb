@@ -195,8 +195,26 @@ Public Class CServiceCode
             m_IsUsedCoSlip = value
         End Set
     End Property
-    Public Function SaveData(pSQLWhere As String) As Boolean
-        Dim bComplete As Boolean = False
+    Public Function DeleteData(pSQLWhere As String) As String
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+                Using cm As New SqlCommand("DELETE FROM Job_SrvSingle " + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+                msg = "Delete Complete"
+            Catch ex As Exception
+                msg = "[exception] " + ex.Message
+            End Try
+        End Using
+        Return msg
+    End Function
+    Public Function SaveData(pSQLWhere As String) As String
+        Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
@@ -228,15 +246,19 @@ Public Class CServiceCode
                             dr("IsLtdAdv50Tavi") = Me.IsLtdAdv50Tavi
                             dr("IsUsedCoSlip") = Me.IsUsedCoSlip
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
-                            bComplete = True
+                            If da.Update(dt) > 0 Then
+                                msg = "Save " & Me.SICode & " Complete"
+                            Else
+                                msg = "Save Failed"
+                            End If
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                msg = "[exception] " + ex.Message
             End Try
         End Using
-        Return bComplete
+        Return msg
     End Function
     Public Function GetData(pSQLWhere As String) As List(Of CServiceCode)
         Dim lst As New List(Of CServiceCode)

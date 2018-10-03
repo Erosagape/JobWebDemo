@@ -11,76 +11,6 @@
     <script src="Scripts/bootstrap.js"></script>
 </head>
 <body>
-    <script type="text/javascript">
-        var userID = '';
-        $(document).ready(function () {
-            CheckLogin();
-        });
-        function CheckLogin() {
-            if (userID == '') {
-                $('#dvLogin').modal('show');
-            }
-        }
-        function Login() {
-            userID = $('#txtUserID').val();
-            var Password = $('#txtPassword').val();
-            if (userID != '') {
-                $.get('Master/SetLogin?Code=' + userID +'&Pass=' + Password)
-                    .done(function (r) {
-                        if (r.user.data.length > 0) {
-                            var b = r.user.data[0];
-                            userID = b.UserID;
-                            $('#lblUserID').text(b.TName);
-                        } else {
-                            userID = '';
-                            $('#lblUserID').text('Please Login');
-                            alert('User ID or Password Incorrect');
-                        }
-
-                    });
-            }
-            var compID = $('#txtCompanyID').val();
-            if (compID != '') {
-                $('#lblCompanyName').text(compID);
-            }
-            $('#dvLogin').modal('hide');
-        }
-        function CheckRights(mnuID) {
-            if (userID.toUpperCase() == 'ADMIN') {
-                return 'Y';
-            }
-            return 'N';
-        }
-        function OpenMenu(mnuID) {
-            if (userID != '') {
-                if (CheckRights(mnuID) == 'N') {
-                    alert('You are not authorized');
-                    return;
-                }
-                switch (mnuID) {
-                    case 'Advance':
-                        window.open('Advance/Index');
-                        break;
-                    case 'Constant':
-                        window.open('Config/Index');
-                        break;
-                    case 'CreateJob':
-                        window.open('JobOrder/CreateJob');
-                        break;
-                    case 'SearchJob':
-                        window.open('Master/Index');
-                        break;
-                    case 'ServiceCode':
-                        window.open('Master/ServiceCode');
-                        break;
-                    default:
-                        break;
-                }
-            } else {
-                alert('Please login first');
-            }
-        }
-    </script>
     <div id="dvLogin" class="modal" style="width:100%">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -241,6 +171,122 @@
             <img src="Resource/jobtawan_bg.jpg" style="width:100%" onclick="CheckLogin()" />
         </div>
     </div>
+    <script type="text/javascript">
+        var userID = '';
+        $(document).ready(function () {
+            SetEvents();
+            CheckLogin();
+        });
+        function SetEvents() {
+
+            $('#dvLogin').on('shown.bs.modal', function () {
+                $('#txtUserID').focus();
+            });
+            $('#txtUserID').keydown(function (event) {
+                if (event.which === 13) {
+                    $('#txtPassword').focus();
+                }
+            });
+            $('#txtPassword').keydown(function (event) {
+                if (event.which === 13) {
+                    Login();
+                }
+            });
+        }
+        function ShowLogin(r) {
+            userID = r.UserID;
+            $('#lblUserID').text(r.TName);   
+            var compID = $('#txtCompanyID').val();
+            if (compID !== '') {
+                $('#lblCompanyName').text(compID);
+            }
+        }
+        function CheckLogin() {
+            if (userID === '') {
+                $.get('Config/GetLogin')
+                    .done(function (r) {
+                        if (r.user.data.UserID !== null) {
+                            ShowLogin(r.user.data);
+                        } else {
+                            userID = '';
+                            $('#dvLogin').modal('show');
+                        }
+                    });
+            } else {
+                var c = confirm('Do you need to log out?');
+                if (c == true) {
+                    $.get('Config/SetLogOut')
+                        .done(function (r) {
+                            if (r == 'Y') {
+                                alert('Log out successfully');
+                                userID = '';
+                                $('#lblUserID').text('Please Login');
+                                $('#lblCompanyName').text('Shipping Control System');
+                            }
+                        });
+                }
+            }
+        }
+        function Login() {
+            userID = $('#txtUserID').val();
+            if (userID !== '') {
+                var Password = $('#txtPassword').val();
+                $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password)
+                    .done(function (r) {
+                        if (r.user.data.length > 0) {
+                            var b = r.user.data[0];
+                            ShowLogin(b);
+                        } else {
+                            userID = '';
+                            $('#lblUserID').text('Please Login');
+
+                            alert('User ID or Password Incorrect');
+                        }
+                        $('#dvLogin').modal('hide');
+                    });
+            } else {
+                userID = '';
+                $('#lblUserID').text('Please Login');
+                $('#lblCompanyName').text('Shipping Control System');
+            }
+        }
+        function CheckRights(mnuID) {
+            if (userID.toUpperCase() == 'ADMIN') {
+                return 'Y';
+            }
+            return 'N';
+        }
+        function OpenMenu(mnuID) {
+            if (userID !== '') {
+                if (CheckRights(mnuID) == 'N') {
+                    alert('You are not authorized');
+                    return;
+                }
+                switch (mnuID) {
+                    case 'Advance':
+                        window.open('Advance/Index');
+                        break;
+                    case 'Constant':
+                        window.open('Config/Index');
+                        break;
+                    case 'CreateJob':
+                        window.open('JobOrder/CreateJob');
+                        break;
+                    case 'SearchJob':
+                        window.open('Master/Index');
+                        break;
+                    case 'ServiceCode':
+                        window.open('Master/ServiceCode');
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                alert('Please login first');
+            }
+        }
+    </script>
+
 </body>
 
 </html>
