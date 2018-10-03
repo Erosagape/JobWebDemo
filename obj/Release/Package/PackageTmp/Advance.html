@@ -179,7 +179,7 @@
         }
     });
     function GetAdv(Branch, Doc) {
-        $.get('advance/getadvance?branchcode=' + Branch + '&advno=' + Doc)
+        $.get('adv/getadvance?branchcode=' + Branch + '&advno=' + Doc)
             .done(function (r) {
                 if (r.adv.header.length > 0) {
                     ShowData(r);

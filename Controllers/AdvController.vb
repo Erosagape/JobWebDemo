@@ -3,7 +3,7 @@ Imports System.Web.Mvc
 Imports Newtonsoft.Json
 
 Namespace Controllers
-    Public Class AdvanceController
+    Public Class AdvController
         Inherits Controller
         Private Sub CheckSession()
             If IsNothing(Session("CurrUser")) Then
@@ -20,7 +20,7 @@ Namespace Controllers
         ' GET: Advance
         Function Index() As ActionResult
             CheckSession()
-            Return GetView("Advance")
+            Return GetView("Index")
         End Function
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
             If Not IsNothing(data) Then

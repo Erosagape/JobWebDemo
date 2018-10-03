@@ -10,7 +10,7 @@ Public Module RouteConfig
         routes.IgnoreRoute("{resource}.axd/{*pathInfo}")
 
         routes.MapRoute(
-            name:="Advance",
+            name:="Adv",
             url:="{controller}/{action}/{id}",
             defaults:=New With {.action = "Index", .id = UrlParameter.Optional}
         )

@@ -295,7 +295,7 @@
     <Compile Include="App_Start\FilterConfig.vb" />
     <Compile Include="App_Start\RouteConfig.vb" />
     <Compile Include="App_Start\WebApiConfig.vb" />
-    <Compile Include="Controllers\AdvanceController.vb" />
+    <Compile Include="Controllers\AdvController.vb" />
     <Compile Include="Controllers\ConfigController.vb" />
     <Compile Include="Controllers\MasterController.vb" />
     <Compile Include="Controllers\JobOrderController.vb" />
@@ -378,9 +378,9 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Advance\Index.vbhtml" />
     <Content Include="Views\Master\ServiceCode.vbhtml" />
     <Content Include="Views\JobOrder\Index.vbhtml" />
+    <Content Include="Views\Adv\Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
