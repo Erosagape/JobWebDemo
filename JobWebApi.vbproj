@@ -167,7 +167,6 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <None Include="My Project\PublishProfiles\JobWebDemo - Web Deploy.pubxml" />
     <Content Include="Scripts\Data\job.txt" />
     <None Include="My Project\PublishProfiles\Tawanasp.com.pubxml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
@@ -381,6 +380,9 @@
     <Content Include="Views\Master\ServiceCode.vbhtml" />
     <Content Include="Views\JobOrder\Index.vbhtml" />
     <Content Include="Views\Adv\Index.vbhtml" />
+    <Content Include="Views\Adv\FormAdv.vbhtml" />
+    <Content Include="Views\JobOrder\FormJob.vbhtml" />
+    <Content Include="Views\Shared\_Report.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

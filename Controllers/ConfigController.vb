@@ -17,6 +17,9 @@ Namespace Controllers
             If IsNothing(Session("CurrUser")) Then
                 Return View("Index")
             End If
+            If ViewBag.User = "" Then
+                Return View("Index")
+            End If
             Return View(vName)
         End Function
         ' GET: Config

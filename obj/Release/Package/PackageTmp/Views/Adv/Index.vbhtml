@@ -270,7 +270,15 @@ End Code
                 <button id="btnAdd" class="btn btn-default">New</button>
                 <button id="btnUpdate" class="btn btn-warning">Save</button>
                 <button id="btnDelete" class="btn btn-danger">Delete</button>
+                <button id="btnPrint" class="btn btn-info" onclick="window.open('/formadv');">Print</button>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var path = '@Url.Content("~")';
+    $(document).ready(function () {
+        var br = getQueryString('BranchCode');
+        var ano = getQueryString('AdvNo');
+    });
+</script>

@@ -28,6 +28,10 @@ Namespace Controllers
             CheckSession()
             Return GetView("ShowJob")
         End Function
+        Function FormJob() As ActionResult
+            CheckSession()
+            Return GetView("FormJob")
+        End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function

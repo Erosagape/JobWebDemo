@@ -493,7 +493,7 @@ End Code
                     data.CustCode = $('#txtCustCode').val();
                     data.CustBranch = $('#txtCustBranch').val();
                     data.CSCode = $('#txtCSCode').val();
-                    data.DocDate = JSDate($('#txtJobDate').val());
+                    data.DocDate = CDateTH($('#txtJobDate').val());
                     data.consigneecode = $('#txtConsignee').val();
                     data.CustContactName = $('#txtContactPerson').val();
                     data.QNo = $('#txtQNo').val();

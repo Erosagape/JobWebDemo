@@ -13,7 +13,7 @@ function getQueryString(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
-function JSDate(sqlDateString) {
+function CDateTH(sqlDateString) {
     try {
         var jsDate = sqlDateString.substr(0, 10);
         var month = jsDate.substr(5, 2);
@@ -29,7 +29,7 @@ function JSDate(sqlDateString) {
         return '';
     }
 }
-function SQLDate(sqldateString) {
+function CDateEN(sqldateString) {
     try {
         var jsDate = sqldateString.substr(0, 10);
         var month = jsDate.substr(5, 2);
@@ -55,7 +55,7 @@ function CNum(data) {
 function CCurrency(data) {
     return data.replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
-function CDate(sqlDateString) {
+function ShowDate(sqlDateString) {
     try {
         var jsDate = sqlDateString.substr(0, 10);
         var month = jsDate.substr(5, 2);
@@ -263,4 +263,56 @@ function DummyJobData() {
         DutyCustPayOther: 0
     };
     return j;
+}
+function DummyAdvanceData() {
+    var data = {
+        "adv":
+            {
+                "header":
+                    [{
+                        "BranchCode": "00",
+                        "AdvNo": "DAV-1808-0003",
+                        "CustCode": "MPENS",
+                        "CustBranch": "0000",
+                        "JobType": 1,
+                        "ShipBy": 7,
+                        "AdvDate": "2018-08-01T00:08:00",
+                        "AdvType": 1,
+                        "EmpCode": "JIRAKUL",
+                        "JNo": "DIF1808-00002",
+                        "InvNo": "",
+                        "DocStatus": 4,
+                        "VATRate": 7,
+                        "TotalAdvance": 2294.8,
+                        "TotalVAT": 159.24,
+                        "Total50Tavi": 22.75,
+                        "TRemark": "TESTESTESTESTESTESTESTEST",
+                        "ApproveBy": "JIRAKUL",
+                        "ApproveDate": "2018-08-01T00:08:00",
+                        "ApproveTime": "1900-01-01T08:49:48",
+                        "PaymentBy": "MANASANOK",
+                        "PaymentDate": "2018-08-01T00:08:00",
+                        "PaymentTime": "1900-01-01T08:54:51",
+                        "PaymentRef": "PV-D1808-0003",
+                        "CancelReson": "",
+                        "CancelProve": "",
+                        "CancelDate": "0001-01-01T00:00:00",
+                        "CancelTime": "1900-01-01T00:00:00",
+                        "AdvCash": 0.0,
+                        "AdvChqCash": 2431.29,
+                        "AdvChq": 0.0,
+                        "AdvCred": 0.0,
+                        "PayChqTo": "PENANSHIN SHIPPING (THAILAND) LTD.",
+                        "PayChqDate": "0001-01-01T00:00:00",
+                        "Doc50Tavi": "DWT-1808-0042"
+                    }],
+                "detail":
+                    [{
+                        "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 1, "STCode": "STD", "SICode": "SNG-112", "AdvAmount": 1000.0, "IsChargeVAT": 1, "ChargeVAT": 70.0, "Rate50Tavi": 1.0, "Charge50Tavi": 10.0, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002"
+                    }, { "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 2, "STCode": "STD", "SICode": "SNG-065", "AdvAmount": 216.0, "IsChargeVAT": 1, "ChargeVAT": 15.12, "Rate50Tavi": 1.0, "Charge50Tavi": 2.16, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002" }, { "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 3, "STCode": "STD", "SICode": "SNG-064", "AdvAmount": 216.0, "IsChargeVAT": 1, "ChargeVAT": 15.12, "Rate50Tavi": 1.0, "Charge50Tavi": 2.16, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002" }, { "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 4, "STCode": "STD", "SICode": "SNG-113", "AdvAmount": 200.0, "IsChargeVAT": 1, "ChargeVAT": 14.0, "Rate50Tavi": 1.0, "Charge50Tavi": 2.0, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002" }, { "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 5, "STCode": "STD", "SICode": "SNG-118", "AdvAmount": 64.8, "IsChargeVAT": 1, "ChargeVAT": 4.54, "Rate50Tavi": 1.0, "Charge50Tavi": 0.65, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002" }, { "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 6, "STCode": "STD", "SICode": "SNG-117", "AdvAmount": 108.0, "IsChargeVAT": 1, "ChargeVAT": 7.56, "Rate50Tavi": 1.0, "Charge50Tavi": 1.08, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002" }, { "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 7, "STCode": "STD", "SICode": "SNG-067", "AdvAmount": 200.0, "IsChargeVAT": 1, "ChargeVAT": 14.0, "Rate50Tavi": 1.0, "Charge50Tavi": 2.0, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002" }, { "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 8, "STCode": "STD", "SICode": "SNG-116", "AdvAmount": 270.0, "IsChargeVAT": 1, "ChargeVAT": 18.9, "Rate50Tavi": 1.0, "Charge50Tavi": 2.7, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002" }, {
+                        "BranchCode": "00", "AdvNo": "DAV-1808-0003", "ItemNo": 9, "STCode": "STD", "SICode": "SNG-029", "AdvAmount": 20.0, "IsChargeVAT": 0, "ChargeVAT": 0.0, "Rate50Tavi": 0.0, "Charge50Tavi": 0.0, "TRemark": "", "IsDuplicate": 0, "PayChqTo": null, "Doc50Tavi": null, "ForJNo": "DIF1808-00002"
+                    }]
+            }
+    };
+    return data;
 }

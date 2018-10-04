@@ -14,9 +14,18 @@
 <body>
     <div Class="panel-primary">
         <div Class="panel-heading">
-            <h4 Class="panel-title">
-                @ViewBag.Title
-            </h4>
+            <div Class="panel-title">
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <h5>@ViewBag.Title (@ViewBag.User)</h5>
+                        </td>
+                        <td align="right">
+                            <img src="~/Resource/logo-tawan.jpg" style="width:100px" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
         @RenderBody()
         <div class="panel-footer">

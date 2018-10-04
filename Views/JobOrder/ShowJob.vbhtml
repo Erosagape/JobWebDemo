@@ -1573,7 +1573,7 @@ End Code
                     ShowCustomer(dr.CustCode, dr.CustBranch, false);
                     ShowJobTypeShipBy(dr.JobType, dr.ShipBy, dr.JobStatus)
                     $('#txtRevised').val(dr.JRevised);
-                    $('#txtDocDate').val(SQLDate(dr.DocDate));
+                    $('#txtDocDate').val(CDateEN(dr.DocDate));
                     $('#txtQNo').val(dr.QNo);
                     $('#txtQRevise').val(dr.Revised);
                     $('#txtCustInvNo').val(dr.InvNo);
@@ -1582,10 +1582,10 @@ End Code
                     $('#txtCommission').val(dr.Commission);
                     $('#txtContactName').val(dr.CustContactName);
                     ShowUser(dr.CSCode, '#txtCSName');
-                    $('#txtConfirmDate').val(SQLDate(dr.ConfirmDate));
+                    $('#txtConfirmDate').val(CDateEN(dr.ConfirmDate));
                     ShowUser(dr.CloseJobBy, '#txtCloseBy');
                     $('#txtJobCondition').val(dr.TRemark);
-                    $('#txtCloseDate').val(SQLDate(dr.CloseJobDate));
+                    $('#txtCloseDate').val(CDateEN(dr.CloseJobDate));
                     $('#txtCustPoNo').val(dr.CustRefNO);
                     $('#txtDescription').val(dr.Description);
                     $('#txtCancelReason').val(dr.CancelReson);
@@ -1593,7 +1593,7 @@ End Code
                     $('#txtConsignee').val(dr.consigneecode);
                     $('#txtConsBranch').val(dr.CustBranch);
                     ShowCustomer(dr.consigneecode, dr.CustBranch,true);
-                    $('#txtCancelDate').val(SQLDate(dr.CancelDate));
+                    $('#txtCancelDate').val(CDateEN(dr.CancelDate));
                     $('#txtProjectName').val(dr.ProjectName);
                     $('#txtInvProduct').val(dr.InvProduct);
                     $('#txtInvQty').val(dr.InvProductQty);
@@ -1641,14 +1641,14 @@ End Code
                     $('#txtTransporter').val(dr.AgentCode);
                     ShowVender(dr.AgentCode, '#txtTransporterName');
                     $('#txtTotalCTN').val(dr.TotalContainer);
-                    $('#txtETDDate').val(SQLDate(dr.ETDDate));
-                    $('#txtETADate').val(SQLDate(dr.ETADate));
-                    $('#txtLoadDate').val(SQLDate(dr.LoadDate));
-                    $('#txtDeliveryDate').val(SQLDate(dr.EstDeliverDate));
-                    $('#txtEDIDate').val(SQLDate(dr.ImExDate));
-                    $('#txtReadyClearDate').val(SQLDate(dr.ReadyToClearDate));
-                    $('#txtDutyDate').val(SQLDate(dr.DutyDate));
-                    $('#txtClearDate').val(SQLDate(dr.ClearDate));
+                    $('#txtETDDate').val(CDateEN(dr.ETDDate));
+                    $('#txtETADate').val(CDateEN(dr.ETADate));
+                    $('#txtLoadDate').val(CDateEN(dr.LoadDate));
+                    $('#txtDeliveryDate').val(CDateEN(dr.EstDeliverDate));
+                    $('#txtEDIDate').val(CDateEN(dr.ImExDate));
+                    $('#txtReadyClearDate').val(CDateEN(dr.ReadyToClearDate));
+                    $('#txtDutyDate').val(CDateEN(dr.DutyDate));
+                    $('#txtClearDate').val(CDateEN(dr.ClearDate));
                     $('#txtDeclareType').val(dr.DeclareType);
                     ShowDeclareType(dr.DeclareType);
                     $('#txtReleasePort').val(dr.ClearPort);
@@ -1700,23 +1700,23 @@ End Code
         dr.CustCode = $('#txtCustCode').val();
         dr.CustBranch = $('#txtCustBranch').val();
         dr.JRevised = $('#txtRevised').val();
-        dr.DocDate= JSDate($('#txtDocDate').val());
+        dr.DocDate= CDateTH($('#txtDocDate').val());
         dr.QNo=$('#txtQNo').val();
         dr.Revised=$('#txtQRevise').val();
         dr.InvNo=$('#txtCustInvNo').val();
         dr.DeclareNumber=$('#txtDeclareNo').val();        
         dr.Commission=$('#txtCommission').val();
         dr.CustContactName=$('#txtContactName').val();
-        dr.ConfirmDate=JSDate($('#txtConfirmDate').val());
+        dr.ConfirmDate=CDateTH($('#txtConfirmDate').val());
         
         dr.TRemark = $('#txtJobCondition').val();
 
-        dr.CloseJobDate = JSDate($('#txtCloseDate').val());
+        dr.CloseJobDate = CDateTH($('#txtCloseDate').val());
         
         dr.CustRefNO=$('#txtCustPoNo').val();
         dr.Description = $('#txtDescription').val();
 
-        dr.CancelDate = JSDate($('#txtCancelDate').val());
+        dr.CancelDate = CDateTH($('#txtCancelDate').val());
         dr.CancelReson=$('#txtCancelReason').val();
         
         dr.consigneecode=$('#txtConsignee').val();        
@@ -1749,15 +1749,15 @@ End Code
         
         dr.TotalContainer = $('#txtTotalCTN').val();
 
-        dr.ETDDate = JSDate($('#txtETDDate').val());
-        dr.ETADate = JSDate($('#txtETADate').val());
-        dr.LoadDate = JSDate($('#txtLoadDate').val());
-        dr.EstDeliverDate = JSDate($('#txtDeliveryDate').val());
-        dr.ImExDate = JSDate($('#txtEDIDate').val());
-        dr.ReadyToClearDate = JSDate($('#txtReadyClearDate').val());
-        dr.DutyDate = JSDate($('#txtDutyDate').val());
+        dr.ETDDate = CDateTH($('#txtETDDate').val());
+        dr.ETADate = CDateTH($('#txtETADate').val());
+        dr.LoadDate = CDateTH($('#txtLoadDate').val());
+        dr.EstDeliverDate = CDateTH($('#txtDeliveryDate').val());
+        dr.ImExDate = CDateTH($('#txtEDIDate').val());
+        dr.ReadyToClearDate = CDateTH($('#txtReadyClearDate').val());
+        dr.DutyDate = CDateTH($('#txtDutyDate').val());
 
-        dr.ClearDate = JSDate($('#txtClearDate').val());             
+        dr.ClearDate = CDateTH($('#txtClearDate').val());             
         dr.ClearPort = $('#txtReleasePort').val();
         dr.ClearPortNo = $('#txtPortNo').val();
         
@@ -1790,7 +1790,7 @@ End Code
         return dr;
     }
     function PrintData() {
-        window.open(path + 'PrintJob.html?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(),'','');
+        window.open(path + 'JobOrder/FormJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(),'','');
     }
     function CancelJob() {
         rec.JobStatus = 99;
@@ -1798,7 +1798,7 @@ End Code
         rec.CancelTime = GetTime();
         ShowUser(rec.CancelProve, '#txtCancelBy');
 
-        $('#txtCancelDate').val(SQLDate(GetToday()));
+        $('#txtCancelDate').val(CDateEN(GetToday()));
         ShowJobTypeShipBy(rec.JobType, rec.ShipBy, rec.JobStatus);
         SaveData();
     }
@@ -1808,7 +1808,7 @@ End Code
         rec.CloseJobTime = GetTime();
         ShowUser(rec.CloseJobBy, '#txtCloseBy');
 
-        $('#txtCloseDate').val(SQLDate(GetToday()));
+        $('#txtCloseDate').val(CDateEN(GetToday()));
         ShowJobTypeShipBy(rec.JobType, rec.ShipBy, rec.JobStatus);
         SaveData();
     }

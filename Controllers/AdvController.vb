@@ -22,6 +22,10 @@ Namespace Controllers
             CheckSession()
             Return GetView("Index")
         End Function
+        Function FormAdv() As ActionResult
+            CheckSession()
+            Return GetView("FormAdv")
+        End Function
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
             If Not IsNothing(data) Then
                 data.SetConnect(jobWebConn)

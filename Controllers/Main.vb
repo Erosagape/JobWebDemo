@@ -5,6 +5,8 @@ Module Main
     Friend Const xmlContent As String = "application/xml;charset=UTF-8"
     Friend Const textContent As String = "text/html"
     Friend Const jobDataPath As String = "~/App_Data/job_data.xml"
+    Friend Const logoApp As String = "logo-tawan.jpg"
+    Friend Const logoRep As String = "logo-idl.jpg"
     Friend jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionString").ConnectionString
     Friend jobMasConn As String = ConfigurationManager.ConnectionStrings("JobMasConnectionString").ConnectionString
     Friend Function GetDBDate(pDate As Date, Optional pTodayAsDefault As Boolean = False) As Object
