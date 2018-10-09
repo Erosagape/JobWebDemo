@@ -13,43 +13,43 @@ End Code
                 </select>
             </div>
             <div class="col-sm-2">
-                <a onclick="ShowSearch()">Service Code:</a>
-                <input type="text" id="txtSICode" class="form-control" />
+                <a onclick="ShowSearch('sicode')">Service Code:</a>
+                <input type="text" id="txtSICode" class="form-control" tabindex="0" />
             </div>
             <div class="col-sm-4">
                 Name Thai:
-                <input type="text" id="txtNameThai" class="form-control" />
+                <input type="text" id="txtNameThai" class="form-control" tabindex="1" />
             </div>
             <div class="col-sm-4">
                 Name Eng:
-                <input type="text" id="txtNameEng" class="form-control" />
+                <input type="text" id="txtNameEng" class="form-control" tabindex="2" />
             </div>
         </div>
         <div class="form-group row">
             <div class="col-sm-3">
                 Price:
-                <input type="text" id="txtStdPrice" class="form-control" />
+                <input type="text" id="txtStdPrice" class="form-control" tabindex="3" />
             </div>
             <div class="col-sm-3">
-                <a>Currency:</a>
-                <input type="text" id="txtCurrencyCode" class="form-control" />
+                <a onclick="ShowSearch('currency')">Currency:</a>
+                <input type="text" id="txtCurrencyCode" class="form-control" tabindex="4" />
             </div>
             <div class="col-sm-3">
-                <a>Unit:</a><input type="text" id="txtUnitCharge" class="form-control" />
+                <a onclick="ShowSearch('unit')">Unit:</a><input type="text" id="txtUnitCharge" class="form-control" tabindex="5" />
             </div>
             <div class="col-sm-3">
-                <a>Vender</a><input type="text" id="txtDefaultVender" class="form-control" />
+                <a onclick="ShowSearch('vender')">Vender</a><input type="text" id="txtDefaultVender" class="form-control" tabindex="6" />
             </div>
         </div>
         <div class="form-group row">
             <div class="col-sm-2">
-                GL-Sales<br /><input type="text" id="txtGLAccountCodeSales" class="form-control" />
+                GL-Sales<br /><input type="text" id="txtGLAccountCodeSales" class="form-control" tabindex="7" />
             </div>
             <div class="col-sm-2">
-                GL-Cost<br /><input type="text" id="txtGLAccountCodeCost" class="form-control" />
+                GL-Cost<br /><input type="text" id="txtGLAccountCodeCost" class="form-control" tabindex="8" />
             </div>
             <div class="col-sm-8">
-                Process Desc:<textarea id="txtProcessDesc" class="form-control"></textarea>
+                Process Desc:<textarea id="txtProcessDesc" class="form-control" tabindex="9" ></textarea>
             </div>
         </div>
         <div class="form-group row">
@@ -88,38 +88,62 @@ End Code
         <button id="btnAdd" class="btn btn-danger" onclick="DeleteData()">Delete</button>
 
     </div>
-    <div id="dvSearch" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <table id="tbGrid" class="table table-responsive">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Service Code
-                                </th>
-                                <th>
-                                    Description
-                                </th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
+    <div id="dvSearch" class="modal fade" role="dialog"></div>
+    <div id="dvVend" class="modal fade" role="dialog"></div>
+    <div id="dvCurr" class="modal fade" role="dialog"></div>
+    <div id="dvUnit" class="modal fade" role="dialog"></div>
 </div>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
-    var row = {};
+    var row = {}; //row pointer to current record show in buffer
     $(document).ready(function () {
+        SetLOV();
         SetEvents();
+        SetEnterToTab();
     });
+    function SetEnterToTab() {
+        //Set enter to tab
+        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
+            $(this).on("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
+                    if (nextElement.length) {
+                        $('[tabindex="' + (this.tabIndex + 1) + '"]').focus();
+                        e.preventDefault();
+                    } else
+                        $('[tabindex="1"]').focus();
+                }
+            });
+        });
+        $('#txtSICode').focus();
+    }
+    function SetLOV() {
+
+        //2 Field show in grid 
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
+            //2 Fields
+            //Currency
+            var ListCurr = response.replace('tbX', 'tbCurr').replace('cpX', 'Currencys');
+            BindList('#dvCurr', '#tbCurr', ListCurr);
+            //Vender
+            var ListVender = response.replace('tbX', 'tbVend').replace('cpX', 'Vender');
+            BindList('#dvVend', '#tbVend', ListVender);
+            //SICode
+            var ListServ = response.replace('tbX', 'tbGrid').replace('cpX', 'Service Code');
+            BindList('#dvSearch', '#tbGrid', ListServ);
+
+            //1 Fields
+            response = response.replace('<th>code</th>', '');
+            //Unit
+            var ListUnit = response.replace('tbX', 'tbUnit').replace('cpX', 'Units');
+            BindList('#dvUnit', '#tbUnit', ListUnit);
+        });
+    }
     function SetEvents() {
+        //if value IsTaxCharge =1 -> Exclude VAT ,2-> Include VAT 
         $('#chkIsTaxCharge').change(function () {
             if (this.checked) {
+                //Default value is Excluded VAT
                 $('input:radio[name=optVAT][value=1]').prop('checked', true);
             } else {
                 $('input:radio[name=optVAT]:checked').prop('checked', false);
@@ -132,9 +156,7 @@ End Code
                 $('input:radio[name=optWHT]:checked').prop('checked', false);
             }
         });
-        $('#dvSearch').on('shown.bs.modal', function () {
-            $('#tbGrid_filter input').focus();
-        });
+        //if enter value then query from database
         $('#txtSICode').keydown(function (e) {
             if (e.which === 13) {
                 SearchData($('#txtSICode').val());
@@ -142,27 +164,53 @@ End Code
         });
     }
     function SearchData(code) {
+        //function for query data from code
         $.get(path + 'master/getservicecode?code=' + code).done(function (r) {
             if (r.servicecode.data.length > 0) {
-                row = r.servicecode.data[0];
-                LoadData(row);
+                LoadData(r.servicecode.data[0]);
                 return;
             } else {
                 alert('Data not found');
             }
         });
     }
-
-    function ShowSearch() {
-        RefreshGrid();
-        $('#dvSearch').modal('show');
+    function ShowData(dt) {
+        LoadData(dt);
+        $('#txtSICode').focus();
+    }
+    function ShowUnit(dt) {
+        $('#txtUnitCharge').val(dt.val);
+        $('#txtUnitCharge').focus();
+    }
+    function ShowVender(dt) {
+        $('#txtDefaultVender').val(dt.VenCode);
+        $('#txtDefaultVender').focus();
+    }
+    function ShowCurrency(dt) {
+        $('#txtCurrencyCode').val(dt.Code);
+        $('#txtCurrencyCode').focus();
+    }
+    function ShowSearch(ty) {
+        switch (ty) {
+            case 'sicode':
+                SetGridSICode(path, '#tbGrid', $('#cboType').val(), '#dvSearch' , ShowData);
+                break;
+            case 'vender':
+                SetGridVender(path, '#tbVend', '#dvVend' , ShowVender);
+                break;
+            case 'currency':
+                SetGridCurrency(path, '#tbCurr', '#dvCurr', ShowCurrency);
+                break;
+            case 'unit':
+                SetGridUnit(path, '#tbUnit','#dvUnit',ShowUnit);
+                break;                 
+        }
     }
     function AddData() {
         var code = $('#cboType').val();
         $.get(path + 'master/getnewservicecode?code=' + code + '-',function (r) {
                 if (r.servicecode.data.length>0) {
-                    row = r.servicecode.data[0];
-                    LoadData(row);
+                    ShowData(r.servicecode.data[0]);
                     return;
                 }
             });
@@ -171,11 +219,11 @@ End Code
         var code = $('#txtSICode').val();
         $.get(path + 'master/delservicecode?code=' + code, function (r) {
             alert(r.servicecode.result);
-            row = r.servicecode.data[0];
-            LoadData(row);
+            ShowData(r.servicecode.data[0]);
         });
     }
     function LoadData(dt) {
+        row = dt;
         $('#txtSICode').val(dt.SICode);
         $('#txtNameThai').val(dt.NameThai);
         $('#txtNameEng').val(dt.NameEng);
@@ -235,6 +283,7 @@ End Code
         } else {
             $('#chkIsUsedCoSlip').prop('checked', true);
         }
+
     }
     function GetDataSave(dt) {
         dt.SICode=$('#txtSICode').val();
@@ -307,6 +356,7 @@ End Code
                 data: jsonText,
                 success: function (response) {
                     alert(response);
+                    $('#txtSICode').focus();
                 },
                 error: function (e) {
                     alert(e);
@@ -316,30 +366,6 @@ End Code
             alert('No data to save');
         }
         //alert('VAT=' + $('#chkIsTaxCharge').prop('checked') + ' (' + $('input:radio[name=optVAT]:checked').val() + ') TAX=' + $('#chkIs50Tavi').prop('checked') + ' (' + $('input:radio[name=optWHT]:checked').val()+')');
-    }
-    function RefreshGrid() {
-        //popup for search data
-        $('#tbGrid').DataTable({
-            ajax: {
-                url: path + 'Master/GetServiceCode?Code=' + $('#cboType').val(), //web service ที่จะ call ไปดึงข้อมูลมา
-                dataSrc: 'servicecode.data'
-            },
-            selected: true, //ให้สามารถเลือกแถวได้
-            columns: [ //กำหนด property ของ header column
-                { data: "SICode", title: "Service Code" },
-                { data: "NameThai", title: "Description" }
-            ],
-            destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-        });
-        $('#tbGrid tbody').on('click', 'tr', function () {
-            $('#tbGrid tbody tr.selected').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
-            $(this).addClass('selected'); //select row ใหม่
-
-            row = $('#tbGrid').DataTable().row(this).data();
-            LoadData(row);
-
-            $('#dvSearch').modal('hide');
-        });
     }
 
 </script>

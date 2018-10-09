@@ -4,25 +4,22 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class MasterController
         Inherits Controller
-        Private Sub CheckSession()
+
+        Private Function GetView(vName As String) As ActionResult
             If IsNothing(Session("CurrUser")) Then
                 Session("CurrUser") = ""
             End If
-            ViewBag.User = Session("CurrUser")
-        End Sub
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Return View("Index")
+            ViewBag.User = Session("CurrUser").ToString
+            If ViewBag.User = "" Then
+                Return Redirect("~/index.html")
             End If
             Return View(vName)
         End Function
         ' GET: Customer
         Function Index() As ActionResult
-            CheckSession()
-            Return View()
+            Return GetView("Index")
         End Function
         Function ServiceCode() As ActionResult
-            CheckSession()
             Return GetView("ServiceCode")
         End Function
         Function GetServUnit() As ActionResult

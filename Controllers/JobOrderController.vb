@@ -4,33 +4,27 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class JobOrderController
         Inherits Controller
-        Private Sub CheckSession()
+        Private Function GetView(vName As String) As ActionResult
             If IsNothing(Session("CurrUser")) Then
                 Session("CurrUser") = ""
             End If
-            ViewBag.User = Session("CurrUser")
-        End Sub
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Return View("Index")
+            ViewBag.User = Session("CurrUser").ToString
+            If ViewBag.User = "" Then
+                Return Redirect("~/index.html")
             End If
             Return View(vName)
         End Function
         Function Index() As ActionResult
-            CheckSession()
-            Return View()
+            Return GetView("Index")
         End Function
         Function CreateJob() As ActionResult
-            CheckSession()
             Return GetView("CreateJob")
         End Function
         Function ShowJob() As ActionResult
-            CheckSession()
             Return GetView("ShowJob")
         End Function
         Function FormJob() As ActionResult
-            CheckSession()
-            Return GetView("FormJob")
+            Return View()
         End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
@@ -57,6 +51,9 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("Year")) Then
                     tSqlW &= " AND Year(DocDate)='" & Request.QueryString("Year") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    tSqlW &= " AND CustCode='" & Request.QueryString("CustCode") & "'"
                 End If
                 Dim oData = oJob.GetData(" WHERE JNo<>'' " & tSqlW)
                 Dim json As String = JsonConvert.SerializeObject(oData)

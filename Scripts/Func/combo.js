@@ -41,3 +41,37 @@ function loadYear(path) {
         }
     });
 }
+function ShowCustomer(Code, Branch, ControlID) {
+    if ((Code + Branch).length > 0) {
+        $(ControlID).val('');
+        $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
+            .done(function (r) {
+                if (r.company.data.length > 0) {
+                    var c = r.company.data[0];
+                    $(ControlID).val(c.NameThai);
+                }
+            });
+    }
+}
+function ShowUser(UserID, ControlID) {
+    $(ControlID).val('');
+    if (UserID != "") {
+        $.get(path + 'Master/GetUser?Code=' + UserID)
+            .done(function (r) {
+                if (r.user.data.length > 0) {
+                    var b = r.user.data[0];
+                    $(ControlID).val(b.TName);
+                }
+            });
+    }
+}
+function ShowBranch(Branch, ControlID) {
+    $(ControlID).val('');
+    $.get(path + 'Config/GetBranch?Code=' + Branch)
+        .done(function (r) {
+            if (r.branch.data.length > 0) {
+                var b = r.branch.data[0];
+                $(ControlID).val(b.BrName);
+            }
+        });
+}

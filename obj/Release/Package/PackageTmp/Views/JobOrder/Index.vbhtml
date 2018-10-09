@@ -37,21 +37,6 @@ End Code
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <table id="tblJob" class="table">
-                <thead>
-                    <tr>
-                        <th>JobNo</th>
-                        <th>Inv.Customer</th>
-                        <th>Customer</th>
-                        <th>DeclareNo</th>
-                        <th>Commodity</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
             <div class="panel panel-primary">
                 <div class="panel panel-heading">
                     <table>
@@ -75,20 +60,47 @@ End Code
 
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table id="tblJob" class="table">
+                <thead>
+                    <tr>
+                        <th>JobNo</th>
+                        <th>Inv.Customer</th>
+                        <th>Customer</th>
+                        <th>DeclareNo</th>
+                        <th>Commodity</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
 </div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var user = '@ViewBag.User';
     $(document).ready(function () {
         loadCombo();
         getJobdata();
+        SetEvents();
     });
+    function SetEvents() {
+        $('#txtJobNo').keydown(function (e) {
+            if (e.which === 13) {
+                if ($('#txtJobNo').val() !== '') {
+                    OpenJob();
+                }
+            }
+        });
+    }
     function loadCombo() {
-        loadBranch();
-        loadConfig('#cboJobType', 'JOB_TYPE');
-        loadConfig('#cboShipBy', 'SHIP_BY');
-        loadConfig('#cboStatus', 'JOB_STATUS');
-        loadYear();
+        loadBranch(path);
+        loadConfig('#cboJobType', 'JOB_TYPE',path,'');
+        loadConfig('#cboShipBy', 'SHIP_BY',path,'');
+        loadConfig('#cboStatus', 'JOB_STATUS',path,'');
+        loadYear(path);
     }
     function getJobdata() {
         var strParam = GetCliteria();
@@ -127,42 +139,5 @@ End Code
     function CreateNewJob() {
         window.open(path +'joborder/createjob?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val());
     }
-    function loadBranch() {
-        $('#cboBranch').empty();
-        $.get(path +'Config/getBranch').done(function (r) {
-            var dr = r.branch.data;
-            if (dr.length > 0) {
-                for (var i = 0; i < dr.length; i++) {
-                    $('#cboBranch')
-                        .append($('<option>', { value: dr[i].Code })
-                            .text(dr[i].Code + ' / ' + dr[i].BrName));
-                }
-            }
-        });
-    }
-    function loadConfig(e, code) {
-        $(e).empty();
-        $.get(path +'Config/getConfig?Code=' + code).done(function (r) {
-            var dr = r.config.data;
-            if (dr.length > 0) {
-                for (var i = 0; i < dr.length; i++) {
-                    $(e).append($('<option>', { value: dr[i].ConfigKey })
-                        .text(dr[i].ConfigKey + ' / ' + dr[i].ConfigValue));
-                }
-            }
-        });
-    }
-    function loadYear() {
-        $('#cboYear').empty();
-        $.get(path +'joborder/getjobyear').done(function (r) {
-            var dr = r[0].Table;
-            if (dr.length > 0) {
-                for (var i = 0; i < dr.length; i++) {
-                    $('#cboYear')
-                        .append($('<option>', { value: dr[i].JobYear })
-                            .text(dr[i].JobYear));
-                }
-            }
-        });
-    }
+
 </script>

@@ -9,7 +9,16 @@
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
     <script src="~/Scripts/Func/Util.js"></script>
+    <script src="~/Scripts/Func/popup.js"></script>
     <title>@ViewBag.Title</title>
+    <script type="text/javascript">
+        function BackToMenu() {
+            var c = confirm('Do you want to back to main menu?');
+            if (c == true) {
+                window.location.href = '/';
+            }
+        }
+    </script>
 </head>
 <body>
     <div Class="panel-primary">
@@ -21,7 +30,7 @@
                             <h5>@ViewBag.Title (@ViewBag.User)</h5>
                         </td>
                         <td align="right">
-                            <img src="~/Resource/logo-tawan.jpg" style="width:100px" />
+                            <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="BackToMenu();" />
                         </td>
                     </tr>
                 </table>

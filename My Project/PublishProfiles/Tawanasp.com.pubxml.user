@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:36:16</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>04/10/2018 18:08:12</publishTime>
+      <publishTime>09/10/2018 17:45:36</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>10/04/2018 18:08:12</publishTime>
+      <publishTime>09/10/2018 17:45:36</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>10/04/2018 18:08:12</publishTime>
+      <publishTime>09/10/2018 17:45:35</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -293,7 +293,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 15:59:57</publishTime>
     </File>
     <File Include="index.html">
-      <publishTime>04/10/2018 14:46:51</publishTime>
+      <publishTime>09/10/2018 14:41:34</publishTime>
     </File>
     <File Include="Models/dsJobOrder.xsc">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -593,10 +593,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:00:14</publishTime>
     </File>
     <File Include="Scripts/Func/combo.js">
-      <publishTime>08/30/2018 14:14:19</publishTime>
+      <publishTime>10/09/2018 13:55:43</publishTime>
+    </File>
+    <File Include="Scripts/Func/popup.js">
+      <publishTime>09/10/2018 15:07:53</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>10/04/2018 16:46:42</publishTime>
+      <publishTime>09/10/2018 16:03:47</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.js">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -719,49 +722,49 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/03/2018 17:13:30</publishTime>
     </File>
     <File Include="Views/Adv/FormAdv.vbhtml">
-      <publishTime>10/04/2018 17:45:36</publishTime>
+      <publishTime>09/10/2018 17:29:08</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
-      <publishTime>10/04/2018 16:48:00</publishTime>
+      <publishTime>10/09/2018 17:51:38</publishTime>
     </File>
     <File Include="Views/Advance/Index.vbhtml">
       <publishTime>10/03/2018 17:18:18</publishTime>
     </File>
     <File Include="Views/Config/Index.vbhtml">
-      <publishTime>10/04/2018 15:10:23</publishTime>
+      <publishTime>10/09/2018 16:28:25</publishTime>
     </File>
     <File Include="Views/index.html">
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Views/JobOrder/CreateJob.vbhtml">
-      <publishTime>10/04/2018 16:46:42</publishTime>
+      <publishTime>09/10/2018 17:45:16</publishTime>
     </File>
     <File Include="Views/JobOrder/FormJob.vbhtml">
-      <publishTime>10/04/2018 17:45:36</publishTime>
+      <publishTime>10/09/2018 17:03:29</publishTime>
     </File>
     <File Include="Views/JobOrder/Index.vbhtml">
-      <publishTime>10/04/2018 15:04:28</publishTime>
+      <publishTime>09/10/2018 17:27:28</publishTime>
     </File>
     <File Include="Views/JobOrder/ListJob.vbhtml">
       <publishTime>09/11/2018 10:43:09</publishTime>
     </File>
     <File Include="Views/JobOrder/ShowJob.vbhtml">
-      <publishTime>10/04/2018 16:46:42</publishTime>
+      <publishTime>09/10/2018 17:44:14</publishTime>
     </File>
     <File Include="Views/Master/Index.vbhtml">
       <publishTime>10/04/2018 14:51:18</publishTime>
     </File>
     <File Include="Views/Master/ServiceCode.vbhtml">
-      <publishTime>03/10/2018 17:53:03</publishTime>
+      <publishTime>10/09/2018 17:55:14</publishTime>
     </File>
     <File Include="Views/Shared/Error.vbhtml">
       <publishTime>08/21/2018 16:00:15</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.vbhtml">
-      <publishTime>10/04/2018 17:45:36</publishTime>
+      <publishTime>09/10/2018 16:54:19</publishTime>
     </File>
     <File Include="Views/Shared/_Report.vbhtml">
-      <publishTime>10/04/2018 16:24:02</publishTime>
+      <publishTime>10/09/2018 17:03:29</publishTime>
     </File>
     <File Include="Views/web.config">
       <publishTime>08/21/2018 16:00:15</publishTime>
@@ -770,7 +773,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:00:15</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/10/2018 18:08:14</publishTime>
+      <publishTime>10/09/2018 14:32:05</publishTime>
     </File>
   </ItemGroup>
 </Project>

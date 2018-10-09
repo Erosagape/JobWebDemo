@@ -7,24 +7,18 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class ConfigController
         Inherits Controller
-        Private Sub CheckSession()
+        Private Function GetView(vName As String) As ActionResult
             If IsNothing(Session("CurrUser")) Then
                 Session("CurrUser") = ""
             End If
-            ViewBag.User = Session("CurrUser").ToString()
-        End Sub
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Return View("Index")
-            End If
+            ViewBag.User = Session("CurrUser").ToString
             If ViewBag.User = "" Then
-                Return View("Index")
+                Return Redirect("~/index.html")
             End If
             Return View(vName)
         End Function
         ' GET: Config
         Function Index() As ActionResult
-            CheckSession()
             Return GetView("Index")
         End Function
         Public Function SetConfig(<FromBody()> ByVal data As CConfig) As HttpResponseMessage
@@ -133,7 +127,10 @@ Namespace Controllers
 "
         End Function
         Function GetLogin() As ActionResult
-            CheckSession()
+            If IsNothing(Session("CurrUser")) Then
+                Session("CurrUser") = ""
+            End If
+            ViewBag.User = Session("CurrUser")
             Dim oData
             If ViewBag.User <> "" Then
                 oData = New CUser(jobWebConn).GetData(String.Format(" WHERE UserID='{0}'", ViewBag.User))

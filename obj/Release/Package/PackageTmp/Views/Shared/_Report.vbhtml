@@ -9,7 +9,6 @@
     <script src="~/Scripts/Func/util.js"></script>
 </head>
 <body class="document">
-    <p style="text-align:right">Printed By : @ViewBag.User Printed Date : @DateTime.Now &copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
     @RenderBody()
 </body>
 </html>

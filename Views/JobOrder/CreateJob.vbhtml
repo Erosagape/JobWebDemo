@@ -6,11 +6,11 @@ End Code
         <tr>
             <td>
                 Job Type :
-                <select id="cboJobType" class="form-control dropdown" style="width:230px"></select>
+                <select id="cboJobType" class="form-control dropdown" style="width:230px" tabindex="0"></select>
             </td>
             <td>
                 Ship By :
-                <select id="cboShipBy" class="form-control dropdown" style="width:230px"></select>
+                <select id="cboShipBy" class="form-control dropdown" style="width:230px" tabindex="1"></select>
             </td>
         </tr>
     </table>
@@ -18,7 +18,7 @@ End Code
         <tr>
             <td>
                 Branch<br />
-                <input type="text" style="width:120px" id="txtBranchCode" />
+                <input type="text" style="width:120px" id="txtBranchCode" tabindex="2" />
             </td>
             <td>
                 <br />
@@ -32,7 +32,7 @@ End Code
         <tr>
             <td>
                 พนักงาน CS<br />
-                <input type="text" id="txtCSCode" style="width:120px" />
+                <input type="text" id="txtCSCode" style="width:120px" tabindex="3" />
             </td>
             <td>
                 <br />
@@ -46,8 +46,8 @@ End Code
         <tr>
             <td>
                 รหัสลูกค้า<br />
-                <input type="text" style="width:80px" id="txtCustCode" />
-                <input type="text" style="width:40px" id="txtCustBranch" />
+                <input type="text" style="width:80px" id="txtCustCode" tabindex="4" />
+                <input type="text" style="width:40px" id="txtCustBranch" tabindex="5" />
             </td>
             <td>
                 <br />
@@ -61,7 +61,7 @@ End Code
         <tr>
             <td>
                 สถานที่วางบิล<br />
-                <input type="text" id="txtConsignee" style="width:120px" />
+                <input type="text" id="txtConsignee" style="width:120px" tabindex="6" />
             </td>
             <td>
                 <br />
@@ -77,7 +77,7 @@ End Code
         <tr>
             <td>
                 ผู้ติดต่อ<br />
-                <input type="text" id="txtContactPerson" style="width:200px" />
+                <input type="text" id="txtContactPerson" style="width:200px" tabindex="7" />
             </td>
             <td>
                 <br />
@@ -85,8 +85,8 @@ End Code
             </td>
             <td>
                 ใบเสนอราคาเลขที่้<br />
-                <input type="text" style="width:150px" id="txtQNo" />
-                <input type="text" style="width:50px" id="txtRevise" />
+                <input type="text" style="width:150px" id="txtQNo" tabindex="8" />
+                <input type="text" style="width:50px" id="txtRevise" tabindex="9" />
             </td>
         </tr>
     </table>
@@ -94,21 +94,21 @@ End Code
         <tr>
             <td>
                 Customer Invoice<br />
-                <input type="text" id="txtCustInv" style="width:230px" />
+                <input type="text" id="txtCustInv" style="width:230px" tabindex="10" />
             </td>
             <td>
                 Customer PO No<br />
-                <input type="text" style="width:230px" id="txtCustPO" />
+                <input type="text" style="width:230px" id="txtCustPO" tabindex="11" />
             </td>
         </tr>
         <tr>
             <td>
                 HAWB or H B/L <br />
-                <input type="text" id="txtHAWB" style="width:230px" />
+                <input type="text" id="txtHAWB" style="width:230px" tabindex="12" />
             </td>
             <td>
                 MAWB or M B/L<br />
-                <input type="text" style="width:230px" id="txtMAWB" />
+                <input type="text" style="width:230px" id="txtMAWB" tabindex="13" />
             </td>
         </tr>
     </table>
@@ -117,20 +117,20 @@ End Code
             <td>
                 Copy ข้อมูลจาก Job<br />
                 <input type="text" id="txtCopyFromJob" style="width:200px" disabled />
-                <input type="button" id="btnBrowseJob" value="..." onclick="SearchData('job')" disabled />
+                <input type="button" id="btnBrowseJob" value="..." onclick="SearchData('job')" />
             </td>
             <td>
                 วันที่เปิดงาน<br />
-                <input type="date" style="width:200px" id="txtJobDate" />
+                <input type="date" style="width:200px" id="txtJobDate" tabindex="14" />
             </td>
         </tr>
         <tr>
             <td>
-                <input id="chkTransferCost" type="checkbox" disabled />
+                <input id="chkTransferCost" type="checkbox" />
                 โอนข้อมูลค่าบริการและค่าใช้จ่ายมาด้วย
             </td>
             <td>
-                <button class="btn btn-success" id="btnCreateJob" onclick="CreateJob()">สร้างหมายเลขงานใหม่</button>
+                <input type="button" class="btn btn-success" id="btnCreateJob" onclick="CreateJob()" tabindex="15" value="สร้างหมายเลขงานใหม่" />
             </td>
         </tr>
     </table>
@@ -138,15 +138,14 @@ End Code
 <div id="frmShowJob" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div id="dvResp" class="modal-header">
                 Save Complete!
             </div>
-            <div class="modal-body">
-                <input id="txtJNo" type="text" disabled />
-                <button class="btn btn-primary" id="btnViewJob" onclick="OpenJob()">VIEW JOB</button>
-                <div id="dvResp"></div>
+            <div class="modal-body" style="text-align:center">
+                <input id="txtJNo" type="text" style="position:center;font-size:20px;text-align:center" disabled />
             </div>
             <div class="modal-footer">
+                <button class="btn btn-primary" id="btnViewJob" onclick="OpenJob()">View Job</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -154,6 +153,7 @@ End Code
 </div>
 <div id="frmSearchBranch" class="modal fade" role="dialog"></div>
 <div id="frmSearchUser" class="modal fade" role="dialog"></div>
+<div id="frmSearchJob" class="modal fade" role="dialog"></div>
 <div id="frmSearchCust" class="modal fade" role="dialog"></div>
 <div id="frmSearchCons" class="modal fade" role="dialog"></div>
 <div id="frmSearchContact" class="modal fade" role="dialog"></div>
@@ -162,13 +162,31 @@ End Code
     //define variables
     var path = '@Url.Content("~")';
     $(document).ready(function () {
+        CheckParam();
         SetLOVs();
         SetEvents();
+        SetEnterToTab();
     });
+    function SetEnterToTab() {
+        //Set enter to tab
+        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
+            $(this).on("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
+                    if (nextElement.length) {
+                        $('[tabindex="' + (this.tabIndex + 1) + '"]').focus();
+                        e.preventDefault();
+                    } else
+                        $('[tabindex="1"]').focus();
+                }
+            });
+        });
+        $('#txtBranchCode').focus();
+    }
     function SetEvents() {
         $('#txtBranchCode').keydown(function (event) {
             if (event.which == 13) {
-                ShowBranch($('#txtBranchCode').val());
+                ShowBranch($('#txtBranchCode').val(), '#txtBranchName');
             }
         });
         $('#txtCSCode').keydown(function (event) {
@@ -178,309 +196,126 @@ End Code
         });
         $('#txtCustBranch').keydown(function (event) {
             if (event.which == 13) {
-                ShowCustomer($('#txtCustCode').val(), $('#txtCustBranch').val(), false);
+                ShowCustomer($('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
         });
         $('#txtConsignee').keydown(function (event) {
             if (event.which == 13) {
-                ShowCustomer($('#txtConsignee').val(), $('#txtCustBranch').val(), true);
+                ShowCustomer($('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
             }
         });
     }
-    function SetLOVs() {
+    function CheckParam() {
         //read query string parameters
         var br = getQueryString('Branch');
         var jt = getQueryString('JType');
         var sb = getQueryString('SBy');
         if (br != null) {
             $('#txtBranchCode').val(br);
-            ShowBranch($('#txtBranchCode').val());
+            ShowBranch($('#txtBranchCode').val(), '#txtBranchName');
         }
-        if (jt == null) jt = "01"
-        if (sb == null) sb = "01"
+        if (jt == null) jt = "01";
+        if (sb == null) sb = "01";
         //Combos
         loadConfig('#cboJobType', 'JOB_TYPE', path, jt);
         loadConfig('#cboShipBy', 'SHIP_BY', path, sb);
+    }
+    function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             //Customers
             var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
-            $('#frmSearchCust').html(ListCust);
-            $('#frmSearchCust').on('shown.bs.modal', function () {
-                $('#tbCust_filter input').focus();
-            });
+            BindList('#frmSearchCust','#tbCust',ListCust);
             //Consignee
             var ListCons = response.replace('tbX', 'tbCons').replace('cpX', 'Consignees');
-            $('#frmSearchCons').html(ListCons);
-            $('#frmSearchCons').on('shown.bs.modal', function () {
-                $('#tbCons_filter input').focus();
-            });
-        });
-        //2 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
+            BindList('#frmSearchCons', '#tbCons', ListCons);
+            //Job
+            var ListJob = response.replace('tbX', 'tbJob').replace('cpX', 'Job List');
+            BindList('#frmSearchJob', '#tbJob', ListJob);
+
+            //2 Fields
+            response = response.replace('<th>key</th>', '');
             //Users
             var ListUser = response.replace('tbX', 'tbUser').replace('cpX', 'Users');
-            $('#frmSearchUser').html(ListUser);
-            $('#frmSearchUser').on('shown.bs.modal', function () {
-                $('#tbUser_filter input').focus();
-            });
+            BindList('#frmSearchUser', '#tbUser', ListUser);
             //Branch
             var ListBranch = response.replace('tbX', 'tbBranch').replace('cpX', 'Branch');
-            $('#frmSearchBranch').html(ListBranch);
-            $('#frmSearchBranch').on('shown.bs.modal', function () {
-                $('#tbBranch_filter input').focus();
-            });
-        });
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=name', function (response) {
+            BindList('#frmSearchBranch', '#tbBranch', ListBranch);
+
+            //1 Fields
+            response = response.replace('<th>code</th>', '');
             //Contact Name
             var ListContact = response.replace('tbX', 'tbContact').replace('cpX', 'Contact Name');
-            $('#frmSearchContact').html(ListContact);
-            $('#frmSearchContact').on('shown.bs.modal', function () {
-                $('#tbContact_filter input').focus();
-            });
+            BindList('#frmSearchContact', '#tbContact', ListContact);
         });
+    }
+    function ReadBranch(dt) {
+        $('#txtBranchCode').val(dt.Code);
+        $('#txtBranchName').val(dt.BrName);
+        $('#txtBranchCode').focus();
+    }
+    function ReadUser(dt) {
+        $('#txtCSCode').val(dt.UserID);
+        $('#txtCSName').val(dt.TName);
+        $('#txtCSCode').focus();
+    }
+    function ReadCustomer(dt) {
+        $('#txtCustCode').val(dt.CustCode);
+        $('#txtCustBranch').val(dt.Branch);
+        ShowCustomer(dt.CustCode, dt.Branch, '#txtCustName');
+        $('#txtCustCode').focus();
+    }
+    function ReadConsignee(dt) {
+        $('#txtConsignee').val(dt.CustCode);
+        $('#txtConsBranch').val(dt.Branch);
+        ShowCustomer(dt.CustCode, dt.Branch, '#txtConsignName');
+        $('#txtConsignee').focus();
+    }
+    function ReadContactName(dt) {
+        $('#txtContactPerson').val(dt.val);
+        $('#txtContactPerson').focus();
+    }
+    function ReadJob(dt) {
+        $('#txtCopyFromJob').val(dt.JNo);
     }
     function SearchData(type) {
         switch (type) {
             case 'branch':
-                $('#tbBranch').DataTable({
-                    ajax: {
-                        url: path + 'Config/GetBranch', //web service ที่จะ call ไปดึงข้อมูลมา
-                        dataSrc: 'branch.data'
-                    },
-                    selected: true, //ให้สามารถเลือกแถวได้
-                    columns: [ //กำหนด property ของ header column
-                        { data: null, title: "#" },
-                        { data: "Code", title: "รหัส" },
-                        { data: "BrName", title: "ชื่อ" }
-                    ],
-                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
-                        {
-                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
-                            "data": null,
-                            "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
-                                return html;
-                            }
-                        }
-                    ],
-                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-                });
-                $('#tbBranch tbody').on('click', 'button', function () {
-                    var dt = GetSelect('#tbBranch', this);
-                    $('#txtBranchCode').val(dt.Code);
-                    $('#txtBranchName').val(dt.BrName);
-                    $('#frmSearchBranch').modal('hide');
-                });
-                $('#tbBranch tbody').on('click', 'tr', function () {
-                    $('#tbBranch tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
-                    $(this).addClass('selected'); //select row ใหม่
-                });
-                $('#frmSearchBranch').modal('show');
+                SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
                 break;
             case 'user':
-                $('#tbUser').DataTable({
-                    ajax: {
-                        url: path + 'Master/GetUser', //web service ที่จะ call ไปดึงข้อมูลมา
-                        dataSrc: 'user.data'
-                    },
-                    selected: true, //ให้สามารถเลือกแถวได้
-                    columns: [ //กำหนด property ของ header column
-                        { data: null, title: "#" },
-                        { data: "UserID", title: "รหัส" },
-                        { data: "TName", title: "ชื่อ" }
-                    ],
-                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
-                        {
-                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
-                            "data": null,
-                            "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
-                                return html;
-                            }
-                        }
-                    ],
-                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-                });
-                $('#tbUser tbody').on('click', 'button', function () {
-                    var dt = GetSelect('#tbUser', this);
-                    $('#txtCSCode').val(dt.UserID);
-                    $('#txtCSName').val(dt.TName);
-                    $('#frmSearchUser').modal('hide');
-                });
-                $('#tbUser tbody').on('click', 'tr', function () {
-                    $('#tbUser tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
-                    $(this).addClass('selected'); //select row ใหม่
-                });
-                $('#frmSearchUser').modal('show');
+                SetGridUser(path, '#tbUser', '#frmSearchUser', ReadUser);
                 break;
             case 'customer':
-                //popup for search data
-                $('#tbCust').DataTable({
-                    ajax: {
-                        url: path + 'Master/GetCompany', //web service ที่จะ call ไปดึงข้อมูลมา
-                        dataSrc: 'company.data'
-                    },
-                    selected: true, //ให้สามารถเลือกแถวได้
-                    columns: [ //กำหนด property ของ header column
-                        { data: null, title: "#" },
-                        { data: "CustCode", title: "รหัส" },
-                        { data: "Branch", title: "สาขา" },
-                        { data: "NameThai", title: "คำอธิบาย" }
-                    ],
-                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
-                        {
-                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
-                            "data": null,
-                            "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
-                                return html;
-                            }
-                        }
-                    ],
-                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-                });
-                $('#tbCust tbody').on('click', 'button', function () {
-                    var dt = GetSelect('#tbCust', this);
-                    $('#txtCustCode').val(dt.CustCode);
-                    $('#txtCustBranch').val(dt.Branch);
-                    ShowCustomer(dt.CustCode, dt.Branch, false);
-                    $('#frmSearchCust').modal('hide');
-                });
-                $('#tbCust tbody').on('click', 'tr', function () {
-                    $('#tbCust tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
-                    $(this).addClass('selected'); //select row ใหม่
-                });
-                $('#frmSearchCust').modal('show');
+                SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
             case 'consignee':
-                //popup for search data
-                $('#tbCons').DataTable({
-                    ajax: {
-                        url: path + 'Master/GetCompany', //web service ที่จะ call ไปดึงข้อมูลมา
-                        dataSrc: 'company.data'
-                    },
-                    selected: true, //ให้สามารถเลือกแถวได้
-                    columns: [ //กำหนด property ของ header column
-                        { data: null, title: "#" },
-                        { data: "CustCode", title: "รหัส" },
-                        { data: "Branch", title: "สาขา" },
-                        { data: "NameThai", title: "คำอธิบาย" }
-                    ],
-                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
-                        {
-                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
-                            "data": null,
-                            "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
-                                return html;
-                            }
-                        }
-                    ],
-                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-                });
-                $('#tbCons tbody').on('click', 'button', function () {
-                    var dt = GetSelect('#tbCons', this);
-                    $('#txtConsignee').val(dt.CustCode);
-                    $('#txtConsBranch').val(dt.Branch);
-                    ShowCustomer(dt.CustCode, dt.Branch, true);
-                    $('#frmSearchCons').modal('hide');
-                });
-                $('#tbCons tbody').on('click', 'tr', function () {
-                    $('#tbCons tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
-                    $(this).addClass('selected'); //select row ใหม่
-                });
-                $('#frmSearchCons').modal('show');
+                SetGridCompany(path, '#tbCons', '#frmSearchCons', ReadConsignee);
                 break;
             case 'contact':
-                //popup for search data
-                $.get(path + 'joborder/getjobdatadistinct?field=CustContactName')
-                    .done(function (r) {
-                        var dr = r[0].Table;
-                        if (dr.length > 0) {
-                            $('#tbContact').DataTable({
-                                data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
-                                selected: true, //ให้สามารถเลือกแถวได้
-                                columns: [ //กำหนด property ของ header column
-                                    { data: null, title: "#" },
-                                    { data: "val", title: "ชื่อผู้ติดต่อ" }
-                                ],
-                                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
-                                    {
-                                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
-                                        "data": null,
-                                        "render": function (data, type, full, meta) {
-                                            var html = "<button class='btn btn-warning'>Select</button>";
-                                            return html;
-                                        }
-                                    }
-                                ],
-                                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-                            });
-                            $('#tbContact tbody').on('click', 'button', function () {
-                                var dt = GetSelect('#tbContact', this);
-                                $('#txtContactPerson').val(dt.val);
-                                $('#frmSearchContact').modal('hide');
-                            });
-                            $('#tbContact tbody').on('click', 'tr', function () {
-                                $('#tbContact tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
-                                $(this).addClass('selected'); //select row ใหม่
-                            });
-                            $('#frmSearchContact').modal('show');
-                        }
-                    });
+                SetGridContactName(path, '#tbContact', '#frmSearchContact', ReadContactName);
+                break;
+            case 'job':
+                SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam() , ReadJob);
                 break;
         }
     }
-    function ShowCustomer(Code, Branch, isCons) {
-        if ((Code + Branch).length > 0) {
-            if (isCons == true) {
-                $('#txtConsignName').val('');
-            }
-            if (isCons == false) {
-                $('#txtCustName').val('');
-            }
-            $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
-                .done(function (r) {
-                    if (r.company.data.length > 0) {
-                        var c = r.company.data[0];
-                        if (isCons == true) {
-                            $('#txtConsignName').val(c.NameThai);
-                        }
-                        if (isCons == false) {
-                            $('#txtCustName').val(c.NameThai);
-                        }
-                    }
-                });
-        }
-    }
-    function ShowUser(UserID, ControlID) {
-        $(ControlID).val('');
-        if (UserID != "") {
-            $.get(path + 'Master/GetUser?Code=' + UserID)
-                .done(function (r) {
-                    if (r.user.data.length > 0) {
-                        var b = r.user.data[0];
-                        $(ControlID).val(b.TName);
-                    }
-                });
-        }
-    }
-    function ShowBranch(Branch) {
-        $('#txtBranchName').val('');
-        $.get(path + 'Config/GetBranch?Code=' + Branch)
-            .done(function (r) {
-                if (r.branch.data.length > 0) {
-                    var b = r.branch.data[0];
-                    $('#txtBranchName').val(b.BrName);
-                }
-            });
+    function GetParam() {
+        var strParam = '?';
+        strParam += 'Branch=' + $('#txtBranchCode').val();
+        strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
+        strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
+        strParam += '&CustCode=' + $('#txtCustCode').val();
+        return strParam;
     }
     function CreateJob() {
         var strParam = path + 'JobOrder/GetNewJob?Prefix=JIDE';
         strParam += '&Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0,2);
-        strParam += '&SBy=' + $('#cboShipBy').val().substr(0,2);
+        strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
+        if ($('#txtCopyFromJob').val() !== '') {
+            strParam += '&CopyFrom=' + $('#txtCopyFromJob').val();
+        }
         $.get(strParam)
             .done(function (r) {
                 if (r.length == 0) {
@@ -502,13 +337,17 @@ End Code
                     data.CustRefNO = $('#txtCustPO').val();
                     data.HAWB = $('#txtHAWB').val();
                     data.MAWB = $('#txtMAWB').val();
-                    $('#txtJNo').val(data.JNo);
+
                     PostData(data);
                 } else {
                     alert(r.job.result);
                 }
+                return;
                 //alert(r.job.result + '=>' + data.JNo);
             });
+    }
+    function OpenJob() {
+        window.location.href='ShowJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val();
     }
     function PostData(obj) {
         var jsonString = JSON.stringify({ data: obj });
@@ -520,14 +359,11 @@ End Code
             data: jsonString,
             success: function (response) {                
                 //alert(response);
+                $('#txtJNo').val(obj.JNo);
                 $('#dvResp').html(response);
                 $('#frmShowJob').modal('show');
             }
         });
     }
-    function OpenJob() {
-        window.open('ShowJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val());
-    }
-
 </script>
 

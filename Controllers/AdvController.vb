@@ -5,26 +5,22 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class AdvController
         Inherits Controller
-        Private Sub CheckSession()
+        Private Function GetView(vName As String) As ActionResult
             If IsNothing(Session("CurrUser")) Then
                 Session("CurrUser") = ""
             End If
-            ViewBag.User = Session("CurrUser")
-        End Sub
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Return View("Index")
+            ViewBag.User = Session("CurrUser").ToString
+            If ViewBag.User = "" Then
+                Return Redirect("~/index.html")
             End If
             Return View(vName)
         End Function
         ' GET: Advance
         Function Index() As ActionResult
-            CheckSession()
             Return GetView("Index")
         End Function
         Function FormAdv() As ActionResult
-            CheckSession()
-            Return GetView("FormAdv")
+            Return View()
         End Function
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
             If Not IsNothing(data) Then

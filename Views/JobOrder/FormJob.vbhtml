@@ -196,6 +196,7 @@ End Code
             </td>
         </tr>
     </table>
+    <p style="text-align:right">Printed By : @ViewBag.User Printed Date : @DateTime.Now &copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
 </div>
 <div class="page" contenteditable="false">
     <b>Expenses List</b>
@@ -321,6 +322,7 @@ End Code
             <td style="border-style:solid;border-width:thin" width="100px"></td>
         </tr>
     </table>
+    <p style="text-align:right">Printed By : @ViewBag.User Printed Date : @DateTime.Now &copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
 </div>
 <script type="text/javascript">
         var path = '@Url.Content("~")';

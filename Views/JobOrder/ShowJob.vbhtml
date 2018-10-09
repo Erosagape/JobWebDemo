@@ -48,8 +48,8 @@ End Code
                 <div class="row">
                     <div class="col-md-8">
                         <label for="txtCustCode">Customer :</label>
-                        <input type="text" id="txtCustCode" style="width:130px" />
-                        <input type="text" id="txtCustBranch" style="width:40px" />
+                        <input type="text" id="txtCustCode" style="width:130px" tabindex="0"/>
+                        <input type="text" id="txtCustBranch" style="width:40px" tabindex="1" />
                         <input type="button" id="btnBrowseCust" value="..." onclick="SearchData('CUSTOMER')" />
                         <input type="text" id="txtCustName" style="width:450px" disabled />
                         <br />
@@ -58,13 +58,13 @@ End Code
                         <textarea id="txtEAddress" style="width:250px" disabled></textarea>
                         <br />
                         <label for="txtPhoneFax">Contact Info :</label>
-                        <input type="text" id="txtPhoneFax" style="width:550px" />
+                        <input type="text" id="txtPhoneFax" style="width:550px" tabindex="2" />
                         <br />
                         <input type="checkbox" id="chkTSRequest" />
                         <label for="chkTSRequest">Use Local Transport</label>
                         <br />
                         <label for="txtContactName">Contact Person :</label>
-                        <input type="text" id="txtContactName" style="width:150px" />
+                        <input type="text" id="txtContactName" style="width:150px" tabindex="3" />
                         <label for="txtCSName">Support By :</label>
                         <input type="text" id="txtCSName" style="width:150px" disabled />
                         <br />
@@ -74,19 +74,19 @@ End Code
                         <input type="text" id="txtShipBy" style="width:150px" disabled />
                         <br />
                         <label for="txtJobCondition">Work Condition :</label>
-                        <input type="text" id="txtJobCondition" style="width:600px" />
+                        <input type="text" id="txtJobCondition" style="width:600px"  tabindex="4"/>
                         <br />
                         <label for="txtCustPoNo">Customer PO :</label>
-                        <input type="text" id="txtCustPoNo" style="width:300px" />
+                        <input type="text" id="txtCustPoNo" style="width:300px" tabindex="5" />
                         <br />
                         <label for="txtDescription">Descriptions : </label>
-                        <textarea id="txtDescription" style="width:180px"></textarea>
+                        <textarea id="txtDescription" style="width:180px" tabindex="6"></textarea>
                         <label for="txtCancelReason">Cancel Note : </label>
                         <textarea id="txtCancelReason" style="width:180px"></textarea>
                         <br />
                         <label for="txtConsignee">Billing Place :</label>
-                        <input type="text" id="txtConsignee" style="width:130px" />
-                        <input type="text" id="txtConsBranch" style="width:40px" />
+                        <input type="text" id="txtConsignee" style="width:130px"  tabindex="7"/>
+                        <input type="text" id="txtConsBranch" style="width:40px"  tabindex="8"/>
                         <input type="button" id="btnBrowseCons" value="..." onclick="SearchData('CONSIGNEE')" />
                         <input type="text" id="txtConsignName" style="width:450px" disabled />
                         <br />
@@ -96,17 +96,17 @@ End Code
                     </div>
                     <div class="col-md-4">
                         <label for="txtQNo">Quotation : </label>
-                        <input type="text" id="txtQNo" style="width:130px" />
-                        <input type="text" id="txtQRevise" style="width:40px" />
+                        <input type="text" id="txtQNo" style="width:130px"  tabindex="9"/>
+                        <input type="text" id="txtQRevise" style="width:40px"  tabindex="10"/>
                         <br />
                         <label for="txtManagerCode">Sales By :</label>
                         <input type="text" id="txtManagerCode" style="width:130px" disabled />
                         <br />
                         <label for="txtCommission">Commission :</label>
-                        <input type="text" id="txtCommission" style="width:130px" />
+                        <input type="text" id="txtCommission" style="width:130px"  tabindex="11"/>
                         <br />
                         <label for="txtConfirmDate">Confirm Date :</label>
-                        <input type="date" id="txtConfirmDate" style="width:130px" />
+                        <input type="date" id="txtConfirmDate" style="width:130px"  tabindex="12"/>
                         <br />
                         <label for="txtCloseBy">Close By :</label>
                         <input type="text" id="txtCloseBy" style="width:130px" disabled />
@@ -130,40 +130,40 @@ End Code
                 <div class="row">
                     <div class="col-md-5">
                         <label for="txtCustInvNo">Cust.Invoice No :</label>
-                        <input type="text" id="txtCustInvNo" style="width:200px" />
+                        <input type="text" id="txtCustInvNo" style="width:200px"  tabindex="13"/>
                         <br />
                         <label for="txtInvProduct">Products :</label>
-                        <input type="text" id="txtInvProduct" style="width:200px" />
+                        <input type="text" id="txtInvProduct" style="width:200px"  tabindex="14"/>
                         <input type="button" id="btnBrowseProd" value="..." onclick="SearchData('InvProduct')" />
                         <br />
                         <label for="txtInvTotal">Inv.Total :</label>
-                        <input type="text" id="txtInvTotal" style="width:130px" />
+                        <input type="text" id="txtInvTotal" style="width:130px"  tabindex="15"/>
                         <label for="txtMeasurement">Measurement(M3) :</label>
-                        <input type="text" id="txtMeasurement" style="width:40px" />
+                        <input type="text" id="txtMeasurement" style="width:40px"  tabindex="16"/>
                         <br />
                         <label for="txtInvCurrency">Currency :</label>
-                        <input type="text" id="txtInvCurrency" style="width:40px" />
+                        <input type="text" id="txtInvCurrency" style="width:40px"  tabindex="17"/>
                         <input type="button" id="btnBrowseRate" value="..." onclick="SearchData('CURRENCY')" />
                         <label for="txtInvCurRate">Exchange Rate :</label>
-                        <input type="text" id="txtInvCurRate" style="width:60px" />
+                        <input type="text" id="txtInvCurRate" style="width:60px"  tabindex="18"/>
                         <br />
                         <label for="txtBookingNo">Booking No :</label>
-                        <input type="text" id="txtBookingNo" style="width:250px" />
+                        <input type="text" id="txtBookingNo" style="width:250px"  tabindex="19"/>
                         <br />
                         <label for="txtBLNo">BL/AWB Status :</label>
-                        <input type="text" id="txtBLNo" style="width:200px" />
+                        <input type="text" id="txtBLNo" style="width:200px"  tabindex="20"/>
                         <br />
                         <label for="txtVesselName">Vessel Name :</label>
-                        <input type="text" id="txtVesselName" style="width:200px" />
+                        <input type="text" id="txtVesselName" style="width:200px"  tabindex="21"/>
                         <input type="button" id="btnBrowseVsl1" value="..." onclick="SearchData('vessel')" />
                         <br />
                         <label for="txtInterPort">Inter Port:</label>
-                        <input type="text" id="txtInterPort" style="width:130px" />
+                        <input type="text" id="txtInterPort" style="width:130px"  tabindex="22"/>
                         <input type="button" id="btnBrowseIPort" value="..." onclick="SearchData('interport')" />
                         <input type="text" id="txtInterPortName" style="width:160px" disabled />
                         <br />
                         <label for="txtTotalCTN">Total Containers :</label>
-                        <input type="text" id="txtTotalCTN" style="width:130px" />
+                        <input type="text" id="txtTotalCTN" style="width:130px" tabindex="23" />
                         <input type="button" id="btnGetCTN" value="..." onclick="SearchData('SERVUNIT')" />
                         <label for="cboSelCtnType">Term : </label>
                         <select id="cboSelCtnType" class="dropdown">
@@ -173,27 +173,27 @@ End Code
                         </select>
                         <br />
                         <label for="txtDeliverNo">Delivery No :</label>
-                        <input type="text" id="txtDeliverNo" style="width:30px" />
+                        <input type="text" id="txtDeliverNo" style="width:30px"  tabindex="24"/>
                         <label for="txtDeliverTo">Delivery To :</label>
-                        <input type="text" id="txtDeliverTo" style="width:130px" />
+                        <input type="text" id="txtDeliverTo" style="width:130px"  tabindex="25"/>
                     </div>
                     <div class="col-md-7">
                         <label for="txtProjectName">Project Name :</label>
-                        <input type="text" id="txtProjectName" style="width:400px" />
+                        <input type="text" id="txtProjectName" style="width:400px"  tabindex="26"/>
                         <input type="button" id="btnBrowseProj" value="..." onclick="SearchData('ProjectName')" />
                         <br />
                         <label for="txtInvQty">Qty :</label>
-                        <input type="text" id="txtInvQty" style="width:130px" />
-                        <input type="text" id="txtInvUnit" style="width:40px" />
+                        <input type="text" id="txtInvQty" style="width:130px"  tabindex="27"/>
+                        <input type="text" id="txtInvUnit" style="width:40px"  tabindex="28"/>
                         <input type="button" id="btnBrowseUnit" value="..." onclick="SearchData('invproductunit')" />
                         <label for="txtInvPackQty">Package.Total :</label>
-                        <input type="text" id="txtInvPackQty" style="width:130px" />
+                        <input type="text" id="txtInvPackQty" style="width:130px"  tabindex="29"/>
                         <br />
                         <label for="txtNetWeight">Net Weight :</label>
-                        <input type="text" id="txtNetWeight" style="width:60px" />
+                        <input type="text" id="txtNetWeight" style="width:60px" tabindex="30" />
                         <label for="txtGrossWeight">Gross Weight :</label>
-                        <input type="text" id="txtGrossWeight" style="width:60px" />
-                        <input type="text" id="txtWeightUnit" style="width:40px" />
+                        <input type="text" id="txtGrossWeight" style="width:60px" tabindex="31" />
+                        <input type="text" id="txtWeightUnit" style="width:40px"  tabindex="32"/>
                         <input type="button" id="btnBrowseMeas" value="..." onclick="SearchData('GWUnit')" />
                         <br />
                         <label for="txtInvFCountry">From Country :</label>
@@ -206,36 +206,36 @@ End Code
                         <input type="button" id="btnBrowseCountry" value="..." onclick="SearchData('country')" />
                         <br />
                         <label for="txtHAWB">House BL/AWB :</label>
-                        <input type="text" id="txtHAWB" style="width:130px" />
+                        <input type="text" id="txtHAWB" style="width:130px"  tabindex="33"/>
                         <label for="txtMAWB">Master BL/AWB :</label>
-                        <input type="text" id="txtMAWB" style="width:130px" />
+                        <input type="text" id="txtMAWB" style="width:130px"  tabindex="34"/>
                         <br />
                         <label for="txtForwarder">Agent:</label>
-                        <input type="text" id="txtForwarder" style="width:130px" />
+                        <input type="text" id="txtForwarder" style="width:130px"  tabindex="35"/>
                         <input type="button" id="btnBrowseFwdr" value="..." onclick="SearchData('forwarder')" />
                         <input type="text" id="txtForwarderName" style="width:300px" disabled />
                         <br />
                         <label for="txtMVesselName">Master Vessel Name :</label>
-                        <input type="text" id="txtMVesselName" style="width:200px" />
+                        <input type="text" id="txtMVesselName" style="width:200px"  tabindex="36"/>
                         <input type="button" id="btnBrowseVsl2" value="..." onclick="SearchData('mvessel')" />
                         <br />
                         <label for="txtTransporter">Transporter :</label>
-                        <input type="text" id="txtTransporter" style="width:130px" />
+                        <input type="text" id="txtTransporter" style="width:130px"  tabindex="37"/>
                         <input type="button" id="btnBrowseTrans" value="..." onclick="SearchData('agent')" />
                         <input type="text" id="txtTransporterName" style="width:250px" disabled />
                         <br />
-                        <label for="txtETDDate">ETD Date:</label><input type="date" style="width:130px" id="txtETDDate" />
-                        <label for="txtETADate">ETA Date:</label><input type="date" style="width:130px" id="txtETADate" />
-                        <label for="txtLoadDate">Load Date:</label><input type="date" style="width:130px" id="txtLoadDate" />
+                        <label for="txtETDDate">ETD Date:</label><input type="date" style="width:130px" id="txtETDDate" tabindex="38" />
+                        <label for="txtETADate">ETA Date:</label><input type="date" style="width:130px" id="txtETADate"  tabindex="39"/>
+                        <label for="txtLoadDate">Load Date:</label><input type="date" style="width:130px" id="txtLoadDate" tabindex="40" />
                         <br />
                         <label for="txtDeliverAddr">Delivery Address :</label>
-                        <input type="text" id="txtDeliverAddr" style="width:400px" />
+                        <input type="text" id="txtDeliverAddr" style="width:400px"  tabindex="41"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="txtDeliveryDate">Delivery Date :</label><input type="date" style="width:130px" id="txtDeliveryDate" />
-                        <input type="button" class="btn btn-success" value="Print Delivery Slip" />
+                        <label for="txtDeliveryDate">Delivery Date :</label><input type="date" style="width:130px" id="txtDeliveryDate" tabindex="42"  />
+                        <input type="button" class="btn btn-info" value="Print Delivery Slip" />
                     </div>
                 </div>
             </div>
@@ -243,35 +243,35 @@ End Code
                 <div class="row">
                     <div class="col-md-3">
                         <label for="txtEDIDate">EDI Date :</label>
-                        <input type="date" id="txtEDIDate" style="width:130px" />
+                        <input type="date" id="txtEDIDate" style="width:130px"  tabindex="43"/>
                     </div>
                     <div class="col-md-3">
                         <label for="txtReadyClearDate">Ready Clear :</label>
-                        <input type="date" id="txtReadyClearDate" style="width:130px" />
+                        <input type="date" id="txtReadyClearDate" style="width:130px"  tabindex="44"/>
                     </div>
                     <div class="col-md-3">
                         <label for="txtDutyDate">Duty Date :</label>
-                        <input type="date" id="txtDutyDate" style="width:130px" />
+                        <input type="date" id="txtDutyDate" style="width:130px" tabindex="45" />
                     </div>
                     <div class="col-md-3">
                         <label for="txtClearDate">Clear Date :</label>
-                        <input type="date" id="txtClearDate" style="width:130px" />
+                        <input type="date" id="txtClearDate" style="width:130px"  tabindex="46"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <label for="txtDeclareType">Declare Type :</label>
-                        <input type="text" id="txtDeclareType" style="width:130px" />
+                        <input type="text" id="txtDeclareType" style="width:130px"  tabindex="47"/>
                         <input type="button" id="btnBrowseDCType" value="..." onclick="SearchData('RFDCT')" />
                         <input type="text" id="txtDeclareTypeName" style="width:200px" disabled />
                     </div>
                     <div class="col-md-3">
                         <label for="txtDeclareNo">Declare No :</label>
-                        <input type="text" id="txtDeclareNo" style="width:130px" />
+                        <input type="text" id="txtDeclareNo" style="width:130px"  tabindex="48"/>
                     </div>
                     <div class="col-md-3">
                         <label for="txtDutyAmt">Duty Amt :</label>
-                        <input type="text" id="txtDutyAmt" style="width:130px" />
+                        <input type="text" id="txtDutyAmt" style="width:130px"  tabindex="49"/>
                     </div>
                 </div>
                 <div class="row">
@@ -304,7 +304,7 @@ End Code
                             <option value="AF">AFTA</option>
                             <option value="OT">Others</option>
                         </select>
-                        <input type="text" id="txtClearTaxReson" />
+                        <input type="text" id="txtClearTaxReson" tabindex="50" />
                     </div>
                 </div>
                 <div class="row">
@@ -316,23 +316,23 @@ End Code
                     </div>
                     <div class="col-md-7">
                         <label for="txtReleasePort">Release Port :</label>
-                        <input type="text" id="txtReleasePort" style="width:50px" />
+                        <input type="text" id="txtReleasePort" style="width:50px"  tabindex="51"/>
                         <input type="button" id="btnBrowseLCPort" value="..." onclick="SearchData('RFARS')" />
                         <input type="text" id="txtReleasePortName" style="width:200px" disabled />
                         <label for="txtPortNo">PORT#</label>
-                        <input type="text" id="txtPortNo" style="width:30px" />
+                        <input type="text" id="txtPortNo" style="width:30px" tabindex="52" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <label for="txtShipping">Shipping Staff :</label>
-                        <input type="text" id="txtShipping" style="width:130px" />
+                        <input type="text" id="txtShipping" style="width:130px"  tabindex="53"/>
                         <input type="button" id="btnBrowseShipping" value="..." onclick="SearchData('user')" />
                         <input type="text" id="txtShippingName" style="width:200px" disabled />
                     </div>
                     <div class="col-md-6">
                         <label for="txtShippingCmd">Shipping Note :</label>
-                        <input type="text" id="txtShippingCmd" style="width:400px" />
+                        <input type="text" id="txtShippingCmd" style="width:400px"  tabindex="54"/>
                     </div>
                 </div>
                 <br />
@@ -348,7 +348,7 @@ End Code
                                     Cheque:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidChq" style="width:130px" onchange="CalTotalLtd();" /><br />
+                                    <input type="text" id="txtComPaidChq" style="width:130px" onchange="CalTotalLtd();"  tabindex="55"/><br />
                                 </td>
                             </tr>
                             <tr>
@@ -357,7 +357,7 @@ End Code
                                     Cash:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidCash" style="width:130px" onchange="CalTotalLtd();"  /><br />
+                                    <input type="text" id="txtComPaidCash" style="width:130px" onchange="CalTotalLtd();"  tabindex="56" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -366,16 +366,16 @@ End Code
                                     E-Payment:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidEPay" style="width:130px" onchange="CalTotalLtd();"  /><br />
+                                    <input type="text" id="txtComPaidEPay" style="width:130px" onchange="CalTotalLtd();"  tabindex="57" /><br />
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>
-                                    Others:<input type="text" id="txtComOthersPayBy" style="width:130px" />
+                                    Others:<input type="text" id="txtComOthersPayBy" style="width:130px"  tabindex="58"/>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidOthers" style="width:130px"  onchange="CalTotalLtd();" /><br />
+                                    <input type="text" id="txtComPaidOthers" style="width:130px"  onchange="CalTotalLtd();" tabindex="59" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -384,7 +384,7 @@ End Code
                                     Total Paid:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtComPaidTotal" style="width:130px" />
+                                    <input type="text" id="txtComPaidTotal" style="width:130px" disabled/>
                                 </td>
                             </tr>
                         </table>
@@ -399,7 +399,7 @@ End Code
                                     Cheque:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidChq" style="width:130px"  onchange="CalTotalCust();" /><br />
+                                    <input type="text" id="txtCustPaidChq" style="width:130px"  onchange="CalTotalCust();"  tabindex="60"/><br />
                                 </td>
                             </tr>
                             <tr>
@@ -408,7 +408,7 @@ End Code
                                     Cash:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidCash" style="width:130px"  onchange="CalTotalCust();" /><br />
+                                    <input type="text" id="txtCustPaidCash" style="width:130px"  onchange="CalTotalCust();" tabindex="61" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -417,7 +417,7 @@ End Code
                                     Tax-Card:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidCard" style="width:130px"  onchange="CalTotalCust();" /><br />
+                                    <input type="text" id="txtCustPaidCard" style="width:130px"  onchange="CalTotalCust();"  tabindex="62"/><br />
                                 </td>
                             </tr>
                             <tr>
@@ -426,7 +426,7 @@ End Code
                                     E-Payment:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidEPay" style="width:130px"  onchange="CalTotalCust();" /><br />
+                                    <input type="text" id="txtCustPaidEPay" style="width:130px"  onchange="CalTotalCust();" tabindex="63" /><br />
                                 </td>
                             </tr>
                             <tr>
@@ -435,16 +435,16 @@ End Code
                                     Bank Guarantee:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidBank" style="width:130px"  onchange="CalTotalCust();" /><br />
+                                    <input type="text" id="txtCustPaidBank" style="width:130px"  onchange="CalTotalCust();"  tabindex="64"/><br />
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>
-                                    Others:<input type="text" id="txtCustOthersPayBy" style="width:130px" />
+                                    Others:<input type="text" id="txtCustOthersPayBy" style="width:130px"  tabindex="65"/>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidOthers" style="width:130px"  onchange="CalTotalCust();" /><br />
+                                    <input type="text" id="txtCustPaidOthers" style="width:130px"  onchange="CalTotalCust();"  tabindex="66"/><br />
                                 </td>
                             </tr>
                             <tr>
@@ -453,7 +453,7 @@ End Code
                                     Total Paid:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustPaidTotal" style="width:130px" />
+                                    <input type="text" id="txtCustPaidTotal" style="width:130px" disabled/>
                                 </td>
                             </tr>
                         </table>
@@ -497,7 +497,7 @@ End Code
                                 ADV-1801-0001
                             </td>
                             <td>
-                                <button class="btn btn-success">View</button>
+                                <button class="btn btn-primary">View</button>
                             </td>
                         </tr>
                         <tr>
@@ -511,7 +511,7 @@ End Code
                                 CLR-1805-0001
                             </td>
                             <td>
-                                <button class="btn btn-success">View</button>
+                                <button class="btn btn-primary">View</button>
                             </td>
                         </tr>
                     </tbody>
@@ -567,7 +567,7 @@ End Code
             </div>
         </div>
         <hr />
-        <button id="btnSave" class="btn btn-info" onclick="SaveData()">Save</button>
+        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
         <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print</button>
     </div>
 </div>
@@ -592,7 +592,24 @@ End Code
             $('#txtJNo').val(jno);
             ShowJob(br, jno);
         }
+        SetEnterToTab();
     });
+    function SetEnterToTab() {
+        //Set enter to tab
+        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
+            $(this).on("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
+                    if (nextElement.length) {
+                        $('[tabindex="' + (this.tabIndex + 1) + '"]').focus();
+                        e.preventDefault();
+                    } else
+                        $('[tabindex="1"]').focus();
+                }
+            });
+        });
+        $('#txtCustCode').focus();
+    }
     function SetEvents() {
         $('#txtTransporter').keydown(function (event) {
             if (event.which == 13) {
@@ -644,112 +661,61 @@ End Code
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             //Customers
             var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
-            $('#frmSearchCust').html(ListCust);
-            $('#frmSearchCust').on('shown.bs.modal', function () {
-                $('#tbCust_filter input').focus();
-            });
+            BindList('#frmSearchCust', '#tbCust', ListCust);
             //Consignee
             var ListCons = response.replace('tbX', 'tbCons').replace('cpX', 'Consignees');
-            $('#frmSearchCons').html(ListCons);
-            $('#frmSearchCons').on('shown.bs.modal', function () {
-                $('#tbCons_filter input').focus();
-            });
+            BindList('#frmSearchCons', '#tbCons', ListCons);
             //Inter Port
             var ListIPort = response.replace('tbX', 'tbIPort').replace('cpX', 'Inter Port');
-            $('#frmSearchIPort').html(ListIPort);
-            $('#frmSearchIPort').on('shown.bs.modal', function () {
-                $('#tbIPort_filter input').focus();
-            });
-        });
-        //2 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
+            BindList('#frmSearchIPort', '#tbIPort', ListIPort);
+
+            //2 Fields
+            response = response.replace('<th>key</th>', '');
             //Users
             var ListUser = response.replace('tbX', 'tbUser').replace('cpX', 'Users');
-            $('#frmSearchUser').html(ListUser);
-            $('#frmSearchUser').on('shown.bs.modal', function () {
-                $('#tbUser_filter input').focus();
-            });
+            BindList('#frmSearchUser', '#tbUser', ListUser);
             //Declare Type
             var ListDType = response.replace('tbX', 'tbDType').replace('cpX', 'Declaration Type');
-            $('#frmSearchDType').html(ListDType);
-            $('#frmSearchDType').on('shown.bs.modal', function () {
-                $('#tbDType_filter input').focus();
-            });
+            BindList('#frmSearchDType', '#tbDType', ListDType);
             //Customs Port
             var ListCPort = response.replace('tbX', 'tbCPort').replace('cpX', 'Customs Inspection At');
-            $('#frmSearchCPort').html(ListCPort);
-            $('#frmSearchCPort').on('shown.bs.modal', function () {
-                $('#tbCPort_filter input').focus();
-            });
+            BindList('#frmSearchCPort', '#tbCPort', ListCPort);
             //Currency
             var ListCurr = response.replace('tbX', 'tbCurr').replace('cpX', 'Currencys');
-            $('#frmSearchCurr').html(ListCurr);
-            $('#frmSearchCurr').on('shown.bs.modal', function () {
-                $('#tbCurr_filter input').focus();
-            });
+            BindList('#frmSearchCurr', '#tbCurr', ListCurr);
             //Country
             var ListCountry = response.replace('tbX', 'tbCountry').replace('cpX', 'Country');
-            $('#frmSearchCountry').html(ListCountry);
-            $('#frmSearchCountry').on('shown.bs.modal', function () {
-                $('#tbCountry_filter input').focus();
-            });
+            BindList('#frmSearchCountry', '#tbCountry', ListCountry);
             //FCountry
             var ListFCountry = response.replace('tbX', 'tbFCountry').replace('cpX', 'Country');
-            $('#frmSearchFCountry').html(ListFCountry);
-            $('#frmSearchFCountry').on('shown.bs.modal', function () {
-                $('#tbFCountry_filter input').focus();
-            });
+            BindList('#frmSearchFCountry', '#tbFCountry', ListFCountry);
             //Agent
             var ListAgent = response.replace('tbX', 'tbVend').replace('cpX', 'Agent');
-            $('#frmSearchVend').html(ListAgent);
-            $('#frmSearchVend').on('shown.bs.modal', function () {
-                $('#tbVend_filter input').focus();
-            });
+            BindList('#frmSearchVend', '#tbVend', ListAgent);
             //Forwarder/Transporter
             var ListForwarder = response.replace('tbX', 'tbForw').replace('cpX', 'Transporter');
-            $('#frmSearchForw').html(ListForwarder);
-            $('#frmSearchForw').on('shown.bs.modal', function () {
-                $('#tbForw_filter input').focus();
-            });
-        });
-        //1 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=name', function (response) {
+            BindList('#frmSearchForw', '#tbForw', ListForwarder);
+
+            //1 Fields
+            response = response.replace('<th>code</th>', '');
             //Projects Name
             var ListProj = response.replace('tbX', 'tbProj').replace('cpX', 'Project Name');
-            $('#frmSearchProj').html(ListProj);
-            $('#frmSearchProj').on('shown.bs.modal', function () {
-                $('#tbProj_filter input').focus();
-            });
+            BindList('#frmSearchProj', '#tbProj', ListProj);
             //Products
             var ListProd = response.replace('tbX', 'tbProd').replace('cpX', 'Products');
-            $('#frmSearchProd').html(ListProd);
-            $('#frmSearchProd').on('shown.bs.modal', function () {
-                $('#tbProd_filter input').focus();
-            });
+            BindList('#frmSearchProd', '#tbProd', ListProd);
             //Vessel
             var ListVessel = response.replace('tbX', 'tbVessel').replace('cpX', 'Vessels');
-            $('#frmSearchVessel').html(ListVessel);
-            $('#frmSearchVessel').on('shown.bs.modal', function () {
-                $('#tbVessel_filter input').focus();
-            });
+            BindList('#frmSearchVessel', '#tbVessel', ListVessel);
             //Mother Vessel
             var ListMVessel = response.replace('tbX', 'tbMVessel').replace('cpX', 'Vessels');
-            $('#frmSearchMVessel').html(ListMVessel);
-            $('#frmSearchMVessel').on('shown.bs.modal', function () {
-                $('#tbMVessel_filter input').focus();
-            });
+            BindList('#frmSearchMVessel', '#tbMVessel', ListMVessel);
             //Inv Units
             var ListInvUnit = response.replace('tbX', 'tbIUnt').replace('cpX', 'Invoice Units');
-            $('#frmSearchIUnt').html(ListInvUnit);
-            $('#frmSearchIUnt').on('shown.bs.modal', function () {
-                $('#tbIUnt_filter input').focus();
-            });
+            BindList('#frmSearchIUnt', '#tbIUnt', ListInvUnit);
             //Weights Unit
             var ListWeightUnit = response.replace('tbX', 'tbWUnt').replace('cpX', 'Weight Units');
-            $('#frmSearchWUnt').html(ListWeightUnit);
-            $('#frmSearchWUnt').on('shown.bs.modal', function () {
-                $('#tbWUnt_filter input').focus();
-            });
+            BindList('#frmSearchWUnt', '#tbWUnt', ListWeightUnit);
         });
     }
     function SearchData(type) {
@@ -787,6 +753,7 @@ End Code
                     var dt = GetSelect('#tbIPort', this);
                     $('#txtInterPort').val(dt.PortCode);
                     $('#txtInterPortName').val(dt.PortName);
+                    $('#txtInterPort').focus();
                     $('#frmSearchIPort').modal('hide');
                 });
                 $('#tbIPort tbody').on('click', 'tr', function () {
@@ -823,6 +790,7 @@ End Code
                     var dt = GetSelect('#tbVend', this);
                     $('#txtTransporter').val(dt.VenCode);
                     $('#txtTransporterName').val(dt.TName);
+                    $('#txtTransporter').focus();
                     $('#frmSearchVend').modal('hide');
                 });
                 $('#tbVend tbody').on('click', 'tr', function () {
@@ -859,6 +827,7 @@ End Code
                     var dt = GetSelect('#tbForw', this);
                     $('#txtForwarder').val(dt.VenCode);
                     $('#txtForwarderName').val(dt.TName);
+                    $('#txtForwarder').focus();
                     $('#frmSearchForw').modal('hide');
                 });
                 $('#tbForw tbody').on('click', 'tr', function () {
@@ -967,6 +936,7 @@ End Code
                             $('#tbWUnt tbody').on('click', 'button', function () {
                                 var dt = GetSelect('#tbWUnt', this);
                                 $('#txtWeightUnit').val(dt.val);
+                                $('#txtWeightUnit').focus();
                                 $('#frmSearchWUnt').modal('hide');
                             });
                             $('#tbWUnt tbody').on('click', 'tr', function () {
@@ -1005,6 +975,7 @@ End Code
                             $('#tbIUnt tbody').on('click', 'button', function () {
                                 var dt = GetSelect('#tbIUnt', this);
                                 $('#txtInvUnit').val(dt.val);
+                                $('#txtInvUnit').focus();
                                 $('#frmSearchIUnt').modal('hide');
                             });
                             $('#tbIUnt tbody').on('click', 'tr', function () {
@@ -1043,6 +1014,7 @@ End Code
                             $('#tbMVessel tbody').on('click', 'button', function () {
                                 var dt = GetSelect('#tbMVessel', this);
                                 $('#txtMVesselName').val(dt.val);
+                                $('#txtMVesselName').focus();
                                 $('#frmSearchMVessel').modal('hide');
                             });
                             $('#tbMVessel tbody').on('click', 'tr', function () {
@@ -1081,6 +1053,7 @@ End Code
                             $('#tbVessel tbody').on('click', 'button', function () {
                                 var dt = GetSelect('#tbVessel', this);
                                 $('#txtVesselName').val(dt.val);
+                                $('#txtVesselName').focus();
                                 $('#frmSearchVessel').modal('hide');
                             });
                             $('#tbVessel tbody').on('click', 'tr', function () {
@@ -1119,6 +1092,7 @@ End Code
                     var dt = GetSelect('#tbUser', this);
                     $('#txtShipping').val(dt.UserID);
                     $('#txtShippingName').val(dt.TName);
+                    $('#txtShipping').focus();
                     $('#frmSearchUser').modal('hide');
                 });
                 $('#tbUser tbody').on('click', 'tr', function () {
@@ -1155,6 +1129,7 @@ End Code
                     var dt = GetSelect('#tbDType', this);
                     $('#txtDeclareType').val(dt.Type);
                     $('#txtDeclareTypeName').val(dt.Description);
+                    $('#txtDeclareType').focus();
                     $('#frmSearchDType').modal('hide');
                 });
                 $('#tbDType tbody').on('click', 'tr', function () {
@@ -1192,6 +1167,7 @@ End Code
                     var dt = GetSelect('#tbCPort', this);
                     $('#txtReleasePort').val(dt.AreaCode);
                     $('#txtReleasePortName').val(dt.AreaName);
+                    $('#txtReleasePort').focus();
                     $('#frmSearchCPort').modal('hide');
                 });
                 $('#tbCPort tbody').on('click', 'tr', function () {
@@ -1260,6 +1236,7 @@ End Code
                 $('#tbCurr tbody').on('click', 'button', function () {
                     var dt = GetSelect('#tbCurr', this);
                     $('#txtInvCurrency').val(dt.Code);
+                    $('#txtInvCurrency').focus();
                     $('#frmSearchCurr').modal('hide');
                 });
                 $('#tbCurr tbody').on('click', 'tr', function () {
@@ -1299,6 +1276,7 @@ End Code
                     $('#txtCustCode').val(dt.CustCode);
                     $('#txtCustBranch').val(dt.Branch);
                     ShowCustomer(dt.CustCode, dt.Branch, false);
+                    $('#txtCustCode').focus();
                     $('#frmSearchCust').modal('hide');
                 });
                 $('#tbCust tbody').on('click', 'tr', function () {
@@ -1338,6 +1316,7 @@ End Code
                     $('#txtConsignee').val(dt.CustCode);
                     $('#txtConsBranch').val(dt.Branch);
                     ShowCustomer(dt.CustCode, dt.Branch, true);
+                    $('#txtConsignee').focus();
                     $('#frmSearchCons').modal('hide');
                 });
                 $('#tbCons tbody').on('click', 'tr', function () {
@@ -1374,6 +1353,7 @@ End Code
                             $('#tbProj tbody').on('click', 'button', function () {
                                 var dt = GetSelect('#tbProj', this);
                                 $('#txtProjectName').val(dt.val);
+                                $('#txtProjectName').focus();
                                 $('#frmSearchProj').modal('hide');
                             });
                             $('#tbProj tbody').on('click', 'tr', function () {
@@ -1412,6 +1392,7 @@ End Code
                             $('#tbProd tbody').on('click', 'button', function () {
                                 var dt = GetSelect('#tbProd', this);
                                 $('#txtInvProduct').val(dt.val);
+                                $('#txtInvProduct').focus();
                                 $('#frmSearchProd').modal('hide');
                             });
                             $('#tbProd tbody').on('click', 'tr', function () {

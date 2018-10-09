@@ -213,7 +213,7 @@ End Code
                     </div>
                 </div>
                 <button id="btnSave" class="btn btn-success">Save Header</button>
-                <button id="btnPrint" class="btn btn-primary">Print Data</button>
+                <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print Data</button>
             </div>
             <div id="tabDetail" class="tab-pane fade">
                 <div class="row">
@@ -270,7 +270,6 @@ End Code
                 <button id="btnAdd" class="btn btn-default">New</button>
                 <button id="btnUpdate" class="btn btn-warning">Save</button>
                 <button id="btnDelete" class="btn btn-danger">Delete</button>
-                <button id="btnPrint" class="btn btn-info" onclick="window.open('/formadv');">Print</button>
             </div>
         </div>
     </div>
@@ -281,4 +280,7 @@ End Code
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
     });
+    function PrintData() {
+        window.open(path + 'Adv/FormAdv');
+    }
 </script>

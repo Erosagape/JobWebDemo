@@ -258,6 +258,7 @@
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
     <Content Include="Scripts\Func\combo.js" />
+    <Content Include="Scripts\Func\popup.js" />
     <Content Include="Scripts\Func\util.js" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
     <Content Include="Scripts\jquery-3.2.1.slim.min.map" />

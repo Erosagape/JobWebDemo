@@ -157,6 +157,7 @@ End Code
             </td>
         </tr>
     </table>
+    <p style="text-align:right">Printed By : @ViewBag.User Printed Date : @DateTime.Now &copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
 </div>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
@@ -165,7 +166,7 @@ End Code
         ShowCompany();
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
-        if (br !== '' && ano !== '') {
+        if (br !== "" && ano !== "") {
             GetAdv(br, ano);
         } else {
             var r = DummyAdvanceData();
