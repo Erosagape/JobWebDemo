@@ -8,7 +8,7 @@ End Code
             <div class="col-sm-5">
                 Branch :
                 <input type="text" id="txtBranchCode" style="width:50px" />
-                <button id="btnBrowseBranch">...</button>
+                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
                 <input type="text" id="txtBranchName" style="width:200px" disabled />
             </div>
             <div class="col-sm-3">
@@ -42,7 +42,7 @@ End Code
                                 </td>
                                 <td>
                                     <input type="text" id="txtAdvBy" style="width:100px" />
-                                    <button id="btnBrowseEmp1">...</button>
+                                    <button id="btnBrowseEmp1" onclick="SearchData('advby')">...</button>
                                     <input type="text" id="txtAdvName" style="width:300px" disabled />
                                 </td>
                             </tr>
@@ -52,7 +52,7 @@ End Code
                                 </td>
                                 <td>
                                     <input type="text" id="txtReqBy" style="width:100px" />
-                                    <button id="btnBrowseEmp2">...</button>
+                                    <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
                                     <input type="text" id="txtReqName" style="width:300px" disabled />
                                 </td>
                             </tr>
@@ -62,7 +62,8 @@ End Code
                                 </td>
                                 <td>
                                     <input type="text" id="txtCustCode" style="width:100px" />
-                                    <button id="btnBrowseCust">...</button>
+                                    <input type="text" id="txtCustBranch" style="width:30px" />
+                                    <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
                                     <input type="text" id="txtCustName" style="width:300px" disabled />
                                 </td>
                             </tr>
@@ -91,10 +92,7 @@ End Code
                                     Job Type :
                                 </td>
                                 <td>
-                                    <select id="cboJobType" style="width:200px" class="form-control dropdown">
-                                        <option id="1">01 / IMPORT</option>
-                                        <option id="2">02 / EXPORT</option>
-                                    </select>
+                                    <select id="cboJobType" style="width:200px" class="form-control dropdown"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -102,10 +100,7 @@ End Code
                                     Ship By :
                                 </td>
                                 <td>
-                                    <select id="cboShipBy" style="width:200px" class="form-control dropdown">
-                                        <option id="1">01 / AIR</option>
-                                        <option id="2">02 / SEA</option>
-                                    </select>
+                                    <select id="cboShipBy" style="width:200px" class="form-control dropdown"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -122,12 +117,7 @@ End Code
                 <div class="row">
                     <div class="col-sm-7">
                         Advance Type:
-                        <select id="cboAdvType" class="form-control dropdown" style="width:100%">
-                            <option value="1">01 / Customs Service / General (C/S)</option>
-                            <option value="2">02 / Duty Fee (C/S)</option>
-                            <option value="3">03 / Shipping Performance (S/P)</option>
-                            <option value="4">04 / Other</option>
-                        </select>
+                        <select id="cboAdvType" class="form-control dropdown" style="width:100%"></select>
                         <br />
                         Remark:
                         <textarea id="txtRemark" style="width:100%;height:80px"></textarea>
@@ -239,11 +229,11 @@ End Code
                         <input type="text" id="txtItemNo" style="width:40px" disabled />
                         <label for="txtSICode">Code :</label>
                         <input type="text" id="txtSICode" style="width:80px" />
-                        <input type="button" id="btnBrowseS" value="..." />
+                        <input type="button" id="btnBrowseS" value="..." onclick="SearchData('servicecode')" />
                         <input type="text" id="txtSDescription" style="width:280px" />
                         <label for="txtForJNo">Job No :</label>
                         <input type="text" id="txtForJNo" style="width:120px" />
-                        <input type="button" id="btnBrowseJ" value="..." />
+                        <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                         <br />
                         <label for="txtAmount">Amount :</label>
                         <input type="text" id="txtAmount" style="width:100px;text-align:right" />
@@ -268,19 +258,174 @@ End Code
                     </div>
                 </div>
                 <button id="btnAdd" class="btn btn-default">New</button>
-                <button id="btnUpdate" class="btn btn-warning">Save</button>
+                <button id="btnUpdate" class="btn btn-primary">Save</button>
                 <button id="btnDelete" class="btn btn-danger">Delete</button>
             </div>
         </div>
     </div>
+    <div id="frmSearchBranch" class="modal fade" role="dialog"></div>
+    <div id="frmSearchAdv" class="modal fade" role="dialog"></div>
+    <div id="frmSearchReq" class="modal fade" role="dialog"></div>
+    <div id="frmSearchCust" class="modal fade" role="dialog"></div>
+    <div id="frmSearchSICode" class="modal fade" role="dialog"></div>
+    <div id="frmSearchJob" class="modal fade" role="dialog"></div>
 </div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
-    $(document).ready(function () {
-        var br = getQueryString('BranchCode');
-        var ano = getQueryString('AdvNo');
+    $(document).ready(function () {       
+        CheckParam();
+        SetLOVs();
+        SetEvents();
+        SetEnterToTab();
     });
+    function CheckParam() {
+        //read query string parameters
+        var br = getQueryString('BranchCode');
+        var jt = getQueryString('JType');
+        var sb = getQueryString('SBy');
+        var ano = getQueryString('AdvNo');
+
+        if (br != null) {
+            $('#txtBranchCode').val(br);
+            ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
+        }
+        if (jt == null) jt = "01";
+        if (sb == null) sb = "01";
+        //Combos
+        loadConfig('#cboJobType', 'JOB_TYPE', path, jt);
+        loadConfig('#cboShipBy', 'SHIP_BY', path, sb);
+        loadConfig('#cboAdvType', 'ADV_TYPE', path, '');
+    }
+    function SetEnterToTab() {
+        //Set enter to tab
+        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
+            $(this).on("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
+                    if (nextElement.length) {
+                        $('[tabindex="' + (this.tabIndex + 1) + '"]').focus();
+                        e.preventDefault();
+                    } else
+                        $('[tabindex="1"]').focus();
+                }
+            });
+        });
+        $('#txtBranchCode').focus();
+    }
     function PrintData() {
         window.open(path + 'Adv/FormAdv');
+    }
+    function SetEvents() {
+        $('#txtBranchCode').keydown(function (event) {
+            if (event.which == 13) {
+                ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
+            }
+        });
+        $('#txtAdvBy').keydown(function (event) {
+            if (event.which == 13) {
+                ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
+            }
+        });
+        $('#txtReqBy').keydown(function (event) {
+            if (event.which == 13) {
+                ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
+            }
+        });
+        $('#txtCustBranch').keydown(function (event) {
+            if (event.which == 13) {
+                ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
+            }
+        });
+        $('#txtSICode').keydown(function (event) {
+            if (event.which == 13) {
+                ShowServiceCode(path, $('#txtSICode').val(), '#txtSDescription');
+            }
+        });
+    }
+    function SetLOVs() {
+        //3 Fields Show
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            //Customers
+            var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
+            BindList('#frmSearchCust', '#tbCust', ListCust);
+            //Job
+            var ListJob = response.replace('tbX', 'tbJob').replace('cpX', 'Job List');
+            BindList('#frmSearchJob', '#tbJob', ListJob);
+
+            //2 Fields
+            response = response.replace('<th>key</th>', '');
+            //Users
+            var ListUser = response.replace('tbX', 'tbAdv').replace('cpX', 'Advance By');
+            BindList('#frmSearchAdv', '#tbAdv', ListUser);
+            var ListUser2 = response.replace('tbX', 'tbReq').replace('cpX', 'Request By');
+            BindList('#frmSearchReq', '#tbReq', ListUser2);
+            //Branch
+            var ListBranch = response.replace('tbX', 'tbBranch').replace('cpX', 'Branch');
+            BindList('#frmSearchBranch', '#tbBranch', ListBranch);
+            //SICode
+            var ListServ = response.replace('tbX', 'tbServ').replace('cpX', 'Service Code');
+            BindList('#frmSearchSICode', '#tbServ', ListServ);
+
+        });
+    }
+    function SearchData(type) {
+        switch (type) {
+            case 'branch':
+                SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
+                break;
+            case 'advby':
+                SetGridUser(path, '#tbAdv', '#frmSearchAdv', ReadAdvBy);
+                break;
+            case 'reqby':
+                SetGridUser(path, '#tbReq', '#frmSearchReq', ReadReqBy);
+                break;
+            case 'customer':
+                SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
+                break;
+            case 'servicecode':
+                SetGridSICode(path, '#tbServ', "", '#frmSearchSICode', ReadService);
+                break;
+            case 'job':
+                SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam(), ReadJob);
+                break;
+        }
+    }
+    function GetParam() {
+        var strParam = '?';
+        strParam += 'Branch=' + $('#txtBranchCode').val();
+        strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
+        strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
+        strParam += '&CustCode=' + $('#txtCustCode').val();
+        return strParam;
+    }
+    function ReadAdvBy(dt) {
+        $('#txtAdvBy').val(dt.UserID);
+        $('#txtAdvName').val(dt.TName);
+        $('#txtAdvBy').focus();
+    }
+    function ReadReqBy(dt) {
+        $('#txtReqBy').val(dt.UserID);
+        $('#txtReqName').val(dt.TName);
+        $('#txtReqBy').focus();
+    }
+    function ReadBranch(dt) {
+        $('#txtBranchCode').val(dt.Code);
+        $('#txtBranchName').val(dt.BrName);
+        $('#txtBranchCode').focus();
+    }
+    function ReadCustomer(dt) {
+        $('#txtCustCode').val(dt.CustCode);
+        $('#txtCustBranch').val(dt.Branch);
+        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+        $('#txtCustCode').focus();
+    }
+    function ReadService(dt) {
+        $('#txtSICode').val(dt.SICode);
+        $('#txtSDescription').val(dt.NameThai);
+        $('#txtSICode').focus();
+    }
+    function ReadJob(dt) {
+        $('#txtForJNo').val(dt.JNo);
     }
 </script>

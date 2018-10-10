@@ -163,7 +163,7 @@ End Code
     var path = '@Url.Content("~")';
     var serv = [];
     $(document).ready(function () {
-        ShowCompany();
+        ShowCompany('#divCompany');
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
         if (br !== "" && ano !== "") {
@@ -189,15 +189,7 @@ End Code
                 ShowDetail(d,h);
             });
     }
-    function GetConfig(Code, Key, ControlID) {
-        $.get(path +'Config/GetConfig?Code='+Code+'&Key=' + Key)
-            .done(function (r) {
-                var b = r.config.data;
-                if (b.length > 0) {
-                    $(ControlID).text(b[0].ConfigValue);
-                }
-            });
-    }
+    
     function ShowData(data) {
         //show headers
         var h = data.adv.header[0];
@@ -210,9 +202,9 @@ End Code
 
         ShowCustomer(h.CustCode, h.CustBranch);
 
-        ShowUser(h.EmpCode, '#lblReqBy');
-        ShowUser(h.ApproveBy, '#lblAppBy');
-        ShowUser(h.PaymentBy, '#lblPayBy');
+        ShowUserSign(path,h.EmpCode, '#lblReqBy');
+        ShowUserSign(path,h.ApproveBy, '#lblAppBy');
+        ShowUserSign(path,h.PaymentBy, '#lblPayBy');
 
         $('#lblRequestDate').text(ShowDate(h.AdvDate));
         $('#lblAppDate').text(ShowDate(h.ApproveDate));
@@ -224,9 +216,9 @@ End Code
         if (jt < 10) jt = '0' + jt;
         if (sb < 10) sb = '0' + sb;
         if (at < 10) at = '0' + at;
-        GetConfig('JOB_TYPE', jt, '#lblJobType');
-        GetConfig('SHIP_BY', sb, '#lblShipBy');
-        GetConfig('ADV_TYPE', at, '#lblAdvType');
+        ShowConfig(path,'JOB_TYPE', jt, '#lblJobType');
+        ShowConfig(path,'SHIP_BY', sb, '#lblShipBy');
+        ShowConfig(path,'ADV_TYPE', at, '#lblAdvType');
         if (h.AdvCash > 0) {
             $('#chkCash').prop('checked', true);
         }
@@ -260,20 +252,8 @@ End Code
                     }
                 });
         }
-    }
-    function ShowUser(UserID, ControlID) {
-        if (UserID != "") {
-            $.get(path +'Master/GetUser?Code=' + UserID)
-                .done(function (r) {
-                    if (r.user.data.length > 0) {
-                        var b = r.user.data[0];
-                        $(ControlID).text('(' + b.TName + ')');
-                    }
-                });
-        }
-    }
+    }    
     function ShowDetail(r,h) {
-
         //Dummy Data
         var strDesc = '';
         var strJob = '';
@@ -305,11 +285,5 @@ End Code
         $('#divJob').html(strJob);
         $('#divAmt').html(strAmt);
     }
-    function ShowCompany() {
-        var c = DummyCompanyData();
-        $('#divCompany').html('<b>' + c.CompanyName + '</b>'
-            + '<br/>' + c.CompanyAddress1
-            + ' '
-            + c.CompanyAddress2);
-    }
+
 </script>

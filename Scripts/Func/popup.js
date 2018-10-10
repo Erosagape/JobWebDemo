@@ -1,4 +1,5 @@
-﻿function BindList(d, t, l) {
+﻿//basic function tools for binding 
+function BindList(d, t, l) {
     //use for set html of tables and set focus when showing
     $(d).html(l);
     $(d).on('shown.bs.modal', function () {
@@ -18,6 +19,7 @@ function BindEvent(t, d, ev) {
     });
     $(d).modal('show');
 }
+//Function for loading data to Grid for popup selection
 function SetGridConfigList(p, g, d, ev) {
     $(g).DataTable({
         ajax: {
@@ -158,7 +160,7 @@ function SetGridUnit(p, g ,d ,ev) {
                     selected: true, //ให้สามารถเลือกแถวได้
                     columns: [ //กำหนด property ของ header column
                         { data: null, title: "#" },
-                        { data: "val", title: "ชื่อหน่วย" }
+                        { data: "val", title: "value" }
                     ],
                     "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
                         {
@@ -310,4 +312,251 @@ function SetGridJob(p, g, d, t, ev) {
         destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
     });
     BindEvent(g, d, ev);
+}
+function SetGridInterPort(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetInterPort?Key=' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'interport.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "PortCode", title: "รหัส" },
+            { data: "CountryCode", title: "ประเทศ" },
+            { data: "PortName", title: "ชื่อ" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridCountry(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetCountry', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'country.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "CTYCODE", title: "รหัส" },
+            { data: "CTYName", title: "ชื่อประเทศ" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridWeightUnit(p, g, d, ev) {
+    $.get(p + 'joborder/getjobdatadistinct?field=GWUnit')
+        .done(function (r) {
+            var dr = r[0].Table;
+            if (dr.length > 0) {
+                $(g).DataTable({
+                    data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "val", title: "value" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                BindEvent(g, d, ev);
+            }
+        });
+
+}
+function SetGridVessel(p, g, d, t, ev) {
+    $.get(p + 'joborder/getjobdatadistinct?field='+ t +'VesselName')
+        .done(function (r) {
+            var dr = r[0].Table;
+            if (dr.length > 0) {
+                $(g).DataTable({
+                    data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "val", title: "ชื่อยานพาหนะ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                BindEvent(g, d, ev);
+            }
+        });
+}
+function SetGridDeclareType(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetDeclareType', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'RFDCT.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "Type", title: "รหัส" },
+            { data: "Description", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridCustomsPort(p, g, d, ev) {
+    //popup for search data
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetCustomsPort', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'RFARS.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "AreaCode", title: "รหัส" },
+            { data: "AreaName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridServUnit(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetServUnit', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'servunit.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "UnitType", title: "รหัส" },
+            { data: "UName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridProjectName(p, g, d, ev) {
+    $.get(p + 'joborder/getjobdatadistinct?field=ProjectName')
+        .done(function (r) {
+            var dr = r[0].Table;
+            if (dr.length > 0) {
+                $(g).DataTable({
+                    data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "val", title: "ชื่อโครงการ" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                BindEvent(g, d, ev);
+            }
+        });
+}
+function SetGridInvProduct(p, g, d, ev) {
+    $.get(p + 'joborder/getjobdatadistinct?field=InvProduct')
+        .done(function (r) {
+            var dr = r[0].Table;
+            if (dr.length > 0) {
+                $(g).DataTable({
+                    data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "val", title: "ชื่อสินค้า" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                var html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                BindEvent(g, d, ev);
+            }
+        });
+
+
 }

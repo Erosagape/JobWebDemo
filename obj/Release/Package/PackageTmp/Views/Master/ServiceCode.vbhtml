@@ -83,7 +83,7 @@ End Code
                 <label for="chkIsUsedCoSlip">Used for Co-person</label>
             </div>
         </div>
-        <button id="btnAdd" class="btn btn-warning" onclick="AddData()">Add</button>
+        <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
         <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
         <button id="btnAdd" class="btn btn-danger" onclick="DeleteData()">Delete</button>
 

@@ -97,15 +97,7 @@ End Code
         $("#txtCode").focus();
     }
     function GetData() {
-        //get data from input cliteria
-        $.get(path + 'Config/getConfig' + GetParam($('#txtCode').val(), $('#txtKey').val()))
-            .done(function (response) {
-                if (response.config.data.length == 0) {
-                    $('#txtValue').val('');
-                    return;
-                }
-                $('#txtValue').val(response.config.data[0].ConfigValue);
-            });
+        ShowConfigValue(path, $('#txtCode').val(), $('#txtKey').val(), '#txtValue');
     }
     function GetInput() {
         //read input data and generated class for post

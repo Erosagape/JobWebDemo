@@ -39,7 +39,7 @@ End Code
                 <b>Confirm Date : </b><label id="lblConfirmDate"></label>
             </td>
             <td align="right">
-                <b>Open Date : </b><label id="lblDoShowDate"></label>
+                <b>Open Date : </b><label id="lblOpenDate"></label>
             </td>
         </tr>
     </table>
@@ -325,208 +325,125 @@ End Code
     <p style="text-align:right">Printed By : @ViewBag.User Printed Date : @DateTime.Now &copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
 </div>
 <script type="text/javascript">
-        var path = '@Url.Content("~")';
-        $(document).ready(function () {
-            var br = getQueryString('BranchCode');
-            var jno = getQueryString('JNo');
-            if (br != "" && jno != "") {
-                GetJob(br, jno);
-            }
+    var path = '@Url.Content("~")';
+    $(document).ready(function () {
+        ShowCompany('#divCompany');
+        var br = getQueryString('BranchCode');
+        var jno = getQueryString('JNo');
+        if (br != "" && jno != "") {
+            GetJob(br, jno);
+        }
+    });
+    function GetJob(Branch, Job) {
+        $.get(path+'joborder/getjobsql?branchcode=' + Branch + '&jno=' + Job)
+            .done(function (r) {
+                if (r.job.data.length > 0) {
+                    var rec = r.job.data[0];
+                    DisplayData(rec);
+                    return;
+                }
         });
-        function GetJob(Branch, Job) {
-            $.get(path+'joborder/getjobsql?branchcode=' + Branch + '&jno=' + Job)
-                .done(function (r) {
-                    if (r.job.data.length > 0) {
-                        var rec = r.job.data[0];
-                        DisplayData(DummyCompanyData(), rec);
-                        return;
-                    }
-                });
+
+    }
+    function ShowCustomer(Code, Branch, isCons) {
+        if (isCons == true) {
+            $('#lblBillToCustName').text('-');
+            $('#dvBillAddr').html('<b>Address : </b>-');
         }
-        function ShowCustomer(Code, Branch, isCons) {
-            if (isCons == true) {
-                $('#lblBillToCustName').text('-');
-                $('#dvBillAddr').html('<b>Address : </b>-');
-            }
-            if (isCons == false) {
-                $('#lblCustName').text('-');
-                $('#dvAddr').html('<b>Address : </b>-');
-                $('#lblTel').text('-');
-                $('#lblFax').text('-');
-            }
-            if ((Code + Branch).length > 0) {
-                $.get(path +'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
-                    .done(function (r) {
-                        if (r.company.data.length > 0) {
-                            var c = r.company.data[0];
-                            if (isCons == true) {
-                                $('#lblBillToCustName').text(c.NameThai + ' Tax Reference :' + c.TaxNumber);
-                                $('#dvBillAddr').html('<b>Address : </b>'
-                                    + (c.TAddress1 + ' ' + c.TAddress2).trim());
-                            }
-                            if (isCons == false) {
-                                $('#lblCustName').text(c.NameThai);
-                                $('#dvAddr').html('<b>Address : </b>'
-                                    + (c.TAddress1 + ' ' + c.TAddress2).trim());
-                                $('#lblTel').text(c.Phone);
-                                $('#lblFax').text(c.FaxNumber);
-                            }
+        if (isCons == false) {
+            $('#lblCustName').text('-');
+            $('#dvAddr').html('<b>Address : </b>-');
+            $('#lblTel').text('-');
+            $('#lblFax').text('-');
+        }
+        if ((Code + Branch).length > 0) {
+            $.get(path +'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
+                .done(function (r) {
+                    if (r.company.data.length > 0) {
+                        var c = r.company.data[0];
+                        if (isCons == true) {
+                            $('#lblBillToCustName').text(c.NameThai + ' Tax Reference :' + c.TaxNumber);
+                            $('#dvBillAddr').html('<b>Address : </b>'
+                                + (c.TAddress1 + ' ' + c.TAddress2).trim());
                         }
-                    });
-            }
-        }
-        function ShowCountry(CountryID, ControlID) {
-            $(ControlID).text('-');
-            if (CountryID != "") {
-                $.get(path +'Master/GetCountry?Code=' + CountryID)
-                    .done(function (r) {
-                        if (r.country.data.length > 0) {
-                            var b = r.country.data[0];
-                            $(ControlID).text(b.CTYName);
+                        if (isCons == false) {
+                            $('#lblCustName').text(c.NameThai);
+                            $('#dvAddr').html('<b>Address : </b>'
+                                + (c.TAddress1 + ' ' + c.TAddress2).trim());
+                            $('#lblTel').text(c.Phone);
+                            $('#lblFax').text(c.FaxNumber);
                         }
-                    });
-            }
-        }
-        function ShowInterPort(CountryID, PortCode, ControlID) {
-            $(ControlID).text('-');
-            $.get(path +'Master/GetInterPort?Code=' + PortCode + '&Key=' + CountryID)
-                .done(function (r) {
-                    if (r.interport.data.length > 0) {
-                        var b = r.interport.data[0];
-                        $(ControlID).text(b.PortName);
                     }
                 });
         }
-        function ShowReleasePort(Code, ControlID) {
-            $(ControlID).text('-');
-            $.get(path +'Master/GetCustomsPort?Code=' + Code)
-                .done(function (r) {
-                    if (r.RFARS.data.length > 0) {
-                        var b = r.RFARS.data[0];
-                        $(ControlID).text(b.AreaName);
-                    }
-                });
+    }
+    function DisplayData(j) {
+        $('#txtJNo').val(j.JNo);
+        $('#lblOpenDate').text(ShowDate(j.DocDate));
+        $('#lblConfirmDate').text(ShowDate(j.ConfirmDate));
+        $('#lblETDDate').text(ShowDate(j.ETDDate));
+        $('#lblETADate').text(ShowDate(j.ETADate));
+        $('#lblLoadDate').text(ShowDate(j.LoadDate));
+        $('#lblDeliveryDate').text(ShowDate(j.EstDeliverDate));
+        $('#lblQuotation').text(j.QNo);
+        $('#lblInvNo').text(j.InvNo);
+        $('#lblCurrency').text(j.InvCurUnit);
+        $('#lblExcRate').text(j.InvCurRate);
+        $('#lblInvProduct').text(j.InvProduct);
+        $('#lblInvTotal').text(j.InvTotal + ' ' + j.InvCurUnit);
+        $('#lblInvQty').text(j.InvProductQty);
+        $('#lblInvUnit').text(j.InvProductUnit);
+        $('#lblPackQty').text(j.TotalQty);
+        $('#lblPackUnit').text('UNIT');
+        $('#lblTotalGW').text(j.TotalGW);
+        $('#lblGWUnit').text(j.GWUnit);
+        $('#lblTotalNW').text(j.TotalNW);
+        $('#lblNWUnit').text(j.GWUnit);
+        $('#lblMeasurement').text(j.Measurement);
+        $('#lblBookingNo').text(j.BLNo);
+        $('#lblHAWBNo').text(j.HAWB);
+        $('#lblMAWBNo').text(j.MAWB);
+        $('#lblVesselName').text(j.VesselName);
+        $('#lblTotalContainer').text(j.TotalContainer);
+        $('#lblDeclareNo').text(j.DeclareNumber);
+        $('#lblContact').text(j.CustContactName);
+        $('#lblDutyAmt').text(j.DutyAmount);
+        $('#lblTaxPrivilege').text(j.Description);
+        $('#lblShippingCmd').text(j.ShippingCmd);
+        $('#divRemark').html('<b>REMARKS:</b>' + j.TRemark);
+
+        var jt = j.JobType;
+        var sb = j.ShipBy;
+        if (jt < 10) jt = '0' + jt;
+        if (sb < 10) sb = '0' + sb;
+        ShowConfig(path, 'JOB_TYPE', jt, '#lblJobType');
+        ShowConfig(path, 'SHIP_BY', sb, '#lblShipBy');
+
+        $('#lblCustCode').text(j.CustCode);
+        ShowCustomer(j.CustCode, j.CustBranch, false);
+
+        $('#lblBillToCustCode').text(j.consigneecode);
+        ShowCustomer(j.consigneecode, j.CustBranch, true);
+
+        if (j.JobType == '1') {
+            ShowCountry(path,j.InvFCountry, '#lblFromCountry');
+            ShowCountry(path,j.InvCountry, '#lblToCountry');
+            ShowInterPort(path,j.InvFCountry, j.InvInterPort, '#lblFromPort');
+            ShowReleasePort(path,j.ClearPort, '#lblToPort');
+        } else {
+            ShowCountry(path,j.InvFCountry, '#lblToCountry');
+            ShowCountry(path,j.InvCountry, '#lblFromCountry');
+            ShowInterPort(path,j.InvCountry, j.InvInterPort, '#lblToPort');
+            ShowReleasePort(path,j.ClearPort, '#lblFromPort');
         }
-        function ShowVender(VenderID, ControlID) {
-            $(ControlID).text('-');
-            if (VenderID != "") {
-                $.get(path +'Master/GetVender?Code=' + VenderID)
-                    .done(function (r) {
-                        if (r.vender.data.length > 0) {
-                            var b = r.vender.data[0];
-                            $(ControlID).text(b.TName);
-                        }
-                    });
-            }
-        }
-        function ShowDeclareType(Code) {
-            $('#lblDeclareType').text('-');
-            $.get(path +'Master/GetDeclareType?Code=' + Code)
-                .done(function (r) {
-                    if (r.RFDCT.data.length > 0) {
-                        var b = r.RFDCT.data[0];
-                        $('#lblDeclareType').text(b.Description);
-                    }
-                });
-        }
-        function ShowUser(UserID, ControlID) {
-            $(ControlID).text('-');
-            if (UserID != "") {
-                $.get(path +'Master/GetUser?Code=' + UserID)
-                    .done(function (r) {
-                        if (r.user.data.length > 0) {
-                            var b = r.user.data[0];
-                            $(ControlID).text(b.TName);
-                        }
-                    });
-            }
-        }
-        function DisplayData(c,j) {
+        ShowVender(path,j.ForwarderCode, '#lblAgentName');
+        ShowVender(path,j.AgentCode, '#lblTransportName');
 
-            $('#divCompany').html('<b>'+ c.CompanyName+'</b>'
-                + '<br/>' + c.CompanyAddress1
-                + ' '
-                + c.CompanyAddress2);
+        ShowDeclareType(path,j.DeclareType,'#lblDeclareType');
+        ShowUser(path,j.CSCode, '#lblCSName');
+        ShowUser(path,j.ShippingEmp, '#lblShippingName');
 
-            $('#txtJNo').val(j.JNo);
-            $('#lblDoShowDate').text(ShowDate(j.DoShowDate));
-            $('#lblConfirmDate').text(ShowDate(j.ConfirmDate));
-            $('#lblETDDate').text(ShowDate(j.ETDDate));
-            $('#lblETADate').text(ShowDate(j.ETADate));
-            $('#lblLoadDate').text(ShowDate(j.LoadDate));
-            $('#lblDeliveryDate').text(ShowDate(j.EstDeliverDate));
-            $('#lblQuotation').text(j.QNo);
-            $('#lblInvNo').text(j.InvNo);
-            $('#lblCurrency').text(j.InvCurUnit);
-            $('#lblExcRate').text(j.InvCurRate);
-            $('#lblInvProduct').text(j.InvProduct);
-            $('#lblInvTotal').text(j.InvTotal + ' ' + j.InvCurUnit);
-            $('#lblInvQty').text(j.InvProductQty);
-            $('#lblInvUnit').text(j.InvProductUnit);
-            $('#lblPackQty').text(j.TotalQty);
-            $('#lblPackUnit').text('UNIT');
-            $('#lblTotalGW').text(j.TotalGW);
-            $('#lblGWUnit').text(j.GWUnit);
-            $('#lblTotalNW').text(j.TotalNW);
-            $('#lblNWUnit').text(j.GWUnit);
-            $('#lblMeasurement').text(j.Measurement);
-            $('#lblBookingNo').text(j.BLNo);
-            $('#lblHAWBNo').text(j.HAWB);
-            $('#lblMAWBNo').text(j.MAWB);
-            $('#lblVesselName').text(j.VesselName);
-            $('#lblTotalContainer').text(j.TotalContainer);
-            $('#lblDeclareNo').text(j.DeclareNumber);
-            $('#lblContact').text(j.CustContactName);
-            $('#lblDutyAmt').text(j.DutyAmount);
-            $('#lblTaxPrivilege').text(j.Description);
-            $('#lblShippingCmd').text(j.ShippingCmd);
-            $('#divRemark').html('<b>REMARKS:</b>' + j.TRemark);
-
-            var jt = j.JobType;
-            var sb = j.ShipBy;
-            if (jt < 10) jt = '0' + jt;
-            if (sb < 10) sb = '0' + sb;
-            $.get(path +'Config/GetConfig?Code=JOB_TYPE&Key=' + jt)
-                .done(function (r) {
-                    var b = r.config.data;
-                    if (b.length > 0) {
-                        $('#lblJobType').text(b[0].ConfigValue);
-                    }
-                });
-            $.get(path +'Config/GetConfig?Code=SHIP_BY&Key=' + sb)
-                .done(function (r) {
-                    var b = r.config.data;
-                    if (b.length > 0) {
-                        $('#lblShipBy').text(b[0].ConfigValue);
-                    }
-                });
-
-            $('#lblCustCode').text(j.CustCode);
-            ShowCustomer(j.CustCode, j.CustBranch, false);
-
-            $('#lblBillToCustCode').text(j.consigneecode);
-            ShowCustomer(j.consigneecode, j.CustBranch, true);
-
-            if (j.JobType == 1) {
-                ShowCountry(j.InvFCountry, '#lblFromCountry');
-                ShowCountry(j.InvCountry, '#lblToCountry');
-                ShowInterPort(j.InvCountry, j.InvInterPort, '#lblFromPort');
-                ShowReleasePort(j.ClearPort, '#lblToPort');
-            } else {
-                ShowCountry(j.InvFCountry, '#lblToCountry');
-                ShowCountry(j.InvCountry, '#lblFromCountry');
-                ShowInterPort(j.InvFCountry, j.InvInterPort, '#lblToPort');
-                ShowReleasePort(j.ClearPort, '#lblFromPort');
-            }
-            ShowVender(j.ForwarderCode, '#lblAgentName');
-            ShowVender(j.AgentCode, '#lblTransportName');
-
-            ShowDeclareType(j.DeclareType);
-            ShowUser(j.CSCode, '#lblCSName');
-            ShowUser(j.ShippingEmp, '#lblShippingName');
-
-            $('#lblPosition').text('Customer Services');
-
-        }
+        $('#lblPosition').text('Customer Services');
+    }
 
 </script>

@@ -1,9 +1,38 @@
-﻿function GetSelect(tb, e) {
+﻿//function for javascripts usage
+function GetSelect(tb, e) {
     //get selected value from LOV
     var indexRow = $(e).parents('tr');
     return $(tb).DataTable().row(indexRow).data();
 }
-//utility function
+function GetToday() {
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+function GetTime() {
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        min = d.getMinutes(),
+        sec = d.getSeconds();
+    if (hour <= 9) hour = '0' + hour;
+    if (min <= 9) min = '0' + min;
+    if (sec <= 9) sec = '0' + sec;
+    var time = hour + ":" + min + ":" + sec;
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year+543, month, day].join('-') + ' ' + time;
+}
 function getQueryString(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
@@ -13,6 +42,7 @@ function getQueryString(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+//convertion utility function
 function CDateTH(sqlDateString) {
     try {
         var jsDate = sqlDateString.substr(0, 10);
@@ -51,54 +81,6 @@ function CNum(data) {
     } else {
         return data;
     }
-}
-function CCurrency(data) {
-    return data.replace(/\d(?=(\d{3})+\.)/g, '$&,');
-}
-function ShowDate(sqlDateString) {
-    try {
-        var jsDate = sqlDateString.substr(0, 10);
-        var month = jsDate.substr(5, 2);
-        var day = jsDate.substr(8, 2);
-        var year = jsDate.substr(0, 4);
-        if (year < '2000') {
-            return '-';
-        }
-        var date = day + "/" + month + "/" + year;
-        return date;
-    }
-    catch (e) {
-        return '-';
-    }
-}
-function GetToday() {
-    var d = new Date(),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year, month, day].join('-');
-}
-function GetTime() {
-    var d = new Date(),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear(),
-        hour = d.getHours(),
-        min = d.getMinutes(),
-        sec = d.getSeconds();
-    if (hour <= 9) hour = '0' + hour;
-    if (min <= 9) min = '0' + min;
-    if (sec <= 9) sec = '0' + sec;
-    var time = hour + ":" + min + ":" + sec;
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year+543, month, day].join('-') + ' ' + time;
 }
 function CNumEng(s) {
     // Convert numbers to words
@@ -162,6 +144,26 @@ function CNumEng(s) {
     }
     return str.replace(/\s+/g, ' ').toUpperCase();
 }
+function CCurrency(data) {
+    return data.replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
+function ShowDate(sqlDateString) {
+    try {
+        var jsDate = sqlDateString.substr(0, 10);
+        var month = jsDate.substr(5, 2);
+        var day = jsDate.substr(8, 2);
+        var year = jsDate.substr(0, 4);
+        if (year < '2000') {
+            return '-';
+        }
+        var date = day + "/" + month + "/" + year;
+        return date;
+    }
+    catch (e) {
+        return '-';
+    }
+}
+//Dummy Data For Testing
 function DummyCompanyData() {
     var o = {
         CompanyName: 'IDEAL CONSOLIDATORS CO.,LTD',
@@ -316,4 +318,29 @@ function DummyAdvanceData() {
     };
     return data;
 }
-
+//public functions
+function CallOpenJob(p, br, jno) {
+    window.open(p + 'joborder/showjob?BranchCode=' + br + '&JNo=' + jno);
+}
+function CallPrintJob(p, br, jno) {
+    window.open(p + 'joborder/formjob?BranchCode=' + br + '&JNo=' + jno);
+}
+function ShowConfigValue(path, Code, Key, ControlID) {
+    var strParam = "";
+    if (Code != "") {
+        strParam += "Code=" + Code;
+    }
+    if (Key != "") {
+        if (strParam != "") strParam += "&";
+        strParam += "Key=" + Key;
+    }
+    if (strParam != "") strParam = "?" + strParam;
+    $.get(path + 'Config/getConfig' + strParam)
+        .done(function (response) {
+            if (response.config.data.length == 0) {
+                $(ControlID).val('');
+                return;
+            }
+            $(ControlID).val(response.config.data[0].ConfigValue);
+        });
+}

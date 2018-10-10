@@ -186,22 +186,22 @@ End Code
     function SetEvents() {
         $('#txtBranchCode').keydown(function (event) {
             if (event.which == 13) {
-                ShowBranch($('#txtBranchCode').val(), '#txtBranchName');
+                ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
             }
         });
         $('#txtCSCode').keydown(function (event) {
             if (event.which == 13) {
-                ShowUser($('#txtCSCode').val(), '#txtCSName');
+                ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
             }
         });
         $('#txtCustBranch').keydown(function (event) {
             if (event.which == 13) {
-                ShowCustomer($('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
+                ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
         });
         $('#txtConsignee').keydown(function (event) {
             if (event.which == 13) {
-                ShowCustomer($('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
+                ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
             }
         });
     }
@@ -212,7 +212,7 @@ End Code
         var sb = getQueryString('SBy');
         if (br != null) {
             $('#txtBranchCode').val(br);
-            ShowBranch($('#txtBranchCode').val(), '#txtBranchName');
+            ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
         }
         if (jt == null) jt = "01";
         if (sb == null) sb = "01";
@@ -262,13 +262,13 @@ End Code
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
-        ShowCustomer(dt.CustCode, dt.Branch, '#txtCustName');
+        ShowCustomer(path,dt.CustCode, dt.Branch, '#txtCustName');
         $('#txtCustCode').focus();
     }
     function ReadConsignee(dt) {
         $('#txtConsignee').val(dt.CustCode);
         $('#txtConsBranch').val(dt.Branch);
-        ShowCustomer(dt.CustCode, dt.Branch, '#txtConsignName');
+        ShowCustomer(path,dt.CustCode, dt.Branch, '#txtConsignName');
         $('#txtConsignee').focus();
     }
     function ReadContactName(dt) {
