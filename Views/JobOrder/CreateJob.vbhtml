@@ -222,17 +222,17 @@ End Code
             //Customers            
             CreateLOV(dv,'#frmSearchCust','#tbCust','Customers',response,3);
             //Consignee
-            CreateLOV(dv,'#frmSearchCons', '#tbCons', 'Consignees',response,3);
+            CreateLOV(dv,'#frmSearchCons','#tbCons','Consignees',response,3);
             //Job
-            CreateLOV(dv,'#frmSearchJob', '#tbJob','Job List',response,3);
+            CreateLOV(dv,'#frmSearchJob','#tbJob','Job List',response,3);
             //2 Fields
             //Users
-            CreateLOV(dv,'#frmSearchUser', '#tbUser','Users',response,2);
+            CreateLOV(dv,'#frmSearchUser','#tbUser','Users',response,2);
             //Branch
-            CreateLOV(dv,'#frmSearchBranch', '#tbBranch', 'Branch',response,2);
+            CreateLOV(dv,'#frmSearchBranch','#tbBranch','Branch',response,2);
             //1 Fields
             //Contact Name
-            CreateLOV(dv,'#frmSearchContact', '#tbContact', 'Contact Person',response,1);
+            CreateLOV(dv,'#frmSearchContact','#tbContact','Contact Person',response,1);
         });
     }
     function ReadBranch(dt) {

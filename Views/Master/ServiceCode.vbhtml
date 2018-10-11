@@ -84,12 +84,11 @@ End Code
             </div>
         </div>
         <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
+        <button id="btnSave" class=btn btn-success" onclick="SaveData()">Save</button>
         <button id="btnAdd" class="btn btn-danger" onclick="DeleteData()">Delete</button>
-
     </div>
-    <div id="dvList"></div>
 </div>
+<div id="dvList"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
@@ -121,14 +120,14 @@ End Code
             var dv = document.getElementById("dvList");
             //2 Fields
             //Currency
-            CreateLOV(dv,'#dvCurr', '#tbCurr','Currency',response,2);
+            CreateLOV(dv,'#dvCurr','#tbCurr','Currency',response,2);
             //Vender
-            CreateLOV(dv,'#dvVend', '#tbVend', 'Venders',response,2);
+            CreateLOV(dv,'#dvVend','#tbVend','Venders',response,2);
             //SICode
-            CreateLOV(dv,'#dvSearch', '#tbGrid','Service Code',response,2);
+            CreateLOV(dv,'#dvSearch','#tbGrid','Service Code',response,2);
             //1 Fields
             //Unit
-            CreateLOV(dv,'#dvUnit', '#tbUnit','Units', response,1);
+            CreateLOV(dv,'#dvUnit','#tbUnit','Units',response,1);
         });
     }
     function SetEvents() {

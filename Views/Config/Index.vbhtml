@@ -51,8 +51,8 @@ End Code
             <tbody />
         </table>
     </div>
-    <div id="dvMsg"></div>
 </div>
+<div id="dvMsg"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     //define variables
