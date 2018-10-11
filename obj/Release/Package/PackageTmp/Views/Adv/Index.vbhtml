@@ -7,13 +7,13 @@ End Code
         <div class="row">
             <div class="col-sm-5">
                 Branch :
-                <input type="text" id="txtBranchCode" style="width:50px" />
+                <input type="text" id="txtBranchCode" style="width:50px" tabindex="0"/>
                 <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
                 <input type="text" id="txtBranchName" style="width:200px" disabled />
             </div>
             <div class="col-sm-3">
                 Request Date :
-                <input type="date" id="txtAdvDate" />
+                <input type="date" id="txtAdvDate" tabindex="1"/>
             </div>
             <div class="col-sm-4" style="text-align:left">
                 <table border="1">
@@ -41,7 +41,7 @@ End Code
                                     Advance By :
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvBy" style="width:100px" />
+                                    <input type="text" id="txtAdvBy" style="width:100px" tabindex="2" />
                                     <button id="btnBrowseEmp1" onclick="SearchData('advby')">...</button>
                                     <input type="text" id="txtAdvName" style="width:300px" disabled />
                                 </td>
@@ -51,7 +51,7 @@ End Code
                                     Request By :
                                 </td>
                                 <td>
-                                    <input type="text" id="txtReqBy" style="width:100px" />
+                                    <input type="text" id="txtReqBy" style="width:100px" tabindex="3"/>
                                     <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
                                     <input type="text" id="txtReqName" style="width:300px" disabled />
                                 </td>
@@ -61,8 +61,8 @@ End Code
                                     Advance For :
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCustCode" style="width:100px" />
-                                    <input type="text" id="txtCustBranch" style="width:30px" />
+                                    <input type="text" id="txtCustCode" style="width:120px" tabindex="4"/>
+                                    <input type="text" id="txtCustBranch" style="width:50px" tabindex="5"/>
                                     <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
                                     <input type="text" id="txtCustName" style="width:300px" disabled />
                                 </td>
@@ -74,13 +74,13 @@ End Code
                                     WH-Tax No:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtWHTaxSlipNo" style="width:200px" />
+                                    <input type="text" id="txtWHTaxSlipNo" style="width:200px" tabindex="6"/>
                                 </td>
                                 <td>
                                     Bill A/P:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtBillNumber" style="width:200px" />
+                                    <input type="text" id="txtBillNumber" style="width:200px" tabindex="7"/>
                                 </td>
                             </tr>
                         </table>
@@ -92,7 +92,7 @@ End Code
                                     Job Type :
                                 </td>
                                 <td>
-                                    <select id="cboJobType" style="width:200px" class="form-control dropdown"></select>
+                                    <select id="cboJobType" style="width:200px" class="form-control dropdown" tabindex="8"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -100,7 +100,7 @@ End Code
                                     Ship By :
                                 </td>
                                 <td>
-                                    <select id="cboShipBy" style="width:200px" class="form-control dropdown"></select>
+                                    <select id="cboShipBy" style="width:200px" class="form-control dropdown" tabindex="9"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -108,7 +108,7 @@ End Code
                                     Status :
                                 </td>
                                 <td>
-                                    <input type="text" id="txtDocStatus" style="width:200px;height:40px;text-align:center;font-style:bold" disabled />
+                                    <select id="cboDocStatus" style="width:200px;height:40px;text-align:center;font-style:bold" disabled></select>
                                 </td>
                             </tr>
                         </table>
@@ -117,10 +117,10 @@ End Code
                 <div class="row">
                     <div class="col-sm-7">
                         Advance Type:
-                        <select id="cboAdvType" class="form-control dropdown" style="width:100%"></select>
+                        <select id="cboAdvType" class="form-control dropdown" style="width:100%" tabindex="10"></select>
                         <br />
                         Remark:
-                        <textarea id="txtRemark" style="width:100%;height:80px"></textarea>
+                        <textarea id="txtRemark" style="width:100%;height:80px" tabindex="11"></textarea>
                     </div>
                     <div class="col-sm-5">
                         <br />
@@ -228,23 +228,23 @@ End Code
                         <label for="txtItemNo">Item No :</label>
                         <input type="text" id="txtItemNo" style="width:40px" disabled />
                         <label for="txtSICode">Code :</label>
-                        <input type="text" id="txtSICode" style="width:80px" />
+                        <input type="text" id="txtSICode" style="width:80px" tabindex="12"/>
                         <input type="button" id="btnBrowseS" value="..." onclick="SearchData('servicecode')" />
-                        <input type="text" id="txtSDescription" style="width:280px" />
+                        <input type="text" id="txtSDescription" style="width:280px" tabindex="13" />
                         <label for="txtForJNo">Job No :</label>
-                        <input type="text" id="txtForJNo" style="width:120px" />
+                        <input type="text" id="txtForJNo" style="width:120px" tabindex="14" />
                         <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                         <br />
                         <label for="txtAmount">Amount :</label>
-                        <input type="text" id="txtAmount" style="width:100px;text-align:right" />
+                        <input type="text" id="txtAmount" style="width:100px;text-align:right" tabindex="15"/>
                         <label for="txtVATRate">VAT :</label>
-                        <input type="text" id="txtVATRate" style="width:50px;text-align:right" />
-                        <input type="text" id="txtVATAmount" style="width:100px;text-align:right" />
+                        <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="16"/>
+                        <input type="text" id="txtVATAmount" style="width:100px;text-align:right" tabindex="17"/>
                         <label for="txtWHTRate">WHT :</label>
-                        <input type="text" id="txtWHTRate" style="width:50px;text-align:right" />
-                        <input type="text" id="txtWHTAmount" style="width:100px;text-align:right" />
+                        <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="18"/>
+                        <input type="text" id="txtWHTAmount" style="width:100px;text-align:right" tabindex="19"/>
                         <label for="txtNETAmount">Net Amount :</label>
-                        <input type="text" id="txtNETAmount" style="width:100px;text-align:right" />
+                        <input type="text" id="txtNETAmount" style="width:100px;text-align:right" tabindex="20"/>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -263,12 +263,7 @@ End Code
             </div>
         </div>
     </div>
-    <div id="frmSearchBranch" class="modal fade" role="dialog"></div>
-    <div id="frmSearchAdv" class="modal fade" role="dialog"></div>
-    <div id="frmSearchReq" class="modal fade" role="dialog"></div>
-    <div id="frmSearchCust" class="modal fade" role="dialog"></div>
-    <div id="frmSearchSICode" class="modal fade" role="dialog"></div>
-    <div id="frmSearchJob" class="modal fade" role="dialog"></div>
+    <div id="dvLOVs"></div>
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
@@ -295,7 +290,8 @@ End Code
         //Combos
         loadConfig('#cboJobType', 'JOB_TYPE', path, jt);
         loadConfig('#cboShipBy', 'SHIP_BY', path, sb);
-        loadConfig('#cboAdvType', 'ADV_TYPE', path, '');
+        loadConfig('#cboAdvType', 'ADV_TYPE', path, '01');
+        loadConfig('#cboAdvStatus', 'ADV_STATUS', path, '01');
     }
     function SetEnterToTab() {
         //Set enter to tab
@@ -346,27 +342,18 @@ End Code
     function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            var dv = document.getElementById("dvLOVs");
             //Customers
-            var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
-            BindList('#frmSearchCust', '#tbCust', ListCust);
+            CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
             //Job
-            var ListJob = response.replace('tbX', 'tbJob').replace('cpX', 'Job List');
-            BindList('#frmSearchJob', '#tbJob', ListJob);
-
-            //2 Fields
-            response = response.replace('<th>key</th>', '');
+            CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job List', response, 3);
             //Users
-            var ListUser = response.replace('tbX', 'tbAdv').replace('cpX', 'Advance By');
-            BindList('#frmSearchAdv', '#tbAdv', ListUser);
-            var ListUser2 = response.replace('tbX', 'tbReq').replace('cpX', 'Request By');
-            BindList('#frmSearchReq', '#tbReq', ListUser2);
+            CreateLOV(dv, '#frmSearchAdv', '#tbAdv', 'Advance By', response, 2);
+            CreateLOV(dv, '#frmSearchReq', '#tbReq', 'Request By', response, 2);
             //Branch
-            var ListBranch = response.replace('tbX', 'tbBranch').replace('cpX', 'Branch');
-            BindList('#frmSearchBranch', '#tbBranch', ListBranch);
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
             //SICode
-            var ListServ = response.replace('tbX', 'tbServ').replace('cpX', 'Service Code');
-            BindList('#frmSearchSICode', '#tbServ', ListServ);
-
+            CreateLOV(dv, '#frmSearchSICode', '#tbServ', 'Service Code', response, 2);
         });
     }
     function SearchData(type) {

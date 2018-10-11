@@ -88,11 +88,9 @@ End Code
         <button id="btnAdd" class="btn btn-danger" onclick="DeleteData()">Delete</button>
 
     </div>
-    <div id="dvSearch" class="modal fade" role="dialog"></div>
-    <div id="dvVend" class="modal fade" role="dialog"></div>
-    <div id="dvCurr" class="modal fade" role="dialog"></div>
-    <div id="dvUnit" class="modal fade" role="dialog"></div>
+    <div id="dvList"></div>
 </div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var row = {}; //row pointer to current record show in buffer
@@ -118,25 +116,19 @@ End Code
         $('#txtSICode').focus();
     }
     function SetLOV() {
-
         //2 Field show in grid 
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
+            var dv = document.getElementById("dvList");
             //2 Fields
             //Currency
-            var ListCurr = response.replace('tbX', 'tbCurr').replace('cpX', 'Currencys');
-            BindList('#dvCurr', '#tbCurr', ListCurr);
+            CreateLOV(dv,'#dvCurr', '#tbCurr','Currency',response,2);
             //Vender
-            var ListVender = response.replace('tbX', 'tbVend').replace('cpX', 'Vender');
-            BindList('#dvVend', '#tbVend', ListVender);
+            CreateLOV(dv,'#dvVend', '#tbVend', 'Venders',response,2);
             //SICode
-            var ListServ = response.replace('tbX', 'tbGrid').replace('cpX', 'Service Code');
-            BindList('#dvSearch', '#tbGrid', ListServ);
-
+            CreateLOV(dv,'#dvSearch', '#tbGrid','Service Code',response,2);
             //1 Fields
-            response = response.replace('<th>code</th>', '');
             //Unit
-            var ListUnit = response.replace('tbX', 'tbUnit').replace('cpX', 'Units');
-            BindList('#dvUnit', '#tbUnit', ListUnit);
+            CreateLOV(dv,'#dvUnit', '#tbUnit','Units', response,1);
         });
     }
     function SetEvents() {

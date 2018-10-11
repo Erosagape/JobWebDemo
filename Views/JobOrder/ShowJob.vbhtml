@@ -582,10 +582,7 @@ End Code
     //main function
     $(document).ready(function () {
         //load list of values
-        $.get(path + 'JobOrder/GetFormJobLOV', function (response) {
-            $('#frmLOVs').html(response);
-            SetLOVs();
-        });
+        SetLOVs();
         SetEvents();
         //check parameters
         var br = getQueryString('BranchCode');
@@ -666,63 +663,45 @@ End Code
     function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            var dv = document.getElementById("frmLOVs");
             //Customers
-            var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
-            BindList('#frmSearchCust', '#tbCust', ListCust);
+            CreateLOV(dv,'#frmSearchCust', '#tbCust','Customers',response,3);
             //Consignee
-            var ListCons = response.replace('tbX', 'tbCons').replace('cpX', 'Consignees');
-            BindList('#frmSearchCons', '#tbCons', ListCons);
+            CreateLOV(dv,'#frmSearchCons', '#tbCons','Consignees',response,3);
             //Inter Port
-            var ListIPort = response.replace('tbX', 'tbIPort').replace('cpX', 'Inter Port');
-            BindList('#frmSearchIPort', '#tbIPort', ListIPort);
+            CreateLOV(dv,'#frmSearchIPort', '#tbIPort','International Port',response,3);
 
             //2 Fields
-            response = response.replace('<th>key</th>', '');
             //Users
-            var ListUser = response.replace('tbX', 'tbUser').replace('cpX', 'Users');
-            BindList('#frmSearchUser', '#tbUser', ListUser);
+            CreateLOV(dv,'#frmSearchUser', '#tbUser','Users',response,2);
             //Declare Type
-            var ListDType = response.replace('tbX', 'tbDType').replace('cpX', 'Declaration Type');
-            BindList('#frmSearchDType', '#tbDType', ListDType);
+            CreateLOV(dv,'#frmSearchDType', '#tbDType','Declare Type',response,2);
             //Customs Port
-            var ListCPort = response.replace('tbX', 'tbCPort').replace('cpX', 'Customs Inspection At');
-            BindList('#frmSearchCPort', '#tbCPort', ListCPort);
+            CreateLOV(dv,'#frmSearchCPort', '#tbCPort','Customs Port',response,2);
             //Currency
-            var ListCurr = response.replace('tbX', 'tbCurr').replace('cpX', 'Currencys');
-            BindList('#frmSearchCurr', '#tbCurr', ListCurr);
+            CreateLOV(dv,'#frmSearchCurr', '#tbCurr','Currency',response,2);
             //Country
-            var ListCountry = response.replace('tbX', 'tbCountry').replace('cpX', 'Country');
-            BindList('#frmSearchCountry', '#tbCountry', ListCountry);
+            CreateLOV(dv,'#frmSearchCountry', '#tbCountry', 'Country', response,2);
             //FCountry
-            var ListFCountry = response.replace('tbX', 'tbFCountry').replace('cpX', 'Country');
-            BindList('#frmSearchFCountry', '#tbFCountry', ListFCountry);
+            CreateLOV(dv,'#frmSearchFCountry', '#tbFCountry','Country',response,2);
             //Agent
-            var ListAgent = response.replace('tbX', 'tbVend').replace('cpX', 'Agent');
-            BindList('#frmSearchVend', '#tbVend', ListAgent);
+            CreateLOV(dv,'#frmSearchVend', '#tbVend','Venders', response,2);
             //Forwarder/Transporter
-            var ListForwarder = response.replace('tbX', 'tbForw').replace('cpX', 'Transporter');
-            BindList('#frmSearchForw', '#tbForw', ListForwarder);
+            CreateLOV(dv,'#frmSearchForw', '#tbForw','Venders',response,2);
 
             //1 Fields
-            response = response.replace('<th>code</th>', '');
             //Projects Name
-            var ListProj = response.replace('tbX', 'tbProj').replace('cpX', 'Project Name');
-            BindList('#frmSearchProj', '#tbProj', ListProj);
+            CreateLOV(dv,'#frmSearchProj', '#tbProj', 'Project Name',response,1);
             //Products
-            var ListProd = response.replace('tbX', 'tbProd').replace('cpX', 'Products');
-            BindList('#frmSearchProd', '#tbProd', ListProd);
+            CreateLOV(dv,'#frmSearchProd', '#tbProd', 'Products',response,1);
             //Vessel
-            var ListVessel = response.replace('tbX', 'tbVessel').replace('cpX', 'Vessels');
-            BindList('#frmSearchVessel', '#tbVessel', ListVessel);
+            CreateLOV(dv,'#frmSearchVessel', '#tbVessel', 'Vessels',response,1);
             //Mother Vessel
-            var ListMVessel = response.replace('tbX', 'tbMVessel').replace('cpX', 'Vessels');
-            BindList('#frmSearchMVessel', '#tbMVessel', ListMVessel);
+            CreateLOV(dv,'#frmSearchMVessel', '#tbMVessel','Mother Vessels',response,1);
             //Inv Units
-            var ListInvUnit = response.replace('tbX', 'tbIUnt').replace('cpX', 'Invoice Units');
-            BindList('#frmSearchIUnt', '#tbIUnt', ListInvUnit);
+            CreateLOV(dv,'#frmSearchIUnt', '#tbIUnt','Invoice Units',response,1);
             //Weights Unit
-            var ListWeightUnit = response.replace('tbX', 'tbWUnt').replace('cpX', 'Weight Units');
-            BindList('#frmSearchWUnt', '#tbWUnt', ListWeightUnit);
+            CreateLOV(dv,'#frmSearchWUnt', '#tbWUnt', 'Weight Unit',response,1);
         });
     }
     //This section is for popup searching function

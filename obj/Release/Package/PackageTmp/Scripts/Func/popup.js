@@ -1,4 +1,17 @@
 ﻿//basic function tools for binding 
+function CreateLOV(dv, frm, tb, name, html, c) {
+    if (c <= 2) html = html.replace('<th>name</th>', '');
+    if (c == 1) html = html.replace('<th>key</th>', '');
+
+    var lov = document.createElement("div");
+    lov.className = "modal fade";
+    lov.setAttribute("role", "dialog");
+    lov.id = frm.replace("#", "");
+    dv.appendChild(lov);
+
+    var struct = html.replace('tbX', tb.replace("#", "")).replace('cpX', name);
+    BindList(frm, tb, struct);
+}
 function BindList(d, t, l) {
     //use for set html of tables and set focus when showing
     $(d).html(l);

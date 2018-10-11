@@ -15,68 +15,93 @@
     <div class="panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                Container Calculator
+                Test Create Modal
             </h4>
         </div>
         <div class="panel-body">
-            <div id="dvContCalc">
-                <input type="text" id="txtTotalCon" value="1x20F,2x30F" />
-                <input type="button" id="btnSplit" value="Split" onclick="SplitData()" />
-                <input type="button" id="btnAdd" value="Add" onclick="AddService()" />
-                <div id="dvSplit"></div>
-                <input type="button" id="btnSubmit" value="Apply" onclick="SumService()" />
+            <div id="dvLOVs">
             </div>
+            <input type="button" id="btn1" value="Show Branch" onclick="OpenLOV()"/>
         </div>
         <div class="panel-footer">
             <p>&copy; Tawan Technology Co.,ltd</p>
         </div>
     </div>
     <script type="text/javascript">
-        function SplitData() {
-            var dv = document.getElementById("dvSplit")
-            dv.innerHTML = '';
-            var str = document.getElementById("txtTotalCon");
+        var path = '/';
+        $(document).ready(function () {
+            $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+                var dv = document.getElementById("dvLOVs");
+                //Customers
+                CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            });
+        });
+        function OpenLOV() {
+            SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
+        }
+        function ReadBranch(dt) {
+            alert(dt.BrName);
+        }
+        function CreateLOV(dv, frm, tb, name, html, c) {
+            if (c <= 2) html = html.replace('<th>name</th>', '');
+            if (c == 1) html = html.replace('<th>key</th>', '');
 
-            var arr = str.value.split(",");
-            for (var i = 0; i < arr.length; i++) {
-                AddNewService(arr[i]);              
-            }
-        }
-        function AddService() {
-            AddNewService("");
-        }
-        function AddNewService(val) {
-            if (val.indexOf("x") < 0) val = "1x" + val;
-            var dv = document.getElementById("dvSplit");
-            var text = document.createElement("input");
-            text.setAttribute("type", "text");
-            text.setAttribute("name", "txtQtyCon");
-            text.value = val.split("x")[0];
-            dv.appendChild(text);
+            var lov = document.createElement("div");
+            lov.className = "modal fade";
+            lov.setAttribute("role", "dialog");
+            lov.id = frm.replace("#","");
+            dv.appendChild(lov);
 
-            var text2 = document.createElement("input");
-            text2.setAttribute("type", "text");
-            text2.setAttribute("name", "txtUnitCon");
-            text2.value = val.split("x")[1];
-            dv.appendChild(text2);
+            var struct = html.replace('tbX', tb.replace("#", "")).replace('cpX', name);
+            BindList(frm, tb, struct);
+        }
+        function BindList(d, t, l) {
+            //use for set html of tables and set focus when showing
+            $(d).html(l);
+            $(d).on('shown.bs.modal', function () {
+                $(t + '_filter input').focus();
+            });
+        }
+        function BindEvent(t, d, ev) {
+            //use for bind event of popup when click some row and selected data
+            $(t + ' tbody').on('click', 'button', function () {
+                var dt = GetSelect(t, this); //read current row selected
+                ev(dt); //callback function from caller 
+                $(d).modal('hide');
+            });
+            $(t + ' tbody').on('click', 'tr', function () {
+                $(t + ' tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                $(this).addClass('selected'); //select row ใหม่
+            });
+            $(d).modal('show');
+        }
+        function SetGridBranch(p, g, d, ev) {
+            $(g).DataTable({
+                ajax: {
+                    url: p + 'Config/GetBranch', //web service ที่จะ call ไปดึงข้อมูลมา
+                    dataSrc: 'branch.data'
+                },
+                selected: true, //ให้สามารถเลือกแถวได้
+                columns: [ //กำหนด property ของ header column
+                    { data: null, title: "#" },
+                    { data: "Code", title: "รหัส" },
+                    { data: "BrName", title: "ชื่อ" }
+                ],
+                "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                    {
+                        "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                        "data": null,
+                        "render": function (data, type, full, meta) {
+                            var html = "<button class='btn btn-warning'>Select</button>";
+                            return html;
+                        }
+                    }
+                ],
+                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+            });
+            BindEvent(g, d, ev);
+        }
 
-            var br = document.createElement("br");
-            dv.appendChild(br);
-        }
-        function SumService() {
-            var c = document.getElementsByName("txtQtyCon");
-            var u = document.getElementsByName("txtUnitCon");
-            var str = '';
-            for (var i = 0; i < c.length; i++) {
-                if (u[i].value == '') continue;
-                if (str.length > 0) str += ',';
-                var q = c[i].value;
-                if (q == '') q = '1';
-                str += q + 'x' + u[i].value;
-            }
-            var o = document.getElementById("txtTotalCon");
-            o.value = str;
-        }
     </script>
 </body>
 </html>

@@ -37,7 +37,7 @@ End Code
         </table>
         <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
     </div>
-    <div id="frmSearch" class="modal fade" role="dialog"></div>
+    <div id="dvLOVs"></div>
     <hr />
     <div id="divGrid">
         <table id="tblData" class="table table-responsive">
@@ -53,6 +53,7 @@ End Code
     </div>
     <div id="dvMsg"></div>
 </div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     //define variables
     var path = '@Url.Content("~")';
@@ -65,9 +66,9 @@ End Code
     function SetLOV() {
         //single field show in grid
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=name', function (response) {
+            var dv = document.getElementById("dvLOVs");
             //Unit
-            var ListConfig = response.replace('tbX', 'tbLOV').replace('cpX', 'Setting');
-            BindList('#frmSearch', '#tbLOV', ListConfig);
+            CreateLOV(dv,'#frmSearch', '#tbLOV', 'Setting',response,1);
         });
     }
     function SetEvents() {

@@ -151,12 +151,7 @@ End Code
         </div>
     </div>
 </div>
-<div id="frmSearchBranch" class="modal fade" role="dialog"></div>
-<div id="frmSearchUser" class="modal fade" role="dialog"></div>
-<div id="frmSearchJob" class="modal fade" role="dialog"></div>
-<div id="frmSearchCust" class="modal fade" role="dialog"></div>
-<div id="frmSearchCons" class="modal fade" role="dialog"></div>
-<div id="frmSearchContact" class="modal fade" role="dialog"></div>
+<div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     //define variables
@@ -223,30 +218,21 @@ End Code
     function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            //Customers
-            var ListCust = response.replace('tbX', 'tbCust').replace('cpX', 'Customers');
-            BindList('#frmSearchCust','#tbCust',ListCust);
+            var dv = document.getElementById("dvLOVs");
+            //Customers            
+            CreateLOV(dv,'#frmSearchCust','#tbCust','Customers',response,3);
             //Consignee
-            var ListCons = response.replace('tbX', 'tbCons').replace('cpX', 'Consignees');
-            BindList('#frmSearchCons', '#tbCons', ListCons);
+            CreateLOV(dv,'#frmSearchCons', '#tbCons', 'Consignees',response,3);
             //Job
-            var ListJob = response.replace('tbX', 'tbJob').replace('cpX', 'Job List');
-            BindList('#frmSearchJob', '#tbJob', ListJob);
-
+            CreateLOV(dv,'#frmSearchJob', '#tbJob','Job List',response,3);
             //2 Fields
-            response = response.replace('<th>key</th>', '');
             //Users
-            var ListUser = response.replace('tbX', 'tbUser').replace('cpX', 'Users');
-            BindList('#frmSearchUser', '#tbUser', ListUser);
+            CreateLOV(dv,'#frmSearchUser', '#tbUser','Users',response,2);
             //Branch
-            var ListBranch = response.replace('tbX', 'tbBranch').replace('cpX', 'Branch');
-            BindList('#frmSearchBranch', '#tbBranch', ListBranch);
-
+            CreateLOV(dv,'#frmSearchBranch', '#tbBranch', 'Branch',response,2);
             //1 Fields
-            response = response.replace('<th>code</th>', '');
             //Contact Name
-            var ListContact = response.replace('tbX', 'tbContact').replace('cpX', 'Contact Name');
-            BindList('#frmSearchContact', '#tbContact', ListContact);
+            CreateLOV(dv,'#frmSearchContact', '#tbContact', 'Contact Person',response,1);
         });
     }
     function ReadBranch(dt) {
