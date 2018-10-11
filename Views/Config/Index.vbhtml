@@ -65,7 +65,7 @@ End Code
     });
     function SetLOV() {
         //single field show in grid
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=name', function (response) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code', function (response) {
             var dv = document.getElementById("dvLOVs");
             //Unit
             CreateLOV(dv,'#frmSearch', '#tbLOV', 'Setting',response,1);

@@ -94,7 +94,7 @@ End Code
     var path = '@Url.Content("~")';
     var row = {}; //row pointer to current record show in buffer
     $(document).ready(function () {
-        SetLOV();
+        SetLOVs();
         SetEvents();
         SetEnterToTab();
     });
@@ -114,9 +114,9 @@ End Code
         });
         $('#txtSICode').focus();
     }
-    function SetLOV() {
+    function SetLOVs() {
         //2 Field show in grid 
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key', function (response) {
             var dv = document.getElementById("dvList");
             //2 Fields
             //Currency
