@@ -110,7 +110,7 @@ Namespace Controllers
         Function GetNewJob() As ActionResult
             Try
                 Dim oJob As New CJobOrder(jobWebConn)
-                Dim prefix As String = "TJOB"
+                Dim prefix As String = jobPrefix
                 If Not IsNothing(Request.QueryString("JType")) Then
                     oJob.JobType = Convert.ToInt16("" & Request.QueryString("JType"))
                 End If
@@ -139,7 +139,7 @@ Namespace Controllers
                 Dim result As String = oJob.SaveData(" WHERE BranchCode='" & oJob.BranchCode & "' And JNo='" & oJob.JNo & "'")
 
                 Dim json As String = JsonConvert.SerializeObject(oJob)
-                json = "{""job"":{""data"":" & json & ",""status"":""Y"",""result"":""" & result & """}}"
+                json = "{""job"":{""data"":" & json & ",""status"":""Y"",""result"":""" + result + """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""" & ex.Message & """}}", jsonContent)
@@ -148,6 +148,9 @@ Namespace Controllers
         Function SaveJobData(<FromBody()> ByVal data As CJobOrder) As ActionResult
             If Not IsNothing(data) Then
                 data.SetConnect(jobWebConn)
+                If data.JNo = "" Then
+                    data.AddNew(jobPrefix & DateTime.Now.ToString("yyMM") & "____", False)
+                End If
                 Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", data.BranchCode, data.JNo))
                 'Dim msg = JsonConvert.SerializeObject(data)
                 Return Content(msg, textContent)

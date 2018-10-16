@@ -12,8 +12,12 @@ Public Class CAdvHeader
         m_ConnStr = pConnStr
     End Sub
     Public Sub AddNew(pformatSQL As String)
-        Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(AdvNo) as t FROM Job_AdvHeader WHERE BranchCode='{0}' And AdvNo Like '%{1}' ", m_BranchCode, pformatSQL), pformatSQL)
-        m_AdvNo = retStr
+        If pformatSQL = "" Then
+            m_AdvNo = ""
+        Else
+            Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(AdvNo) as t FROM Job_AdvHeader WHERE BranchCode='{0}' And AdvNo Like '%{1}' ", m_BranchCode, pformatSQL), pformatSQL)
+            m_AdvNo = retStr
+        End If
     End Sub
     Private m_BranchCode As String
     Public Property BranchCode As String
@@ -509,5 +513,23 @@ Public Class CAdvHeader
             End Try
         End Using
         Return lst
+    End Function
+    Public Function DeleteData(pSQLWhere As String) As String
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+                Using cm As New SqlCommand("DELETE FROM Job_AdvHeader " + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+                msg = "Delete Complete"
+            Catch ex As Exception
+                msg = "[exception] " + ex.Message
+            End Try
+        End Using
+        Return msg
     End Function
 End Class

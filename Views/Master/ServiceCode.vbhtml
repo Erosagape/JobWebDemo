@@ -84,8 +84,8 @@ End Code
             </div>
         </div>
         <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
-        <button id="btnSave" class=btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnAdd" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
+        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
     </div>
 </div>
 <div id="dvList"></div>
@@ -199,15 +199,20 @@ End Code
     }
     function AddData() {
         var code = $('#cboType').val();
-        $.get(path + 'master/getnewservicecode?code=' + code + '-',function (r) {
+        $.get(path + 'master/getnewservicecode',function (r) {
                 if (r.servicecode.data.length>0) {
                     ShowData(r.servicecode.data[0]);
+                    $("#txtSICode").attr("disabled", "disabled"); 
+                    $('#txtNameThai').focus();
                     return;
                 }
             });
     }
     function DeleteData() {
         var code = $('#txtSICode').val();
+        var ask = confirm("Do you need to Delete "+code +"?");
+        if (ask == false) return;
+
         $.get(path + 'master/delservicecode?code=' + code, function (r) {
             alert(r.servicecode.result);
             ShowData(r.servicecode.data[0]);
@@ -274,10 +279,11 @@ End Code
         } else {
             $('#chkIsUsedCoSlip').prop('checked', true);
         }
-
+        $("#txtSICode").removeAttr("disabled"); 
     }
     function GetDataSave(dt) {
-        dt.SICode=$('#txtSICode').val();
+        dt.SICode = $('#txtSICode').val();
+        if (dt.SICode == "") dt.SICode = $('#cboType').val() + '-';
         dt.NameThai=$('#txtNameThai').val();
         dt.NameEng=$('#txtNameEng').val();
         dt.StdPrice=CNum($('#txtStdPrice').val());
@@ -338,6 +344,8 @@ End Code
     function SaveData() {
         if (row.SICode != undefined) {
             var obj = GetDataSave(row);
+            var ask = confirm("Do you need to " + (row.SICode == "" ? "Add" : "Save") + " this data?");
+            if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
@@ -346,8 +354,11 @@ End Code
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    alert(response);
-                    $('#txtSICode').focus();
+                    if (response.result.data!=null) {
+                        $('#txtSICode').val(response.result.data);
+                        $('#txtSICode').focus();
+                    }
+                    alert(response.result.msg);
                 },
                 error: function (e) {
                     alert(e);

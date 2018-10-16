@@ -85,17 +85,16 @@ End Code
         </div>
         <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
         <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnAdd" class="btn btn-danger" onclick="DeleteData()">Delete</button>
-
+        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
     </div>
-    <div id="dvList"></div>
 </div>
+<div id="dvList"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var row = {}; //row pointer to current record show in buffer
     $(document).ready(function () {
-        SetLOV();
+        SetLOVs();
         SetEvents();
         SetEnterToTab();
     });
@@ -115,20 +114,20 @@ End Code
         });
         $('#txtSICode').focus();
     }
-    function SetLOV() {
+    function SetLOVs() {
         //2 Field show in grid 
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,name', function (response) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key', function (response) {
             var dv = document.getElementById("dvList");
             //2 Fields
             //Currency
-            CreateLOV(dv,'#dvCurr', '#tbCurr','Currency',response,2);
+            CreateLOV(dv,'#dvCurr','#tbCurr','Currency',response,2);
             //Vender
-            CreateLOV(dv,'#dvVend', '#tbVend', 'Venders',response,2);
+            CreateLOV(dv,'#dvVend','#tbVend','Venders',response,2);
             //SICode
-            CreateLOV(dv,'#dvSearch', '#tbGrid','Service Code',response,2);
+            CreateLOV(dv,'#dvSearch','#tbGrid','Service Code',response,2);
             //1 Fields
             //Unit
-            CreateLOV(dv,'#dvUnit', '#tbUnit','Units', response,1);
+            CreateLOV(dv,'#dvUnit','#tbUnit','Units',response,1);
         });
     }
     function SetEvents() {
@@ -200,15 +199,20 @@ End Code
     }
     function AddData() {
         var code = $('#cboType').val();
-        $.get(path + 'master/getnewservicecode?code=' + code + '-',function (r) {
+        $.get(path + 'master/getnewservicecode',function (r) {
                 if (r.servicecode.data.length>0) {
                     ShowData(r.servicecode.data[0]);
+                    $("#txtSICode").attr("disabled", "disabled"); 
+                    $('#txtNameThai').focus();
                     return;
                 }
             });
     }
     function DeleteData() {
         var code = $('#txtSICode').val();
+        var ask = confirm("Do you need to Delete "+code +"?");
+        if (ask == false) return;
+
         $.get(path + 'master/delservicecode?code=' + code, function (r) {
             alert(r.servicecode.result);
             ShowData(r.servicecode.data[0]);
@@ -275,10 +279,11 @@ End Code
         } else {
             $('#chkIsUsedCoSlip').prop('checked', true);
         }
-
+        $("#txtSICode").removeAttr("disabled"); 
     }
     function GetDataSave(dt) {
-        dt.SICode=$('#txtSICode').val();
+        dt.SICode = $('#txtSICode').val();
+        if (dt.SICode == "") dt.SICode = $('#cboType').val() + '-';
         dt.NameThai=$('#txtNameThai').val();
         dt.NameEng=$('#txtNameEng').val();
         dt.StdPrice=CNum($('#txtStdPrice').val());
@@ -339,6 +344,8 @@ End Code
     function SaveData() {
         if (row.SICode != undefined) {
             var obj = GetDataSave(row);
+            var ask = confirm("Do you need to " + (row.SICode == "" ? "Add" : "Save") + " this data?");
+            if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
@@ -347,8 +354,11 @@ End Code
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    alert(response);
-                    $('#txtSICode').focus();
+                    if (response.result.data!=null) {
+                        $('#txtSICode').val(response.result.data);
+                        $('#txtSICode').focus();
+                    }
+                    alert(response.result.msg);
                 },
                 error: function (e) {
                     alert(e);

@@ -48,6 +48,19 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function DelConfig() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ConfigCode<>'' "
+                tSqlw &= String.Format("AND ConfigCode='{0}'", Request.QueryString("Code").ToString)
+                tSqlw &= String.Format("AND ConfigKey='{0}'", Request.QueryString("Key").ToString)
+                Dim msg = New CConfig(jobWebConn).DeleteData(tSqlw)
+                Dim json = "{""config"":{""result"":""" & msg & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Dim json = "{""config"":{""result"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
         Function GetConfig() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ConfigCode<>'' "

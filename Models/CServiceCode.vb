@@ -12,6 +12,10 @@ Public Class CServiceCode
         m_ConnStr = pConnStr
     End Sub
     Public Sub AddNew(pformatSQL As String)
+        If pformatSQL = "" Then
+            m_SICode = ""
+            Exit Sub
+        End If
         Dim retStr As String = Main.GetMaxByMask(jobWebConn, "SELECT MAX(SICode) as t FROM Job_SrvSingle WHERE SICode Like '%" + pformatSQL + "'", pformatSQL)
         m_SICode = retStr
     End Sub

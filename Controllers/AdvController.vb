@@ -25,6 +25,9 @@ Namespace Controllers
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
             If Not IsNothing(data) Then
                 data.SetConnect(jobWebConn)
+                If data.AdvNo = "" Then
+                    data.AddNew(advPrefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+                End If
                 Dim msg As String = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}'", data.BranchCode, data.AdvNo))
                 'Dim msg = JsonConvert.SerializeObject(data)
                 Return Content(msg, textContent)
@@ -45,6 +48,49 @@ Namespace Controllers
                 Return Content("No data to save", textContent)
             End If
         End Function
+        Function DelAdvanceDetail() As ActionResult
+            Try
+                Dim oADVD As New CAdvDetail(jobWebConn)
+                Dim Branch As String = ""
+                If Not IsNothing(Request.QueryString("BranchCode")) Then
+                    Branch = Request.QueryString("BranchCode")
+                End If
+                Dim tSqlW As String = String.Format(" WHERE BranchCode='{0}'", Branch)
+                If Not IsNothing(Request.QueryString("AdvNo")) Then
+                    tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
+                End If
+                Dim ItemNo As String = "0"
+                If Not IsNothing(Request.QueryString("ItemNo")) Then
+                    ItemNo = Request.QueryString("ItemNo")
+                End If
+                tSqlW &= " AND ItemNo=" & ItemNo & ""
+                Dim msg As String = oADVD.DeleteData(tSqlW)
+                Dim json = "{""adv"":{""result"":""" & msg & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Dim json = "{""adv"":{""result"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelAdvanceHeader() As ActionResult
+            Try
+                Dim oAdvH As New CAdvHeader(jobWebConn)
+                Dim Branch As String = ""
+                If Not IsNothing(Request.QueryString("BranchCode")) Then
+                    Branch = Request.QueryString("BranchCode")
+                End If
+                Dim tSqlW As String = String.Format(" WHERE BranchCode='{0}'", Branch)
+                If Not IsNothing(Request.QueryString("AdvNo")) Then
+                    tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
+                End If
+                Dim msg As String = oAdvH.DeleteData(tSqlW)
+                Dim json = "{""adv"":{""result"":""" & msg & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Dim json = "{""adv"":{""result"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
         Function GetNewAdvanceHeader() As ActionResult
             Try
                 Dim oAdvH As New CAdvHeader(jobWebConn)
@@ -52,7 +98,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
-                Dim prefix As String = "ADV"
+                Dim prefix As String = advPrefix
                 If Not IsNothing(Request.QueryString("Prefix")) Then
                     prefix = "" & Request.QueryString("Prefix")
                 End If

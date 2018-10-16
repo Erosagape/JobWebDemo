@@ -43,6 +43,22 @@ Public Class CConfig
         End Try
         Return bComplete
     End Function
+    Public Function DeleteData(Optional pSqlWhere As String = "") As String
+        Try
+            Using cn As New SqlConnection(m_ConnStr)
+                cn.Open()
+
+                Using cm = New SqlCommand("DELETE FROM Mas_Config " & pSqlWhere, cn)
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+            End Using
+            Return "Delete Data Complete"
+        Catch ex As Exception
+            Return String.Format("[exception] {0}", ex.Message)
+        End Try
+    End Function
     Public Function GetData(Optional pSqlWhere As String = "") As List(Of CConfig)
         Dim lst As New List(Of CConfig)
         Try

@@ -3,7 +3,6 @@
 End Code
 <div class="panel-body">
     <div id="divInputs">
-        <button id="btnNew" class="btn btn-default" onclick="ClearData()">New</button>
         <table id="frmConfig">
             <tr>
                 <td>
@@ -35,7 +34,9 @@ End Code
                 <td></td>
             </tr>
         </table>
+        <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
         <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
+        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
     </div>
     <div id="dvLOVs"></div>
     <hr />
@@ -112,6 +113,8 @@ End Code
     function SaveData() {
         //post data input to web API
         var obj = GetInput();
+        var ask = confirm("Do you need to Save " + obj.ConfigCode + "/" + obj.ConfigKey + "?");
+        if (ask == false) return;
         $.ajax({
             url: "@Url.Action("SetConfig", "Config")",
             type: "POST",
@@ -142,6 +145,16 @@ End Code
         $('#txtKey').val('');
         $('#txtValue').val('');
         $("#txtCode").focus();
+    }
+    function DeleteData() {
+        var code = $('#txtCode').val();
+        var key = $('#txtKey').val();
+        var ask = confirm("Do you need to Delete " + code + "/" + key + "?");
+        if (ask == false) return;
+        $.get(path + 'config/delconfig' + GetParam(code,key), function (r) {
+            alert(r.config.result);
+            ShowData($('#txtCode').val(), "");
+        });
     }
     function ShowData(Code, Key) {
     //function for show grid data

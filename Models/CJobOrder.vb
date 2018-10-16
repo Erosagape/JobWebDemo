@@ -876,9 +876,12 @@ Public Class CJobOrder
         End Set
     End Property
     Public Sub AddNew(pFormatSQL As String, Optional pClearAll As Boolean = True)
-
-        Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(JNo) as Ret FROM Job_Order WHERE JNo Like '{0}'", pFormatSQL), pFormatSQL)
-        m_JNo = retStr
+        If pFormatSQL = "" Then
+            m_JNo = ""
+        Else
+            Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(JNo) as Ret FROM Job_Order WHERE JNo Like '{0}'", pFormatSQL), pFormatSQL)
+            m_JNo = retStr
+        End If
         If pClearAll Then
             m_CancelDate = SqlTypes.SqlDateTime.MinValue
             m_CancelProveDate = SqlTypes.SqlDateTime.MinValue

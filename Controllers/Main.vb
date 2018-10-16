@@ -7,6 +7,9 @@ Module Main
     Friend Const jobDataPath As String = "~/App_Data/job_data.xml"
     Friend Const logoApp As String = "logo-tawan.jpg"
     Friend Const logoRep As String = "logo-idl.jpg"
+    Friend Const jobPrefix As String = "TJOB"
+    Friend Const advPrefix As String = "TADV"
+    Friend Const clrPrefix As String = "TCLR"
     Friend jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionString").ConnectionString
     Friend jobMasConn As String = ConfigurationManager.ConnectionStrings("JobMasConnectionString").ConnectionString
     Friend Function GetDBDate(pDate As Date, Optional pTodayAsDefault As Boolean = False) As Object

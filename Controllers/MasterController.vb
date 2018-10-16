@@ -193,21 +193,9 @@ Namespace Controllers
         End Function
         Function GetNewServiceCode() As ActionResult
             Try
-                Dim Code As String = "SNG-"
-                If Not IsNothing(Request.QueryString("Code")) Then
-                    Code = Request.QueryString("Code").ToString
-                End If
-                Dim IsSave As String = "Y"
-                If Not IsNothing(Request.QueryString("Save")) Then
-                    IsSave = Request.QueryString("Save").ToString
-                End If
                 Dim oData = New CServiceCode(jobWebConn)
                 Dim msg As String = "OK"
-                If IsSave = "Y" Then
-                    oData.AddNew(Code & "___")
-                    msg = oData.SaveData(String.Format(" WHERE SICode='{0}' ", oData.SICode))
-                End If
-
+                oData.AddNew("")
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""servicecode"":{""data"":[" & json & "],""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
@@ -216,14 +204,25 @@ Namespace Controllers
             End Try
         End Function
         Function SetServiceCode(<FromBody()> data As CServiceCode) As ActionResult
-            If Not IsNothing(data) Then
-                data.SetConnect(jobWebConn)
-                Dim msg = data.SaveData(String.Format(" WHERE SICode='{0}' ", data.SICode))
-                'Dim msg = JsonConvert.SerializeObject(data)
-                Return Content(msg, textContent)
-            Else
-                Return Content("No data to save", textContent)
-            End If
+            Try
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    If data.SICode.ToString().Substring(data.SICode.ToString().Length - 1, 1) = "-" Then
+                        data.AddNew(data.SICode + "___")
+                    End If
+                    Dim msg = data.SaveData(String.Format(" WHERE SICode='{0}' ", data.SICode))
+                    Dim json = "{""result"":{""data"":""" & data.SICode & """,""msg"":""" & msg & """}}"
+                    'Dim msg = JsonConvert.SerializeObject(data)
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, textContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, textContent)
+            End Try
         End Function
     End Class
 End Namespace

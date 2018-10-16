@@ -75,6 +75,13 @@ function CDateEN(sqldateString) {
         return '';
     }
 }
+function CStr(data, length) {
+    if (data == null) {
+        return '';
+    } else {
+        return data.substr(0,length);
+    }
+}
 function CNum(data) {
     if (data == '') {
         return 0;

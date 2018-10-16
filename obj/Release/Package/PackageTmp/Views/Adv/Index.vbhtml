@@ -236,20 +236,21 @@ End Code
                         <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                         <br />
                         <label for="txtAmount">Amount :</label>
-                        <input type="text" id="txtAmount" style="width:100px;text-align:right" tabindex="15"/>
+                        <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="15"/>
                         <label for="txtVATRate">VAT :</label>
                         <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="16"/>
-                        <input type="text" id="txtVATAmount" style="width:100px;text-align:right" tabindex="17"/>
+                        <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="17"/>
                         <label for="txtWHTRate">WHT :</label>
                         <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="18"/>
-                        <input type="text" id="txtWHTAmount" style="width:100px;text-align:right" tabindex="19"/>
+                        <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="19"/>
                         <label for="txtNETAmount">Net Amount :</label>
-                        <input type="text" id="txtNETAmount" style="width:100px;text-align:right" tabindex="20"/>
+                        <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="20"/>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
                         <input type="text" id="txtAdvAmount" style="width:100px;text-align:right" /><br />
                         VAT :
+                        <input type="hidden" id="txtVatType" /><br />
                         <input type="text" id="txtVatAmount" style="width:100px;text-align:right" /><br />
                         WHT :
                         <input type="text" id="txtWhtAmount" style="width:100px;text-align:right" /><br />
@@ -268,6 +269,7 @@ End Code
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
+    var serv = [];
     $(document).ready(function () {       
         CheckParam();
         SetLOVs();
@@ -335,7 +337,37 @@ End Code
         });
         $('#txtSICode').keydown(function (event) {
             if (event.which == 13) {
-                ShowServiceCode(path, $('#txtSICode').val(), '#txtSDescription');
+                GetServiceCode(path, $('#txtSICode').val(), ReadService);
+            }
+        });
+        $('#txtAMT').keydown(function (event) {
+            if (event.which == 13) {
+                CalVATWHT();
+            }
+        });
+        $('#txtVATRate').keydown(function (event) {
+            if (event.which == 13) {
+                CalVATWHT();
+            }
+        });
+        $('#txtWHTRate').keydown(function (event) {
+            if (event.which == 13) {
+                CalVATWHT();
+            }
+        });
+        $('#txtVAT').keydown(function (event) {
+            if (event.which == 13) {
+                CalTotal();
+            }
+        });
+        $('#txtWHT').keydown(function (event) {
+            if (event.which == 13) {
+                CalTotal();
+            }
+        });
+        $('#txtNET').keydown(function (event) {
+            if (event.which == 13) {
+                CalTotal();
             }
         });
     }
@@ -408,11 +440,55 @@ End Code
         $('#txtCustCode').focus();
     }
     function ReadService(dt) {
+        serv = dt;
         $('#txtSICode').val(dt.SICode);
         $('#txtSDescription').val(dt.NameThai);
+        $('#txtVatType').val(dt.IsTaxCharge);
+        $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
+        $('#txtWHTRate').val(dt.Is50Tavi=="0"? "0" : dt.Rate50Tavi);
         $('#txtSICode').focus();
     }
     function ReadJob(dt) {
         $('#txtForJNo').val(dt.JNo);
+    }
+    function CalTotal() {
+        var amt = Number($('#txtAMT').val());
+        var vat = Number($('#txtVAT').val());
+        var wht = Number($('#txtWHT').val());
+        var net = Number($('#txtNET').val());
+        var type = $('#txtVatType').val();
+        if (type == "2") {
+            $('#txtAMT').val(net - vat + wht);
+        }
+        if (type == "1") {
+            $('#txtNET').val(amt + vat - wht);
+        }
+    }
+    function CalVATWHT() {
+        var type = $('#txtVatType').val();
+        var amt = Number($('#txtAMT').val());
+        if (type == "2") {
+            amt = Number($('#txtNET').val());
+        }
+        var vatrate = Number($('#txtVATRate').val());
+        var whtrate = Number($('#txtWHTRate').val());
+        var vat = 0;
+        var wht = 0;
+        var net = 0;
+        if (type == "2") {
+            var base = amt * 100 / (100 + (vatrate - whtrate));
+            vat = base * vatrate * 0.01;
+            wht = base * whtrate * 0.01;
+            $('#txtVAT').val(vat);
+            $('#txtWHT').val(wht);
+        }
+        if (type == "1") {
+            vat = amt * vatrate * 0.01;
+            wht = amt * whtrate * 0.01;
+            net = amt + vat - wht;
+            $('#txtVAT').val(vat);
+            $('#txtWHT').val(wht);
+        }
+        CalTotal();
     }
 </script>

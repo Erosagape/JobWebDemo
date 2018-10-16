@@ -250,4 +250,22 @@ Public Class CAdvDetail
         End Using
         Return lst
     End Function
+    Public Function DeleteData(pSQLWhere As String) As String
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+                Using cm As New SqlCommand("DELETE FROM Job_AdvDetail " + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+                msg = "Delete Complete"
+            Catch ex As Exception
+                msg = "[exception] " + ex.Message
+            End Try
+        End Using
+        Return msg
+    End Function
 End Class

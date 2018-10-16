@@ -171,6 +171,15 @@ function ShowServiceCode(path, Code, ControlID) {
             }
         });
 }
+function GetServiceCode(path, Code, ev) {
+    $.get(path + 'master/getservicecode?code=' + Code)
+        .done(function (r) {
+            if (r.servicecode.data.length > 0) {
+                var b = r.servicecode.data[0];
+                ev(b);
+            }
+        });
+}
 function ShowJobTypeShipBy(path, jt, sb, js ,ControlJT,ControlSB,ControlST) {
     $(ControlJT).val('');
     $(ControlSB).val('');
