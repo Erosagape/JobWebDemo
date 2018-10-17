@@ -107,7 +107,7 @@ Namespace Controllers
             Dim htmlStr As String = GetLOV(Head, ID, List.ToArray)
             Return Content(htmlStr, textContent)
         End Function
-        Private Function GetListTable(arr As String())
+        Private Function GetListTable(arr As String()) As String
             Dim html As String = ""
             For Each str As String In arr
                 html &= "<th>" & str & "</th>" & vbCrLf
@@ -191,6 +191,78 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function RemovePicture() As ActionResult
+            Dim path As String = ""
+            If Not Request.QueryString("Path") Is Nothing Then
+                path = Request.QueryString("Path").ToString
+            End If
+            Dim file As String = ""
+            If Not Request.QueryString("Name") Is Nothing Then
+                file = Request.QueryString("Name").ToString
+            End If
+            Dim msg As String = ""
+            If file = "" Then
+                msg = "No File To Delete"
+            Else
+                Dim files As New System.IO.DirectoryInfo(Server.MapPath("~/" + path))
+                For Each f As System.IO.FileInfo In files.GetFiles(file)
+                    f.Delete()
+                    msg += "File " + file + " Deleted"
+                Next
+                If msg = "" Then
+                    msg = "File " + file + " Not Found on " + path
+                End If
+            End If
+            Return Content(msg, textContent)
+        End Function
+        Function UploadPicture() As ActionResult
+            Dim msg As String = ""
+            Dim exts As String = ".jpg,.jpeg,.png,.bmp,.gif,.tiff,.svg"
 
+            Try
+                For Each fileIdx As String In Request.Files
+                    Dim File As HttpPostedFileBase = Request.Files.Item(fileIdx)
+                    Dim filename = System.IO.Path.GetFileName(File.FileName)
+                    If File.ContentLength > 0 Then
+                        If exts.IndexOf(System.IO.Path.GetExtension(filename).ToLower) >= 0 Then
+                            Try
+                                Dim path = System.IO.Path.Combine(Server.MapPath("~/Resource/uploads"), filename)
+                                File.SaveAs(path)
+                                msg = msg + "Upload " + filename + " successfully" + vbCrLf
+                            Catch ex As Exception
+                                msg = msg + "[Error]" + filename + "=>" + ex.Message + vbCrLf
+                            End Try
+                        Else
+                            msg = msg + "[Error]" + filename + " is not allowed to upload" + vbCrLf
+                        End If
+                    Else
+                        msg = msg + "[Error]" + filename + " cannot upload" + vbCrLf
+                    End If
+                Next
+            Catch e As Exception
+                msg = "[Error]" + e.Message
+            End Try
+            If msg = "" Then msg = "No File To Upload"
+            Return Content(msg, textContent)
+        End Function
+        Function FileManager() As ActionResult
+            Return View()
+        End Function
+        Function GetFileList() As ActionResult
+            Dim path As String = ""
+            If Not Request.QueryString("Path") Is Nothing Then
+                path = Request.QueryString("Path").ToString
+            End If
+            Dim data = JsonConvert.SerializeObject(GetUploadFiles(path))
+            Return Content(data, jsonContent)
+        End Function
+        Private Function GetUploadFiles(path As String) As List(Of String)
+            Dim lst As New List(Of String)
+            Dim files As New System.IO.DirectoryInfo(Server.MapPath("~/" + path))
+            For Each file As System.IO.FileInfo In files.GetFiles("*.*", IO.SearchOption.AllDirectories)
+                lst.Add(file.Name)
+            Next
+            Return lst
+        End Function
     End Class
 End Namespace

@@ -82,6 +82,14 @@ function CStr(data, length) {
         return data.substr(0,length);
     }
 }
+function CDbl(data, dec) {
+    try {
+        return parseFloat(data).toFixed(dec);
+    }
+    catch {
+        return data;
+    }
+}
 function CNum(data) {
     if (data == '') {
         return 0;

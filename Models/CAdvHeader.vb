@@ -82,6 +82,15 @@ Public Class CAdvHeader
             m_EmpCode = value
         End Set
     End Property
+    Private m_AdvBy As String
+    Public Property AdvBy As String
+        Get
+            Return m_AdvBy
+        End Get
+        Set(value As String)
+            m_AdvBy = value
+        End Set
+    End Property
     Private m_CustCode As String
     Public Property CustCode As String
         Get
@@ -235,6 +244,15 @@ Public Class CAdvHeader
             m_PaymentRef = value
         End Set
     End Property
+    Private m_PaymentNo As String
+    Public Property PaymentNo As String
+        Get
+            Return m_PaymentNo
+        End Get
+        Set(value As String)
+            m_PaymentNo = value
+        End Set
+    End Property
     Private m_CancelReson As String
     Public Property CancelReson As String
         Get
@@ -355,6 +373,7 @@ Public Class CAdvHeader
                             dr("AdvDate") = Main.GetDBDate(Me.AdvDate, True)
                             dr("AdvType") = Me.AdvType
                             dr("EmpCode") = Me.EmpCode
+                            dr("AdvBy") = Me.AdvBy
                             dr("JNo") = Me.JNo
                             dr("InvNo") = Me.InvNo
                             dr("DocStatus") = Me.DocStatus
@@ -370,6 +389,7 @@ Public Class CAdvHeader
                             dr("PaymentDate") = Main.GetDBDate(Me.PaymentDate)
                             dr("PaymentTime") = Main.GetDBTime(Me.PaymentTime)
                             dr("PaymentRef") = Me.PaymentRef
+                            dr("PaymentNo") = Me.PaymentNo
                             dr("CancelReson") = Me.CancelReson
                             dr("CancelProve") = Me.CancelProve
                             dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
@@ -429,6 +449,9 @@ Public Class CAdvHeader
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("EmpCode"))) = False Then
                         row.EmpCode = rd.GetString(rd.GetOrdinal("EmpCode")).ToString()
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AdvBy"))) = False Then
+                        row.AdvBy = rd.GetString(rd.GetOrdinal("AdvBy")).ToString()
+                    End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("JNo"))) = False Then
                         row.JNo = rd.GetString(rd.GetOrdinal("JNo")).ToString()
                     End If
@@ -473,6 +496,9 @@ Public Class CAdvHeader
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("PaymentRef"))) = False Then
                         row.PaymentRef = rd.GetString(rd.GetOrdinal("PaymentRef")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("PaymentNo"))) = False Then
+                        row.PaymentNo = rd.GetString(rd.GetOrdinal("PaymentNo")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("CancelReson"))) = False Then
                         row.CancelReson = rd.GetString(rd.GetOrdinal("CancelReson")).ToString()

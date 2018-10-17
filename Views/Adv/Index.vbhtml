@@ -19,7 +19,7 @@ End Code
                 <table border="1">
                     <tr>
                         <td>
-                            <b>Advance No</b>
+                            <b><a onclick="SearchData('advance')">Advance No:</a></b>
                             <br />
                             <input type="text" id="txtAdvNo" style="font-style:bold;font-size:20px;text-align:center" />
                         </td>
@@ -74,13 +74,13 @@ End Code
                                     WH-Tax No:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtWHTaxSlipNo" style="width:200px" tabindex="6"/>
+                                    <input type="text" id="txtDoc50Tavi" style="width:200px" tabindex="6"/>
                                 </td>
                                 <td>
                                     Bill A/P:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtBillNumber" style="width:200px" tabindex="7"/>
+                                    <input type="text" id="txtPaymentNo" style="width:200px" tabindex="7"/>
                                 </td>
                             </tr>
                         </table>
@@ -120,7 +120,7 @@ End Code
                         <select id="cboAdvType" class="form-control dropdown" style="width:100%" tabindex="10"></select>
                         <br />
                         Remark:
-                        <textarea id="txtRemark" style="width:100%;height:80px" tabindex="11"></textarea>
+                        <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
                     </div>
                     <div class="col-sm-5">
                         <br />
@@ -132,34 +132,34 @@ End Code
                                     <label for="chkCash">Cash</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCashAmount" style="width:100px;text-align:right" />
+                                    <input type="text" id="txtAdvCash" style="width:100px;text-align:right" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="checkbox" id="chkComChq" />
-                                    <label for="chkComChq">Cashier Chq</label>
+                                    <input type="checkbox" id="chkChq" />
+                                    <label for="chkChq">Cashier Chq</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtChqAmount" style="width:100px;text-align:right" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" id="chkCustChq" />
-                                    <label for="chkCustChq">Customer Chq</label>
-                                </td>
-                                <td>
-                                    <input type="text" id="txtCustChqAmount" style="width:100px;text-align:right" />
+                                    <input type="text" id="txtAdvChq" style="width:100px;text-align:right" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="checkbox" id="chkCredit" />
-                                    <label for="chkCredit">Credit</label>
+                                    <input type="checkbox" id="chkChqCash" />
+                                    <label for="chkChqCash">Customer Chq</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtCreditAmount" style="width:100px;text-align:right" />
+                                    <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id="chkCred" />
+                                    <label for="chkCred">Credit</label>
+                                </td>
+                                <td>
+                                    <input type="text" id="txtAdvCred" style="width:100px;text-align:right" />
                                 </td>
                             </tr>
                         </table>
@@ -187,12 +187,12 @@ End Code
                         Time:
                         <input type="text" id="txtPaymentTime" style="width:80px" disabled />
                         <br />
-                        Payment Ref:<input type="text" id="txtPaymentRef" style="width:200px" />
+                        Payment Ref:<input type="text" id="txtPaymentRef" style="width:200px" disabled />
                     </div>
                     <div class="col-sm-4" style="border-style:solid;border-width:1px;color:red">
                         <input type="checkbox" id="chkCancel" />
                         <label for="chkCancel">Cancel By</label>
-                        <input type="text" id="txtCancelBy" style="width:250px" disabled />
+                        <input type="text" id="txtCancelProve" style="width:250px" disabled />
                         <br />
                         Date:
                         <input type="text" id="txtCancelDate" style="width:120px" disabled />
@@ -228,7 +228,7 @@ End Code
                         <label for="txtItemNo">Item No :</label>
                         <input type="text" id="txtItemNo" style="width:40px" disabled />
                         <label for="txtSICode">Code :</label>
-                        <input type="text" id="txtSICode" style="width:80px" tabindex="12"/>
+                        <input type="text" id="txtSICode" style="width:80px" tabindex="12" />
                         <input type="button" id="btnBrowseS" value="..." onclick="SearchData('servicecode')" />
                         <input type="text" id="txtSDescription" style="width:280px" tabindex="13" />
                         <label for="txtForJNo">Job No :</label>
@@ -236,21 +236,21 @@ End Code
                         <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                         <br />
                         <label for="txtAmount">Amount :</label>
-                        <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="15"/>
+                        <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="15" />
                         <label for="txtVATRate">VAT :</label>
-                        <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="16"/>
-                        <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="17"/>
+                        <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="16" />
+                        <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="17" />
                         <label for="txtWHTRate">WHT :</label>
-                        <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="18"/>
-                        <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="19"/>
+                        <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="18" />
+                        <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="19" />
                         <label for="txtNETAmount">Net Amount :</label>
-                        <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="20"/>
+                        <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="20" />
+                        <input type="hidden" id="txtVatType" /><br />
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
                         <input type="text" id="txtAdvAmount" style="width:100px;text-align:right" /><br />
                         VAT :
-                        <input type="hidden" id="txtVatType" /><br />
                         <input type="text" id="txtVatAmount" style="width:100px;text-align:right" /><br />
                         WHT :
                         <input type="text" id="txtWhtAmount" style="width:100px;text-align:right" /><br />
@@ -270,6 +270,8 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var serv = [];
+    var hdr = [];
+    var dtl = [];
     $(document).ready(function () {       
         CheckParam();
         SetLOVs();
@@ -293,19 +295,26 @@ End Code
         loadConfig('#cboJobType', 'JOB_TYPE', path, jt);
         loadConfig('#cboShipBy', 'SHIP_BY', path, sb);
         loadConfig('#cboAdvType', 'ADV_TYPE', path, '01');
-        loadConfig('#cboAdvStatus', 'ADV_STATUS', path, '01');
+        loadConfig('#cboDocStatus', 'ADV_STATUS', path, '01');
     }
     function SetEnterToTab() {
         //Set enter to tab
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
-                    if (nextElement.length) {
-                        $('[tabindex="' + (this.tabIndex + 1) + '"]').focus();
-                        e.preventDefault();
-                    } else
-                        $('[tabindex="1"]').focus();
+                    var idx = (this.tabIndex + 1);
+                    var nextElement = $('[tabindex="' + idx + '"]');
+                    while (nextElement.length) {
+                        if (nextElement.prop('disabled') == false) {
+                            $('[tabindex="' + idx + '"]').focus();
+                            e.preventDefault();
+                            return;
+                        } else {
+                            idx = idx + 1;
+                            nextElement = $('[tabindex="' + idx + '"]');
+                        }                     
+                    }
+                    $('[tabindex="0"]').focus();
                 }
             });
         });
@@ -318,6 +327,11 @@ End Code
         $('#txtBranchCode').keydown(function (event) {
             if (event.which == 13) {
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
+            }
+        });
+        $('#txtAdvNo').keydown(function (event) {
+            if (event.which == 13) {
+                ShowData($('#txtBranchCode').val(),$('#txtAdvNo').val());
             }
         });
         $('#txtAdvBy').keydown(function (event) {
@@ -367,7 +381,13 @@ End Code
         });
         $('#txtNET').keydown(function (event) {
             if (event.which == 13) {
-                CalTotal();
+                var type = $('#txtVatType').val();
+                if (type == '') type = "1";
+                if (type == "2") {
+                    CalVATWHT();
+                } else {
+                    CalTotal();
+                }
             }
         });
     }
@@ -388,8 +408,76 @@ End Code
             CreateLOV(dv, '#frmSearchSICode', '#tbServ', 'Service Code', response, 2);
         });
     }
+    function ShowData(branchcode,advno) {
+        $.get(path + 'adv/getadvance?branchcode='+branchcode+'&advno='+ advno, function (r) {
+            var h = r.adv.header[0];
+            ReadAdvHeader(h);
+            //var d = r.adv.detail;
+
+        });
+    }
+    function ReadAdvHeader(dt) {
+        hdr = dt;
+        $('#txtBranchCode').val(dt.BranchCode);
+        $('#txtAdvNo').val(dt.AdvNo);
+        $('#txtAdvDate').val(CDateEN(dt.AdvDate));
+        $('#txtAdvBy').val(dt.EmpCode);
+        $('#txtReqBy').val(dt.AdvBy);
+        $('#txtCustCode').val(dt.CustCode);
+        $('#txtCustBranch').val(dt.CustBranch);
+        $('#txtDoc50Tavi').val(dt.Doc50Tavi);
+        $('#txtPaymentNo').val(dt.PaymentNo);
+        $('#txtTRemark').val(dt.TRemark);
+        $('#txtApproveBy').val(dt.ApproveBy);
+        $('#txtPaymentBy').val(dt.PaymentBy);
+        $('#txtCancelProve').val(dt.CancelProve);
+        $('#txtCancelReson').val(dt.CancelReson);
+        $('#txtPaymentRef').val(dt.PaymentRef);
+        $('#txtCancelDate').val(CDateEN(dt.CancelDate));
+        $('#txtApproveDate').val(CDateEN(dt.ApproveDate));
+        $('#txtPaymentDate').val(CDateEN(dr.PaymentDate));
+        $('#txtCancelTime').val(dt.CancelTime);
+        $('#txtApproveTime').val(dt.ApproveTime);
+        $('#txtPaymentTime').val(dr.PaymentTime);
+        $('#txtAdvCash').val(dt.AdvCash);
+        $('#txtAdvChq').val(dt.AdvChq);
+        $('#txtAdvChqCash').val(dt.AdvChqCash);
+        $('#txtAdvCred').val(dt.AdvCred);
+
+        $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
+        $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
+        $('#chkPayment').prop('checked', $('#txtPaymentBy').val() == '' ? false : true);
+
+        $('#chkCash').prop('checked', dt.AdvCash > 0 ? true : false);
+        $('#chkChq').prop('checked', dt.AdvChq > 0 ? true : false);
+        $('#chkChqCash').prop('checked', dt.AdvChqCash > 0 ? true : false);
+        $('#chkCred').prop('checked', dt.AdvCred > 0 ? true : false);
+
+        var jt = dt.JobType;
+        var sb = dt.ShipBy;
+        var at = dt.AdvType;
+        var st = dt.DocStatus;
+
+        if (jt <10) jt = "0"+jt;
+        if (sb < 10) sb = "0" + sb;
+        if (at < 10) at = "0" + at;
+        if (st < 10) st = "0" + st;
+        //Combos
+        loadConfig('#cboJobType', 'JOB_TYPE', path, jt);
+        loadConfig('#cboShipBy', 'SHIP_BY', path, sb);
+        loadConfig('#cboAdvType', 'ADV_TYPE', path, at);
+        loadConfig('#cboDocStatus', 'ADV_STATUS', path, st);
+
+        ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
+        ShowUser(path, $('#txtReqBy').val(), '#txtReqName');     
+
+        ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
+    }
+
     function SearchData(type) {
         switch (type) {
+            case 'advance':
+                break;
             case 'branch':
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
                 break;
@@ -446,7 +534,22 @@ End Code
         $('#txtVatType').val(dt.IsTaxCharge);
         $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
         $('#txtWHTRate').val(dt.Is50Tavi=="0"? "0" : dt.Rate50Tavi);
-        $('#txtSICode').focus();
+        if (dt.IsTaxCharge == "2") {
+            $('#txtAMT').attr('disabled', 'disabled');
+            $('#txtVATRate').attr('disabled', 'disabled');
+            $('#txtWHTRate').attr('disabled', 'disabled');
+            $('#txtVAT').attr('disabled', 'disabled');
+            $('#txtWHT').attr('disabled', 'disabled');
+        } else {
+            $('#txtAMT').removeAttr('disabled');
+            $('#txtVATRate').removeAttr('disabled');
+            $('#txtWHTRate').removeAttr('disabled');
+            $('#txtVAT').removeAttr('disabled');
+            $('#txtWHT').removeAttr('disabled');
+        }
+        if (type == "1") {
+            $('#txtNET').val(amt + vat - wht);
+        }
     }
     function ReadJob(dt) {
         $('#txtForJNo').val(dt.JNo);
@@ -457,18 +560,22 @@ End Code
         var wht = Number($('#txtWHT').val());
         var net = Number($('#txtNET').val());
         var type = $('#txtVatType').val();
+        if (type == '') type = "1";
         if (type == "2") {
-            $('#txtAMT').val(net - vat + wht);
+            $('#txtAMT').val(CDbl(net - vat + wht, 2));
+            $('#txtNET').val(CDbl(net, 2));
         }
         if (type == "1") {
-            $('#txtNET').val(amt + vat - wht);
+            $('#txtNET').val(CDbl(amt + vat - wht, 2));
+            $('#txtAMT').val(CDbl(amt, 2));
         }
     }
     function CalVATWHT() {
         var type = $('#txtVatType').val();
-        var amt = Number($('#txtAMT').val());
+        if (type == '') type = "1";
+        var amt = Number(CDbl($('#txtAMT').val(),2));
         if (type == "2") {
-            amt = Number($('#txtNET').val());
+            amt = Number(CDbl($('#txtNET').val(),2));
         }
         var vatrate = Number($('#txtVATRate').val());
         var whtrate = Number($('#txtWHTRate').val());
@@ -479,16 +586,14 @@ End Code
             var base = amt * 100 / (100 + (vatrate - whtrate));
             vat = base * vatrate * 0.01;
             wht = base * whtrate * 0.01;
-            $('#txtVAT').val(vat);
-            $('#txtWHT').val(wht);
         }
         if (type == "1") {
             vat = amt * vatrate * 0.01;
             wht = amt * whtrate * 0.01;
             net = amt + vat - wht;
-            $('#txtVAT').val(vat);
-            $('#txtWHT').val(wht);
         }
+        $('#txtVAT').val(CDbl(vat, 2));
+        $('#txtWHT').val(CDbl(wht, 2));
         CalTotal();
     }
 </script>

@@ -228,7 +228,7 @@ End Code
                         <label for="txtItemNo">Item No :</label>
                         <input type="text" id="txtItemNo" style="width:40px" disabled />
                         <label for="txtSICode">Code :</label>
-                        <input type="text" id="txtSICode" style="width:80px" tabindex="12"/>
+                        <input type="text" id="txtSICode" style="width:80px" tabindex="12" />
                         <input type="button" id="btnBrowseS" value="..." onclick="SearchData('servicecode')" />
                         <input type="text" id="txtSDescription" style="width:280px" tabindex="13" />
                         <label for="txtForJNo">Job No :</label>
@@ -236,21 +236,21 @@ End Code
                         <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                         <br />
                         <label for="txtAmount">Amount :</label>
-                        <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="15"/>
+                        <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="15" />
                         <label for="txtVATRate">VAT :</label>
-                        <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="16"/>
-                        <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="17"/>
+                        <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="16" />
+                        <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="17" />
                         <label for="txtWHTRate">WHT :</label>
-                        <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="18"/>
-                        <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="19"/>
+                        <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="18" />
+                        <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="19" />
                         <label for="txtNETAmount">Net Amount :</label>
-                        <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="20"/>
+                        <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="20" />
+                        <input type="hidden" id="txtVatType" /><br />
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
                         <input type="text" id="txtAdvAmount" style="width:100px;text-align:right" /><br />
                         VAT :
-                        <input type="hidden" id="txtVatType" /><br />
                         <input type="text" id="txtVatAmount" style="width:100px;text-align:right" /><br />
                         WHT :
                         <input type="text" id="txtWhtAmount" style="width:100px;text-align:right" /><br />
@@ -300,12 +300,19 @@ End Code
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
-                    if (nextElement.length) {
-                        $('[tabindex="' + (this.tabIndex + 1) + '"]').focus();
-                        e.preventDefault();
-                    } else
-                        $('[tabindex="1"]').focus();
+                    var idx = (this.tabIndex + 1);
+                    var nextElement = $('[tabindex="' + idx + '"]');
+                    while (nextElement.length) {
+                        if (nextElement.prop('disabled') == false) {
+                            $('[tabindex="' + idx + '"]').focus();
+                            e.preventDefault();
+                            return;
+                        } else {
+                            idx = idx + 1;
+                            nextElement = $('[tabindex="' + idx + '"]');
+                        }                     
+                    }
+                    $('[tabindex="0"]').focus();
                 }
             });
         });
@@ -367,7 +374,13 @@ End Code
         });
         $('#txtNET').keydown(function (event) {
             if (event.which == 13) {
-                CalTotal();
+                var type = $('#txtVatType').val();
+                if (type == '') type = "1";
+                if (type == "2") {
+                    CalVATWHT();
+                } else {
+                    CalTotal();
+                }
             }
         });
     }
@@ -446,7 +459,22 @@ End Code
         $('#txtVatType').val(dt.IsTaxCharge);
         $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
         $('#txtWHTRate').val(dt.Is50Tavi=="0"? "0" : dt.Rate50Tavi);
-        $('#txtSICode').focus();
+        if (dt.IsTaxCharge == "2") {
+            $('#txtAMT').attr('disabled', 'disabled');
+            $('#txtVATRate').attr('disabled', 'disabled');
+            $('#txtWHTRate').attr('disabled', 'disabled');
+            $('#txtVAT').attr('disabled', 'disabled');
+            $('#txtWHT').attr('disabled', 'disabled');
+        } else {
+            $('#txtAMT').removeAttr('disabled');
+            $('#txtVATRate').removeAttr('disabled');
+            $('#txtWHTRate').removeAttr('disabled');
+            $('#txtVAT').removeAttr('disabled');
+            $('#txtWHT').removeAttr('disabled');
+        }
+        if (type == "1") {
+            $('#txtNET').val(amt + vat - wht);
+        }
     }
     function ReadJob(dt) {
         $('#txtForJNo').val(dt.JNo);
@@ -457,15 +485,17 @@ End Code
         var wht = Number($('#txtWHT').val());
         var net = Number($('#txtNET').val());
         var type = $('#txtVatType').val();
+        if (type == '') type = "1";
         if (type == "2") {
-            $('#txtAMT').val(net - vat + wht);
+            $('#txtAMT').val(CDbl(net - vat + wht,2));
         }
         if (type == "1") {
-            $('#txtNET').val(amt + vat - wht);
+            $('#txtNET').val(CDbl(amt + vat - wht,2));
         }
     }
     function CalVATWHT() {
         var type = $('#txtVatType').val();
+        if (type == '') type = "1";
         var amt = Number($('#txtAMT').val());
         if (type == "2") {
             amt = Number($('#txtNET').val());
@@ -479,16 +509,14 @@ End Code
             var base = amt * 100 / (100 + (vatrate - whtrate));
             vat = base * vatrate * 0.01;
             wht = base * whtrate * 0.01;
-            $('#txtVAT').val(vat);
-            $('#txtWHT').val(wht);
         }
         if (type == "1") {
             vat = amt * vatrate * 0.01;
             wht = amt * whtrate * 0.01;
             net = amt + vat - wht;
-            $('#txtVAT').val(vat);
-            $('#txtWHT').val(wht);
         }
+        $('#txtVAT').val(CDbl(vat, 2));
+        $('#txtWHT').val(CDbl(wht, 2));
         CalTotal();
     }
 </script>

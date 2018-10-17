@@ -103,12 +103,19 @@ End Code
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
-                    if (nextElement.length) {
-                        $('[tabindex="' + (this.tabIndex + 1) + '"]').focus();
-                        e.preventDefault();
-                    } else
-                        $('[tabindex="1"]').focus();
+                    var idx = (this.tabIndex + 1);
+                    var nextElement = $('[tabindex="' + idx + '"]');
+                    while (nextElement.length) {
+                        if (nextElement.prop('disabled') == false) {
+                            $('[tabindex="' + idx + '"]').focus();
+                            e.preventDefault();
+                            return;
+                        } else {
+                            idx = idx + 1;
+                            nextElement = $('[tabindex="' + idx + '"]');
+                        }
+                    }
+                    $('[tabindex="1"]').focus();
                 }
             });
         });

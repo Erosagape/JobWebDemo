@@ -96,6 +96,24 @@ Public Class CAdvDetail
             m_ChargeVAT = value
         End Set
     End Property
+    Private m_VATRate As Double
+    Public Property VATRate As Double
+        Get
+            Return m_VATRate
+        End Get
+        Set(value As Double)
+            m_VATRate = value
+        End Set
+    End Property
+    Private m_Is50Tavi As Integer
+    Public Property Is50Tavi As Integer
+        Get
+            Return m_Is50Tavi
+        End Get
+        Set(value As Integer)
+            m_Is50Tavi = value
+        End Set
+    End Property
     Private m_Rate50Tavi As Double
     Public Property Rate50Tavi As Double
         Get
@@ -112,6 +130,15 @@ Public Class CAdvDetail
         End Get
         Set(value As Double)
             m_Charge50Tavi = value
+        End Set
+    End Property
+    Private m_AdvNet As Double
+    Public Property AdvNet As Double
+        Get
+            Return m_AdvNet
+        End Get
+        Set(value As Double)
+            m_AdvNet = value
         End Set
     End Property
     Private m_TRemark As String
@@ -171,10 +198,13 @@ Public Class CAdvDetail
                             dr("AdvAmount") = Me.AdvAmount
                             dr("IsChargeVAT") = Me.IsChargeVAT
                             dr("ChargeVAT") = Me.ChargeVAT
+                            dr("VATRate") = Me.VATRate
                             dr("Rate50Tavi") = Me.Rate50Tavi
                             dr("Charge50Tavi") = Me.Charge50Tavi
+                            dr("AdvNet") = Me.AdvNet
                             dr("TRemark") = Me.TRemark
                             dr("IsDuplicate") = Me.IsDuplicate
+                            dr("Is50Tavi") = Me.Is50Tavi
                             dr("PayChqTo") = Me.PayChqTo
                             dr("Doc50Tavi") = Me.Doc50Tavi
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
@@ -222,14 +252,23 @@ Public Class CAdvDetail
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("IsChargeVAT"))) = False Then
                         row.IsChargeVAT = rd.GetByte(rd.GetOrdinal("IsChargeVAT"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("Is50Tavi"))) = False Then
+                        row.Is50Tavi = rd.GetByte(rd.GetOrdinal("Is50Tavi"))
+                    End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ChargeVAT"))) = False Then
                         row.ChargeVAT = rd.GetDouble(rd.GetOrdinal("ChargeVAT"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("VATRate"))) = False Then
+                        row.VATRate = rd.GetDouble(rd.GetOrdinal("VATRate"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Rate50Tavi"))) = False Then
                         row.Rate50Tavi = rd.GetDouble(rd.GetOrdinal("Rate50Tavi"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Charge50Tavi"))) = False Then
                         row.Charge50Tavi = rd.GetDouble(rd.GetOrdinal("Charge50Tavi"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AdvNet"))) = False Then
+                        row.AdvNet = rd.GetDouble(rd.GetOrdinal("AdvNet"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("TRemark"))) = False Then
                         row.TRemark = rd.GetString(rd.GetOrdinal("TRemark")).ToString()
