@@ -166,7 +166,7 @@ End Code
         ShowCompany('#divCompany');
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
-        if (br !== "" && ano !== "") {
+        if (br.length>0 && ano.length>0) {
             GetAdv(br, ano);
         } else {
             var r = DummyAdvanceData();

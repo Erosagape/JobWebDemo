@@ -18,14 +18,10 @@ function loadConfig(e, code, path, def) {
         var dr = r.config.data;
         if (dr.length > 0) {
             for (var i = 0; i < dr.length; i++) {
-                if (def == dr[i].ConfigKey.trim()) {
-                    $(e).append($('<option selected>', { value: dr[i].ConfigKey.trim() })
-                        .text(dr[i].ConfigKey.trim() + ' / ' + dr[i].ConfigValue.trim()));
-                } else {
                     $(e).append($('<option>', { value: dr[i].ConfigKey.trim() })
                         .text(dr[i].ConfigKey.trim() + ' / ' + dr[i].ConfigValue.trim()));
-                }
             }
+            $(e).val(def);
         }
     });
 }
@@ -44,8 +40,8 @@ function loadYear(path) {
 }
 //Show Data Related from Combo or Text After Input
 function ShowCustomer(path, Code, Branch, ControlID) {
+    $(ControlID).val('');
     if ((Code + Branch).length > 0) {
-        $(ControlID).val('');
         $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
             .done(function (r) {
                 if (r.company.data.length > 0) {
@@ -56,17 +52,17 @@ function ShowCustomer(path, Code, Branch, ControlID) {
     }
 }
 function ShowCustomerFull(path, Code, Branch, CustNameID,NameThaiID,NameEngID,PhoneFaxID) {
+    if (PhoneFaxID == '') {
+        $(CustNameID).val('');
+        $(NameEngID).val('');
+        $(NameThaiID).val('');
+    } else {
+        $(CustNameID).val('');
+        $(NameEngID).val('');
+        $(NameThaiID).val('');
+        $(PhoneFaxID).val('');
+    }
     if ((Code + Branch).length > 0) {
-        if (PhoneFaxID == '') {
-            $(CustNameID).val('');
-            $(NameEngID).val('');
-            $(NameThaiID).val('');
-        } else {
-            $(CustNameID).val('');
-            $(NameEngID).val('');
-            $(NameThaiID).val('');
-            $(PhoneFaxID).val('');
-        }
         $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
             .done(function (r) {
                 if (r.company.data.length > 0) {

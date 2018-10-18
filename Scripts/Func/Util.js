@@ -84,17 +84,17 @@ function CStr(data, length) {
 }
 function CDbl(data, dec) {
     try {
-        return parseFloat(data).toFixed(dec);
+        return parseFloat(CNum(data)).toFixed(dec);
     }
     catch {
-        return data;
+        return CNum(data);
     }
 }
 function CNum(data) {
-    if (data == '') {
+    if (data.toString().length==0) {
         return 0;
     } else {
-        return data;
+        return Number(data);
     }
 }
 function CNumEng(s) {
@@ -162,6 +162,12 @@ function CNumEng(s) {
 function CCurrency(data) {
     return data.replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
+function CCode(data) {
+    var st = data;
+
+    if (st < 10) st = "0" + st;
+    return st;
+}
 function ShowDate(sqlDateString) {
     try {
         var jsDate = sqlDateString.substr(0, 10);
@@ -173,6 +179,15 @@ function ShowDate(sqlDateString) {
         }
         var date = day + "/" + month + "/" + year;
         return date;
+    }
+    catch (e) {
+        return '-';
+    }
+}
+function ShowTime(sqlDateString) {
+    try {
+        var jsDate = sqlDateString.substr(11, 8);
+        return jsDate;
     }
     catch (e) {
         return '-';

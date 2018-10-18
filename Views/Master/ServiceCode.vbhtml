@@ -140,19 +140,11 @@ End Code
     function SetEvents() {
         //if value IsTaxCharge =1 -> Exclude VAT ,2-> Include VAT 
         $('#chkIsTaxCharge').change(function () {
-            if (this.checked) {
-                //Default value is Excluded VAT
-                $('input:radio[name=optVAT][value=1]').prop('checked', true);
-            } else {
-                $('input:radio[name=optVAT]:checked').prop('checked', false);
-            }
+            //Default value is Excluded VAT
+            $('input:radio[name=optVAT][value=1]').prop('checked', this.checked ? true : false);
         });
         $('#chkIs50Tavi').change(function () {
-            if (this.checked) {
-                $('input:radio[name=optWHT][value=1]').prop('checked', true);
-            } else {
-                $('input:radio[name=optWHT]:checked').prop('checked', false);
-            }
+            $('input:radio[name=optWHT][value=1]').prop('checked', this.checked ? true : false);
         });
         //if enter value then query from database
         $('#txtSICode').keydown(function (e) {
@@ -238,54 +230,23 @@ End Code
         $('#txtGLAccountCodeSales').val(dt.GLAccountCodeSales);
         $('#txtGLAccountCodeCost').val(dt.GLAccountCodeCost);
 
-        $('input:radio[name=optVAT]:checked').prop('checked', false);
-        if (dt.IsTaxCharge === 0) {
-            $('#chkIsTaxCharge').prop('checked', false);
-        } else {
-            $('#chkIsTaxCharge').prop('checked', true);
-            $('input:radio[name=optVAT][value="' + dt.IsTaxCharge + '"]').prop('checked', true);
-        }
+        $('#chkIsTaxCharge').prop('checked', dt.IsTaxCharge === 0 ? false : true);
+        $('#chkIs50Tavi').prop('checked', dt.Is50Tavi === 0 ? false : true);
 
+        $('input:radio[name=optVAT]:checked').prop('checked', false);
         $('input:radio[name=optWHT]:checked').prop('checked', false);
-        if (dt.Is50Tavi === 0) {
-            $('#chkIs50Tavi').prop('checked', false);
-        } else {
-            $('#chkIs50Tavi').prop('checked', true);
-        }
-        if (dt.IsLtdAdv50Tavi === 1) $('input:radio[name=optWHT][value=1]').prop('checked', true);
-        if (dt.IsPay50TaviTo === 1) $('input:radio[name=optWHT][value=2]').prop('checked', true);
+        $('input:radio[name=optVAT][value="' + dt.IsTaxCharge + '"]').prop('checked', true);
+        $('input:radio[name=optWHT][value=1]').prop('checked', dt.IsLtdAdv50Tavi === 1 ? true : false);
+        $('input:radio[name=optWHT][value=2]').prop('checked', dt.IsPay50TaviTo === 1 ? true : false);
 
         $('#txtRate50Tavi').val(dt.Rate50Tavi);
 
-        if (dt.IsHaveSlip === 0) {
-            $('#chkIsHaveSlip').prop('checked', false);
-        } else {
-            $('#chkIsHaveSlip').prop('checked', true);
-        }
+        $('#chkIsHaveSlip').prop('checked', dt.IsHaveSlip === 0 ? false : true);
+        $('#chkIsCredit').prop('checked', dt.IsCredit === 0 ? false : true);
+        $('#chkIsExpense').prop('checked', dt.IsExpense === 0 ? false : true);
+        $('#chkIsShowPrice').prop('checked', dt.IsShowPrice === 0 ? false : true);
+        $('#chkIsUsedCoSlip').prop('checked', dt.IsUsedCoSlip === 0 ? false : true);
 
-        if (dt.IsCredit === 0) {
-            $('#chkIsCredit').prop('checked', false);
-        } else {
-            $('#chkIsCredit').prop('checked', true);
-        }
-
-        if (dt.IsExpense === 0) {
-            $('#chkIsExpense').prop('checked', false);
-        } else {
-            $('#chkIsExpense').prop('checked', true);
-        }
-
-        if (dt.IsShowPrice === 0) {
-            $('#chkIsShowPrice').prop('checked', false);
-        } else {
-            $('#chkIsShowPrice').prop('checked', true);
-        }
-
-        if (dt.IsUsedCoSlip === 0) {
-            $('#chkIsUsedCoSlip').prop('checked', false);
-        } else {
-            $('#chkIsUsedCoSlip').prop('checked', true);
-        }
         $("#txtSICode").removeAttr("disabled"); 
     }
     function GetDataSave(dt) {
@@ -300,52 +261,23 @@ End Code
         dt.ProcessDesc=$('#txtProcessDesc').val();
         dt.GLAccountCodeSales=$('#txtGLAccountCodeSales').val();
         dt.GLAccountCodeCost=$('#txtGLAccountCodeCost').val();
-
        
         if ($('#chkIsTaxCharge').prop('checked') == false) {
             dt.IsTaxCharge = 0;
         } else {
-            dt.IsTaxCharge = 0;
-            if ($('input:radio[name=optVAT]:checked').val() == '1') dt.IsTaxCharge = 1;
-            if ($('input:radio[name=optVAT]:checked').val() == '2') dt.IsTaxCharge = 2;
+            dt.IsTaxCharge = $('input:radio[name=optVAT]:checked').val() == '2' ? 2 : 1;
         }
-        if ($('#chkIs50Tavi').prop('checked') == true) {
-            dt.Is50Tavi = 1;
-        } else {
-            dt.Is50Tavi = 0;
-        }
-        dt.IsLtdAdv50Tavi = 0;
-        dt.IsPay50TaviTo = 0;
-        if ($('input:radio[name=optWHT]:checked').val() == '1') dt.IsLtdAdv50Tavi = 1;
-        if ($('input:radio[name=optWHT]:checked').val() == '2') dt.IsPay50TaviTo = 1;
+        dt.Is50Tavi = $('#chkIs50Tavi').prop('checked') == true ? 1 : 0;
 
+        dt.IsPay50TaviTo = $('input:radio[name=optWHT]:checked').val() == '2' ? 1 : 0;
+        dt.IsLtdAdv50Tavi = $('input:radio[name=optWHT]:checked').val() == '1' ? 1 : 0;
         dt.Rate50Tavi = CNum($('#txtRate50Tavi').val());
 
-        if ($('#chkIsHaveSlip').prop('checked') === true) {
-            dt.IsHaveSlip = 1;
-        } else {
-            dt.IsHaveSlip = 0;
-        }
-        if ($('#chkIsCredit').prop('checked') === true) {
-            dt.IsCredit = 1;
-        } else {
-            dt.IsCredit = 0;
-        }
-        if ($('#chkIsExpense').prop('checked') === true) {
-            dt.IsExpense = 1;
-        } else {
-            dt.IsExpense = 0;
-        }
-        if ($('#chkIsShowPrice').prop('checked') === true) {
-            dt.IsShowPrice = 1;
-        } else {
-            dt.IsShowPrice = 0;
-        }
-        if ($('#chkIsUsedCoSlip').prop('checked') === true) {
-            dt.IsUsedCoSlip = 1;
-        } else {
-            dt.IsUsedCoSlip = 0;
-        }
+        dt.IsHaveSlip = $('#chkIsHaveSlip').prop('checked') === true ? 1 : 0;
+        dt.IsCredit = $('#chkIsCredit').prop('checked') === true ? 1 : 0;
+        dt.IsExpense = $('#chkIsExpense').prop('checked') === true ? 1 : 0;
+        dt.IsShowPrice = $('#chkIsShowPrice').prop('checked') === true ? 1 : 0;
+        dt.IsUsedCoSlip = $('#chkIsUsedCoSlip').prop('checked') === true? 1 : 0;
         return dt;
     }
     function SaveData() {

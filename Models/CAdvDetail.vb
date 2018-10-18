@@ -69,6 +69,15 @@ Public Class CAdvDetail
             m_SICode = value
         End Set
     End Property
+    Private m_SDescription As String
+    Public Property SDescription As String
+        Get
+            Return m_SDescription
+        End Get
+        Set(value As String)
+            m_SDescription = value
+        End Set
+    End Property
     Private m_AdvAmount As Double
     Public Property AdvAmount As Double
         Get
@@ -194,6 +203,7 @@ Public Class CAdvDetail
                             dr("ItemNo") = Me.ItemNo
                             dr("ForJNo") = Me.ForJNo
                             dr("STCode") = Me.STCode
+                            dr("SDescription") = Me.SDescription
                             dr("SICode") = Me.SICode
                             dr("AdvAmount") = Me.AdvAmount
                             dr("IsChargeVAT") = Me.IsChargeVAT
@@ -245,6 +255,9 @@ Public Class CAdvDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("SICode"))) = False Then
                         row.SICode = rd.GetString(rd.GetOrdinal("SICode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("SDescription"))) = False Then
+                        row.SDescription = rd.GetString(rd.GetOrdinal("SDescription")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AdvAmount"))) = False Then
                         row.AdvAmount = rd.GetDouble(rd.GetOrdinal("AdvAmount"))

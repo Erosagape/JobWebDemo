@@ -84,6 +84,8 @@ Namespace Controllers
                     tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
                 End If
                 Dim msg As String = oAdvH.DeleteData(tSqlW)
+                Dim oAdvD As New CAdvDetail(jobWebConn)
+                Dim msgD As String = oAdvD.DeleteData(tSqlW)
                 Dim json = "{""adv"":{""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
@@ -103,10 +105,15 @@ Namespace Controllers
                     prefix = "" & Request.QueryString("Prefix")
                 End If
                 oAdvH.BranchCode = Branch
-                oAdvH.AddNew(prefix & "-" & DateTime.Now.ToString("yyMM") & "____")
-                Dim msg As String = oAdvH.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdVNo='{1}'", oAdvH.BranchCode, oAdvH.AdvNo))
+                oAdvH.AdvNo = ""
+                Dim oAdvD As New CAdvDetail(jobWebConn)
+                oAdvD.BranchCode = Branch
+                oAdvD.AdvNo = ""
+                oAdvD.ItemNo = 0
+                'Dim msg As String = oAdvH.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdVNo='{1}'", oAdvH.BranchCode, oAdvH.AdvNo))
                 Dim jsonh As String = JsonConvert.SerializeObject(oAdvH)
-                Dim json = "{""adv"":{""header"":" & jsonh & ",""result"":""" & msg & """}}"
+                Dim jsond As String = JsonConvert.SerializeObject(oAdvD)
+                Dim json = "{""adv"":{""header"":" & jsonh & ",""detail"":" & jsond & ",""result"":""OK""}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
@@ -125,10 +132,10 @@ Namespace Controllers
                 End If
                 oAdvD.BranchCode = Branch
                 oAdvD.AdvNo = AdvNo
-                oAdvD.AddNew()
-                Dim msg As String = oAdvD.SaveData(String.Format(" WHERE BranchCode='{0}' And AdvNo='{1}' And ItemNo={2}", oAdvD.BranchCode, oAdvD.AdvNo, oAdvD.ItemNo))
+                oAdvD.ItemNo = 0
+                'Dim msg As String = oAdvD.SaveData(String.Format(" WHERE BranchCode='{0}' And AdvNo='{1}' And ItemNo={2}", oAdvD.BranchCode, oAdvD.AdvNo, oAdvD.ItemNo))
                 Dim jsonh As String = JsonConvert.SerializeObject(oAdvD)
-                Dim json = "{""adv"":{""detail"":" & jsonh & ",""result"":""" & msg & """}}"
+                Dim json = "{""adv"":{""detail"":" & jsonh & ",""result"":""OK""}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

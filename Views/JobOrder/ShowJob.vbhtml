@@ -651,11 +651,7 @@ End Code
         });
         $('#txtInterPort').keydown(function (event) {
             if (event.which == 13) {
-                if ($('#txtJobType').val() == 'IMPORT') {
-                    ShowInterPort(path, $('#txtInvFCountryCode').val(), $('#txtInterPort').val(), '#txtInterPortName');
-                } else {
-                    ShowInterPort(path, $('#txtInvCountryCode').val(), $('#txtInterPort').val(), '#txtInterPortName');
-                }
+                ShowInterPort(path, $('#txtJobType').val() == 'IMPORT' ? $('#txtInvFCountryCode').val() : $('#txtInvCountryCode').val(), $('#txtInterPort').val(), '#txtInterPortName');
             }
         });
         $('#txtDeclareType').keydown(function (event) {
@@ -793,10 +789,7 @@ End Code
     function SearchData(type) {
         switch (type) {
             case 'interport':
-                var CountryID = $('#txtInvCountryCode').val();
-                if ($('#txtJobType').val() == "IMPORT") {
-                    CountryID = $('#txtInvFCountryCode').val();
-                }
+                var CountryID = $('#txtJobType').val() == "IMPORT" ? $('#txtInvFCountryCode').val() : $('#txtInvCountryCode').val();
                 SetGridInterPort(path, '#tbIPort', '#frmSearchIPort', CountryID, ReadInterPort);
                 break;
             case 'agent':
@@ -944,11 +937,7 @@ End Code
                     $('#txtVesselName').val(dr.VesselName);
                     $('#txtMVesselName').val(dr.MVesselName);
                     $('#txtInterPort').val(dr.InvInterPort);
-                    if (dr.JobType==1) {
-                        ShowInterPort(path,dr.InvFCountry, dr.InvInterPort, '#txtInterPortName');
-                    } else {
-                        ShowInterPort(path,dr.InvCountry, dr.InvInterPort, '#txtInterPortName');
-                    }
+                    ShowInterPort(path, dr.JobType == 1 ? dr.InvFCountry : dr.InvCountry, dr.InvInterPort, '#txtInterPortName');
                     $('#txtTransporter').val(dr.AgentCode);
                     ShowVender(path,dr.AgentCode, '#txtTransporterName');
                     $('#txtTotalCTN').val(dr.TotalContainer);
@@ -1167,12 +1156,12 @@ End Code
         var dv = document.getElementById("dvSplit")
         dv.innerHTML = '';
         var str = document.getElementById("txtTotalCTN");
-
         var arr = str.value.split(",");
         for (var i = 0; i < arr.length; i++) {
             AddNewService(arr[i]);
         }
         $('#frmSearchSUnt').hide();
+
         $('#txtQtyAdd').val('');
         $('#txtUnitAdd').val('');
         SumService();
@@ -1184,6 +1173,7 @@ End Code
     function AddNewService(val) {
         if (val.indexOf("x") < 0) val = "1x" + val;
         var dv = document.getElementById("dvSplit");
+
         var text = document.createElement("input");
         text.setAttribute("type", "text");
         text.setAttribute("name", "txtQtyCon");
