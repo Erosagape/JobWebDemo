@@ -248,3 +248,6 @@ obj/Release/JobWebApi.vbprojResolveAssemblyReference.cache
 .vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
 .vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal
 obj/Debug/DesignTimeResolveAssemblyReferences.cache
+.vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
+.vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal
+obj/Debug/DesignTimeResolveAssemblyReferences.cache
