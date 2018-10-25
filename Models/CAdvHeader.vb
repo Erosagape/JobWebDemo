@@ -15,7 +15,7 @@ Public Class CAdvHeader
         If pformatSQL = "" Then
             m_AdvNo = ""
         Else
-            Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(AdvNo) as t FROM Job_AdvHeader WHERE BranchCode='{0}' And AdvNo Like '%{1}' ", m_BranchCode, pformatSQL), pformatSQL)
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(AdvNo) as t FROM Job_AdvHeader WHERE BranchCode='{0}' And AdvNo Like '%{1}' ", m_BranchCode, pformatSQL), pformatSQL)
             m_AdvNo = retStr
         End If
     End Sub
@@ -352,6 +352,30 @@ Public Class CAdvHeader
             m_Doc50Tavi = value
         End Set
     End Property
+    Private Function GetDocStatus() As Integer
+        If Me.CancelProve <> "" Then
+            Return 99
+        Else
+            Dim clrStatus As Integer = GetStatusClear()
+            If clrStatus = 0 Then
+                If Me.PaymentBy <> "" Then
+                    Return 3
+                Else
+                    If Me.ApproveBy <> "" Then
+                        Return 2
+                    Else
+                        Return 1
+                    End If
+                End If
+            Else
+                Return clrStatus
+            End If
+        End If
+    End Function
+    Private Function GetStatusClear() As Integer
+        Dim sts As Integer = 0
+        Return sts
+    End Function
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -376,7 +400,6 @@ Public Class CAdvHeader
                             dr("AdvBy") = Me.AdvBy
                             dr("JNo") = Me.JNo
                             dr("InvNo") = Me.InvNo
-                            dr("DocStatus") = Me.DocStatus
                             dr("VATRate") = Me.VATRate
                             dr("TotalAdvance") = Me.TotalAdvance
                             dr("TotalVAT") = Me.TotalVAT
@@ -394,6 +417,7 @@ Public Class CAdvHeader
                             dr("CancelProve") = Me.CancelProve
                             dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
                             dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
+                            dr("DocStatus") = Me.GetDocStatus
                             dr("AdvCash") = Me.AdvCash
                             dr("AdvChqCash") = Me.AdvChqCash
                             dr("AdvChq") = Me.AdvChq
@@ -402,7 +426,9 @@ Public Class CAdvHeader
                             dr("PayChqDate") = Main.GetDBDate(Me.PayChqDate)
                             dr("Doc50Tavi") = Me.Doc50Tavi
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = String.Format("Save '{0}' Complete", Me.AdvNo)
                         End Using
                     End Using
@@ -412,6 +438,26 @@ Public Class CAdvHeader
             End Try
         End Using
         Return msg
+    End Function
+    Public Function UpdateTotal(cn As SqlConnection)
+        Dim sql As String = "
+                                    update b 
+                                    set b.TotalAdvance =a.SumAdvance,b.TotalVAT=a.SumVAT,b.Total50Tavi=a.Sum50Tavi
+                                    from (
+	                                    select BranchCode,AdvNo,Sum(AdvAmount) as SumAdvance,
+	                                    sum(ChargeVAT) as SumVAT,
+	                                    sum(Charge50Tavi) as Sum50Tavi
+	                                    from Job_AdvDetail 
+	                                    group by BranchCode,AdvNo) a 
+                                    inner join Job_AdvHeader b
+                                    on a.BranchCode =b.BranchCode
+                                    and a.AdvNo=b.AdvNo
+"
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " and a.BranchCode='" + Me.BranchCode + "' and a.AdvNo='" + Me.AdvNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
     End Function
     Public Function GetData(pSQLWhere As String) As List(Of CAdvHeader)
         Dim lst As New List(Of CAdvHeader)

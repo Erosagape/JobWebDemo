@@ -12,7 +12,7 @@ Public Class CAdvDetail
         m_ConnStr = pConnStr
     End Sub
     Public Sub AddNew()
-        Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(ItemNo) as t FROM Job_AdvHeader WHERE BranchCode='{0}' And AdvNo ='{1}' ", m_BranchCode, m_ItemNo), "_")
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_AdvDetail WHERE BranchCode='{0}' And AdvNo ='{1}' ", m_BranchCode, m_AdvNo), "____")
         m_ItemNo = retStr
     End Sub
     Private m_BranchCode As String
@@ -218,7 +218,9 @@ Public Class CAdvDetail
                             dr("PayChqTo") = Me.PayChqTo
                             dr("Doc50Tavi") = Me.Doc50Tavi
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = String.Format("Save '{0}' Item {1} Complete", Me.AdvNo, Me.ItemNo)
                         End Using
                     End Using
@@ -228,6 +230,26 @@ Public Class CAdvDetail
             End Try
         End Using
         Return msg
+    End Function
+    Public Function UpdateTotal(cn As SqlConnection)
+        Dim sql As String = "
+                                    update b 
+                                    set b.TotalAdvance =a.SumAdvance,b.TotalVAT=a.SumVAT,b.Total50Tavi=a.Sum50Tavi
+                                    from (
+	                                    select BranchCode,AdvNo,Sum(AdvAmount) as SumAdvance,
+	                                    sum(ChargeVAT) as SumVAT,
+	                                    sum(Charge50Tavi) as Sum50Tavi
+	                                    from Job_AdvDetail 
+	                                    group by BranchCode,AdvNo) a 
+                                    inner join Job_AdvHeader b
+                                    on a.BranchCode =b.BranchCode
+                                    and a.AdvNo=b.AdvNo
+"
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " and a.BranchCode='" + Me.BranchCode + "' and a.AdvNo='" + Me.AdvNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
     End Function
     Public Function GetData(pSQLWhere As String) As List(Of CAdvDetail)
         Dim lst As New List(Of CAdvDetail)
@@ -312,6 +334,7 @@ Public Class CAdvDetail
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
+                UpdateTotal(cn)
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception

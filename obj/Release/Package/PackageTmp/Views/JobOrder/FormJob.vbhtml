@@ -335,7 +335,7 @@ End Code
         }
     });
     function GetJob(Branch, Job) {
-        $.get(path+'joborder/getjobsql?branchcode=' + Branch + '&jno=' + Job)
+        $.get(path+'joborder/getjobsql?branch=' + Branch + '&jno=' + Job)
             .done(function (r) {
                 if (r.job.data.length > 0) {
                     var rec = r.job.data[0];

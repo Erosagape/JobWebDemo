@@ -23,17 +23,25 @@ Namespace Controllers
             Return View()
         End Function
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
-            If Not IsNothing(data) Then
-                data.SetConnect(jobWebConn)
-                If data.AdvNo = "" Then
-                    data.AddNew(advPrefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+            Try
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    If data.AdvNo = "" Then
+                        data.AddNew(advPrefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+                    End If
+                    Dim msg As String = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}'", data.BranchCode, data.AdvNo))
+                    'Dim msg = JsonConvert.SerializeObject(data)
+                    Dim json = "{""result"":{""data"":""" & data.AdvNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
                 End If
-                Dim msg As String = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}'", data.BranchCode, data.AdvNo))
-                'Dim msg = JsonConvert.SerializeObject(data)
-                Return Content(msg, textContent)
-            Else
-                Return Content("No data to save", textContent)
-            End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" + ex.Message + """}}"
+                Return Content(json, jsonContent)
+            End Try
         End Function
         Function SaveAdvanceDetail(<FromBody()> ByVal data As CAdvDetail) As ActionResult
             If Not IsNothing(data) Then
@@ -43,9 +51,11 @@ Namespace Controllers
                 End If
                 Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}' AND ItemNo={2} ", data.BranchCode, data.AdvNo, data.ItemNo))
                 'Dim msg = JsonConvert.SerializeObject(data)
-                Return Content(msg, textContent)
+                Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
+                Return Content(json, jsonContent)
             Else
-                Return Content("No data to save", textContent)
+                Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                Return Content(json, jsonContent)
             End If
         End Function
         Function DelAdvanceDetail() As ActionResult
@@ -100,12 +110,9 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
-                Dim prefix As String = advPrefix
-                If Not IsNothing(Request.QueryString("Prefix")) Then
-                    prefix = "" & Request.QueryString("Prefix")
-                End If
                 oAdvH.BranchCode = Branch
                 oAdvH.AdvNo = ""
+                oAdvH.AdvDate = DateTime.Today
                 Dim oAdvD As New CAdvDetail(jobWebConn)
                 oAdvD.BranchCode = Branch
                 oAdvD.AdvNo = ""

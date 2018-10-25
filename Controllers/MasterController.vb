@@ -22,6 +22,15 @@ Namespace Controllers
         Function ServiceCode() As ActionResult
             Return GetView("ServiceCode")
         End Function
+        Function Customers() As ActionResult
+            Return GetView("Customer")
+        End Function
+        Function Users() As ActionResult
+            Return GetView("Users")
+        End Function
+        Function Venders() As ActionResult
+            Return GetView("Venders")
+        End Function
         Function GetServUnit() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE [UnitType]<>'' "

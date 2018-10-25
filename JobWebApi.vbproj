@@ -363,7 +363,7 @@
     <None Include="packages.config" />
     <Content Include="Views\Shared\Error.vbhtml" />
     <Content Include="Views\_ViewStart.vbhtml" />
-    <Content Include="Views\Shared\_Layout.vbhtml" />
+    <Content Include="_Layout.vbhtml" />
     <Content Include="Views\web.config" />
     <Content Include="Views\JobOrder\CreateJob.vbhtml" />
     <Content Include="Views\JobOrder\ShowJob.vbhtml" />
@@ -387,6 +387,9 @@
     <Content Include="Views\JobOrder\FormJob.vbhtml" />
     <Content Include="Views\Shared\_Report.vbhtml" />
     <Content Include="Views\Config\FileManager.vbhtml" />
+    <Content Include="Views\Master\Users.vbhtml" />
+    <Content Include="Views\Master\Customers.vbhtml" />
+    <Content Include="Views\Master\Venders.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -879,7 +879,7 @@ Public Class CJobOrder
         If pFormatSQL = "" Then
             m_JNo = ""
         Else
-            Dim retStr As String = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(JNo) as Ret FROM Job_Order WHERE JNo Like '{0}'", pFormatSQL), pFormatSQL)
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(JNo) as Ret FROM Job_Order WHERE JNo Like '{0}'", pFormatSQL), pFormatSQL)
             m_JNo = retStr
         End If
         If pClearAll Then

@@ -164,13 +164,10 @@ End Code
     var serv = [];
     $(document).ready(function () {
         ShowCompany('#divCompany');
-        var br = getQueryString('BranchCode');
-        var ano = getQueryString('AdvNo');
-        if (br.length>0 && ano.length>0) {
-            GetAdv(br, ano);
-        } else {
-            var r = DummyAdvanceData();
-            ShowData(r);
+        var branch = getQueryString('branch');
+        var advno = getQueryString('advno');
+        if (branch != "" && advno != "") {
+            GetAdv(branch, advno);
         }
     });
     function GetAdv(Branch, Doc) {

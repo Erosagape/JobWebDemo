@@ -1,9 +1,8 @@
-﻿@Code
-    ViewBag.Title = "Master Files"
+﻿
+@Code
+    ViewBag.Title = "Customers"
 End Code
 <div class="panel-body">
-    @ViewBag.Title
     <div class="container">
-
     </div>
 </div>

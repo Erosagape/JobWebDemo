@@ -58,17 +58,18 @@ Module Main
                         If rd.HasRows Then
                             Dim numStr As String = ""
                             Dim formatStr As String = ""
+                            Dim val As String = rd.GetValue(0).ToString()
                             Dim i As Integer = 0
-                            For i = 1 To rd.GetString(0).Length
-                                If IsNumeric(rd.GetString(0).Substring(rd.GetString(0).Length - i, 1)) Then
-                                    numStr = rd.GetString(0).Substring(rd.GetString(0).Length - i, 1) & numStr
+                            For i = 1 To val.Length
+                                If IsNumeric(val.Substring(val.Length - i, 1)) Then
+                                    numStr = val.Substring(val.Length - i, 1) & numStr
                                     formatStr &= "0"
                                 Else
                                     Exit For
                                 End If
                             Next
                             If numStr <> "" Then
-                                retStr = rd.GetString(0).Substring(0, rd.GetString(0).Length - i + 1) & Format(CLng(numStr) + 1, formatStr)
+                                retStr = val.Substring(0, val.Length - i + 1) & Format(CLng(numStr) + 1, formatStr)
                             End If
                         End If
                     End If

@@ -128,11 +128,11 @@ End Code
                         <table>
                             <tr>
                                 <td>
-                                    <input type="checkbox" id="chkCash" checked />
+                                    <input type="checkbox" id="chkCash" />
                                     <label for="chkCash">Cash</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvCash" style="width:100px;text-align:right" />
+                                    <input type="text" id="txtAdvCash" style="width:100px;text-align:right" disabled/>
                                 </td>
                             </tr>
                             <tr>
@@ -141,7 +141,7 @@ End Code
                                     <label for="chkChq">Cashier Chq</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvChq" style="width:100px;text-align:right" />
+                                    <input type="text" id="txtAdvChq" style="width:100px;text-align:right" disabled/>
                                 </td>
                             </tr>
                             <tr>
@@ -150,7 +150,7 @@ End Code
                                     <label for="chkChqCash">Customer Chq</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" />
+                                    <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" disabled/>
                                 </td>
                             </tr>
                             <tr>
@@ -159,7 +159,7 @@ End Code
                                     <label for="chkCred">Credit</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvCred" style="width:100px;text-align:right" />
+                                    <input type="text" id="txtAdvCred" style="width:100px;text-align:right" disabled/>
                                 </td>
                             </tr>
                         </table>
@@ -167,13 +167,13 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-4" style="border-style:solid;border-width:1px">
-                        <input type="checkbox" id="chkApprove" checked />
+                        <input type="checkbox" id="chkApprove" />
                         <label for="chkApprove">Approve By</label>
                         <br />
                         <input type="text" id="txtApproveBy" style="width:250px" disabled />
                         <br />
                         Date:
-                        <input type="text" id="txtApproveDate" style="width:120px" disabled />
+                        <input type="date" id="txtApproveDate" style="width:120px" disabled />
                         Time:
                         <input type="text" id="txtApproveTime" style="width:80px" disabled />
                     </div>
@@ -183,7 +183,7 @@ End Code
                         <input type="text" id="txtPaymentBy" style="width:250px" disabled />
                         <br />
                         Date:
-                        <input type="text" id="txtPaymentDate" style="width:120px" disabled />
+                        <input type="date" id="txtPaymentDate" style="width:120px" disabled />
                         Time:
                         <input type="text" id="txtPaymentTime" style="width:80px" disabled />
                         <br />
@@ -195,7 +195,7 @@ End Code
                         <input type="text" id="txtCancelProve" style="width:250px" disabled />
                         <br />
                         Date:
-                        <input type="text" id="txtCancelDate" style="width:120px" disabled />
+                        <input type="date" id="txtCancelDate" style="width:120px" disabled />
                         Time:
                         <input type="text" id="txtCancelTime" style="width:80px" disabled />
                         <br />
@@ -203,8 +203,8 @@ End Code
                     </div>
                 </div>
                 <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
-                <button id="btnSave" class="btn btn-success">Save Document</button>
-                <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print Data</button>
+                <button id="btnSave" class="btn btn-success" disabled onclick="SaveHeader()">Save Document</button>
+                <button id="btnPrint" class="btn btn-info" onclick="PrintData()" disabled>Print Data</button>
             </div>
             <div id="tabDetail" class="tab-pane fade">
                 <div class="row">
@@ -229,7 +229,7 @@ End Code
                 <div class="row">
                     <div class="col-sm-9">
                         <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">Add</button>
-                        <button id="btnDel" class="btn btn-danger">Delete</button>
+                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -255,6 +255,7 @@ End Code
                             <label for="txtItemNo">No :</label>
                             <input type="text" id="txtItemNo" style="width:40px" disabled />
                             <select id="cboSTCode" class="dropdown">
+                                <option value="ADV">N/A</option>
                                 <option value="STD">STD</option>
                                 <option value="INC">INC</option>
                                 <option value="EXP">EXP</option>
@@ -299,7 +300,7 @@ End Code
                             <textarea id="txtRemark" style="width:100%;height:80px" tabindex="21"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button id="btnUpdate" class="btn btn-primary">Save</button>
+                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
                             <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
@@ -313,9 +314,10 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var user = '@ViewBag.User';
-    var serv = [];
-    var hdr = [];
-    var dtl = [];
+    var serv = []; //must be array of object
+    var hdr = {}; //simple object
+    var dtl = {}; //simple object
+    var isjobmode = false;
     $(document).ready(function () {       
         SetLOVs();
         SetEvents();
@@ -328,13 +330,13 @@ End Code
         var jt = getQueryString('JType');
         var sb = getQueryString('SBy');
         var ano = getQueryString('AdvNo');
-
+        var jno = getQueryString('JNo');
 
         //Combos
         loadConfig('#cboJobType', 'JOB_TYPE', path, jt == null ? "01" : jt);
         loadConfig('#cboShipBy', 'SHIP_BY', path, sb == null ? "01" : sb);
-        loadConfig('#cboAdvType', 'ADV_TYPE', path, '01');
-        loadConfig('#cboDocStatus', 'ADV_STATUS', path, '01');
+        loadConfig('#cboAdvType', 'ADV_TYPE', path, '');
+        loadConfig('#cboDocStatus', 'ADV_STATUS', path, '');
         LoadService();
         $('#txtBranchCode').val('00');
         if (br.length > 0) {
@@ -344,6 +346,11 @@ End Code
         if (ano.length > 0) {
             $('#txtAdvNo').val(ano);
             ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
+        }
+        if (jno.length > 0) {
+            $('#txtForJNo').val(jno);
+            $('#txtForJNo').attr('disabled','disabled');
+            isjobmode = true;
         }
     }
     function SetEnterToTab() {
@@ -369,12 +376,69 @@ End Code
         });
         $('#txtAdvNo').focus();
     }
-    function PrintData() {
-        window.open(path + 'Adv/FormAdv');
-    }
     function SetEvents() {
         $('#frmDetail').on('shown.bs.modal', function () {
             $('#txtSICode').focus();
+        });
+        $('#cboSTCode').on('change', function () {
+            if ($('#cboSTCode').val() == 'ADV') {
+                $('#txtSICode').attr('disabled', 'disabled');
+                $('#txtSDescription').attr('disabled', 'disabled');
+                $('#btnBrowseS').attr('disabled', 'disabled');
+                return;
+            }
+            $('#txtSICode').removeAttr('disabled');
+            $('#txtSDescription').removeAttr('disabled');
+            $('#btnBrowseS').removeAttr('disabled');
+        });
+        $('#chkCash,#chkChq,#chkChqCash,#chkCred').on('click', function () {
+            var id = this.id;
+            var chk = this.checked;
+            if (this.checked == false) {
+                $('#txtAdv' + id.substr(3)).val(0);
+                $('#txtAdv' + id.substr(3)).attr('disabled', 'disabled');
+                return;
+            }
+            var val = GetTotal();
+            if (val <= 0) {
+                alert('Total not Balance,Please check');
+                $('#txtAdv' + id.substr(3)).val(0);
+                $('#txtAdv' + id.substr(3)).attr('disabled', 'disabled');
+                this.checked = false;
+                return;
+            }
+            $('#txtAdv' + id.substr(3)).val(val);
+            $('#txtAdv' + id.substr(3)).removeAttr('disabled');
+            return;
+        });
+        $('#txtAdvCash,#txtAdvChq,#txtAdvChqCash,#txtAdvCred').keydown(function (e) {
+            if (e.which == 13) {
+                if (GetTotal() < 0) {
+                    alert('Total not Balance,Please check');
+                    $('#' + this.id).val(0);
+                }
+                var amt = $('#' + this.id).val();
+                $('#chk' + this.id.substr(6)).prop('checked', amt > 0 ? true : false);
+            }
+        });
+        $('#txtAdvCash,#txtAdvChq,#txtAdvChqCash,#txtAdvCred').on('blur', function () {
+            var amt = $('#' + this.id).val();
+            if (amt > 0) {
+                if ($('#chk' + this.id.substr(6)).prop('checked') == false) {
+                    $('#' + this.id).val(0);
+                    $('#' + this.id).attr('disabled', 'disabled');
+                } else {
+                    if (GetTotal() < 0) {
+                        $('#' + this.id).val(0);
+                        $('#chk' + this.id.substr(6)).prop('checked', false);
+                        $('#' + this.id).attr('disabled', 'disabled');
+                        alert('Total not Balance,Please check');
+                    }
+                }
+                return;
+            }
+            $('#' + this.id).attr('disabled', 'disabled');
+            $('#chk' + this.id.substr(6)).prop('checked', false);
         });
         $('#chkApprove').on('click',function () {
             $('#txtApproveBy').val(this.checked ? user : '');
@@ -484,8 +548,87 @@ End Code
             ReadAdvDetail(d);
         });
     }
+    function PrintData() {
+        window.open(path + 'Adv/FormAdv?branch=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val());
+    }
+    function SaveHeader() {
+        if (hdr != undefined) {
+            var obj = GetDataHeader(hdr);
+            var jsonString = JSON.stringify({ data: obj });
+            //alert(jsonString);
+            $.ajax({
+                url: "@Url.Action("SaveAdvanceHeader", "Adv")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonString,
+                success: function (response) {                
+                    alert(response.result.msg);
+                    if (response.result.data !== null) {
+                        $('#txtAdvNo').val(response.result.data);
+                        ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
+                    }
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+            return;
+        }
+        alert('No data to save');
+    }
+    function GetDataHeader() {
+        var dt = {
+            BranchCode : $('#txtBranchCode').val(),
+            AdvNo : $('#txtAdvNo').val(),
+            AdvDate : CDateTH($('#txtAdvDate').val()),
+            EmpCode : $('#txtAdvBy').val(),
+            AdvBy : $('#txtReqBy').val(),
+            CustCode : $('#txtCustCode').val(),
+            CustBranch : $('#txtCustBranch').val(),
+            Doc50Tavi : $('#txtDoc50Tavi').val(),
+            PaymentNo : $('#txtPaymentNo').val(),
+            TRemark : $('#txtTRemark').val(),
+
+            CancelProve : $('#txtCancelProve').val(),
+            CancelReson : $('#txtCancelReson').val(),
+            CancelDate : CDateTH($('#txtCancelDate').val()),
+            CancelTime : CTime($('#txtCancelTime').val()),
+
+            PaymentBy : $('#txtPaymentBy').val(),
+            PaymentDate : CDateTH($('#txtPaymentDate').val()),
+            PaymentTime : CTime($('#txtPaymentTime').val()),
+            PaymentRef : $('#txtPaymentRef').val(),
+
+            ApproveBy : $('#txtApproveBy').val(),
+            ApproveDate : CDateTH($('#txtApproveDate').val()),
+            ApproveTime : CTime($('#txtApproveTime').val()),
+
+            AdvCash : CNum($('#txtAdvCash').val()),
+            AdvChq : CNum($('#txtAdvChq').val()),
+            AdvChqCash : CNum($('#txtAdvChqCash').val()),
+            AdvCred : CNum($('#txtAdvCred').val()),
+
+            TotalAdvance : CNum($('#txtAdvAmount').val()),
+            TotalVAT : CNum($('#txtVatAmount').val()),
+            Total50Tavi : CNum($('#txtWhtAmount').val()),
+
+            JobType : $('#cboJobType').val(),
+            ShipBy : $('#cboShipBy').val(),
+            AdvType : $('#cboAdvType').val(),
+            DocStatus: $('#cboDocStatus').val(),
+
+            JNo: null,
+            InvNo: null,
+            VATRate: 0,
+            PayChqTo: null,
+            PayChqDate: ''
+        };
+
+        return dt;
+    }
     function ReadAdvHeader(dt) {
         if (dt != undefined) {
+            ClearHeader();
             hdr = dt;
             $('#txtBranchCode').val(dt.BranchCode);
             $('#txtAdvNo').val(dt.AdvNo);
@@ -512,15 +655,15 @@ End Code
             $('#txtApproveDate').val(CDateEN(dt.ApproveDate));
             $('#txtApproveTime').val(ShowTime(dt.ApproveTime));
 
-            $('#txtAdvCash').val(dt.AdvCash);
-            $('#txtAdvChq').val(dt.AdvChq);
-            $('#txtAdvChqCash').val(dt.AdvChqCash);
-            $('#txtAdvCred').val(dt.AdvCred);
+            $('#txtAdvCash').val(CDbl(dt.AdvCash,2));
+            $('#txtAdvChq').val(CDbl(dt.AdvChq, 2));
+            $('#txtAdvChqCash').val(CDbl(dt.AdvChqCash, 2));
+            $('#txtAdvCred').val(CDbl(dt.AdvCred, 2));
 
-            $('#txtAdvAmount').val(dt.TotalAdvance);
-            $('#txtVatAmount').val(dt.TotalVAT);
-            $('#txtWhtAmount').val(dt.Total50Tavi);
-            $('#txtTotalAmount').val(dt.AdvCash+dt.AdvChq+dt.AdvChqCash+dt.AdvCred);
+            $('#txtAdvAmount').val(CDbl(dt.TotalAdvance, 2));
+            $('#txtVatAmount').val(CDbl(dt.TotalVAT, 2));
+            $('#txtWhtAmount').val(CDbl(dt.Total50Tavi, 2));
+            $('#txtTotalAmount').val(CDbl((dt.TotalAdvance+dt.TotalVAT-dt.Total50Tavi),2));
 
             $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
             $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
@@ -542,14 +685,16 @@ End Code
 
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
-        } else {
-            ClearHeader();
-        }
+            $('#btnSave').removeAttr('disabled');
+            $('#btnPrint').removeAttr('disabled');
+            return;
+        } 
+        ClearHeader();
     }
     function AddHeader() {
         $('#txtAdvNo').val('');
         $.get(path + 'adv/getnewadvanceheader?branchcode=' + $('#txtBranchCode').val() , function (r) {
-            var h = r.adv.header[0];
+            var h = r.adv.header;
             ReadAdvHeader(h);
             var d = r.adv.detail;
             ReadAdvDetail(d);
@@ -560,10 +705,22 @@ End Code
         $.get(path + 'adv/getnewadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
             var d = r.adv.detail[0];
             LoadDetail(d);
+            $('#frmDetail').modal('show');
+            $('#txtSICode').focus();
         });
     }
+    function DeleteDetail() {
+        if (dtl != undefined) {
+            $.get(path + 'adv/deladvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val() + '&itemno=' + dtl.ItemNo, function (r) {
+                alert(r.adv.result);
+                ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
+            });
+        } else {
+            alert('No data to delete');
+        }
+    }
     function ClearHeader() {
-        hdr = [];
+        hdr = {};
         $('#txtAdvDate').val('');
         $('#txtAdvBy').val('');
         $('#txtReqBy').val('');
@@ -616,7 +773,42 @@ End Code
         ShowUser(path, '', '#txtReqName');
 
         ShowCustomer(path, '', $('#txtCustBranch').val(), '#txtCustName');
+        $('#btnSave').removeAttr('disabled');
+        $('#btnPrint').attr('disabled', 'disabled');
+
+        $('#txtAdvCash').attr('disabled', 'disabled');
+        $('#txtAdvChq').attr('disabled', 'disabled');
+        $('#txtAdvChqCash').attr('disabled', 'disabled');
+        $('#txtAdvCred').attr('disabled', 'disabled');
     }
+    function SaveDetail() {
+        if (hdr == undefined) {
+            alert('Please add header before');
+            return;
+        }
+        if (hdr.AdvNo == '') {
+            alert('Please save header first');
+            return;
+        }
+        if (dtl != undefined) {
+            var obj = GetDataDetail();
+            var jsonString = JSON.stringify({ data: obj });
+            //alert(jsonString);
+            $.ajax({
+                url: "@Url.Action("SaveAdvanceDetail", "Adv")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonString,
+                success: function (response) {                
+                    alert(response.result.msg);
+                    ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
+                }
+            });
+            return;
+        }
+        alert('No data to save');
+    }
+
     function ReadAdvDetail(dt) {
         $('#tbDetail').DataTable({
             data:dt,
@@ -646,15 +838,42 @@ End Code
         });
         $('#tbDetail tbody').on('click', 'tr', function () {
             $('#tbDetail tbody > tr').removeClass('selected');
-            $(this).addClass('selected');
+            $(this).addClass('selected');            
+            var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
+            LoadDetail(data); //callback function from caller 
         });
         $('#tbDetail tbody').on('click', 'button', function () {
-            var dt = GetSelect('#tbDetail', this); //read current row selected
-            LoadDetail(dt); //callback function from caller 
+            $('#frmDetail').modal('show');
+            $('#txtSICode').focus();
         });
+    }
+    function GetDataDetail() {
+        var dt = {
+            BranchCode : $('#txtBranchCode').val(),
+            AdvNo : $('#txtAdvNo').val(),
+            ItemNo : $('#txtItemNo').val(),
+            SICode : $('#txtSICode').val(),
+            STCode : $('#cboSTCode').val(),
+            ForJNo : $('#txtForJNo').val(),
+            TRemark : $('#txtRemark').val(),
+            Doc50Tavi : $('#txt50Tavi').val(),
+            PayChqTo : $('#txtPayChqTo').val(),
+            SDescription : $('#txtSDescription').val(),
+            IsChargeVAT : $('#txtVatType').val(),
+            VATRate: $('#txtVATRate').val(),
+            Is50Tavi: ($('#txtWHTRate').val() >0? 1:0),
+            Rate50Tavi : $('#txtWHTRate').val(),
+            AdvAmount : $('#txtAMT').val(),
+            ChargeVAT : $('#txtVAT').val(),
+            Charge50Tavi : $('#txtWHT').val(),
+            AdvNet: $('#txtNET').val(),
+            IsDuplicate: ($('#chkDuplicate').prop('checked')==true? 1:0)
+        };
+        return dt;
     }
     function LoadDetail(dt) {        
         if (dt != undefined) {
+            ClearDetail();
             dtl = dt;
             $('#txtItemNo').val(dt.ItemNo);
             $('#txtSICode').val(dt.SICode);
@@ -674,18 +893,17 @@ End Code
             $('#txtWHT').val(dt.Charge50Tavi);
             $('#txtNET').val(dt.AdvNet);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
-        } else {
-            ClearDetail();
+            return;
         }
-        $('#frmDetail').modal('show');
-        $('#txtSICode').focus();
+        ClearDetail();
     }
     function ClearDetail() {
-        dtl = [];
-        $('#txtItemNo').val('');
+        dtl = {};
+        $('#txtItemNo').val('0');
         $('#txtSICode').val('');
         $('#cboSTCode').val('STD');
-        $('#txtForJNo').val('');
+        if (isjobmode == false)
+            $('#txtForJNo').val('');
         $('#txtRemark').val('');
         $('#txt50Tavi').val('');
         $('#txtPayChqTo').val('');
@@ -812,6 +1030,17 @@ End Code
         $('#txtForJNo').val(dt.JNo);
         $('#txtInvNo').val(dt.InvNo);
         $('#txtForJNo').focus();
+    }
+    function SumTotal() {
+        var cash = CDbl($('#txtAdvCash').val(),2);
+        var chq = CDbl($('#txtAdvChq').val(),2);
+        var chqcash = CDbl($('#txtAdvChqCash').val(),2);
+        var cred = CDbl($('#txtAdvCred').val(),2);
+        return CDbl(Number(cash) + Number(chq) + Number(chqcash) + Number(cred),2);
+    }
+    function GetTotal() {
+        var total = SumTotal();
+        return CDbl(CNum($('#txtTotalAmount').val()) - total,2);
     }
     function CalTotal() {
         var amt = CDbl($('#txtAMT').val(),2);

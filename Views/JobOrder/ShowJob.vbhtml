@@ -590,7 +590,6 @@ End Code
         if (br != "" && jno != "") {
             $('#txtBranchCode').val(br);
             ShowBranch(path, br, '#txtBranchName');
-            $('#txtJNo').val(jno);
             ShowJob(br, jno);
         }
         SetEnterToTab();
@@ -866,11 +865,12 @@ End Code
     }
     //This section for Load Data And Print data
     function ShowJob(Branch, Job) {
-        $.get(path + 'joborder/getjobsql?branchcode=' + Branch + '&jno=' + Job)
+        $.get(path + 'joborder/getjobsql?branch=' + Branch + '&jno=' + Job)
             .done(function (r) {
                 if (r.job.data.length > 0) {
                     var dr = r.job.data[0];
                     rec = dr;
+                    $('#txtJNo').val(dr.JNo);
                     $('#txtCustCode').val(dr.CustCode);
                     $('#txtCustBranch').val(dr.CustBranch);
                     ShowCustomerFull(path,dr.CustCode, dr.CustBranch, '#txtCustName', '#txtTAddress', '#txtEAddress', '#txtPhoneFax');

@@ -35,7 +35,8 @@ function GetTime() {
 }
 function getQueryString(name, url) {
     if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, '\\$&');
+    url = url.toLowerCase();
+    name = name.replace(/[\[\]]/g, '\\$&').toLowerCase();
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
         results = regex.exec(url);
     if (!results) return '';
@@ -86,12 +87,12 @@ function CDbl(data, dec) {
     try {
         return parseFloat(CNum(data)).toFixed(dec);
     }
-    catch {
+    catch(e) {
         return CNum(data);
     }
 }
 function CNum(data) {
-    if (data.toString().length==0) {
+    if ((''+data).length==0) {
         return 0;
     } else {
         return Number(data);
