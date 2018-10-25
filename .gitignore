@@ -256,3 +256,5 @@ obj/Debug/DesignTimeResolveAssemblyReferences.cache
 My Project/PublishProfiles/Tawanasp.com.pubxml.user
 obj/Release/JobWebApi.dll
 obj/Release/JobWebApi.pdb
+.vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
+.vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal

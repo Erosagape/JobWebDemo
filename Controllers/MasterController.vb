@@ -212,6 +212,60 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function SetCompany(<FromBody()> data As CCompany) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    data.setConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE CustCode='{0}' And Branch='{1}' ", data.CustCode, data.Branch))
+                    Dim json = "{""result"":{""data"":""" & data.CustCode & """,""msg"":""" & msg & """}}"
+                    'Dim msg = JsonConvert.SerializeObject(data)
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, textContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, textContent)
+            End Try
+        End Function
+        Function SetVender(<FromBody()> data As CVender) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE VenCode='{0}' ", data.VenCode))
+                    Dim json = "{""result"":{""data"":""" & data.VenCode & """,""msg"":""" & msg & """}}"
+                    'Dim msg = JsonConvert.SerializeObject(data)
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, textContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, textContent)
+            End Try
+        End Function
+        Function SetUser(<FromBody()> data As CUser) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE UserID='{0}' ", data.UserID))
+                    Dim json = "{""result"":{""data"":""" & data.UserID & """,""msg"":""" & msg & """}}"
+                    'Dim msg = JsonConvert.SerializeObject(data)
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, textContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, textContent)
+            End Try
+        End Function
         Function SetServiceCode(<FromBody()> data As CServiceCode) As ActionResult
             Try
                 If Not IsNothing(data) Then

@@ -5,7 +5,9 @@ Public Class CUser
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
-
+    Public Sub SetConnect(pConnStr As String)
+        m_ConnStr = pConnStr
+    End Sub
     Private m_UserID As String
     Public Property UserID As String
         Get

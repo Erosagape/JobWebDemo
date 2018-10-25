@@ -5,7 +5,9 @@ Public Class CVender
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
-
+    Public Sub SetConnect(pConnStr As String)
+        m_ConnStr = pConnStr
+    End Sub
     Private m_VenCode As String
     Public Property VenCode As String
         Get
