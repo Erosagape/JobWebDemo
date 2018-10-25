@@ -306,6 +306,37 @@ End Code
                     </div>
                 </div>
             </div>
+            <div id="frmHeader" class="modal modal-lg fade">
+                <div class="modal-dialog-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"></button>
+                            <h4 class="modal-title"><label id="lblHeader">Advance List</label></h4>
+                        </div>
+                        <div class="modal-body">
+                            <table id="tbHeader" class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>AdvNo</th>
+                                        <th>AdvDate</th>
+                                        <th>CustCode</th>
+                                        <th>ReqBy</th>
+                                        <th>Job</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                        <th>WTDoc</th>
+                                        <th>APDoc</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="dvLOVs"></div>
@@ -376,7 +407,7 @@ End Code
         });
         $('#txtAdvNo').focus();
     }
-    function SetEvents() {
+    function SetEvents() {        
         $('#frmDetail').on('shown.bs.modal', function () {
             $('#txtSICode').focus();
         });
@@ -938,9 +969,43 @@ End Code
         });
         return c[0];
     }
+    function SetGridAdv() {
+        $.get(path + 'adv/getadvance?branchcode=' + $('#txtBranchCode').val(), function (r) {
+            var h = r.adv.header;
+            $('#tbHeader').DataTable({
+                data: h,
+                selected: true, //ให้สามารถเลือกแถวได้
+                columns: [ //กำหนด property ของ header column
+                    { data: "AdvNo", title: "Advance No" },
+                    { data: "AdvDate", title: "Date" },
+                    { data: "CustCode", title: "Customer" },
+                    { data: "EmpCode", title: "Request By" },
+                    { data: "JNo", title: "Job Number" },
+                    { data: "DocStatus", title: "Status" },
+                    { data: "TotalAdvance", title: "Total" },
+                    { data: "Doc50Tavi", title: "W/T No" },
+                    { data: "PaymentNo", title: "A/P No" },
+                    { data: "TRemark", title: "Remark" },
+                ],
+                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+            });
+            $('#tbHeader tbody').on('click', 'tr', function () {
+                $('#tbHeader tbody > tr').removeClass('selected');
+                $(this).addClass('selected');
+                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                ShowData(data.BranchCode,data.AdvNo); //callback function from caller 
+            });
+            $('#frmHeader').on('shown.bs.modal', function () {
+                $('#tbHeader_filter input').focus();
+            });
+            $('#frmHeader').modal('show');
+        });
+
+    }
     function SearchData(type) {
         switch (type) {
             case 'advance':
+                SetGridAdv();
                 break;
             case 'branch':
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
