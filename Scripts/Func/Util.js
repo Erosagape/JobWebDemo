@@ -53,7 +53,11 @@ function CDateTH(sqlDateString) {
         if (year < '2000') {
             return '';
         }
-        var date = Number(year)+543 + "-" + month + "-" + day;
+        var yy = Number(year);
+        if (yy < 2500) {
+            yy = Number(year) + 543;
+        }
+        var date = yy + "-" + month + "-" + day;
         return date;
     }
     catch (e) {
@@ -350,6 +354,14 @@ function DummyAdvanceData() {
     return data;
 }
 //public functions
+function CallBackQueryJob(p, br, jno, ev) {
+    $.get(p + 'joborder/getjobsql?Branch=' + br + '&JNo' + jno).done(function (r) {
+        var dr = r.job.data;
+        if (dr.length > 0) {
+            ev(dr);
+        }
+    });
+}
 function CallOpenJob(p, br, jno) {
     window.open(p + 'joborder/showjob?BranchCode=' + br + '&JNo=' + jno);
 }

@@ -203,7 +203,7 @@ End Code
                     </div>
                 </div>
                 <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
-                <button id="btnSave" class="btn btn-success" disabled onclick="SaveHeader()">Save Document</button>
+                <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Document</button>
                 <button id="btnPrint" class="btn btn-info" onclick="PrintData()" disabled>Print Data</button>
             </div>
             <div id="tabDetail" class="tab-pane fade">
@@ -228,8 +228,8 @@ End Code
                 </div>                
                 <div class="row">
                     <div class="col-sm-9">
-                        <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">Add</button>
-                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                        <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
+                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -348,6 +348,7 @@ End Code
     var serv = []; //must be array of object
     var hdr = {}; //simple object
     var dtl = {}; //simple object
+    var job = '';
     var isjobmode = false;
     $(document).ready(function () {       
         SetLOVs();
@@ -364,9 +365,9 @@ End Code
         var jno = getQueryString('JNo');
 
         //Combos
-        loadConfig('#cboJobType', 'JOB_TYPE', path, jt == null ? "01" : jt);
-        loadConfig('#cboShipBy', 'SHIP_BY', path, sb == null ? "01" : sb);
-        loadConfig('#cboAdvType', 'ADV_TYPE', path, '');
+        loadConfig('#cboJobType', 'JOB_TYPE', path, jt == null ? "01" : CCode(jt));
+        loadConfig('#cboShipBy', 'SHIP_BY', path, sb == null ? "01" : CCode(sb));
+        loadConfig('#cboAdvType', 'ADV_TYPE', path, '01');
         loadConfig('#cboDocStatus', 'ADV_STATUS', path, '');
         LoadService();
         $('#txtBranchCode').val('00');
@@ -374,14 +375,32 @@ End Code
             $('#txtBranchCode').val(br);
         }
         ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName')
+        if (jno.length > 0) {
+            job = jno;
+            isjobmode = true;
+            CallBackQueryJob(path, br, jno, LoadJob);
+        }
         if (ano.length > 0) {
             $('#txtAdvNo').val(ano);
             ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
         }
-        if (jno.length > 0) {
-            $('#txtForJNo').val(jno);
-            $('#txtForJNo').attr('disabled','disabled');
-            isjobmode = true;
+    }
+    function LoadJob(dt) {
+        if (dt.length > 0) {
+            var dr = dt[0];
+            $('#txtForJNo').val(dr.JNo);
+            $('#txtCustCode').val(dr.CustCode);
+            $('#txtCustBranch').val(dr.CustBranch);
+            $('#txtInvNo').val(dr.InvNo);
+            ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
+            
+            $('#txtCustCode').attr('disabled', 'disabled');
+            $('#txtCustBranch').attr('disabled', 'disabled');
+            $('#btnBrowseCust').attr('disabled', 'disabled');
+            $('#txtForJNo').attr('disabled', 'disabled');
+            $('#btnBrowseJ').attr('disabled', 'disabled');
+            $('#cboJobType').attr('disabled', 'disabled');
+            $('#cboShipBy').attr('disabled', 'disabled');
         }
     }
     function SetEnterToTab() {
@@ -493,6 +512,7 @@ End Code
         });
         $('#txtAdvNo').keydown(function (event) {
             if (event.which == 13) {
+                isjobmode = false;
                 ShowData($('#txtBranchCode').val(),$('#txtAdvNo').val());
             }
         });
@@ -666,8 +686,12 @@ End Code
             $('#txtAdvDate').val(CDateEN(dt.AdvDate));
             $('#txtAdvBy').val(dt.EmpCode);
             $('#txtReqBy').val(dt.AdvBy);
-            $('#txtCustCode').val(dt.CustCode);
-            $('#txtCustBranch').val(dt.CustBranch);
+            if (isjobmode == false) {
+                $('#txtCustCode').val(dt.CustCode);
+                $('#txtCustBranch').val(dt.CustBranch);
+                $('#cboJobType').val(CCode(dt.JobType));
+                $('#cboShipBy').val(CCode(dt.ShipBy));
+            }
             $('#txtDoc50Tavi').val(dt.Doc50Tavi);
             $('#txtPaymentNo').val(dt.PaymentNo);
             $('#txtTRemark').val(dt.TRemark);
@@ -706,8 +730,7 @@ End Code
             $('#chkCred').prop('checked', dt.AdvCred > 0 ? true : false);
 
             //Combos
-            $('#cboJobType').val(CCode(dt.JobType));
-            $('#cboShipBy').val(CCode(dt.ShipBy));
+
             $('#cboAdvType').val(CCode(dt.AdvType));
             $('#cboDocStatus').val(CCode(dt.DocStatus));
 
@@ -718,6 +741,8 @@ End Code
             ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             $('#btnSave').removeAttr('disabled');
             $('#btnPrint').removeAttr('disabled');
+            $('#btnAdd').removeAttr('disabled');
+            $('#btnDel').removeAttr('disabled');
             return;
         } 
         ClearHeader();
@@ -755,8 +780,12 @@ End Code
         $('#txtAdvDate').val('');
         $('#txtAdvBy').val('');
         $('#txtReqBy').val('');
-        $('#txtCustCode').val('');
-        $('#txtCustBranch').val('');
+        if (isjobmode == false) {
+            $('#txtCustCode').val('');
+            $('#txtCustBranch').val('');
+            $('#cboJobType').val('');
+            $('#cboShipBy').val('');
+        }
         $('#txtDoc50Tavi').val('');
         $('#txtPaymentNo').val('');
         $('#txtTRemark').val('');
@@ -795,8 +824,7 @@ End Code
         $('#chkCred').prop('checked', false);
 
         //Combos
-        $('#cboJobType').val('');
-        $('#cboShipBy').val('');
+
         $('#cboAdvType').val('');
         $('#cboDocStatus').val('');
 
@@ -811,6 +839,8 @@ End Code
         $('#txtAdvChq').attr('disabled', 'disabled');
         $('#txtAdvChqCash').attr('disabled', 'disabled');
         $('#txtAdvCred').attr('disabled', 'disabled');
+        $('#btnAdd').attr('disabled', 'disabled');
+        $('#btnDel').attr('disabled', 'disabled');
     }
     function SaveDetail() {
         if (hdr == undefined) {
@@ -911,7 +941,8 @@ End Code
             $('#cboSTCode').val(dt.STCode);
             var r = FindService($('#txtSICode').val())
             ReadService(r);
-            $('#txtForJNo').val(dt.ForJNo);
+            if (isjobmode == false)
+                $('#txtForJNo').val(dt.ForJNo);
             $('#txtRemark').val(dt.TRemark);
             $('#txt50Tavi').val(dt.Doc50Tavi);
             $('#txtPayChqTo').val(dt.PayChqTo);
@@ -933,8 +964,10 @@ End Code
         $('#txtItemNo').val('0');
         $('#txtSICode').val('');
         $('#cboSTCode').val('STD');
-        if (isjobmode == false)
+        if (isjobmode == false) {
             $('#txtForJNo').val('');
+            $('#txtInvNo').val('');
+        }            
         $('#txtRemark').val('');
         $('#txt50Tavi').val('');
         $('#txtPayChqTo').val('');
@@ -970,8 +1003,12 @@ End Code
         return c[0];
     }
     function SetGridAdv() {
-        $.get(path + 'adv/getadvance?branchcode=' + $('#txtBranchCode').val(), function (r) {
-            var h = r.adv.header;
+        var w = '';
+        if (job.length > 0) {
+            w = '&jobno=' + job;
+        }
+        $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
+            var h = r[0].Table;
             $('#tbHeader').DataTable({
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
@@ -980,7 +1017,7 @@ End Code
                     { data: "AdvDate", title: "Date" },
                     { data: "CustCode", title: "Customer" },
                     { data: "EmpCode", title: "Request By" },
-                    { data: "JNo", title: "Job Number" },
+                    { data: "JobNo", title: "Job Number" },
                     { data: "DocStatus", title: "Status" },
                     { data: "TotalAdvance", title: "Total" },
                     { data: "Doc50Tavi", title: "W/T No" },

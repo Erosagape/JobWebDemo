@@ -3,66 +3,40 @@
 End Code
 <div class="panel-body">
     <div class="row">
-        <div class="col-sm-12">
-            <div class="panel panel-primary">
-                <div class="panel panel-body">
-                    <div class="col-sm-2">
-                        <label id="lblBranch">Branch</label>
-                        <select id="cboBranch" class="form-control dropdown"></select>
-                    </div>
-                    <div class="col-sm-2">
-                        <label id="lblJObType">Job Type</label>
-                        <select id="cboJobType" class="form-control dropdown"></select>
-                    </div>
-                    <div class="col-sm-2">
-                        <label id="lblShipBy">Ship By</label>
-                        <select id="cboShipBy" class="form-control dropdown"></select>
-                    </div>
-                    <div class="col-sm-2">
-                        <label id="lblYear">Year</label>
-                        <select id="cboYear" class="form-control dropdown"></select>
-                    </div>
-                    <div class="col-sm-3">
-                        <label id="lblStatus">Status</label>
-                        <select id="cboStatus" class="form-control dropdown"></select>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-warning" id="btnRefresh" onclick="getJobdata()">แสดงข้อมูล</button>
-                        <button class="btn btn-danger" id="btnGenJob" onclick="CreateNewJob()">สร้างงานใหม่</button>
-                    </div>
-                </div>
+        <div class="col-sm-2">
+            <label for="cboBranch" id="lblBranch">Branch</label>
+            <select id="cboBranch" class="form-control dropdown"></select>
+        </div>
+        <div class="col-sm-3">
+            <label for="cboStatus" id="lblStatus">Status</label>
+            <select id="cboStatus" class="form-control dropdown"></select>
+        </div>
+        <div class="col-sm-2">
+            <label for="cboJobType" id="lblJObType">Job Type</label>
+            <select id="cboJobType" class="form-control dropdown"></select>
+        </div>
+        <div class="col-sm-2">
+            <label for="cboShipBy" id="lblShipBy">Ship By</label>
+            <select id="cboShipBy" class="form-control dropdown"></select>
+        </div>
+        <div class="col-sm-1">
+            <label for="cboYear" id="lblYear">Year</label>
+            <select id="cboYear" class="form-control dropdown"></select>
+        </div>
+        <div class="col-sm-1">
+            <label for="cboMonth" id="lblMonth">Month</label>
+            <select id="cboMonth" class="form-control dropdown"></select>
+        </div>
+        <div class="col-sm-1">
+            <div class="btn-group-vertical">
+                <button class="btn btn-warning" id="btnRefresh" onclick="getJobdata()">Show</button>
+                <button class="btn btn-danger" id="btnGenJob" onclick="CreateNewJob()">New</button>
             </div>
-
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-primary">
-                <div class="panel panel-heading">
-                    <table>
-                        <tr>
-                            <td>
-                                Enter Job >>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="txtJobNo" />
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
-                <div class="panel panel-body">
-                    <button id="btnJobSlip" class="btn btn-info" onclick="PrintJob()">Print Slip</button>
-                    <button class="btn btn-success" id="btnInfoJob" onclick="OpenJob()">View JOB</button>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <table id="tblJob" class="table">
+            <table id="tblJob" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>JobNo</th>
@@ -73,6 +47,19 @@ End Code
                     </tr>
                 </thead>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="txtJobNo" id="lblJob">Enter Job >></label>
+            <input type="text" id="txtJobNo" class="form-control" />
+        </div>
+        <div class="col-sm-2">
+            <br />
+            <div class="btn-group">
+                <button id="btnJobSlip" class="btn btn-success" onclick="OpenJob()">View</button>
+                <button class="btn btn-info" id="btnPrnJob" onclick="PrintJob()">Print</button>
+            </div>
         </div>
     </div>
 </div>
@@ -100,6 +87,7 @@ End Code
         loadConfig('#cboShipBy', 'SHIP_BY',path,'');
         loadConfig('#cboStatus', 'JOB_STATUS',path,'');
         loadYear(path);
+        loadMonth('#cboMonth');
     }
     function getJobdata() {
         var strParam = GetCliteria();
@@ -125,9 +113,37 @@ End Code
             var data = $('#tblJob').DataTable().row(this).data();
             $('#txtJobNo').val(data.JNo);
         });
+        $('#tblJob tbody').on('dblclick', 'tr', function () {
+            OpenJob();
+        });
     }
     function GetCliteria() {
-        return '?JType=' + $('#cboJobType').val() + '&SBy=' + $('#cboShipBy').val() + '&Branch=' + $('#cboBranch').val() + '&Year=' + $('#cboYear').val() + '&Status=' + $('#cboStatus').val();
+        var str = '';
+        if ($('#cboJobType').val() > '') {
+            if (str.length > 0) str += '&';
+            str += 'JType=' + $('#cboJobType').val();
+        }
+        if ($('#cboShipBy').val() > '') {
+            if (str.length > 0) str += '&';
+            str += 'SBy=' + $('#cboShipBy').val();
+        }
+        if ($('#cboBranch').val() >= '00') {
+            if (str.length > 0) str += '&';
+            str += 'Branch=' + $('#cboBranch').val();
+        }
+        if ($('#cboYear').val() > '') {
+            if (str.length > 0) str += '&';
+            str += 'Year=' + $('#cboYear').val();
+        }
+        if ($('#cboMonth').val() > '') {
+            if (str.length > 0) str += '&';
+            str += 'Month=' + $('#cboMonth').val();
+        }
+        if ($('#cboStatus').val() > '') {
+            if (str.length > 0) str += '&';
+            str += 'Status=' + $('#cboStatus').val();
+        }
+        return '?' + str;
     }
     function OpenJob() {
         window.open(path +'joborder/showjob?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val());

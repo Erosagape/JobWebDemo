@@ -302,13 +302,46 @@ End Code
         return strParam;
     }
     function CreateJob() {
-        var strParam = path + 'JobOrder/GetNewJob?Prefix=JIDE';
-        strParam += '&Branch=' + $('#txtBranchCode').val();
+        if ($('#txtBranchCode').val() === '') {
+            alert('Please select branch before create job');
+            $('#txtBranchCode').focus();
+            return;
+        }
+        if ($('#cboJobType').val() === '') {
+            alert('Please select job type before create job');
+            $('#cboJobType').focus();
+            return;
+        }
+        if ($('#cboShipBy').val() === '') {
+            alert('Please select ship by before create job');
+            $('#cboShipBy').focus();
+            return;
+        }
+        if ($('#txtCSCode').val() === '') {
+            alert('Please select CS before create job');
+            $('#txtCSCode').focus();
+            return;
+        }
+        if ($('#txtCustCode').val() === '') {
+            alert('Please select customer before create job');
+            $('#txtCustCode').focus();
+            return;
+        }
+        if ($('#txtCustInv').val() === '') {
+            alert('Please select customer invoice before create job');
+            $('#txtCustInv').focus();
+            return;
+        }
+        //if pass every checked
+        var strParam = path + 'JobOrder/GetNewJob?';
+        strParam += 'Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0,2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
         if ($('#txtCopyFromJob').val() !== '') {
             strParam += '&CopyFrom=' + $('#txtCopyFromJob').val();
         }
+        strParam += '&Cust=' + $('#txtCustCode').val() + '|' + $('#txtCustBranch').val();
+        strParam += '&Inv=' + $('#txtCustInv').val();
         $.get(strParam)
             .done(function (r) {
                 if (r.length == 0) {

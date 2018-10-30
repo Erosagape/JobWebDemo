@@ -452,36 +452,7 @@ End Code
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                2018-01-01
-                            </td>
-                            <td>
-                                ADV
-                            </td>
-                            <td>
-                                ADV-1801-0001
-                            </td>
-                            <td>
-                                <button class="btn btn-primary">View</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2018-05-01
-                            </td>
-                            <td>
-                                CLR
-                            </td>
-                            <td>
-                                CLR-1805-0001
-                            </td>
-                            <td>
-                                <button class="btn btn-primary">View</button>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
             <div id="tabremark" class="tab-pane fade">
@@ -499,22 +470,6 @@ End Code
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        2018-01-01
-                                    </td>
-                                    <td>
-                                        Create Job
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        2018-05-01
-                                    </td>
-                                    <td>
-                                        Close Job
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -526,7 +481,7 @@ End Code
                         <input type="button" class="btn btn-primary" id="btnLinkOption" value="Addition Info" />
                         <input type="button" class="btn btn-primary" id="btnLinkExp" value="Minimum Expense" />
                         <input type="button" class="btn btn-primary" id="btnLinkTAdv" value="Credit Advance" />
-                        <input type="button" class="btn btn-primary" id="btnLinkAdv" value="Advance Request" />
+                        <input type="button" class="btn btn-primary" id="btnLinkAdv" value="Advance Request" onclick="OpenAdvance()" />
                         <input type="button" class="btn btn-primary" id="btnLinkClr" value="Advance Clearing" />
                         <input type="button" class="btn btn-primary" id="btnLinkCost" value="Cost & Profit" />
                     </div>
@@ -980,6 +935,9 @@ End Code
     }
     function PrintData() {
         window.open(path + 'JobOrder/FormJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+    function OpenAdvance() {
+        window.open(path + 'Adv/Index?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val() + '&JType=' + rec.JobType + '&SBy=' + rec.ShipBy, '', '');
     }
     function GetDataSave(dr) {
         dr.CustCode = $('#txtCustCode').val();

@@ -148,6 +148,34 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetAdvanceGrid() As ActionResult
+            Try
+                Dim Branch As String = ""
+                Dim JobNo As String = ""
+                If Not IsNothing(Request.QueryString("BranchCode")) Then
+                    Branch = Request.QueryString("BranchCode")
+                End If
+                Dim tSqlW As String = String.Format(" WHERE a.BranchCode='{0}'", Branch)
+                If Not IsNothing(Request.QueryString("JobNo")) Then
+                    tSqlW &= " AND a.AdvNo IN(SELECT AdvNo FROM Job_AdvDetail WHERE BranchCode='" & Branch & "' And ForJNo='" & Request.QueryString("JobNo") & "')"
+                End If
+                Dim sql As String = "
+select a.*,
+(SELECT STUFF((
+SELECT DISTINCT ',' + ForJNo
+FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
+AND AdvNo=a.AdvNo AND ForJNo<>'' 
+FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
+)) as JobNo
+FROM Job_AdvHeader as a
+"
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
+                Dim json As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetAdvance() As ActionResult
             Try
                 Dim oAdvH As New CAdvHeader(jobWebConn)

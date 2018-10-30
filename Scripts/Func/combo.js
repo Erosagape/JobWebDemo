@@ -14,6 +14,8 @@ function loadBranch(path) {
 }
 function loadConfig(e, code, path, def) {
     $(e).empty();
+    $(e).append($('<option>', { value: '' })
+        .text('ALL'));
     $.get(path +'Config/getConfig?Code=' + code).done(function (r) {
         var dr = r.config.data;
         if (dr.length > 0) {
@@ -25,8 +27,20 @@ function loadConfig(e, code, path, def) {
         }
     });
 }
+function loadMonth(e) {
+    $(e).empty();
+    $(e).append($('<option>', { value: '' })
+        .text('ALL'));
+    for (var i = 1; i <= 12; i++) {
+        $(e)
+            .append($('<option>', { value: i })
+                .text(i.toString()));
+    }
+}
 function loadYear(path) {
     $('#cboYear').empty();
+    $('#cboYear').append($('<option>', { value: '' })
+        .text('ALL'));
     $.get(path +'joborder/getjobyear').done(function (r) {
         var dr = r[0].Table;
         if (dr.length > 0) {
