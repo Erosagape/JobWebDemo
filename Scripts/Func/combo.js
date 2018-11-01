@@ -37,6 +37,13 @@ function loadMonth(e) {
                 .text(i.toString()));
     }
 }
+function loadLang(e) {
+    $(e).empty();
+    $(e).append($('<option>', { value: 'TH' })
+        .text('ไทย'));
+    $(e).append($('<option>', { value: 'EN' })
+        .text('English'));
+}
 function loadYear(path) {
     $('#cboYear').empty();
     $('#cboYear').append($('<option>', { value: '' })

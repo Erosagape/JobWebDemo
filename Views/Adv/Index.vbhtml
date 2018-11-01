@@ -378,7 +378,7 @@ End Code
         if (jno.length > 0) {
             job = jno;
             isjobmode = true;
-            CallBackQueryJob(path, br, jno, LoadJob);
+            CallBackQueryJob(path, $('#txtBranchCode').val(), jno, LoadJob);
         }
         if (ano.length > 0) {
             $('#txtAdvNo').val(ano);

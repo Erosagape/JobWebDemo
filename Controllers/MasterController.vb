@@ -23,7 +23,7 @@ Namespace Controllers
             Return GetView("ServiceCode")
         End Function
         Function Customers() As ActionResult
-            Return GetView("Customer")
+            Return GetView("Customers")
         End Function
         Function Users() As ActionResult
             Return GetView("Users")
@@ -109,6 +109,17 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetNewUser() As ActionResult
+            Try
+                Dim oData = New CUser(jobWebConn)
+                oData.AddNew()
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""user"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetCountry() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE CTYCODE<>'' "
@@ -186,6 +197,23 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function DelUser() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE UserID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND UserID Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""user"":{""result"":""Please Select Some User"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CUser(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""user"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetServiceCode() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE SICode<>'' "
@@ -248,7 +276,7 @@ Namespace Controllers
                 Return Content(json, textContent)
             End Try
         End Function
-        Function SetUser(<FromBody()> data As CUser) As ActionResult
+        Function SetUsers(<FromBody()> data As CUser) As ActionResult
             Try
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)

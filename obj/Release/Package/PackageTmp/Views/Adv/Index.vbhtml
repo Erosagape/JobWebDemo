@@ -378,12 +378,7 @@ End Code
         if (jno.length > 0) {
             job = jno;
             isjobmode = true;
-            $('#txtForJNo').val(jno);
-            $('#txtForJNo').attr('disabled', 'disabled');
-            $('#btnBrowseJ').attr('disabled', 'disabled');
-            $('#cboJobType').attr('disabled', 'disabled');
-            $('#cboShipBy').attr('disabled', 'disabled');
-            CallBackQueryJob(path, br, jno, LoadJob);
+            CallBackQueryJob(path, $('#txtBranchCode').val(), jno, LoadJob);
         }
         if (ano.length > 0) {
             $('#txtAdvNo').val(ano);
@@ -393,6 +388,7 @@ End Code
     function LoadJob(dt) {
         if (dt.length > 0) {
             var dr = dt[0];
+            $('#txtForJNo').val(dr.JNo);
             $('#txtCustCode').val(dr.CustCode);
             $('#txtCustBranch').val(dr.CustBranch);
             $('#txtInvNo').val(dr.InvNo);
@@ -401,6 +397,10 @@ End Code
             $('#txtCustCode').attr('disabled', 'disabled');
             $('#txtCustBranch').attr('disabled', 'disabled');
             $('#btnBrowseCust').attr('disabled', 'disabled');
+            $('#txtForJNo').attr('disabled', 'disabled');
+            $('#btnBrowseJ').attr('disabled', 'disabled');
+            $('#cboJobType').attr('disabled', 'disabled');
+            $('#cboShipBy').attr('disabled', 'disabled');
         }
     }
     function SetEnterToTab() {
@@ -512,6 +512,7 @@ End Code
         });
         $('#txtAdvNo').keydown(function (event) {
             if (event.which == 13) {
+                isjobmode = false;
                 ShowData($('#txtBranchCode').val(),$('#txtAdvNo').val());
             }
         });
@@ -1002,7 +1003,11 @@ End Code
         return c[0];
     }
     function SetGridAdv() {
-        $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + '&jobno='+ job, function (r) {
+        var w = '';
+        if (job.length > 0) {
+            w = '&jobno=' + job;
+        }
+        $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             var h = r[0].Table;
             $('#tbHeader').DataTable({
                 data: h,

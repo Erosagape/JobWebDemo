@@ -362,6 +362,15 @@ function CallBackQueryJob(p, br, jno, ev) {
         }
     });
 }
+function CallBackQueryUser(p, UserID, ev) {
+    $.get(p + 'Master/GetUser?Code=' + UserID)
+        .done(function (r) {
+            if (r.user.data.length > 0) {
+                var b = r.user.data[0];
+                ev(b);
+            }
+        });
+}
 function CallOpenJob(p, br, jno) {
     window.open(p + 'joborder/showjob?BranchCode=' + br + '&JNo=' + jno);
 }

@@ -5,7 +5,7 @@ Public Class CCompany
     Public Sub New()
 
     End Sub
-    Public Sub setConnect(pConnStr As String)
+    Public Sub SetConnect(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
     Public Sub New(pConnStr As String)

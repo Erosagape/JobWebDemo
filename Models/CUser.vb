@@ -8,6 +8,7 @@ Public Class CUser
     Public Sub SetConnect(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
+
     Private m_UserID As String
     Public Property UserID As String
         Get
@@ -233,8 +234,8 @@ Public Class CUser
             m_AlertPolicy = value
         End Set
     End Property
-    Public Function SaveData(pSQLWhere As String) As Boolean
-        Dim bComplete As Boolean = False
+    Public Function SaveData(pSQLWhere As String) As String
+        Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
@@ -272,15 +273,43 @@ Public Class CUser
                             dr("AlertPolicy") = Me.AlertPolicy
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            bComplete = True
+                            msg = String.Format("Save user {0} Complete", Me.UserID)
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                msg = ex.Message
             End Try
         End Using
-        Return bComplete
+        Return msg
     End Function
+    Public Sub AddNew()
+        m_UserID = ""
+        m_UPassword = ""
+        m_TName = ""
+        m_EName = ""
+        m_TPosition = ""
+        m_LoginDate = DateTime.MinValue
+        m_LoginTime = DateTime.MinValue
+        m_LogoutDate = DateTime.MinValue
+        m_LogoutTime = DateTime.MinValue
+        m_UPosition = 0
+        m_MaxRateDisc = 0
+        m_MaxAdvance = 0
+        m_JobAuthorize = ""
+        m_EMail = ""
+        m_MobilePhone = ""
+        m_IsAlertByAgent = 0
+        m_IsAlertByEMail = 0
+        m_IsAlertBySMS = 0
+        m_UserUpline = ""
+        m_GLAccountCode = ""
+        m_UsedLanguage = ""
+        m_DMailAccount = ""
+        m_DMailPassword = ""
+        m_JobPolicy = ""
+        m_AlertPolicy = ""
+    End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CUser)
         Dim lst As New List(Of CUser)
         Using cn As New SqlConnection(m_ConnStr)
@@ -371,5 +400,24 @@ Public Class CUser
             End Try
         End Using
         Return lst
+    End Function
+    Public Function DeleteData(pSQLWhere As String) As String
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+
+                Using cm As New SqlCommand("DELETE FROM Mas_User" + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+                msg = "Delete Complete"
+            Catch ex As Exception
+                msg = ex.Message
+            End Try
+        End Using
+        Return msg
     End Function
 End Class

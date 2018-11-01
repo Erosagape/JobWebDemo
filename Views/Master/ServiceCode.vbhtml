@@ -197,7 +197,6 @@ End Code
         }
     }
     function AddData() {
-        var code = $('#cboType').val();
         $.get(path + 'master/getnewservicecode',function (r) {
                 if (r.servicecode.data.length>0) {
                     ShowData(r.servicecode.data[0]);
