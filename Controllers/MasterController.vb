@@ -243,24 +243,31 @@ Namespace Controllers
         Function SetCompany(<FromBody()> data As CCompany) As ActionResult
             Try
                 If Not IsNothing(data) Then
-                    data.setConnect(jobWebConn)
+                    If "" & data.CustCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter CustCode""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE CustCode='{0}' And Branch='{1}' ", data.CustCode, data.Branch))
                     Dim json = "{""result"":{""data"":""" & data.CustCode & """,""msg"":""" & msg & """}}"
                     'Dim msg = JsonConvert.SerializeObject(data)
                     Return Content(json, jsonContent)
                 Else
                     Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
-                    Return Content(json, textContent)
+                    Return Content(json, jsonContent)
                 End If
 
             Catch ex As Exception
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
-                Return Content(json, textContent)
+                Return Content(json, jsonContent)
             End Try
         End Function
         Function SetVender(<FromBody()> data As CVender) As ActionResult
             Try
                 If Not IsNothing(data) Then
+                    If "" & data.VenCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Vender Code""}}", jsonContent)
+                    End If
+
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE VenCode='{0}' ", data.VenCode))
                     Dim json = "{""result"":{""data"":""" & data.VenCode & """,""msg"":""" & msg & """}}"
@@ -268,17 +275,21 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 Else
                     Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
-                    Return Content(json, textContent)
+                    Return Content(json, jsonContent)
                 End If
 
             Catch ex As Exception
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
-                Return Content(json, textContent)
+                Return Content(json, jsonContent)
             End Try
         End Function
-        Function SetUsers(<FromBody()> data As CUser) As ActionResult
+        Function SetUser(<FromBody()> data As CUser) As ActionResult
             Try
                 If Not IsNothing(data) Then
+                    If "" & data.UserID = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter User ID""}}", jsonContent)
+                    End If
+
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE UserID='{0}' ", data.UserID))
                     Dim json = "{""result"":{""data"":""" & data.UserID & """,""msg"":""" & msg & """}}"
@@ -286,12 +297,12 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 Else
                     Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
-                    Return Content(json, textContent)
+                    Return Content(json, jsonContent)
                 End If
 
             Catch ex As Exception
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
-                Return Content(json, textContent)
+                Return Content(json, jsonContent)
             End Try
         End Function
         Function SetServiceCode(<FromBody()> data As CServiceCode) As ActionResult
@@ -307,12 +318,12 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 Else
                     Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
-                    Return Content(json, textContent)
+                    Return Content(json, jsonContent)
                 End If
 
             Catch ex As Exception
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
-                Return Content(json, textContent)
+                Return Content(json, jsonContent)
             End Try
         End Function
     End Class

@@ -2,6 +2,9 @@
 Imports System.Data.SqlClient
 Public Class CUser
     Private m_ConnStr As String
+    Public Sub New()
+
+    End Sub
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
@@ -237,40 +240,40 @@ Public Class CUser
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
+            Dim stepFld As String = 0
             Try
                 cn.Open()
-
                 Using da As New SqlDataAdapter("SELECT * FROM Mas_User" & pSQLWhere, cn)
                     Using cb As New SqlCommandBuilder(da)
                         Using dt As New DataTable
                             da.Fill(dt)
                             Dim dr As DataRow = dt.NewRow
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
-                            dr("UserID") = Me.UserID
-                            dr("UPassword") = Me.UPassword
-                            dr("TName") = Me.TName
-                            dr("EName") = Me.EName
-                            dr("TPosition") = Me.TPosition
-                            dr("LoginDate") = Me.LoginDate
-                            dr("LoginTime") = Me.LoginTime
-                            dr("LogoutDate") = Me.LogoutDate
-                            dr("LogoutTime") = Me.LogoutTime
-                            dr("UPosition") = Me.UPosition
-                            dr("MaxRateDisc") = Me.MaxRateDisc
-                            dr("MaxAdvance") = Me.MaxAdvance
-                            dr("JobAuthorize") = Me.JobAuthorize
-                            dr("EMail") = Me.EMail
-                            dr("MobilePhone") = Me.MobilePhone
-                            dr("IsAlertByAgent") = Me.IsAlertByAgent
-                            dr("IsAlertByEMail") = Me.IsAlertByEMail
-                            dr("IsAlertBySMS") = Me.IsAlertBySMS
-                            dr("UserUpline") = Me.UserUpline
-                            dr("GLAccountCode") = Me.GLAccountCode
-                            dr("UsedLanguage") = Me.UsedLanguage
-                            dr("DMailAccount") = Me.DMailAccount
-                            dr("DMailPassword") = Me.DMailPassword
-                            dr("JobPolicy") = Me.JobPolicy
-                            dr("AlertPolicy") = Me.AlertPolicy
+                            stepFld = 1 : dr("UserID") = Me.UserID
+                            stepFld = 2 : dr("UPassword") = Me.UPassword
+                            stepFld = 3 : dr("TName") = Me.TName
+                            stepFld = 4 : dr("EName") = Me.EName
+                            stepFld = 5 : dr("TPosition") = Me.TPosition
+                            stepFld = 6 : dr("LoginDate") = Main.GetDBDate(Me.LoginDate)
+                            stepFld = 7 : dr("LoginTime") = Main.GetDBTime(Me.LoginTime)
+                            stepFld = 8 : dr("LogoutDate") = Main.GetDBDate(Me.LogoutDate)
+                            stepFld = 9 : dr("LogoutTime") = Main.GetDBTime(Me.LogoutTime)
+                            stepFld = 10 : dr("UPosition") = Me.UPosition
+                            stepFld = 11 : dr("MaxRateDisc") = Me.MaxRateDisc
+                            stepFld = 12 : dr("MaxAdvance") = Me.MaxAdvance
+                            stepFld = 13 : dr("JobAuthorize") = Me.JobAuthorize
+                            stepFld = 14 : dr("EMail") = Me.EMail
+                            stepFld = 15 : dr("MobilePhone") = Me.MobilePhone
+                            stepFld = 16 : dr("IsAlertByAgent") = Me.IsAlertByAgent
+                            stepFld = 17 : dr("IsAlertByEMail") = Me.IsAlertByEMail
+                            stepFld = 18 : dr("IsAlertBySMS") = Me.IsAlertBySMS
+                            stepFld = 19 : dr("UserUpline") = Me.UserUpline
+                            stepFld = 20 : dr("GLAccountCode") = Me.GLAccountCode
+                            stepFld = 21 : dr("UsedLanguage") = Me.UsedLanguage
+                            stepFld = 22 : dr("DMailAccount") = Me.DMailAccount
+                            stepFld = 23 : dr("DMailPassword") = Me.DMailPassword
+                            stepFld = 24 : dr("JobPolicy") = Me.JobPolicy
+                            stepFld = 25 : dr("AlertPolicy") = Me.AlertPolicy
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = String.Format("Save user {0} Complete", Me.UserID)
@@ -278,7 +281,7 @@ Public Class CUser
                     End Using
                 End Using
             Catch ex As Exception
-                msg = ex.Message
+                msg = "[STEP]=" & stepFld & " :" & ex.Message
             End Try
         End Using
         Return msg

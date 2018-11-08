@@ -1,5 +1,4 @@
-﻿
-@Code
+﻿@Code
     ViewBag.Title = "Users"
 End Code
 <div class="panel-body">
@@ -55,7 +54,33 @@ End Code
     var row = {};
     $(document).ready(function () {
         SetEvents();
+        SetEnterToTab();
+        ClearData();
     });
+    function SetEnterToTab() {
+        //Set enter to tab
+        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
+            $(this).on("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    var idx = (this.tabIndex + 1);
+                    var nextElement = $('[tabindex="' + idx + '"]');
+                    while (nextElement.length) {
+                        if (nextElement.prop('disabled') == false) {
+                            $('[tabindex="' + idx + '"]').focus();
+                            e.preventDefault();
+                            return;
+                        } else {
+                            idx = idx + 1;
+                            nextElement = $('[tabindex="' + idx + '"]');
+                        }
+                    }
+                    $('[tabindex="1"]').focus();
+                }
+            });
+        });
+        $('#txtUserID').focus();
+    }
+
     function SetEvents() {
         loadLang('#txtUsedLanguage');
         loadConfig('#txtUPosition', 'USER_LEVEL', path, '');
@@ -98,6 +123,13 @@ End Code
             $('#txtMobilePhone').val(dr.MobilePhone);
             $('#txtUserUpline').val(dr.UserUpline);
             $('#txtUsedLanguage').val(dr.UsedLanguage);
+
+            $('#btnSave').removeAttr('disabled');
+            if (dr.UserID != "") {
+                $('#btnDel').removeAttr('disabled');
+            } else {
+                $('#btnDel').attr('disabled', 'disabled');
+            }
         } else {
             alert('Data Not Found');
         }
@@ -150,7 +182,7 @@ End Code
             var jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
-                url: "@Url.Action("SetUsers", "Master")",
+                url: "@Url.Action("SetUser", "Master")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
@@ -176,7 +208,7 @@ End Code
 
         $.get(path + 'master/deluser?code=' + code, function (r) {
             alert(r.user.result);
-            ReadUser(r.user.data[0]);
+            ClearData();
         });
     }
 

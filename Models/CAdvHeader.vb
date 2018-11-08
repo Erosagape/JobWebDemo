@@ -439,7 +439,7 @@ Public Class CAdvHeader
         End Using
         Return msg
     End Function
-    Public Function UpdateTotal(cn As SqlConnection)
+    Public Sub UpdateTotal(cn As SqlConnection)
         Dim sql As String = "
                                     update b 
                                     set b.TotalAdvance =a.SumAdvance,b.TotalVAT=a.SumVAT,b.Total50Tavi=a.Sum50Tavi
@@ -458,7 +458,7 @@ Public Class CAdvHeader
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
         End Using
-    End Function
+    End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CAdvHeader)
         Dim lst As New List(Of CAdvHeader)
         Using cn As New SqlConnection(m_ConnStr)

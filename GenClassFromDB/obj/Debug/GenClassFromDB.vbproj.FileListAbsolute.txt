@@ -10,3 +10,15 @@ E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.exe
 E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.xml
 E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.pdb
 E:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbprojAssemblyReference.cache
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.exe.config
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.exe
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.pdb
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.xml
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbprojAssemblyReference.cache
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.Form1.resources
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.Resources.resources
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbproj.GenerateResource.cache
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbproj.CoreCompileInputs.cache
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.exe
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.xml
+C:\Users\Puttipong\Source\Repos\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.pdb

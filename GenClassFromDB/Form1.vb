@@ -34,10 +34,12 @@ Public Class Form1
     End Sub
     Private Function ReadStructure(oTbl As DataTable) As String
         Dim strAll As String = ""
-        strAll &= "Imports System.Data" & vbCrLf
         strAll &= "Imports System.Data.SqlClient" & vbCrLf
         strAll &= "Public Class " & TextBox4.Text & " " & vbCrLf
         strAll &= "Private m_ConnStr as String" & vbCrLf
+        strAll &= "Public Sub New()" & vbCrLf
+        strAll &= "" & vbCrLf
+        strAll &= "End sub" & vbCrLf
         strAll &= "Public Sub New(pConnStr as String)" & vbCrLf
         strAll &= "m_ConnStr=pConnStr" & vbCrLf
         strAll &= "End sub" & vbCrLf

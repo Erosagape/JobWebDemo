@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GenClassFromDB", "GenClassFromDB\GenClassFromDB.vbproj", "{BB24AA3D-0DA6-4964-A563-7F187FB52286}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "JobWebApi", "JobWebApi.vbproj", "{83509C73-0244-4B30-ADA4-ECF5D52DBC0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BB24AA3D-0DA6-4964-A563-7F187FB52286}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB24AA3D-0DA6-4964-A563-7F187FB52286}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB24AA3D-0DA6-4964-A563-7F187FB52286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83509C73-0244-4B30-ADA4-ECF5D52DBC0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83509C73-0244-4B30-ADA4-ECF5D52DBC0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83509C73-0244-4B30-ADA4-ECF5D52DBC0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83509C73-0244-4B30-ADA4-ECF5D52DBC0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

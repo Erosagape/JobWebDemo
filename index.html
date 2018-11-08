@@ -158,7 +158,12 @@
                         </div>
                         <div id="mnuMas" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
+                                <a href="#mnuSubMas" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้่อมูลมาตรฐาน</a>
+                                <div class="collapse" id="mnuSubMas">
+                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('customers')">Customers</a>
+                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('venders')">Venders</a>
+                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('users');">Users</a>
+                                </div>
                                 <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('Constant')">ค่าคงที่ต่างๆ</a>
                                 <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
                             </div>
@@ -277,6 +282,15 @@
                         break;
                     case 'ServiceCode':
                         window.location.href='Master/ServiceCode';
+                        break;
+                    case 'users':
+                        window.location.href = 'Master/Users';
+                        break;
+                    case 'venders':
+                        window.location.href = 'Master/Venders';
+                        break;
+                    case 'customers':
+                        window.location.href = 'Master/Customers';
                         break;
                     default:
                         break;

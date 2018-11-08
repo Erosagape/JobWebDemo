@@ -1,7 +1,9 @@
-﻿Imports System.Data
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Public Class CVender
     Private m_ConnStr As String
+    Public Sub New()
+
+    End Sub
     Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
@@ -197,8 +199,8 @@ Public Class CVender
             m_WEB_SITE = value
         End Set
     End Property
-    Public Function SaveData(pSQLWhere As String) As Boolean
-        Dim bComplete As Boolean = False
+    Public Function SaveData(pSQLWhere As String) As String
+        Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
@@ -232,14 +234,15 @@ Public Class CVender
                             dr("WEB_SITE") = Me.WEB_SITE
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            bComplete = True
+                            msg = "Save " & Me.VenCode & " Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                msg = "[ERR]:" & ex.Message
             End Try
         End Using
-        Return bComplete
+        Return msg
     End Function
     Public Function GetData(pSQLWhere As String) As List(Of CVender)
         Dim lst As New List(Of CVender)
