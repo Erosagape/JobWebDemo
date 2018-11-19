@@ -56,6 +56,7 @@ Public Class Form1
         Dim strHtml As String = ""
         Dim strJavaLoad As String = ""
         Dim strJavaSave As String = ""
+        Dim strJavaClear As String = ""
         Dim idx As Integer = 0
         For Each dc As DataColumn In oTbl.Columns
             idx += 1
@@ -77,8 +78,11 @@ Public Class Form1
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " ="""""
-                    strHtml &= vbCrLf & "<br/>" & dc.ColumnName & " :<input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
-                Case "Double"
+                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
+                    strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
+                    strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
+                    strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
+                Case "Double", "Integer"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Double"
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
                     strReader &= "row." & dc.ColumnName & " =rd.GetDouble(rd.GetOrdinal(""" & dc.ColumnName & """))" & vbCrLf
@@ -91,7 +95,10 @@ Public Class Form1
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
-                    strHtml &= vbCrLf & "<br/>" & dc.ColumnName & " :<input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0.00"">"
+                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0.00"">"
+                    strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
+                    strJavaSave &= vbCrLf & dc.ColumnName & ":CNum($('#txt" & dc.ColumnName & "').val()),"
+                    strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('0.00');"
                 Case "DateTime"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Date"
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
@@ -105,7 +112,10 @@ Public Class Form1
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =DateTime.Minvalue"
-                    strHtml &= vbCrLf & "<br/>" & dc.ColumnName & " :<input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
+                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
+                    strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(CDateEN(dr." & dc.ColumnName & "));"
+                    strJavaSave &= vbCrLf & dc.ColumnName & ":CDateTH($('#txt" & dc.ColumnName & "').val()),"
+                    strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
                 Case Else
                     strPrivate &= "Private m_" & dc.ColumnName & " as Integer"
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
@@ -119,19 +129,21 @@ Public Class Form1
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
-                    strHtml &= vbCrLf & "<br/>" & dc.ColumnName & " :<input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0"">"
+                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0"">"
+                    strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
+                    strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
+                    strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
             End Select
+
             strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
             strProperty &= vbCrLf & "End Property"
             strPrivate &= strProperty
             strGet &= vbCrLf & "txt" & dc.ColumnName & ".Text =obj." & dc.ColumnName & ""
             strSet &= vbCrLf & "obj." & dc.ColumnName & "=txt" & dc.ColumnName & ".Text"
-            strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
-            strJavaSave &= vbCrLf & "dr." & dc.ColumnName & "=$('#txt" & dc.ColumnName & "').val();"
         Next
         strAll = strAll & vbCrLf & strPrivate
         strAll = strAll & vbCrLf & "Public Function SaveData(pSQLWhere as string) as String"
-        strAll = strAll & vbCrLf & "dim msg as boolean="""""
+        strAll = strAll & vbCrLf & "dim msg as string="""""
         strAll = strAll & vbCrLf & "using cn as new SqlConnection(m_ConnStr)"
         strAll = strAll & vbCrLf & "try"
         strAll = strAll & vbCrLf & "cn.Open"
@@ -209,6 +221,7 @@ Public Class Form1
         strAll = strAll & vbCrLf & strHtml
         strAll = strAll & vbCrLf & strJavaLoad
         strAll = strAll & vbCrLf & strJavaSave
+        strAll = strAll & vbCrLf & strJavaClear
         strAll = strAll & vbCrLf & "End Sub"
 
         Return strAll

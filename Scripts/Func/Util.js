@@ -353,7 +353,7 @@ function DummyAdvanceData() {
     };
     return data;
 }
-//public functions
+//public query functions
 function CallBackQueryJob(p, br, jno, ev) {
     $.get(p + 'joborder/getjobsql?Branch=' + br + '&JNo' + jno).done(function (r) {
         var dr = r.job.data;
@@ -371,11 +371,14 @@ function CallBackQueryUser(p, UserID, ev) {
             }
         });
 }
-function CallOpenJob(p, br, jno) {
-    window.open(p + 'joborder/showjob?BranchCode=' + br + '&JNo=' + jno);
-}
-function CallPrintJob(p, br, jno) {
-    window.open(p + 'joborder/formjob?BranchCode=' + br + '&JNo=' + jno);
+function CallBackQueryVender(p, VenCode, ev) {
+    $.get(p + 'Master/GetVender?Code=' + VenCode)
+        .done(function (r) {
+            if (r.vender.data.length > 0) {
+                var b = r.vender.data[0];
+                ev(b);
+            }
+        });
 }
 function ShowConfigValue(path, Code, Key, ControlID) {
     var strParam = "";
@@ -395,4 +398,11 @@ function ShowConfigValue(path, Code, Key, ControlID) {
             }
             $(ControlID).val(response.config.data[0].ConfigValue);
         });
+}
+//call linked page function
+function CallOpenJob(p, br, jno) {
+    window.open(p + 'joborder/showjob?BranchCode=' + br + '&JNo=' + jno);
+}
+function CallPrintJob(p, br, jno) {
+    window.open(p + 'joborder/formjob?BranchCode=' + br + '&JNo=' + jno);
 }

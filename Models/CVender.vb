@@ -10,6 +10,7 @@ Public Class CVender
     Public Sub SetConnect(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
+
     Private m_VenCode As String
     Public Property VenCode As String
         Get
@@ -205,7 +206,7 @@ Public Class CVender
             Try
                 cn.Open()
 
-                Using da As New SqlDataAdapter("SELECT * FROM Mas_vender" & pSQLWhere, cn)
+                Using da As New SqlDataAdapter("SELECT * FROM Mas_Vender" & pSQLWhere, cn)
                     Using cb As New SqlCommandBuilder(da)
                         Using dt As New DataTable
                             da.Fill(dt)
@@ -234,23 +235,47 @@ Public Class CVender
                             dr("WEB_SITE") = Me.WEB_SITE
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            msg = "Save " & Me.VenCode & " Complete"
+                            msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
-                msg = "[ERR]:" & ex.Message
+                msg = ex.Message
             End Try
         End Using
         Return msg
     End Function
+    Public Sub AddNew()
+
+        m_VenCode = ""
+        m_BranchCode = ""
+        m_TaxNumber = ""
+        m_Title = ""
+        m_TName = ""
+        m_English = ""
+        m_TAddress1 = ""
+        m_TAddress2 = ""
+        m_EAddress1 = ""
+        m_EAddress2 = ""
+        m_Phone = ""
+        m_FaxNumber = ""
+        m_LoginName = ""
+        m_LoginPassword = ""
+        m_GLAccountCode = ""
+        m_ContactAcc = ""
+        m_ContactSale = ""
+        m_ContactSupport1 = ""
+        m_ContactSupport2 = ""
+        m_ContactSupport3 = ""
+        m_WEB_SITE = ""
+    End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CVender)
         Dim lst As New List(Of CVender)
         Using cn As New SqlConnection(m_ConnStr)
             Dim row As CVender
             Try
                 cn.Open()
-                Dim rd As SqlDataReader = New SqlCommand("SELECT * FROM Mas_vender" & pSQLWhere, cn).ExecuteReader()
+                Dim rd As SqlDataReader = New SqlCommand("SELECT * FROM Mas_Vender" & pSQLWhere, cn).ExecuteReader()
                 While rd.Read()
                     row = New CVender(m_ConnStr)
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("VenCode"))) = False Then
@@ -322,5 +347,24 @@ Public Class CVender
             End Try
         End Using
         Return lst
+    End Function
+    Public Function DeleteData(pSQLWhere As String) As String
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+
+                Using cm As New SqlCommand("DELETE FROM Mas_Vender" + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+                msg = "Delete Complete"
+            Catch ex As Exception
+                msg = ex.Message
+            End Try
+        End Using
+        Return msg
     End Function
 End Class

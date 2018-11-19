@@ -120,6 +120,17 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetNewVender() As ActionResult
+            Try
+                Dim oData = New CVender(jobWebConn)
+                oData.AddNew()
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""vender"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetCountry() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE CTYCODE<>'' "
@@ -192,6 +203,23 @@ Namespace Controllers
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""servicecode"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function DelVender() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE VenCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND VenCode Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""vender"":{""result"":""Please Select Some Vender"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CVender(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""vender"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

@@ -78,7 +78,7 @@ End Code
                 }
             });
         });
-        $('#txtUserID').focus();
+       
     }
 
     function SetEvents() {
