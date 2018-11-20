@@ -5,14 +5,12 @@ End Code
 <div class="panel-body">
     <div class="container">
         <div class="row">
-            <div class="col-sm-5">
-                Branch :
-                <input type="text" id="txtBranchCode" style="width:50px" tabIndex="0" />
-                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
+            <div class="col-sm-4">
+                <a href="#" onclick="SearchData('vender')">Vender Code</a>:<br /><input type="text" id="txtVenCode" Class="form-control" tabIndex="0">
             </div>
-            <div class="col-sm-3">
-                <a href="#" onclick="SearchData('vender')">Vender Code</a>:<br /><input type="text" id="txtVenCode" Class="form-control" tabIndex="1">
+            <div class="col-sm-4">
+                Branch :<br/>
+                <input type="text" id="txtBranchCode" Class="form-control" tabIndex="1" />
             </div>
             <div class="col-sm-4">
                 Tax Number:<br /><input type="text" id="txtTaxNumber" Class="form-control" tabIndex="2">
@@ -77,9 +75,9 @@ End Code
     var path = '@Url.Content("~")';
     var row = {};
     $(document).ready(function () {
-        SetLOVs();
         SetEvents();
         SetEnterToTab();
+        ClearData();
     });
     function GetDataSave() {
         var dr = {
@@ -153,18 +151,11 @@ End Code
             alert('No data to save');
         }
     }
-    function ReadBranch(dt) {
-        $('#txtBranchCode').val(dt.Code);
-        $('#txtBranchName').val(dt.BrName);
-        $('#txtBranchCode').focus();
-    }
     function ReadVender(dr) {
         if (dr.VenCode != undefined) {
             row = dr;
-            $('#txtBranchCode').val(dr.BranchCode);
-            ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-
             $('#txtVenCode').val(dr.VenCode);
+            $('#txtBranchCode').val(dr.BranchCode);
             $('#txtTaxNumber').val(dr.TaxNumber);
             $('#txtTitle').val(dr.Title);
             $('#txtTName').val(dr.TName);
@@ -194,24 +185,16 @@ End Code
         } else {
             alert('Data Not Found');
         }
-        $('#txtVenCode').focus();
+        //$('#txtVenCode').focus();
     }
     function SearchData(type) {
         switch (type) {
-            case 'branch':
-                SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
-                break;
             case 'vender':
                 SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender);
                 break;
         }
     }
     function SetEvents() {
-        $('#txtBranchCode').keydown(function (event) {
-            if (event.which == 13) {
-                ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-            }
-        });
         $('#txtVenCode').keydown(function (event) {
             if (event.which == 13) {
                 CallBackQueryVender(path, $('#txtVenCode').val(), ReadVender);
@@ -223,7 +206,6 @@ End Code
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             var dv = document.getElementById("dvLOVs");
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
-            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
         });
     }
     function SetEnterToTab() {

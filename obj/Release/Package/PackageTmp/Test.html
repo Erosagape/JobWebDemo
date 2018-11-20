@@ -15,53 +15,99 @@
     <div class="panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
-                Test File
+                <p>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <img src="Resource/logo-tawan.jpg" style="width:100px" />
+                            </td>
+                            <td align="right">
+                                <h5><label id="lblCompanyName" style="text-align:right">Shipping Control System</label></h5>
+                            </td>
+                        </tr>
+                    </table>
+                </p>
             </h4>
         </div>
         <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-2">
-                    User ID :<br /><input type="text" id="txtUserID" class="form-control" tabIndex="1">
-                </div>
-                <div class="col-sm-4">
-                    Password :<br /><input type="password" id="txtUPassword" class="form-control" tabIndex="2">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    Name (TH) :<br /><input type="text" id="txtTName" class="form-control" tabIndex="3">
-                </div>
-                <div class="col-sm-6">
-                    Name (EN) :<br /><input type="text" id="txtEName" class="form-control" tabIndex="4">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    Position :<br /><input type="text" id="txtTPosition" class="form-control" tabIndex="5">
-                </div>
-                <div class="col-sm-4">
-                    User Level :<br /><select id="txtUPosition" class="form-control dropdown" tabIndex="6"></select>
-                </div>
-                <div class="col-sm-4">
-                    Supervisor :<br /><input type="text" id="txtUserUpline" class="form-control" tabIndex="7">
+            <div id="dvLogin" style="width:100%">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:black">
+                            <div class="modal-title" style="color:white;text-align:center">
+                                Log in
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            Company ID : <input type="text" class="form-control" id="txtCompanyID" value="jobdemo" disabled />
+                            User ID : <input type="text" class="form-control" id="txtUserID" />
+                            Password : <input type="password" class="form-control" id="txtPassword" />
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" id="btnLogin" onclick="Login()">Log in</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    E-Mail :<br /><input type="text" id="txtEMail" class="form-control" tabIndex="8">
-                </div>
-                <div class="col-sm-4">
-                    Mobile Phone :<br /><input type="text" id="txtMobilePhone" class="form-control" tabIndex="9">
-                </div>
-                <div class="col-sm-4">
-                    Report Language :<br />
-                    <select id="txtUsedLanguage" class="form-control dropdown" tabindex="10"></select>
-                </div>
-            </div>            
         </div>
         <div class="panel-footer">
             <p>&copy; Tawan Technology Co.,ltd</p>
         </div>
     </div>
+    <script type="text/javascript">
+        var userID = '';
+        $(document).ready(function () {
+            SetEvents();
+            CheckLogin();
+        });
+        function SetEvents() {
+            SetLOVs();
+            $('#dvLogin').on('shown.bs.modal', function () {
+                $('#txtUserID').focus();
+            });
+            $('#txtUserID').keydown(function (event) {
+                if (event.which === 13) {
+                    $('#txtPassword').focus();
+                }
+            });
+            $('#txtPassword').keydown(function (event) {
+                if (event.which === 13) {
+                    Login();
+                }
+            });
+        }
+        function CheckLogin() {
+            if (userID === '') {
+                $.get('Config/GetLogin')
+                    .done(function (r) {
+                        if (r.user.data.UserID !== null) {
+                            OpenMenu();
+                        } else {
+                            userID = '';
+                        }
+                    });
+            } 
+        }
+        function Login() {
+            userID = $('#txtUserID').val();
+            if (userID !== '') {
+                var Password = $('#txtPassword').val();
+                $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password)
+                    .done(function (r) {
+                        if (r.user.data.length > 0) {                            
+                            OpenMenu();
+                        } else {
+                            userID = '';
+                            alert('User ID or Password Incorrect');
+                        }
+                    });
+            } else {
+                userID = '';
+            }
+        }
+        function OpenMenu() {
+            window.location.href = 'Menu/Index';
+        }
+    </script>
 </body>
 </html>

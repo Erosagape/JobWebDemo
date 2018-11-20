@@ -3,177 +3,55 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Content/bootstrap.min.css" />
-    <link rel="stylesheet" href="/Content/jquery.datatables.min.css" />
-    <title>Demo Job</title>
-    <script src="Scripts/jquery-3.2.1.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="Content/bootstrap.min.css">
+    <link rel="stylesheet" href="Content/jquery.datatables.min.css">
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/Func/Util.js"></script>
+    <title>Template</title>
 </head>
 <body>
-    <div id="dvLogin" class="modal" style="width:100%">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color:black">
-                    <div class="modal-title" style="color:white;text-align:center">
-                        Logon Information
-                    </div>
-                </div>
-                <div class="modal-body">
-                    Company ID : <input type="text" class="form-control" id="txtCompanyID" value="jobdemo" disabled />
-                    User ID : <input type="text" class="form-control" id="txtUserID" />
-                    Password : <input type="password" class="form-control" id="txtPassword" />
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" id="btnLogin" onclick="Login()">Log in</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
+    <div class="panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <p>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <img src="Resource/logo-tawan.jpg" style="width:100px" />
+                            </td>
+                            <td align="right">
+                                <h5><label id="lblCompanyName" style="text-align:right">Shipping Control System</label></h5>
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+            </h4>
         </div>
-    </div>
-    <div id="dvUser">
-        <p>
-            <table width="100%">
-                <tr>
-                    <td>
-                        <img src="Resource/logo-tawan.jpg" style="width:100px" />
-                    </td>
-                    <td align="right">
-                        <h5><label id="lblCompanyName" style="text-align:right">Shipping Control System</label></h5>
-                    </td>
-                </tr>
-            </table>
-        </p>
-    </div>
-    <div id="dvMain" class="row" style="background-color:black">
-        <div class="col-sm-3" style="text-align:center">
-            <label id="lblUserID" style="color:white" onclick="CheckLogin()">Please Login</label>
-            <div id="navbar" class="navbar navbar-collapse;text" style="text-align:left">
-                <div class="panel-group" id="accordion">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuMkt">
-                                    Marketing Works
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="mnuMkt" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMkt">จัดการใบเสนอราคา</a>
+        <div class="panel-body">
+            <div id="dvLogin" style="width:100%">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:black">
+                            <div class="modal-title" style="color:white;text-align:center">
+                                Log in
                             </div>
                         </div>
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuCS">
-                                    CS Works
-                                </a>
-                            </h4>
+                        <div class="modal-body">
+                            Company ID : <input type="text" class="form-control" id="txtCompanyID" value="jobdemo" disabled />
+                            User ID : <input type="text" class="form-control" id="txtUserID" />
+                            Password : <input type="password" class="form-control" id="txtPassword" />
                         </div>
-                        <div id="mnuCS" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('CreateJob');">เปิดงานใหม่</a>
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('SearchJob');">ค้นหางาน</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuShp">
-                                    Shipping Works
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="mnuShp" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Advance');">ใบเบิกค่าใช้จ่าย</a>
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบปิดค่าใช้จ่าย</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuFin">
-                                    Finance & Accounting Works
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="mnuFin" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <a href="#mnuSubFin" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานการเงิน</a>
-                                <div class="collapse" id="mnuSubFin">
-                                    <a href="#" class="list-group-item glyphicon-minus">จ่ายเงินตามใบเบิก</a>
-                                    <a href="#" class="list-group-item glyphicon-minus">รับเคลียร์เงินตามใบปิด</a>
-                                </div>
-                                <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
-                                <div class="collapse" id="mnuSubAcc">
-                                    <a href="#" class="list-group-item glyphicon-minus">ใบแจ้งหนี้</a>
-                                    <a href="#" class="list-group-item glyphicon-minus">ใบเสร็จรับเงิน</a>
-                                    <a href="#" class="list-group-item glyphicon-minus">ใบกำกับภาษี</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuAppr">
-                                    Approving Documents
-                                </a>
-                            </div>
-                        </div>
-                        <div id="mnuAppr" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบเบิก</a>
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบปิด</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuTrack">
-                                    Tracking Information
-                                </a>
-                            </div>
-                        </div>
-                        <div id="mnuTrack" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">รายงานต่างๆ</a>
-                                <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">ตรวจสอบการทำงาน</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <div class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#mnuMas">
-                                    Master Files
-                                </a>
-                            </div>
-                        </div>
-                        <div id="mnuMas" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <a href="#mnuSubMas" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้่อมูลมาตรฐาน</a>
-                                <div class="collapse" id="mnuSubMas">
-                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
-                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
-                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</a>
-                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('venders')">ผู้ให้บริการ</a>
-                                    <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
-                                </div>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" id="btnLogin" onclick="Login()">Log in</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-9">
-            <img src="Resource/jobtawan_bg.jpg" style="width:100%" onclick="CheckLogin()" />
+        <div class="panel-footer">
+            <p>&copy; Tawan Technology Co.,ltd</p>
         </div>
     </div>
     <script type="text/javascript">
@@ -183,7 +61,6 @@
             CheckLogin();
         });
         function SetEvents() {
-
             $('#dvLogin').on('shown.bs.modal', function () {
                 $('#txtUserID').focus();
             });
@@ -198,38 +75,16 @@
                 }
             });
         }
-        function ShowLogin(r) {
-            userID = r.UserID;
-            $('#lblUserID').text(r.TName);   
-            var compID = $('#txtCompanyID').val();
-            if (compID !== '') {
-                $('#lblCompanyName').text(compID);
-            }
-        }
         function CheckLogin() {
             if (userID === '') {
                 $.get('Config/GetLogin')
                     .done(function (r) {
                         if (r.user.data.UserID !== null) {
-                            ShowLogin(r.user.data);
+                            OpenMenu();
                         } else {
                             userID = '';
-                            $('#dvLogin').modal('show');
                         }
                     });
-            } else {
-                var c = confirm('Do you need to log out?');
-                if (c == true) {
-                    $.get('Config/SetLogOut')
-                        .done(function (r) {
-                            if (r == 'Y') {
-                                alert('Log out successfully');
-                                userID = '';
-                                $('#lblUserID').text('Please Login');
-                                $('#lblCompanyName').text('Shipping Control System');
-                            }
-                        });
-                }
             }
         }
         function Login() {
@@ -239,68 +94,19 @@
                 $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password)
                     .done(function (r) {
                         if (r.user.data.length > 0) {
-                            var b = r.user.data[0];
-                            ShowLogin(b);
+                            OpenMenu();
                         } else {
                             userID = '';
-                            $('#lblUserID').text('Please Login');
-
                             alert('User ID or Password Incorrect');
                         }
-                        $('#dvLogin').modal('hide');
                     });
             } else {
                 userID = '';
-                $('#lblUserID').text('Please Login');
-                $('#lblCompanyName').text('Shipping Control System');
             }
         }
-        function CheckRights(mnuID) {
-            if (userID.toUpperCase() == 'ADMIN') {
-                return 'Y';
-            }
-            return 'N';
-        }
-        function OpenMenu(mnuID) {
-            if (userID !== '') {
-                if (CheckRights(mnuID) == 'N') {
-                    alert('You are not authorized');
-                    return;
-                }
-                switch (mnuID) {
-                    case 'Advance':
-                        window.location.href='Adv/Index';
-                        break;
-                    case 'Constant':
-                        window.location.href='Config/Index';
-                        break;
-                    case 'CreateJob':
-                        window.location.href='JobOrder/CreateJob';
-                        break;
-                    case 'SearchJob':
-                        window.location.href= 'JobOrder/Index';
-                        break;
-                    case 'ServiceCode':
-                        window.location.href='Master/ServiceCode';
-                        break;
-                    case 'users':
-                        window.location.href = 'Master/Users';
-                        break;
-                    case 'venders':
-                        window.location.href = 'Master/Venders';
-                        break;
-                    case 'customers':
-                        window.location.href = 'Master/Customers';
-                        break;
-                    default:
-                        break;
-                }
-            } else {
-                alert('Please login first');
-            }
+        function OpenMenu() {
+            window.location.href = 'Menu/Index';
         }
     </script>
-
 </body>
-
 </html>

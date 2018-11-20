@@ -21,8 +21,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>
-    </Use64BitIISExpress>
+    <Use64BitIISExpress>true</Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -41,6 +40,7 @@
     <DocumentationFile>JobWebApi.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -299,6 +299,7 @@
     <Compile Include="Controllers\MasterController.vb" />
     <Compile Include="Controllers\JobOrderController.vb" />
     <Compile Include="Controllers\Main.vb" />
+    <Compile Include="Controllers\MenuController.vb" />
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -387,6 +388,7 @@
     <Content Include="Views\Master\Users.vbhtml" />
     <Content Include="Views\Master\Customers.vbhtml" />
     <Content Include="Views\Master\Venders.vbhtml" />
+    <Content Include="Views\Menu\Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

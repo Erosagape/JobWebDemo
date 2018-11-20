@@ -94,9 +94,9 @@ End Code
     var path = '@Url.Content("~")';
     var row = {}; //row pointer to current record show in buffer
     $(document).ready(function () {
-        SetLOVs();
         SetEvents();
         SetEnterToTab();
+        $('#txtSICode').focus();
     });
     function SetEnterToTab() {
         //Set enter to tab
@@ -115,11 +115,9 @@ End Code
                             nextElement = $('[tabindex="' + idx + '"]');
                         }
                     }
-                    $('[tabindex="1"]').focus();
                 }
             });
         });
-        $('#txtSICode').focus();
     }
     function SetLOVs() {
         //2 Field show in grid 
@@ -138,6 +136,7 @@ End Code
         });
     }
     function SetEvents() {
+        SetLOVs();
         //if value IsTaxCharge =1 -> Exclude VAT ,2-> Include VAT 
         $('#chkIsTaxCharge').change(function () {
             //Default value is Excluded VAT

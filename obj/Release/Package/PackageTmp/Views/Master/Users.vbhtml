@@ -78,7 +78,7 @@ End Code
                 }
             });
         });
-        $('#txtUserID').focus();
+       
     }
 
     function SetEvents() {
@@ -133,7 +133,7 @@ End Code
         } else {
             alert('Data Not Found');
         }
-        $('#txtUserID').focus();
+        //$('#txtUserID').focus();
     }
     function ClearData() {
         $.get(path + 'master/getnewuser', function (r) {

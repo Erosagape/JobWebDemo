@@ -15,7 +15,7 @@
         function BackToMenu() {
             var c = confirm('Do you want to back to main menu?');
             if (c == true) {
-                window.location.href = '/';
+                window.location.href = 'Menu/Index';
             }
         }
     </script>
