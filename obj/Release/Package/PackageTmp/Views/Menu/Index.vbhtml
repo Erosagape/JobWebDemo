@@ -145,14 +145,11 @@ End Code
                                 </div>
                                 <div id="mnuMas" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#mnuSubMas" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้่อมูลมาตรฐาน</a>
-                                        <div class="collapse" id="mnuSubMas">
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('venders')">ผู้ให้บริการ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
-                                        </div>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('venders')">ผู้ให้บริการ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
                                     </div>
                                 </div>
                             </div>
