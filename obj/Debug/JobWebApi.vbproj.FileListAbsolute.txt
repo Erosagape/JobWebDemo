@@ -190,3 +190,4 @@ D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.vbproj.CopyComplete
 D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.dll
 D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.xml
 D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.pdb
+D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.vbprojAssemblyReference.cache

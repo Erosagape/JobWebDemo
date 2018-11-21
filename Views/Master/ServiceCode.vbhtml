@@ -160,6 +160,7 @@ End Code
                 return;
             } else {
                 alert('Data not found');
+                ClearData();
             }
         });
     }
@@ -248,7 +249,7 @@ End Code
         $("#txtSICode").removeAttr("disabled"); 
     }
     function GetDataSave(dt) {
-        dt.SICode = $('#txtSICode').val();
+        dt.SICode = $('#txtSICode').val().trim();
         if (dt.SICode == "") dt.SICode = $('#cboType').val() + '-';
         dt.NameThai=$('#txtNameThai').val();
         dt.NameEng=$('#txtNameEng').val();
@@ -281,6 +282,14 @@ End Code
     function SaveData() {
         if (row.SICode != undefined) {
             var obj = GetDataSave(row);
+            if (obj.SICode == '') {
+                alert('Please enter service code');
+                return;
+            }
+            if (obj.NameThai == '') {
+                alert('Please enter service name');
+                return;
+            }
             var ask = confirm("Do you need to " + (row.SICode == "" ? "Add" : "Save") + " this data?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });

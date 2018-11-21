@@ -82,10 +82,12 @@ End Code
         });
     }
     function loadCombo() {
+        var lists = 'JOB_TYPE=#cboJobType';
+        lists += ',SHIP_BY=#cboShipBy';
+        lists += ',JOB_STATUS=#cboStatus';
+
+        loadCombos(path, lists);
         loadBranch(path);
-        loadConfig('#cboJobType', 'JOB_TYPE',path,'');
-        loadConfig('#cboShipBy', 'SHIP_BY',path,'');
-        loadConfig('#cboStatus', 'JOB_STATUS',path,'');
         loadYear(path);
         loadMonth('#cboMonth');
     }

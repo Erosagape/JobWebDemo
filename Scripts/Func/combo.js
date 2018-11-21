@@ -12,10 +12,51 @@ function loadBranch(path) {
         }
     });
 }
+function loadCombos(path, params) {
+    var arr = params.split(',');
+    var qry = '';
+    var ctls = '';
+    for (var i = 0; i < arr.length; i++) {
+        var obj = arr[i].split('=');
+        if (qry != '') qry += ',';
+        if (ctls != '') ctls += ',';
+        qry += obj[0];
+        ctls += obj[1];
+    }
+    loadConfigMultiple(path, qry, ctls);
+}
+function loadConfigMultiple(path, list, controls) {
+    var query = list.split(",").join("','");
+    $.get(path + 'Config/getConfig?Code=' + query).done(function (r) {
+        var arr = r.config.data;
+        var ctl = controls.split(',');
+        var cfg = list.split(',');
+        if (arr.length > 0) {
+            for (var i = 0; i < cfg.length; i++) {
+                var dr = $.grep(arr, function (data) {
+                    return data.ConfigCode === cfg[i];
+                });
+                loadComboArray(ctl[i], dr, '');
+            }
+        }
+    });
+}
+function loadComboArray(e, dr, def) {
+    $(e).empty();
+    $(e).append($('<option>', { value: '' })
+        .text('N/A'));
+    if (dr.length > 0) {
+        for (var i = 0; i < dr.length; i++) {
+            $(e).append($('<option>', { value: dr[i].ConfigKey.trim() })
+                .text(dr[i].ConfigKey.trim() + ' / ' + dr[i].ConfigValue.trim()));
+        }
+        $(e).val(def);
+    }
+}
 function loadConfig(e, code, path, def) {
     $(e).empty();
     $(e).append($('<option>', { value: '' })
-        .text('ALL'));
+        .text('N/A'));
     $.get(path +'Config/getConfig?Code=' + code).done(function (r) {
         var dr = r.config.data;
         if (dr.length > 0) {

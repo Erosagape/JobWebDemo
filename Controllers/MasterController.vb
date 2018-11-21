@@ -109,6 +109,17 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetNewCompany() As ActionResult
+            Try
+                Dim oData = New CCompany(jobWebConn)
+                oData.AddNew()
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""company"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetNewUser() As ActionResult
             Try
                 Dim oData = New CUser(jobWebConn)
@@ -225,6 +236,27 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function DelCompany() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE CustCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND CustCode = '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""company"":{""result"":""Please Select Some Customer"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND Branch = '{0}'", Request.QueryString("Branch").ToString)
+                End If
+                Dim oData As New CCompany(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""company"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+
         Function DelUser() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE UserID<>'' "

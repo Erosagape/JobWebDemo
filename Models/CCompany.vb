@@ -4,10 +4,10 @@ Public Class CCompany
     Public Sub New()
 
     End Sub
-    Public Sub SetConnect(pConnStr As String)
+    Public Sub New(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
-    Public Sub New(pConnStr As String)
+    Public Sub SetConnect(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
 
@@ -583,6 +583,7 @@ Public Class CCompany
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
+
                 Using da As New SqlDataAdapter("SELECT * FROM Mas_Company" & pSQLWhere, cn)
                     Using cb As New SqlCommandBuilder(da)
                         Using dt As New DataTable
@@ -654,17 +655,83 @@ Public Class CCompany
                             dr("WEB_SITE") = Me.WEB_SITE
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            msg = "Save " & Me.CustCode & "/" & Me.Branch & " Complete"
+                            msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
-                msg = "[ERR]:" & ex.Message
+                msg = ex.Message
             End Try
         End Using
         Return msg
     End Function
-    Public Function GetData(Optional pSQLWhere As String = "") As List(Of CCompany)
+    Public Sub AddNew()
+
+        m_CustCode = ""
+        m_Branch = ""
+        m_CustGroup = ""
+        m_TaxNumber = ""
+        m_Title = ""
+        m_NameThai = ""
+        m_NameEng = ""
+        m_TAddress1 = ""
+        m_TAddress2 = ""
+        m_EAddress1 = ""
+        m_EAddress2 = ""
+        m_Phone = ""
+        m_FaxNumber = ""
+        m_LoginName = ""
+        m_LoginPassword = ""
+        m_ManagerCode = ""
+        m_CSCodeIM = ""
+        m_CSCodeEX = ""
+        m_CSCodeOT = ""
+        m_GLAccountCode = ""
+        m_CustType = 0
+        m_BillToCustCode = ""
+        m_BillToBranch = ""
+        m_UsedLanguage = ""
+        m_LevelGrade = ""
+        m_TermOfPayment = 0
+        m_BillCondition = ""
+        m_CreditLimit = 0
+        m_MapText = ""
+        m_MapFileName = ""
+        m_CmpType = ""
+        m_CmpLevelExp = ""
+        m_CmpLevelImp = ""
+        m_Is19bis = 0
+        m_MgrSeq = 0
+        m_LevelNoExp = 0
+        m_LevelNoImp = 0
+        m_LnNO = ""
+        m_AdjTaxCode = ""
+        m_BkAuthorNo = ""
+        m_BkAuthorCnn = ""
+        m_LtdPsWkName = ""
+        m_ConsStatus = ""
+        m_CommLevel = ""
+        m_DutyLimit = 0
+        m_CommRate = 0
+        m_TAddress = ""
+        m_TDistrict = ""
+        m_TSubProvince = ""
+        m_TProvince = ""
+        m_TPostCode = ""
+        m_DMailAddress = ""
+        m_PrivilegeOption = ""
+        m_GoldCardNO = 0
+        m_CustomsBrokerSeq = 0
+        m_ISCustomerSign = 0
+        m_ISCustomerSignInv = 0
+        m_ISCustomerSignDec = 0
+        m_ISCustomerSignECon = 0
+        m_IsShippingCannotSign = 0
+        m_ExportCode = ""
+        m_Code19BIS = ""
+        m_WEB_SITE = ""
+    End Sub
+    Public Function GetData(pSQLWhere As String) As List(Of CCompany)
         Dim lst As New List(Of CCompany)
         Using cn As New SqlConnection(m_ConnStr)
             Dim row As CCompany
@@ -868,5 +935,24 @@ Public Class CCompany
             End Try
         End Using
         Return lst
+    End Function
+    Public Function DeleteData(pSQLWhere As String) As String
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+
+                Using cm As New SqlCommand("DELETE FROM Mas_Company" + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+                msg = "Delete Complete"
+            Catch ex As Exception
+                msg = ex.Message
+            End Try
+        End Using
+        Return msg
     End Function
 End Class

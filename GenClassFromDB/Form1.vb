@@ -1,9 +1,9 @@
 ﻿Imports System.Data.OleDb
-Imports System.Data
 Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TextBox1.Text = My.Settings.ConnectionStr
         TextBox2.Text = My.Settings.DefaultSQL
+        cboDbType.SelectedIndex = 0
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
@@ -34,7 +34,20 @@ Public Class Form1
     End Sub
     Private Function ReadStructure(oTbl As DataTable) As String
         Dim strAll As String = ""
-        strAll &= "Imports System.Data.SqlClient" & vbCrLf
+        Dim preFix As String = cboDbType.Text
+        Select Case cboDbType.Text
+            Case "OleDb"
+                strAll &= "Imports System.Data.OleDb" & vbCrLf
+            Case "Oracle"
+                strAll &= "Imports Oracle.DataAccess.Client" & vbCrLf
+            Case "Odbc"
+                strAll &= "Imports System.Data.Odbc" & vbCrLf
+            Case "MySql"
+                strAll &= "Imports MySql.Data.MySqlClient" & vbCrLf
+            Case Else
+                preFix = "Sql"
+                strAll &= "Imports System.Data.SqlClient" & vbCrLf
+        End Select
         strAll &= "Public Class " & TextBox4.Text & " " & vbCrLf
         strAll &= "Private m_ConnStr as String" & vbCrLf
         strAll &= "Public Sub New()" & vbCrLf
@@ -144,11 +157,11 @@ Public Class Form1
         strAll = strAll & vbCrLf & strPrivate
         strAll = strAll & vbCrLf & "Public Function SaveData(pSQLWhere as string) as String"
         strAll = strAll & vbCrLf & "dim msg as string="""""
-        strAll = strAll & vbCrLf & "using cn as new SqlConnection(m_ConnStr)"
+        strAll = strAll & vbCrLf & "using cn as new " & preFix & "Connection(m_ConnStr)"
         strAll = strAll & vbCrLf & "try"
         strAll = strAll & vbCrLf & "cn.Open"
-        strAll = strAll & vbCrLf & "using da as new SqlDataAdapter(""" & TextBox2.Text & """ & pSQLWhere,cn)"
-        strAll = strAll & vbCrLf & "using cb as new SqlCommandBuilder(da)"
+        strAll = strAll & vbCrLf & "using da as new " & preFix & "DataAdapter(""" & TextBox2.Text & """ & pSQLWhere,cn)"
+        strAll = strAll & vbCrLf & "using cb as new " & preFix & "CommandBuilder(da)"
         strAll = strAll & vbCrLf & "using dt as new DataTable"
         strAll = strAll & vbCrLf & "da.fill(dt)"
         strAll = strAll & vbCrLf & "dim dr as DataRow=dt.NewRow"
@@ -173,11 +186,11 @@ Public Class Form1
 
         strAll = strAll & vbCrLf & "Public Function GetData(pSQLWhere as string) as List(Of " & TextBox4.Text & " ) "
         strAll = strAll & vbCrLf & "Dim lst as new List(Of " & TextBox4.Text & " )"
-        strAll = strAll & vbCrLf & "using cn as new SqlConnection(m_ConnStr)"
+        strAll = strAll & vbCrLf & "using cn as new " & preFix & "Connection(m_ConnStr)"
         strAll = strAll & vbCrLf & "Dim row as " & TextBox4.Text & " "
         strAll = strAll & vbCrLf & "try"
         strAll = strAll & vbCrLf & "cn.Open"
-        strAll = strAll & vbCrLf & "Dim rd as SqlDataReader=new SqlCommand(""" & TextBox2.Text & """ & pSQLWhere,cn).ExecuteReader()"
+        strAll = strAll & vbCrLf & "Dim rd as " & preFix & "DataReader=new " & preFix & "Command(""" & TextBox2.Text & """ & pSQLWhere,cn).ExecuteReader()"
         strAll = strAll & vbCrLf & "while rd.Read()"
         strAll = strAll & vbCrLf & "row=New " & TextBox4.Text & " (m_ConnStr)"
         strAll = strAll & vbCrLf & strReader
@@ -191,10 +204,10 @@ Public Class Form1
 
         strAll = strAll & vbCrLf & "Public Function DeleteData(pSQLWhere as string) as String "
         strAll = strAll & vbCrLf & "Dim msg As String ="""""
-        strAll = strAll & vbCrLf & "using cn as new SqlConnection(m_ConnStr)"
+        strAll = strAll & vbCrLf & "using cn as new " & preFix & "Connection(m_ConnStr)"
         strAll = strAll & vbCrLf & "try"
         strAll = strAll & vbCrLf & "cn.Open"
-        strAll = strAll & vbCrLf & "Using cm As New SqlCommand(""DELETE " + TextBox2.Text.Substring(TextBox2.Text.IndexOf("FROM")) + """ + pSQLWhere, cn)"
+        strAll = strAll & vbCrLf & "Using cm As New " & preFix & "Command(""DELETE " + TextBox2.Text.Substring(TextBox2.Text.IndexOf("FROM")) + """ + pSQLWhere, cn)"
         strAll = strAll & vbCrLf & "cm.CommandTimeOut= 0 "
         strAll = strAll & vbCrLf & "cm.CommandType=CommandType.Text"
         strAll = strAll & vbCrLf & "cm.ExecuteNonQuery"
@@ -209,20 +222,35 @@ Public Class Form1
         strAll = strAll & vbCrLf & "End Function"
         strAll = strAll & vbCrLf & "End Class"
 
-        strAll = strAll & vbCrLf & "Sub ExampleGetClass"
-        strAll = strAll & vbCrLf & strGet
-        strAll = strAll & vbCrLf & "End Sub"
+        If CheckBox3.Checked = True Then
+            strAll = strAll & vbCrLf & "Sub ExampleGetClass"
+            strAll = strAll & vbCrLf & "Dim cls as New " & TextBox4.Text & "(conn).GetData("" WHERE (1=0)"")"
+            strAll = strAll & vbCrLf & "Dim obj=IF(cls.Count>0,cls(0),new " & TextBox4.Text & ")"
+            strAll = strAll & vbCrLf & strGet
+            strAll = strAll & vbCrLf & "End Sub"
 
-        strAll = strAll & vbCrLf & "Sub ExampleSetClass"
-        strAll = strAll & vbCrLf & strSet
-        strAll = strAll & vbCrLf & "End Sub"
-
-        strAll = strAll & vbCrLf & "Sub HtmlControl"
-        strAll = strAll & vbCrLf & strHtml
-        strAll = strAll & vbCrLf & strJavaLoad
-        strAll = strAll & vbCrLf & strJavaSave
-        strAll = strAll & vbCrLf & strJavaClear
-        strAll = strAll & vbCrLf & "End Sub"
+            strAll = strAll & vbCrLf & "Sub ExampleSetClass(obj as " & TextBox4.Text & ")"
+            strAll = strAll & vbCrLf & strSet
+            strAll = strAll & vbCrLf & "End Sub"
+        End If
+        If CheckBox1.Checked = True Then
+            strAll = strAll & vbCrLf & "Sub HtmlControl"
+            strAll = strAll & vbCrLf & strHtml
+            strAll = strAll & vbCrLf & "End Sub"
+        End If
+        If CheckBox2.Checked = True Then
+            strAll = strAll & vbCrLf & "Sub JavaLoad"
+            strAll = strAll & vbCrLf & strJavaLoad
+            strAll = strAll & vbCrLf & "End Sub"
+            strAll = strAll & vbCrLf & "Sub JavaSave"
+            strAll = strAll & vbCrLf & "var obj={"
+            strAll = strAll & vbCrLf & strJavaSave
+            strAll = strAll & vbCrLf & "}"
+            strAll = strAll & vbCrLf & "End Sub"
+            strAll = strAll & vbCrLf & "Sub JavaClear"
+            strAll = strAll & vbCrLf & strJavaClear
+            strAll = strAll & vbCrLf & "End Sub"
+        End If
 
         Return strAll
     End Function

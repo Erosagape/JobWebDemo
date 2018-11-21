@@ -104,15 +104,27 @@ End Code
     function GetInput() {
         //read input data and generated class for post
         var obj = {
-            ConfigCode: $('#txtCode').val(),
-            ConfigKey: $('#txtKey').val(),
-            ConfigValue: $('#txtValue').val()
+            ConfigCode: $('#txtCode').val().trim(),
+            ConfigKey: $('#txtKey').val().trim(),
+            ConfigValue: $('#txtValue').val().trim()
         };
         return obj;
     }
     function SaveData() {
         //post data input to web API
         var obj = GetInput();
+        if (obj.ConfigCode == '') {
+            alert('please enter config code');
+            return;
+        }
+        if (obj.ConfigKey == '') {
+            alert('please enter config key');
+            return;
+        }
+        if (obj.ConfigValue == '') {
+            alert('please enter config value');
+            return;
+        }
         var ask = confirm("Do you need to Save " + obj.ConfigCode + "/" + obj.ConfigKey + "?");
         if (ask == false) return;
         $.ajax({

@@ -9,14 +9,13 @@
     <script src="Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="Scripts/bootstrap.js"></script>
     <script src="Scripts/Func/Util.js"></script>
-    <title>Template</title>
+    <title>Shipping Control System</title>
 </head>
 <body>
     <div class="panel-primary">
         <div class="panel-heading">
-            <h4 class="panel-title">
-                <p>
-                    <table width="100%">
+            <div class="panel-title">
+                    <table style="width:100%">
                         <tr>
                             <td>
                                 <img src="Resource/logo-tawan.jpg" style="width:100px" />
@@ -26,11 +25,10 @@
                             </td>
                         </tr>
                     </table>
-                </p>
-            </h4>
+            </div>
         </div>
-        <div class="panel-body">
-            <div id="dvLogin" style="width:100%">
+        <div class="panel-body" >
+            <div id="dvLogin" style="width:100%;background:url('Resource/jobtawan_bg.jpg');background-position:center;background-repeat:round;background-size:contain">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header" style="background-color:black">
@@ -57,8 +55,9 @@
     <script type="text/javascript">
         var userID = '';
         $(document).ready(function () {
-            SetEvents();
             CheckLogin();
+            SetEvents();
+            $('#txtUserID').focus();
         });
         function SetEvents() {
             $('#dvLogin').on('shown.bs.modal', function () {

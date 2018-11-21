@@ -354,6 +354,14 @@ function DummyAdvanceData() {
     return data;
 }
 //public query functions
+function CallBackQueryCustomer(p, cno, br, ev) {
+    $.get(p + 'master/getcompany?Code=' + cno + '&Branch' + br).done(function (r) {
+        var dr = r.company.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function CallBackQueryJob(p, br, jno, ev) {
     $.get(p + 'joborder/getjobsql?Branch=' + br + '&JNo' + jno).done(function (r) {
         var dr = r.job.data;

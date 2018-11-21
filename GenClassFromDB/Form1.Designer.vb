@@ -29,10 +29,13 @@ Partial Class Form1
         Me.Button1 = New System.Windows.Forms.Button()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.cboDbType = New System.Windows.Forms.ComboBox()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TextBox4 = New System.Windows.Forms.TextBox()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -100,14 +103,14 @@ Partial Class Form1
         Me.RadioButton2.Text = "C#"
         Me.RadioButton2.UseVisualStyleBackColor = True
         '
-        'ComboBox1
+        'cboDbType
         '
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Items.AddRange(New Object() {"OleDb", "Sql", "Oracle", "MySql", "Odbc"})
-        Me.ComboBox1.Location = New System.Drawing.Point(717, 82)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(71, 21)
-        Me.ComboBox1.TabIndex = 7
+        Me.cboDbType.FormattingEnabled = True
+        Me.cboDbType.Items.AddRange(New Object() {"Sql", "OleDb", "Oracle", "MySql", "Odbc"})
+        Me.cboDbType.Location = New System.Drawing.Point(717, 82)
+        Me.cboDbType.Name = "cboDbType"
+        Me.cboDbType.Size = New System.Drawing.Size(71, 21)
+        Me.cboDbType.TabIndex = 7
         '
         'Button2
         '
@@ -135,15 +138,48 @@ Partial Class Form1
         Me.TextBox4.TabIndex = 10
         Me.TextBox4.Text = "CTableName"
         '
+        'CheckBox1
+        '
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Location = New System.Drawing.Point(598, 154)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(56, 17)
+        Me.CheckBox1.TabIndex = 11
+        Me.CheckBox1.Text = "HTML"
+        Me.CheckBox1.UseVisualStyleBackColor = True
+        '
+        'CheckBox2
+        '
+        Me.CheckBox2.AutoSize = True
+        Me.CheckBox2.Location = New System.Drawing.Point(660, 154)
+        Me.CheckBox2.Name = "CheckBox2"
+        Me.CheckBox2.Size = New System.Drawing.Size(52, 17)
+        Me.CheckBox2.TabIndex = 12
+        Me.CheckBox2.Text = "JAVA"
+        Me.CheckBox2.UseVisualStyleBackColor = True
+        '
+        'CheckBox3
+        '
+        Me.CheckBox3.AutoSize = True
+        Me.CheckBox3.Location = New System.Drawing.Point(718, 154)
+        Me.CheckBox3.Name = "CheckBox3"
+        Me.CheckBox3.Size = New System.Drawing.Size(63, 17)
+        Me.CheckBox3.TabIndex = 13
+        Me.CheckBox3.Text = "USAGE"
+        Me.CheckBox3.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.CheckBox3)
+        Me.Controls.Add(Me.CheckBox2)
+        Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.TextBox4)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.ComboBox1)
+        Me.Controls.Add(Me.cboDbType)
         Me.Controls.Add(Me.RadioButton2)
         Me.Controls.Add(Me.RadioButton1)
         Me.Controls.Add(Me.Button1)
@@ -166,8 +202,11 @@ Partial Class Form1
     Friend WithEvents Button1 As Button
     Friend WithEvents RadioButton1 As RadioButton
     Friend WithEvents RadioButton2 As RadioButton
-    Friend WithEvents ComboBox1 As ComboBox
+    Friend WithEvents cboDbType As ComboBox
     Friend WithEvents Button2 As Button
     Friend WithEvents Label1 As Label
     Friend WithEvents TextBox4 As TextBox
+    Friend WithEvents CheckBox1 As CheckBox
+    Friend WithEvents CheckBox2 As CheckBox
+    Friend WithEvents CheckBox3 As CheckBox
 End Class

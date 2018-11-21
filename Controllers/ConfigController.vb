@@ -65,7 +65,7 @@ Namespace Controllers
             Try
                 Dim tSqlw As String = " WHERE ConfigCode<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND ConfigCode='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND ConfigCode IN('{0}')", Request.QueryString("Code").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Key")) Then
                     tSqlw &= String.Format("AND ConfigKey='{0}'", Request.QueryString("Key").ToString)

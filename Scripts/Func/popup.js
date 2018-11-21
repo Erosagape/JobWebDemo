@@ -1,4 +1,4 @@
-﻿//basic function tools for binding 
+﻿//basic function tools for binding
 function CreateLOV(dv, frm, tb, name, html, c) {
     if (c <= 2) html = html.replace('<th>name</th>', '');
     if (c == 1) html = html.replace('<th>key</th>', '');

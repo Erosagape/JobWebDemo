@@ -219,8 +219,11 @@ End Code
         if (jt == null) jt = "01";
         if (sb == null) sb = "01";
         //Combos
-        loadConfig('#cboJobType', 'JOB_TYPE', path, jt);
-        loadConfig('#cboShipBy', 'SHIP_BY', path, sb);
+        var lists = 'JOB_TYPE=#cboJobType,SHIP_BY=#cboShipBy';
+        loadCombos(path, lists);
+
+        $('#cboJobType').val(jt);
+        $('#cboShipBy').val(sb);
     }
     function SetLOVs() {
         //3 Fields Show

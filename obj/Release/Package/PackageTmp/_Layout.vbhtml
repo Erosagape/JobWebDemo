@@ -4,10 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/bootstrap-select.min.css">
     <link rel="stylesheet" href="~/Content/jquery.datatables.min.css">
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap-select.js"></script>
     <script src="~/Scripts/Func/Util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
     <title>@ViewBag.Title</title>

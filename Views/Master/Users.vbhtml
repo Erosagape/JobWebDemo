@@ -132,6 +132,7 @@ End Code
             }
         } else {
             alert('Data Not Found');
+            ClearData();
         }
         //$('#txtUserID').focus();
     }
@@ -146,7 +147,7 @@ End Code
     }
     function GetDataSave() {
         var dr = {
-            UserID: $('#txtUserID').val(),
+            UserID: $('#txtUserID').val().trim(),
             UPassword: $('#txtUPassword').val(),
             TName: $('#txtTName').val(),
             EName: $('#txtEName').val(),
@@ -177,6 +178,14 @@ End Code
     function SaveData() {
         if (row.UserID != undefined) {
             var obj = GetDataSave();
+            if (obj.UserID == '') {
+                alert('Please enter user ID');
+                return;
+            }
+            if (obj.TName == '') {
+                alert('Please enter user name');
+                return;
+            }
             var ask = confirm("Do you need to " + (row.UserID == "" ? "Add" : "Save") + " this data?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });

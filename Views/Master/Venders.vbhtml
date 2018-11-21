@@ -81,7 +81,7 @@ End Code
     });
     function GetDataSave() {
         var dr = {
-            VenCode: $('#txtVenCode').val(),
+            VenCode: $('#txtVenCode').val().trim(),
             BranchCode: $('#txtBranchCode').val(),
             TaxNumber: $('#txtTaxNumber').val(),
             Title: $('#txtTitle').val(),
@@ -127,6 +127,14 @@ End Code
     function SaveData() {
         if (row.VenCode != undefined) {
             var obj = GetDataSave();
+            if (obj.VenCode == '') {
+                alert('Please enter vender code');
+                return;
+            }
+            if (obj.TName == '') {
+                alert('Please enter vender name');
+                return;
+            }
             var ask = confirm("Do you need to " + (row.VenCode == "" ? "Add" : "Save") + " this data?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
@@ -184,6 +192,7 @@ End Code
             }
         } else {
             alert('Data Not Found');
+            ClearData();
         }
         //$('#txtVenCode').focus();
     }

@@ -246,30 +246,18 @@ End Code
                         <input type="checkbox" id="chkTyAuthorSp" />
                         <label for="chkTyAuthorSp">Special Privilege</label>
                         <select id="cboTyAuthorSp" class="dropdown">
-                            <option value="">No Privilege</option>
-                            <option value="GC">Gold Card</option>
-                            <option value="CB">Customs Broker</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <input type="checkbox" id="chkTy19BIS" />
                         <label for="chkTy19BIS">19 BIS Rule</label>
                         <select id="cboTy19BIS" class="dropdown">
-                            <option value="">No Rule</option>
-                            <option value="CA">Cash</option>
-                            <option value="BG">Bank Guarantee</option>
-                            <option value="DD">Draft Deposit</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <input type="checkbox" id="chkTyClearTax" />
                         <label for="chkTyClearTax">Duty Rule</label>
                         <select id="cboTyClearTax" class="dropdown">
-                            <option value="">Non-Tax</option>
-                            <option value="TX">Tax Paid</option>
-                            <option value="NX">Tax Excepts</option>
-                            <option value="AF">AFTA</option>
-                            <option value="OT">Others</option>
                         </select>
                         <input type="text" id="txtClearTaxReson" tabindex="50" />
                     </div>
@@ -536,7 +524,6 @@ End Code
     var rec = {};
     //main function
     $(document).ready(function () {
-        //load list of values
         SetLOVs();
         SetEvents();
         //check parameters
@@ -660,6 +647,11 @@ End Code
             //Weights Unit
             CreateLOV(dv,'#frmSearchWUnt', '#tbWUnt', 'Weight Unit',response,1);
         });
+        //load list of values
+        var lists = 'CUSTOMS_PRIVILEGE=#cboTyAuthorSp';
+        lists += ',CUSTOMS_19BIS=#cboTy19BIS';
+        lists += ',CUSTOMS_EXPENSES=#cboTyClearTax';
+        loadCombos(path, lists);
     }
     //This section is for popup searching function
     function ReadInterPort(dt) {

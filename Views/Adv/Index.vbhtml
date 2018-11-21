@@ -355,6 +355,8 @@ End Code
         SetEvents();
         SetEnterToTab();
         CheckParam();
+        AddHeader();
+        $('#txtAdvNo').focus();
     });
     function CheckParam() {
         //read query string parameters
@@ -365,12 +367,14 @@ End Code
         var jno = getQueryString('JNo');
 
         //Combos
-        loadConfig('#cboJobType', 'JOB_TYPE', path, jt == null ? "01" : CCode(jt));
-        loadConfig('#cboShipBy', 'SHIP_BY', path, sb == null ? "01" : CCode(sb));
-        loadConfig('#cboAdvType', 'ADV_TYPE', path, '01');
-        loadConfig('#cboDocStatus', 'ADV_STATUS', path, '');
-        LoadService();
-        $('#txtBranchCode').val('00');
+        var lists = 'JOB_TYPE=#cboJobType';
+        lists += ',SHIP_BY=#cboShipBy';
+        lists += ',ADV_STATUS=#cboDocStatus';
+        lists += ',ADV_TYPE=#cboAdvType';
+
+        loadCombos(path, lists);
+
+        LoadService();        
         if (br.length > 0) {
             $('#txtBranchCode').val(br);
         }
@@ -424,7 +428,6 @@ End Code
                 }
             });
         });
-        $('#txtAdvNo').focus();
     }
     function SetEvents() {        
         $('#frmDetail').on('shown.bs.modal', function () {
@@ -752,6 +755,11 @@ End Code
         $.get(path + 'adv/getnewadvanceheader?branchcode=' + $('#txtBranchCode').val() , function (r) {
             var h = r.adv.header;
             ReadAdvHeader(h);
+            $('#cboJobType').val('01');
+            $('#cboShipBy').val('01');
+            $('#cboDocStatus').val('01');
+            $('#cboAdvType').val('01');
+
             var d = r.adv.detail;
             ReadAdvDetail(d);
             ClearDetail();
@@ -1030,7 +1038,8 @@ End Code
                 $('#tbHeader tbody > tr').removeClass('selected');
                 $(this).addClass('selected');
                 var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
-                ShowData(data.BranchCode,data.AdvNo); //callback function from caller 
+                ShowData(data.BranchCode, data.AdvNo); //callback function from caller 
+                $('#frmHeader').modal('hide');
             });
             $('#frmHeader').on('shown.bs.modal', function () {
                 $('#tbHeader_filter input').focus();
