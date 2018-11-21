@@ -1,8 +1,13 @@
-﻿Imports System.Data
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Public Class CCountry
     Private m_ConnStr As String
+    Public Sub New()
+
+    End Sub
     Public Sub New(pConnStr As String)
+        m_ConnStr = pConnStr
+    End Sub
+    Public Sub SetConnect(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
 
@@ -51,8 +56,8 @@ Public Class CCountry
             m_CUCODE = value
         End Set
     End Property
-    Public Function SaveData(pSQLWhere As String) As Boolean
-        Dim bComplete As Boolean = False
+    Public Function SaveData(pSQLWhere As String) As String
+        Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
@@ -70,15 +75,24 @@ Public Class CCountry
                             dr("CUCODE") = Me.CUCODE
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            bComplete = True
+                            msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                msg = ex.Message
             End Try
         End Using
-        Return bComplete
+        Return msg
     End Function
+    Public Sub AddNew()
+
+        m_CTYCODE = ""
+        m_CTYName = ""
+        m_CURCODE = ""
+        m_FTCODE = 0
+        m_CUCODE = 0
+    End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CCountry)
         Dim lst As New List(Of CCountry)
         Using cn As New SqlConnection(m_ConnStr)
@@ -109,5 +123,24 @@ Public Class CCountry
             End Try
         End Using
         Return lst
+    End Function
+    Public Function DeleteData(pSQLWhere As String) As String
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+
+                Using cm As New SqlCommand("DELETE FROM Mas_CountryFT" + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+                msg = "Delete Complete"
+            Catch ex As Exception
+                msg = ex.Message
+            End Try
+        End Using
+        Return msg
     End Function
 End Class
