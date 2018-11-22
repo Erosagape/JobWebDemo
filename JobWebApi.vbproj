@@ -467,6 +467,8 @@
     <Content Include="Views\Master\Venders.vbhtml" />
     <Content Include="Views\Menu\Index.vbhtml" />
     <Content Include="Scripts\bootstrap-select.js.map" />
+    <Content Include="Views\Master\Branch.vbhtml" />
+    <Content Include="Views\Master\Currency.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

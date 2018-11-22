@@ -11,7 +11,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="Advance.html">
-      <publishTime>04/10/2018 16:45:17</publishTime>
+      <publishTime>10/04/2018 16:45:17</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>08/21/2018 16:36:16</publishTime>
@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:36:16</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>11/21/2018 15:03:04</publishTime>
+      <publishTime>11/22/2018 17:57:35</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>11/21/2018 15:03:04</publishTime>
+      <publishTime>11/22/2018 17:57:35</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>11/21/2018 15:03:04</publishTime>
+      <publishTime>11/22/2018 17:57:34</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -263,10 +263,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:00:06</publishTime>
     </File>
     <File Include="Content/sheets-of-paper-a4.css">
-      <publishTime>05/09/2018 17:30:56</publishTime>
+      <publishTime>09/05/2018 17:30:56</publishTime>
     </File>
     <File Include="Content/sheets-of-paper.css">
-      <publishTime>09/05/2018 17:14:11</publishTime>
+      <publishTime>05/09/2018 17:14:11</publishTime>
     </File>
     <File Include="Content/Site.css">
       <publishTime>08/21/2018 16:00:06</publishTime>
@@ -317,7 +317,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/11/2018 14:47:12</publishTime>
     </File>
     <File Include="Resource/logo-idl.jpg">
-      <publishTime>09/06/2018 11:38:11</publishTime>
+      <publishTime>06/09/2018 11:38:11</publishTime>
     </File>
     <File Include="Resource/logo-tawan.jpg">
       <publishTime>09/11/2018 15:53:31</publishTime>
@@ -620,7 +620,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/20/2018 10:32:35</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>11/21/2018 15:46:56</publishTime>
+      <publishTime>11/22/2018 17:19:11</publishTime>
     </File>
     <File Include="Scripts/i18n/defaults-ar_AR.js">
       <publishTime>11/21/2018 14:59:42</publishTime>
@@ -994,6 +994,12 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/JobOrder/ShowJob.vbhtml">
       <publishTime>11/21/2018 15:15:42</publishTime>
     </File>
+    <File Include="Views/Master/Branch.vbhtml">
+      <publishTime>11/22/2018 16:39:46</publishTime>
+    </File>
+    <File Include="Views/Master/Currency.vbhtml">
+      <publishTime>11/22/2018 17:47:16</publishTime>
+    </File>
     <File Include="Views/Master/Customers.vbhtml">
       <publishTime>11/21/2018 17:31:43</publishTime>
     </File>
@@ -1010,7 +1016,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/21/2018 17:31:43</publishTime>
     </File>
     <File Include="Views/Menu/Index.vbhtml">
-      <publishTime>11/20/2018 16:58:59</publishTime>
+      <publishTime>11/22/2018 17:54:18</publishTime>
     </File>
     <File Include="Views/Shared/Error.vbhtml">
       <publishTime>08/21/2018 16:00:15</publishTime>

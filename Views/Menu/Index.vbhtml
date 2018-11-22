@@ -19,7 +19,7 @@ End Code
     <div class="panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
-                <table width="100%">
+                <table style="width:100%">
                     <tr>
                         <td>
                             <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="CheckLogin()" />
@@ -145,11 +145,19 @@ End Code
                                 </div>
                                 <div id="mnuMas" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('venders')">ผู้ให้บริการ</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
+                                        <a href="#mnuSubMas1" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
+                                        <div class="collapse" id="mnuSubMas1">
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Branch')">สาขา</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
+                                        </div>
+                                        <a href="#mnuSubMas2" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลพื้นฐาน</a>
+                                        <div class="collapse" id="mnuSubMas2">
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Currency')">สกุลเงิน</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('venders')">ผู้ให้บริการ</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -280,6 +288,9 @@ End Code
                 case 'Advance':
                     window.location.href = path+'Adv/Index';
                     break;
+                case 'Branch':
+                    window.location.href = path + 'Master/Branch';
+                    break;
                 case 'Constant':
                     window.location.href = path +'Config/Index';
                     break;
@@ -288,6 +299,9 @@ End Code
                     break;
                 case 'SearchJob':
                     window.location.href = path +'JobOrder/Index';
+                    break;
+                case 'Currency':
+                    window.location.href = path + 'Master/Currency';
                     break;
                 case 'ServiceCode':
                     window.location.href = path +'Master/ServiceCode';

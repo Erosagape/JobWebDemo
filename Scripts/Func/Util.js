@@ -362,6 +362,14 @@ function CallBackQueryCustomer(p, cno, br, ev) {
         }
     });
 }
+function CallBackQueryCurrency(p, cno, ev) {
+    $.get(p + 'master/getcurrency?Code=' + cno).done(function (r) {
+        var dr = r.currency.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function CallBackQueryJob(p, br, jno, ev) {
     $.get(p + 'joborder/getjobsql?Branch=' + br + '&JNo' + jno).done(function (r) {
         var dr = r.job.data;

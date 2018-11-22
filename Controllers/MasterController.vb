@@ -19,6 +19,9 @@ Namespace Controllers
         Function Index() As ActionResult
             Return GetView("Index")
         End Function
+        Function Branch() As ActionResult
+            Return GetView("Branch")
+        End Function
         Function ServiceCode() As ActionResult
             Return GetView("ServiceCode")
         End Function
@@ -86,6 +89,50 @@ Namespace Controllers
                 Dim oData = New CCurrency(jobMasConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""currency"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
+        End Function
+        Function Currency() As ActionResult
+            Return GetView("Currency")
+        End Function
+        Function SetCurrency(<FromBody()> data As CCurrency) As ActionResult
+
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.Code = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE [Code]='{0}' ", data.Code))
+                    Dim json = "{""result"":{""data"":""" & data.Code & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+
+        End Function
+        Function DelCurrency() As ActionResult
+
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code] ='{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""currency"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CCurrency(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""currency"":{""result"":""" & msg & """,""data"":[""" & JsonConvert.SerializeObject(oData) & """]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
@@ -384,6 +431,59 @@ Namespace Controllers
             Catch ex As Exception
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function GetBranch() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code]='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CBranch(jobWebConn).GetData("SELECT * FROM Mas_Branch " & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""branch"":{""data"":""" & json & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetBranch(<FromBody()> data As CBranch) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.Code = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE [Code]='{0}' ", data.Code))
+                    Dim json = "{""result"":{""data"":""" & data.Code & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+
+        End Function
+        Function DelBranch() As ActionResult
+
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code] Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""branch"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CBranch(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""branch"":{""result"":""" & msg & """,""data"":[""" & JsonConvert.SerializeObject(oData) & """]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
             End Try
         End Function
     End Class

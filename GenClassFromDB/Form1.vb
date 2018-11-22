@@ -82,7 +82,9 @@ Public Class Form1
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
                     strReader &= "row." & dc.ColumnName & " =rd.GetString(rd.GetOrdinal(""" & dc.ColumnName & """)).ToString()" & vbCrLf
                     strReader &= "End if"
+
                     strPrivate &= "Private m_" & dc.ColumnName & " as String"
+
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as String"
                     strProperty &= vbCrLf & "Get"
                     strProperty &= vbCrLf & "Return m_" & dc.ColumnName
@@ -90,16 +92,21 @@ Public Class Form1
                     strProperty &= vbCrLf & "Set (value as String)"
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
+
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " ="""""
+
                     strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
+
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
                 Case "Double", "Integer"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Double"
+
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
                     strReader &= "row." & dc.ColumnName & " =rd.GetDouble(rd.GetOrdinal(""" & dc.ColumnName & """))" & vbCrLf
                     strReader &= "End if"
+
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as Double"
                     strProperty &= vbCrLf & "Get"
                     strProperty &= vbCrLf & "Return m_" & dc.ColumnName
@@ -107,16 +114,21 @@ Public Class Form1
                     strProperty &= vbCrLf & "Set (value as Double)"
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
+
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
+
                     strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0.00"">"
+
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CNum($('#txt" & dc.ColumnName & "').val()),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('0.00');"
                 Case "DateTime"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Date"
+
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
                     strReader &= "row." & dc.ColumnName & " =rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """))" & vbCrLf
                     strReader &= "End if"
+
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as Date"
                     strProperty &= vbCrLf & "Get"
                     strProperty &= vbCrLf & "Return m_" & dc.ColumnName
@@ -124,16 +136,21 @@ Public Class Form1
                     strProperty &= vbCrLf & "Set (value as Date)"
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
+
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =DateTime.Minvalue"
+
                     strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
+
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(CDateEN(dr." & dc.ColumnName & "));"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CDateTH($('#txt" & dc.ColumnName & "').val()),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
                 Case Else
                     strPrivate &= "Private m_" & dc.ColumnName & " as Integer"
+
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
                     strReader &= "row." & dc.ColumnName & " =rd.Get" & Replace(dc.DataType.FullName, "System.", "") & "(rd.GetOrdinal(""" & dc.ColumnName & """))" & vbCrLf
                     strReader &= "End if"
+
                     strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as Integer"
                     strProperty &= vbCrLf & "Get"
                     strProperty &= vbCrLf & "Return m_" & dc.ColumnName
@@ -141,8 +158,11 @@ Public Class Form1
                     strProperty &= vbCrLf & "Set (value as Integer)"
                     strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
                     strProperty &= vbCrLf & "End Set"
+
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
+
                     strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0"">"
+
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
@@ -223,6 +243,70 @@ Public Class Form1
         strAll = strAll & vbCrLf & "End Class"
 
         If CheckBox3.Checked = True Then
+            strAll = strAll & vbCrLf & "Function " & TextBox4.Text.Substring(1) & "() as ActionResult"
+            strAll = strAll & vbCrLf & "Return View()"
+            strAll = strAll & vbCrLf & "End Function"
+
+            strAll = strAll & vbCrLf & "Function Get" & TextBox4.Text.Substring(1) & "() as ActionResult"
+            strAll = strAll & vbCrLf & "Try"
+            strAll = strAll & vbCrLf & "
+                Dim tSqlw As String = "" WHERE Key1<>'' ""
+                If Not IsNothing(Request.QueryString(""Code"")) Then
+                    tSqlw &= String.Format(""AND Key1 ='{0}'"", Request.QueryString(""Code"").ToString)
+                Else
+                Dim oData = New " & TextBox4.Text & "(conn).GetData(String.Format(""" & TextBox2.Text & " {0}"",tSqlW))
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = ""{""""" & TextBox4.Text.Substring(1).ToLower & """"":{""""data"""":"""""" & json & """"""}}""
+                Return Content(json, jsonContent)
+                "
+            strAll = strAll & vbCrLf & "Catch ex As Exception"
+            strAll = strAll & vbCrLf & "Return Content(""[]"", jsonContent)"
+            strAll = strAll & vbCrLf & "End Try"
+            strAll = strAll & vbCrLf & "End Function"
+
+            strAll = strAll & vbCrLf & "Function Set" & TextBox4.Text.Substring(1) & "(<FromBody()> data as " & TextBox4.Text & ") as ActionResult"
+            strAll = strAll & vbCrLf & "
+            Try
+                If Not IsNothing(data) Then
+                    If """" & data.Key1 = """" Then
+                        Return Content(""{""""result"""":{""""data"""":null,""""msg"""":""""Please Enter Data""""}}"", jsonContent)
+                    End If
+                    data.SetConnect(Conn)
+                    Dim msg = data.SaveData(String.Format("" WHERE Key1='{0}' "", data.Key1))
+                    Dim json = ""{""""result"""":{""""data"""":"""""" & data.Key1 & """""",""""msg"""":"""""" & msg & """"""}}""
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = ""{""""result"""":{""""data"""":null,""""msg"""":""""No Data To Save""""}}""
+                    Return Content(json, jsonContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = ""{""""result"""":{""""data"""":null,""""msg"""":"""""" & ex.Message & """"""}}""
+                Return Content(json, jsonContent)
+            End Try
+"
+            strAll = strAll & vbCrLf & "End Function"
+
+            strAll = strAll & vbCrLf & "Function Del" & TextBox4.Text.Substring(1) & "() as ActionResult"
+            strAll = strAll & vbCrLf & "
+            Try
+                Dim tSqlw As String = "" WHERE Key1<>'' ""
+                If Not IsNothing(Request.QueryString(""Code"")) Then
+                    tSqlw &= String.Format(""AND Key1 Like '{0}'"", Request.QueryString(""Code"").ToString)
+                Else
+                    Return Content(""{""""" & TextBox4.Text.Substring(1).ToLower & """"":{""""result"""":""""Please Select Some Data"""",""""data"""":[]}}"", jsonContent)
+                End If
+                Dim oData As New " & TextBox4.Text & "(Conn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = ""{""""" & TextBox4.Text.Substring(1).ToLower & """"":{""""result"""":"""""" & msg & """""",""""data"""":["""""" & JsonConvert.SerializeObject(oData) & """"""]}}""
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content(""[]"", jsonContent)
+            End Try
+"
+            strAll = strAll & vbCrLf & "End Function"
+
             strAll = strAll & vbCrLf & "Sub ExampleGetClass"
             strAll = strAll & vbCrLf & "Dim cls as New " & TextBox4.Text & "(conn).GetData("" WHERE (1=0)"")"
             strAll = strAll & vbCrLf & "Dim obj=IF(cls.Count>0,cls(0),new " & TextBox4.Text & ")"
@@ -234,22 +318,30 @@ Public Class Form1
             strAll = strAll & vbCrLf & "End Sub"
         End If
         If CheckBox1.Checked = True Then
-            strAll = strAll & vbCrLf & "Sub HtmlControl"
+            strAll = strAll & vbCrLf & "<div id=""dvForm"">"
             strAll = strAll & vbCrLf & strHtml
-            strAll = strAll & vbCrLf & "End Sub"
+            strAll = strAll & vbCrLf & "</div>"
+            strAll = strAll & vbCrLf & "<div id=""dvCommand"">"
+            strAll = strAll & vbCrLf & "
+            <button id=""btnAdd"" class=""btn btn-default"" onclick=""ClearData()"">Add</button>
+            <button id=""btnSave"" class=""btn btn-success"" onclick=""SaveData()"">Save</button>
+            <button id=""btnDel"" class=""btn btn-danger"" onclick=""DeleteData()"">Delete</button>
+"
+            strAll = strAll & vbCrLf & "</div>"
         End If
         If CheckBox2.Checked = True Then
-            strAll = strAll & vbCrLf & "Sub JavaLoad"
+            strAll = strAll & vbCrLf & "function ReadData(dr){"
             strAll = strAll & vbCrLf & strJavaLoad
-            strAll = strAll & vbCrLf & "End Sub"
-            strAll = strAll & vbCrLf & "Sub JavaSave"
+            strAll = strAll & vbCrLf & "}"
+            strAll = strAll & vbCrLf & "function SaveData(){"
             strAll = strAll & vbCrLf & "var obj={"
             strAll = strAll & vbCrLf & strJavaSave
+            strAll = strAll & vbCrLf & "};"
+            strAll = strAll & vbCrLf & "return true;"
             strAll = strAll & vbCrLf & "}"
-            strAll = strAll & vbCrLf & "End Sub"
-            strAll = strAll & vbCrLf & "Sub JavaClear"
+            strAll = strAll & vbCrLf & "function ClearData(){"
             strAll = strAll & vbCrLf & strJavaClear
-            strAll = strAll & vbCrLf & "End Sub"
+            strAll = strAll & vbCrLf & "}"
         End If
 
         Return strAll
