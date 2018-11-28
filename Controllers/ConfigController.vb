@@ -6,23 +6,13 @@ Imports Newtonsoft.Json
 
 Namespace Controllers
     Public Class ConfigController
-        Inherits Controller
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Session("CurrUser") = ""
-            End If
-            ViewBag.User = Session("CurrUser").ToString
-            If ViewBag.User = "" Then
-                Return Redirect("~/index.html")
-            End If
-            Return View(vName)
-        End Function
+        Inherits CController
         ' GET: Config
         Function Index() As ActionResult
-            Return GetView("Index")
+            Return GetView("Index", "MODULE_MAS")
         End Function
         Function UserAuth() As ActionResult
-            Return GetView("UserAuth")
+            Return GetView("UserAuth", "MODULE_MAS")
         End Function
         Function GetUserAuth() As ActionResult
             Try

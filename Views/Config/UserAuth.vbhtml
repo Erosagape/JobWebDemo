@@ -1,75 +1,127 @@
 ﻿@Code
-    ViewBag.Title = "Master Files"
+    ViewBag.Title = "User Authorized"
 End Code
 <div class="panel-body">
     <div class="container">
         <div id="dvForm">
-            UserID :<br /><input type="text" id="txtUserID" class="form-control" tabIndex="1">
-            AppID :<br /><input type="text" id="txtAppID" class="form-control" tabIndex="2">
-            MenuID :<br /><input type="text" id="txtMenuID" class="form-control" tabIndex="3">
-            Author :<br /><input type="text" id="txtAuthor" class="form-control" tabIndex="4">
-        </div>
-        <div id="dvCommand">
-            <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-            <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+            <div class="row">                
+                Module :<br /><select id="txtAppID" class="form-control dropdown" tabIndex="0" onchange="LoadGrid()"></select>
+            </div>
+            <div class="row">
+                <table id="tbMenu" class="table table-responsive"></table>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    Function :<br/><input type="text" id="txtMenuID" class="form-control" disabled>
+                </div>                
+                <div class="col-sm-8">
+                    <br/>
+                    <input type="text" id="txtMenuName" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="#" onclick="SearchData('user')">UserID :</a><br /><input type="text" id="txtUserID" class="form-control" tabIndex="1" />
+                </div>
+                <div class="col-sm-8">
+                    <br /><input type="text" id="txtUserName" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="checkbox" id="chkManage" onchange="SetAuth()" />
+                    <label for="chkManage">Allow Manage</label>
+                    <input type="checkbox" id="chkInsert" onchange="SetAuth()" />
+                    <label for="chkInsert">Allow Add</label>
+                    <input type="checkbox" id="chkRead" onchange="SetAuth()" />
+                    <label for="chkRead">Allow Search</label>
+                    <input type="checkbox" id="chkEdit" onchange="SetAuth()" />
+                    <label for="chkEdit">Can Edit</label>
+                    <input type="checkbox" id="chkDelete" onchange="SetAuth()" />
+                    <label for="chkDelete">Can Delete</label>
+                    <input type="checkbox" id="chkPrint" onchange="SetAuth()" />
+                    <label for="chkPrint">Can Print</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    Summary : <input type="text" id="txtAuthor" class="form-control">
+                </div>
+                <div class="col-sm-8">
+                    <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
+                    <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
     <div id="dvLOVs"></div>
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-        var path = '@Url.Content("~")';
+    var path = '@Url.Content("~")';
     $(document).ready(function () {
         SetEvents();
-        SetEnterToTab();
-        ClearData();
     });
+    function LoadGrid() {
+        var code = 'MODULE_'+ $('#txtAppID').val();
+        $('#tbMenu').DataTable({
+            ajax: {
+                url: path + 'Config/GetConfig?Code='+code, //web service ที่จะ call ไปดึงข้อมูลมา
+                dataSrc: 'config.data'
+            },
+            selected: true, //ให้สามารถเลือกแถวได้
+            columns: [ //กำหนด property ของ header column
+                { data: "ConfigKey", title: "รหัส" },
+                { data: "ConfigValue", title: "คำอธิบาย" }
+            ],
+            destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+        });
+        $('#tbMenu tbody').on('click', 'tr', function () {
+            $('#tbMenu tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+            $(this).addClass('selected'); //select row ใหม่
+            var dr = $('#tbMenu').DataTable().row(this).data();
+            $('#txtMenuID').val(dr.ConfigKey);
+            $('#txtMenuName').val(dr.ConfigValue);
+            if ($('#txtUserID').val() !== "") {
+                ShowData();
+            }
+        });
+        ClearData();
+    }
+    function SetAuth() {
+        var str = '';
+        str += $('#chkManage').prop('checked') == true ? 'M' : '';
+        str += $('#chkInsert').prop('checked') == true ? 'I' : '';
+        str += $('#chkRead').prop('checked') == true ? 'R' : '';
+        str += $('#chkEdit').prop('checked') == true ? 'E' : '';
+        str += $('#chkDelete').prop('checked') == true ? 'D' : '';
+        str += $('#chkPrint').prop('checked') == true ? 'P' : '';
+        $('#txtAuthor').val(str);
+    }
     function SetEvents() {
+        loadConfig('#txtAppID', 'MODULE', path, '');   
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             var dv = document.getElementById("dvLOVs");
-            CreateLOV(dv, '#frmSearchCode', '#tbCode', 'Search Data', response, 2);
+            CreateLOV(dv, '#frmSearchUser', '#tbUser', 'Search User', response, 2);
+        });     
+        $('#txtUserID').keydown(function (event) {
+            if (event.which == 13) {
+                $('#txtUserName').val('');
+                CallBackQueryUser(path, $('#txtUserID').val(), ReadUser);
+            }
         });
+    }
+    function ReadUser(dr) {
+        $('#txtUserID').val(dr.UserID);
+        $('#txtUserName').val(dr.TName);
+        ShowData();
     }
     function SearchData(type) {
         switch (type) {
-            default:
+            case 'user':
+                SetGridUser(path, '#tbUser', '#frmSearchUser', ReadUser);
                 break;
         }
-    }
-    function SetEnterToTab() {
-        //Set enter to tab
-        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
-            $(this).on("keypress", function (e) {
-                if (e.keyCode === 13) {
-                    var idx = (this.tabIndex + 1);
-                    var nextElement = $('[tabindex="' + idx + '"]');
-                    while (nextElement.length) {
-                        if (nextElement.prop('disabled') == false) {
-                            $('[tabindex="' + idx + '"]').focus();
-                            e.preventDefault();
-                            return;
-                        } else {
-                            idx = idx + 1;
-                            nextElement = $('[tabindex="' + idx + '"]');
-                        }
-                    }
-                    $('[tabindex="1"]').focus();
-                }
-            });
-        });
-    }
-    function SetEvents() {
-        $('#txtUserID').keydown(function (event) {
-            if (event.which == 13) {
-                var code = $('#txtUserID').val();
-                var app = $('#txtAppID').val();
-                var menu = $('#txtMenuID').val();
-                ClearData();
-                $('#txtUserID').val(code);
-                CallBackQueryUserAuth(path, code,app,menu, ReadData);
-            }
-        });
     }
     function DeleteData() {
         var code = $('#txtUserID').val();
@@ -83,10 +135,21 @@ End Code
         });
     }
     function ReadData(dr) {
-        $('#txtUserID').val(dr.UserID);
-        $('#txtAppID').val(dr.AppID);
-        $('#txtMenuID').val(dr.MenuID);
-        $('#txtAuthor').val(dr.Author);
+        var data = dr.Author;
+        $('#txtAuthor').val(data);
+        $('#chkManage').prop('checked', data.indexOf('M') >= 0 ? true : false);
+        $('#chkInsert').prop('checked', data.indexOf('I') >= 0 ? true : false);
+        $('#chkRead').prop('checked', data.indexOf('R') >= 0 ? true : false);
+        $('#chkEdit').prop('checked', data.indexOf('E') >= 0 ? true : false);
+        $('#chkDelete').prop('checked', data.indexOf('D') >= 0 ? true : false);
+        $('#chkPrint').prop('checked', data.indexOf('P') >= 0 ? true : false);
+    }
+    function ShowData() {
+        var code = $('#txtUserID').val();
+        var app = $('#txtAppID').val();
+        var menu = $('#txtMenuID').val();
+        ClearData();
+        CallBackQueryUserAuth(path, code, app, menu, ReadData);
     }
     function SaveData(){
         var obj = {
@@ -95,7 +158,7 @@ End Code
             MenuID:$('#txtMenuID').val(),
             Author:$('#txtAuthor').val()
         };
-        if (obj.UserID != "") {
+        if (obj.UserID !== "") {
             if (obj.AppID === "") {
                 alert('Please select Application');
                 return;
@@ -113,10 +176,6 @@ End Code
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtUserID').val(response.result.data);
-                        $('#txtUserID').focus();
-                    }
                     alert(response.result.msg);
                 },
                 error: function (e) {
@@ -128,10 +187,12 @@ End Code
         }
     }
     function ClearData(){
-
-        $('#txtUserID').val('');
-        $('#txtAppID').val('');
-        $('#txtMenuID').val('');
         $('#txtAuthor').val('');
+        $('#chkManage').prop('checked', false);
+        $('#chkInsert').prop('checked', false);
+        $('#chkRead').prop('checked', false);
+        $('#chkEdit').prop('checked', false);
+        $('#chkDelete').prop('checked', false);
+        $('#chkPrint').prop('checked', false);
     }
 </script>

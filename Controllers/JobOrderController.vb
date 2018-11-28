@@ -3,25 +3,15 @@ Imports System.Web.Mvc
 Imports Newtonsoft.Json
 Namespace Controllers
     Public Class JobOrderController
-        Inherits Controller
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Session("CurrUser") = ""
-            End If
-            ViewBag.User = Session("CurrUser").ToString
-            If ViewBag.User = "" Then
-                Return Redirect("~/index.html")
-            End If
-            Return View(vName)
-        End Function
+        Inherits CController
         Function Index() As ActionResult
-            Return GetView("Index")
+            Return GetView("Index", "MODULE_CS")
         End Function
         Function CreateJob() As ActionResult
-            Return GetView("CreateJob")
+            Return GetView("CreateJob", "MODULE_CS")
         End Function
         Function ShowJob() As ActionResult
-            Return GetView("ShowJob")
+            Return GetView("ShowJob", "MODULE_CS")
         End Function
         Function FormJob() As ActionResult
             Return View()

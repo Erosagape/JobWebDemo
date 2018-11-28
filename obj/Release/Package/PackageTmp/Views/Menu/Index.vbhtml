@@ -150,6 +150,7 @@ End Code
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Branch')">สาขา</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</a>
                                         </div>
                                         <a href="#mnuSubMas2" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
                                         <div class="collapse" id="mnuSubMas2">
@@ -331,6 +332,9 @@ End Code
                     break;
                 case 'users':
                     window.location.href = path +'Master/Users';
+                    break;
+                case 'UserAuth':
+                    window.location.href = path + 'Config/UserAuth';
                     break;
                 case 'venders':
                     window.location.href = path +'Master/Venders';

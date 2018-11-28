@@ -385,6 +385,7 @@
     <Compile Include="Models\CBranch.vb" />
     <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
+    <Compile Include="Models\CController.vb" />
     <Compile Include="Models\CCountry.vb" />
     <Compile Include="Models\CCurrency.vb" />
     <Compile Include="Models\CCustomsPort.vb" />
@@ -476,6 +477,9 @@
     <Content Include="Views\Master\CustomsPort.vbhtml" />
     <Content Include="Views\Master\InterPort.vbhtml" />
     <Content Include="Views\Config\UserAuth.vbhtml" />
+    <Content Include="Views\Adv\Approve.vbhtml" />
+    <Content Include="Views\Adv\Payment.vbhtml" />
+    <Content Include="Views\Menu\AuthError.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

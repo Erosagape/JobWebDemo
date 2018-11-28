@@ -361,8 +361,6 @@ End Code
     function CheckParam() {
         //read query string parameters
         var br = getQueryString('BranchCode');
-        var jt = getQueryString('JType');
-        var sb = getQueryString('SBy');
         var ano = getQueryString('AdvNo');
         var jno = getQueryString('JNo');
 
@@ -396,6 +394,8 @@ End Code
             $('#txtCustCode').val(dr.CustCode);
             $('#txtCustBranch').val(dr.CustBranch);
             $('#txtInvNo').val(dr.InvNo);
+            $('#cboJobType').val(CCode(dr.JobType));
+            $('#cboShipBy').val(CCode(dr.ShipBy));
             ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             
             $('#txtCustCode').attr('disabled', 'disabled');

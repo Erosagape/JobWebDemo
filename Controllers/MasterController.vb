@@ -3,51 +3,43 @@ Imports System.Web.Mvc
 Imports Newtonsoft.Json
 Namespace Controllers
     Public Class MasterController
-        Inherits Controller
-
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Session("CurrUser") = ""
-            End If
-            ViewBag.User = Session("CurrUser").ToString
-            If ViewBag.User = "" Then
-                Return Redirect("~/index.html")
-            End If
-            Return View(vName)
-        End Function
+        Inherits CController
         ' GET: Customer
         Function Index() As ActionResult
             Return GetView("Index")
         End Function
         Function Branch() As ActionResult
-            Return GetView("Branch")
+            Return GetView("Branch", "MODULE_MAS")
         End Function
         Function ServiceCode() As ActionResult
-            Return GetView("ServiceCode")
+            Return GetView("ServiceCode", "MODULE_MAS")
         End Function
         Function Customers() As ActionResult
-            Return GetView("Customers")
+            Return GetView("Customers", "MODULE_MAS")
+        End Function
+        Function Currency() As ActionResult
+            Return GetView("Currency", "MODULE_MAS")
         End Function
         Function Users() As ActionResult
-            Return GetView("Users")
+            Return GetView("Users", "MODULE_MAS")
         End Function
         Function Venders() As ActionResult
-            Return GetView("Venders")
+            Return GetView("Venders", "MODULE_MAS")
         End Function
         Function Country() As ActionResult
-            Return GetView("Country")
+            Return GetView("Country", "MODULE_MAS")
         End Function
         Function ServUnit() As ActionResult
-            Return GetView("ServUnit")
+            Return GetView("ServUnit", "MODULE_MAS")
         End Function
         Function DeclareType() As ActionResult
-            Return GetView("DeclareType")
+            Return GetView("DeclareType", "MODULE_MAS")
         End Function
         Function CustomsPort() As ActionResult
-            Return GetView("CustomsPort")
+            Return GetView("CustomsPort", "MODULE_MAS")
         End Function
         Function InterPort() As ActionResult
-            Return GetView("InterPort")
+            Return GetView("InterPort", "MODULE_MAS")
         End Function
         Function GetInterPort() As ActionResult
             Try
@@ -296,9 +288,6 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
 
-        End Function
-        Function Currency() As ActionResult
-            Return GetView("Currency")
         End Function
         Function SetCurrency(<FromBody()> data As CCurrency) As ActionResult
 

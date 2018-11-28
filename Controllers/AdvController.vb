@@ -4,20 +4,16 @@ Imports Newtonsoft.Json
 
 Namespace Controllers
     Public Class AdvController
-        Inherits Controller
-        Private Function GetView(vName As String) As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Session("CurrUser") = ""
-            End If
-            ViewBag.User = Session("CurrUser").ToString
-            If ViewBag.User = "" Then
-                Return Redirect("~/index.html")
-            End If
-            Return View(vName)
-        End Function
+        Inherits CController
         ' GET: Advance
         Function Index() As ActionResult
-            Return GetView("Index")
+            Return GetView("Index", "MODULE_ADV")
+        End Function
+        Function Approve() As ActionResult
+            Return GetView("Approve", "MODULE_ADV")
+        End Function
+        Function Payment() As ActionResult
+            Return GetView("Payment", "MODULE_ADV")
         End Function
         Function FormAdv() As ActionResult
             Return View()
@@ -113,11 +109,11 @@ Namespace Controllers
                 oAdvH.BranchCode = Branch
                 oAdvH.AdvNo = ""
                 oAdvH.AdvDate = DateTime.Today
-                Dim oAdvD As New CAdvDetail(jobWebConn)
-                oAdvD.BranchCode = Branch
-                oAdvD.AdvNo = ""
-                oAdvD.ItemNo = 0
-                'Dim msg As String = oAdvH.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdVNo='{1}'", oAdvH.BranchCode, oAdvH.AdvNo))
+                Dim oAdvD As New CAdvDetail(jobWebConn) With {
+                    .BranchCode = Branch,
+                    .AdvNo = "",
+                    .ItemNo = 0
+                }
                 Dim jsonh As String = JsonConvert.SerializeObject(oAdvH)
                 Dim jsond As String = JsonConvert.SerializeObject(oAdvD)
                 Dim json = "{""adv"":{""header"":" & jsonh & ",""detail"":" & jsond & ",""result"":""OK""}}"

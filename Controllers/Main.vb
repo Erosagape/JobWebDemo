@@ -86,4 +86,15 @@ Module Main
         End If
         Return retStr
     End Function
+    Public Function GetAuthorize(uname As String, app As String, mnu As String) As String
+        'M=Can Manage
+        'I=Can Insert Data
+        'R=Can Query Data
+        'E=Can Edit Data
+        'D=Can Delete Data
+        'P=Can Print Data
+        Dim auth = New CUserAuth(jobWebConn).GetData(" WHERE UserID='" & uname & "' AND AppID='" & app & "' AND MenuID='" & mnu & "'")
+        Dim data = If(auth.Count > 0, "" & auth(0).Author, "MIREDP")
+        Return data
+    End Function
 End Module

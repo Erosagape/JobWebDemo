@@ -9,7 +9,7 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-        var path = '@Url.Content("~")';
+    var path = '@Url.Content("~")';
     $(document).ready(function () {
         SetEvents();
         SetEnterToTab();
