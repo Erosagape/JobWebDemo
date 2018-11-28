@@ -36,6 +36,12 @@ Partial Class Form1
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
+        Me.TextBox5 = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.TextBox6 = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -58,9 +64,9 @@ Partial Class Form1
         'DataGridView1
         '
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(19, 155)
+        Me.DataGridView1.Location = New System.Drawing.Point(19, 178)
         Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.Size = New System.Drawing.Size(397, 258)
+        Me.DataGridView1.Size = New System.Drawing.Size(397, 235)
         Me.DataGridView1.TabIndex = 2
         '
         'TextBox3
@@ -124,7 +130,7 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(423, 155)
+        Me.Label1.Location = New System.Drawing.Point(280, 156)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(63, 13)
         Me.Label1.TabIndex = 9
@@ -132,7 +138,7 @@ Partial Class Form1
         '
         'TextBox4
         '
-        Me.TextBox4.Location = New System.Drawing.Point(492, 152)
+        Me.TextBox4.Location = New System.Drawing.Point(340, 151)
         Me.TextBox4.Name = "TextBox4"
         Me.TextBox4.Size = New System.Drawing.Size(100, 20)
         Me.TextBox4.TabIndex = 10
@@ -141,7 +147,7 @@ Partial Class Form1
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(598, 154)
+        Me.CheckBox1.Location = New System.Drawing.Point(512, 154)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(56, 17)
         Me.CheckBox1.TabIndex = 11
@@ -151,7 +157,7 @@ Partial Class Form1
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(660, 154)
+        Me.CheckBox2.Location = New System.Drawing.Point(574, 153)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(52, 17)
         Me.CheckBox2.TabIndex = 12
@@ -161,20 +167,78 @@ Partial Class Form1
         'CheckBox3
         '
         Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Checked = True
-        Me.CheckBox3.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.CheckBox3.Location = New System.Drawing.Point(718, 154)
+        Me.CheckBox3.Location = New System.Drawing.Point(632, 153)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.Size = New System.Drawing.Size(63, 17)
         Me.CheckBox3.TabIndex = 13
         Me.CheckBox3.Text = "USAGE"
         Me.CheckBox3.UseVisualStyleBackColor = True
         '
+        'TextBox5
+        '
+        Me.TextBox5.Location = New System.Drawing.Point(84, 152)
+        Me.TextBox5.Name = "TextBox5"
+        Me.TextBox5.Size = New System.Drawing.Size(76, 20)
+        Me.TextBox5.TabIndex = 15
+        Me.TextBox5.Text = "JobMasConn"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(15, 155)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(61, 13)
+        Me.Label2.TabIndex = 14
+        Me.Label2.Text = "Connection"
+        '
+        'TextBox6
+        '
+        Me.TextBox6.Location = New System.Drawing.Point(195, 152)
+        Me.TextBox6.Name = "TextBox6"
+        Me.TextBox6.Size = New System.Drawing.Size(79, 20)
+        Me.TextBox6.TabIndex = 17
+        Me.TextBox6.Text = "Key1"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(164, 155)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(25, 13)
+        Me.Label3.TabIndex = 16
+        Me.Label3.Text = "Key"
+        '
+        'CheckBox4
+        '
+        Me.CheckBox4.AutoSize = True
+        Me.CheckBox4.Location = New System.Drawing.Point(446, 154)
+        Me.CheckBox4.Name = "CheckBox4"
+        Me.CheckBox4.Size = New System.Drawing.Size(60, 17)
+        Me.CheckBox4.TabIndex = 18
+        Me.CheckBox4.Text = "CLASS"
+        Me.CheckBox4.UseVisualStyleBackColor = True
+        '
+        'CheckBox5
+        '
+        Me.CheckBox5.AutoSize = True
+        Me.CheckBox5.Location = New System.Drawing.Point(693, 154)
+        Me.CheckBox5.Name = "CheckBox5"
+        Me.CheckBox5.Size = New System.Drawing.Size(99, 17)
+        Me.CheckBox5.TabIndex = 19
+        Me.CheckBox5.Text = "CONTROLLER"
+        Me.CheckBox5.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.CheckBox5)
+        Me.Controls.Add(Me.CheckBox4)
+        Me.Controls.Add(Me.TextBox6)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.TextBox5)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.CheckBox3)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.CheckBox1)
@@ -211,4 +275,10 @@ Partial Class Form1
     Friend WithEvents CheckBox1 As CheckBox
     Friend WithEvents CheckBox2 As CheckBox
     Friend WithEvents CheckBox3 As CheckBox
+    Friend WithEvents TextBox5 As TextBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents TextBox6 As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents CheckBox4 As CheckBox
+    Friend WithEvents CheckBox5 As CheckBox
 End Class

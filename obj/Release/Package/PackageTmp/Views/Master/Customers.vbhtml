@@ -185,11 +185,16 @@ End Code
     function SetEvents() {
         $('#txtBranch').keydown(function (event) {
             if (event.which == 13) {
-                CallBackQueryCustomer(path, $('#txtCustCode').val(), $('#txtBranch').val(), ReadCustomer);
+                var code = $('#txtCustCode').val();
+                var branch = $('#txtBranch').val();
+                ClearData();
+                CallBackQueryCustomer(path,code ,branch, ReadCustomer);
             }
         });
         $('#txtBillToBranch').keydown(function (event) {
             if (event.which == 13) {
+                $('#txtBillToCustName').val('');
+                $('#txtBillToAddress').val('');
                 CallBackQueryCustomer(path, $('#txtBillToCustCode').val(), $('#txtBillToBranch').val(), ReadBilling);
             }
         });
@@ -361,7 +366,7 @@ End Code
         $('#txtBillToCustCode').val(dr.CustCode);
         $('#txtBillToBranch').val(dr.Branch);
         if ($('#txtUsedLanguage').val() == "TH") {
-            $('#txtBillToCustName').val(dr.Title + dr.NameThai);
+            $('#txtBillToCustName').val(dr.NameThai);
             $('#txtBillToAddress').val(dr.TAddress1 + ' ' + dr.TAddress2);
         } else {
             $('#txtBillToCustName').val(dr.NameEng);
@@ -452,6 +457,8 @@ End Code
         $('#txtWEB_SITE').val('');
         $('#cboCompanyType').val('');
         $('#cboCommLevel').val('');
+
+        $('#txtCustCode').focus();
     }
     function SaveData() {
         var obj = {

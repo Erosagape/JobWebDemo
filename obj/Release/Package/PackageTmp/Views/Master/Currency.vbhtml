@@ -4,12 +4,26 @@ End Code
 <div class="panel-body">
     <div class="container">
         <div id="dvForm">
-            <a href="#" onclick="SearchData('currency')">Currency Code</a> :
-            <br /><input type="text" id="txtCode" class="form-control" tabIndex="1">
-            Currency Name :<br /><input type="text" id="txtTName" class="form-control" tabIndex="2">
-            Begin Date :<br /><input type="date" id="txtStartDate" class="form-control" tabIndex="3">
-            Expire Date :<br /><input type="date" id="txtFinishDate" class="form-control" tabIndex="4">
-            Last Update :<br /><input type="date" id="txtLastUpdate" class="form-control" disabled>
+            <div class="row">
+                <div class="col-sm-3">
+                    <a href="#" onclick="SearchData('currency')">Currency Code</a> :
+                    <br /><input type="text" id="txtCode" class="form-control" tabIndex="1">
+                </div>
+                <div class="col-sm-9">
+                    Currency Name :<br /><input type="text" id="txtTName" class="form-control" tabIndex="2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    Begin Date :<br /><input type="date" id="txtStartDate" class="form-control" tabIndex="3">
+                </div>
+                <div class="col-sm-4">
+                    Expire Date :<br /><input type="date" id="txtFinishDate" class="form-control" tabIndex="4">
+                </div>
+                <div class="col-sm-4">
+                    Last Update :<br /><input type="date" id="txtLastUpdate" class="form-control" disabled>
+                </div>
+            </div>
         </div>
         <div id="dvCommand">
             <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
@@ -30,7 +44,10 @@ End Code
     function SetEvents() {
         $('#txtCode').keydown(function (event) {
             if (event.which == 13) {
-                CallBackQueryCurrency(path, $('#txtCode').val(),ReadData);
+                var code = $('#txtCode').val();
+                ClearData();
+                $('#txtCode').val(code);
+                CallBackQueryCurrency(path, code, ReadData);
             }
         });
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
@@ -73,6 +90,8 @@ End Code
         $('#txtStartDate').val('');
         $('#txtFinishDate').val('');
         $('#txtLastUpdate').val(GetToday());
+
+        $('#txtCode').focus();
     }
     function DeleteData() {
         var code = $('#txtCode').val();

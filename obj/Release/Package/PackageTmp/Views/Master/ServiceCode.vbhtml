@@ -160,7 +160,7 @@ End Code
                 return;
             } else {
                 alert('Data not found');
-                ClearData();
+                AddData();
             }
         });
     }

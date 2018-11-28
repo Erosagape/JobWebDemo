@@ -47,7 +47,7 @@ End Code
                                 </div>
                                 <div id="mnuMkt" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMkt">จัดการใบเสนอราคา</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMkt" onclick="OpenMenu('Quotation')">จัดการใบเสนอราคา</a>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@ End Code
                                 <div id="mnuShp" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Advance');">ใบเบิกค่าใช้จ่าย</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp">ใบปิดค่าใช้จ่าย</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="openMenu('Clearing')">ใบปิดค่าใช้จ่าย</a>
                                     </div>
                                 </div>
                             </div>
@@ -93,14 +93,14 @@ End Code
                                     <div class="panel-body">
                                         <a href="#mnuSubFin" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานการเงิน</a>
                                         <div class="collapse" id="mnuSubFin">
-                                            <a href="#" class="list-group-item glyphicon-minus">จ่ายเงินตามใบเบิก</a>
-                                            <a href="#" class="list-group-item glyphicon-minus">รับเคลียร์เงินตามใบปิด</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PayAdvance')">จ่ายเงินตามใบเบิก</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvClear')">รับเคลียร์เงินตามใบปิด</a>
                                         </div>
                                         <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
                                         <div class="collapse" id="mnuSubAcc">
-                                            <a href="#" class="list-group-item glyphicon-minus">ใบแจ้งหนี้</a>
-                                            <a href="#" class="list-group-item glyphicon-minus">ใบเสร็จรับเงิน</a>
-                                            <a href="#" class="list-group-item glyphicon-minus">ใบกำกับภาษี</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Invoices')">ใบแจ้งหนี้</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Receipts')">ใบเสร็จรับเงิน</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('TaxInvoices')">ใบกำกับภาษี</a>
                                         </div>
                                     </div>
                                 </div>
@@ -115,8 +115,8 @@ End Code
                                 </div>
                                 <div id="mnuAppr" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบเบิก</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr">อนุมัติใบปิด</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr" onclick="OpenMenu('AppAdvance')">อนุมัติใบเบิก</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuAppr" onclick="OpenMenu('AppClearing')">อนุมัติใบปิด</a>
                                     </div>
                                 </div>
                             </div>
@@ -130,8 +130,8 @@ End Code
                                 </div>
                                 <div id="mnuTrack" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">รายงานต่างๆ</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack">ตรวจสอบการทำงาน</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Reports')">รายงานต่างๆ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Tracking')">ตรวจสอบการทำงาน</a>
                                     </div>
                                 </div>
                             </div>
@@ -145,18 +145,26 @@ End Code
                                 </div>
                                 <div id="mnuMas" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#mnuSubMas1" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
+                                        <a href="#mnuSubMas1" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลระบบ</a>
                                         <div class="collapse" id="mnuSubMas1">
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Branch')">สาขา</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
                                         </div>
-                                        <a href="#mnuSubMas2" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลพื้นฐาน</a>
+                                        <a href="#mnuSubMas2" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
                                         <div class="collapse" id="mnuSubMas2">
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Currency')">สกุลเงิน</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Country')">ประเทศ</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('DeclareType')">ประเภทใบขน</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</a>
+                                        </div>
+                                        <a href="#mnuSubMas3" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลบัญชี</a>
+                                        <div class="collapse" id="mnuSubMas3">
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('venders')">ผู้ให้บริการ</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServUnit')">หน่วยบริการ</a>
                                         </div>
                                     </div>
                                 </div>
@@ -300,11 +308,26 @@ End Code
                 case 'SearchJob':
                     window.location.href = path +'JobOrder/Index';
                     break;
+                case 'Country':
+                    window.location.href = path + 'Master/Country';
+                    break;
                 case 'Currency':
                     window.location.href = path + 'Master/Currency';
                     break;
+                case 'DeclareType':
+                    window.location.href = path + 'Master/DeclareType';
+                    break;
+                case 'CustomsPort':
+                    window.location.href = path + 'Master/CustomsPort';
+                    break;
+                case 'InterPort':
+                    window.location.href = path + 'Master/InterPort';
+                    break;
                 case 'ServiceCode':
-                    window.location.href = path +'Master/ServiceCode';
+                    window.location.href = path + 'Master/ServiceCode';
+                    break;
+                case 'ServUnit':
+                    window.location.href = path + 'Master/ServUnit';
                     break;
                 case 'users':
                     window.location.href = path +'Master/Users';
@@ -316,6 +339,7 @@ End Code
                     window.location.href = path +'Master/Customers';
                     break;
                 default:
+                    alert('Under Development, Coming soon!');
                     break;
             }
         } else {

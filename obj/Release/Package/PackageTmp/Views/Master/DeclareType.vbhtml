@@ -1,27 +1,35 @@
 ﻿@Code
-    ViewBag.Title = "Currency"
+    ViewBag.Title = "Declare Type"
 End Code
 <div class="panel-body">
     <div class="container">
         <div id="dvForm">
             <div class="row">
-                <div class="col-sm-3">
-                    <a href="#" onclick="SearchData('currency')">Currency Code</a> :
-                    <br /><input type="text" id="txtCode" class="form-control" tabIndex="1">
+                <div class="col-sm-2">
+                    <a href="#" onclick="SearchData('code')">Declare Type :</a><br />
+                    <input type="text" id="txtType" class="form-control" tabIndex="1">
                 </div>
-                <div class="col-sm-9">
-                    Currency Name :<br /><input type="text" id="txtTName" class="form-control" tabIndex="2">
+                <div class="col-sm-7">
+                    Description :<br /><input type="text" id="txtDescription" class="form-control" tabIndex="2">
+                </div>
+                <div class="col-sm-3">
+                    Category :<br />
+                    <select id="txtCategory" class="form-control dropdown" tabIndex="3">
+                        <option value="B">IMPORT&EXPORT</option>
+                        <option value="M">IMPORT</option>
+                        <option value="X">EXPORT</option>
+                    </select>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    Begin Date :<br /><input type="date" id="txtStartDate" class="form-control" tabIndex="3">
+                    StartDate :<br /><input type="date" id="txtStartDate" class="form-control" tabIndex="4">
                 </div>
                 <div class="col-sm-4">
-                    Expire Date :<br /><input type="date" id="txtFinishDate" class="form-control" tabIndex="4">
+                    FinishDate :<br /><input type="date" id="txtFinishDate" class="form-control" tabIndex="5">
                 </div>
                 <div class="col-sm-4">
-                    Last Update :<br /><input type="date" id="txtLastUpdate" class="form-control" disabled>
+                    LastUpdate :<br /><input type="date" id="txtLastUpdate" class="form-control" disabled>
                 </div>
             </div>
         </div>
@@ -42,17 +50,17 @@ End Code
         ClearData();
     });
     function SetEvents() {
-        $('#txtCode').keydown(function (event) {
+        $('#txtType').keydown(function (event) {
             if (event.which == 13) {
-                var code = $('#txtCode').val();
+                var code = $('#txtType').val();
                 ClearData();
-                $('#txtCode').val(code);
-                CallBackQueryCurrency(path, code, ReadData);
+                $('#txtType').val(code);
+                CallBackQueryDeclareType(path, code, ReadData);
             }
         });
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             var dv = document.getElementById("dvLOVs");
-            CreateLOV(dv, '#frmSearchCurr', '#tbCurr', 'Currency', response, 2);
+            CreateLOV(dv, '#frmSearchCode', '#tbCode', 'Declare Type', response, 2);
         });
     }
     function SetEnterToTab() {
@@ -77,58 +85,48 @@ End Code
             });
         });
     }
+    function SearchData(type) {
+        switch (type) {
+            case 'code':
+                SetGridDeclareType(path, '#tbCode', '#frmSearchCode', ReadData);
+                break;
+        }
+    }
     function ReadData(dr) {
-        $('#txtCode').val(dr.Code);
-        $('#txtTName').val(dr.TName);
+        $('#txtType').val(dr.Type);
+        $('#txtDescription').val(dr.Description);
+        $('#txtCategory').val(dr.Category);
         $('#txtStartDate').val(CDateEN(dr.StartDate));
         $('#txtFinishDate').val(CDateEN(dr.FinishDate));
         $('#txtLastUpdate').val(CDateEN(dr.LastUpdate));
     }
-    function ClearData() {
-        $('#txtCode').val('');
-        $('#txtTName').val('');
-        $('#txtStartDate').val('');
-        $('#txtFinishDate').val('');
-        $('#txtLastUpdate').val(GetToday());
-
-        $('#txtCode').focus();
-    }
-    function DeleteData() {
-        var code = $('#txtCode').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delcurrency?code=' + code, function (r) {
-            alert(r.currency.result);
-            ClearData();
-        });
-    }
     function SaveData() {
         var obj = {
-            Code: $('#txtCode').val(),
-            TName: $('#txtTName').val(),
+            Type: $('#txtType').val(),
+            Description: $('#txtDescription').val(),
+            Category: $('#txtCategory').val(),
             StartDate: CDateTH($('#txtStartDate').val()),
             FinishDate: CDateTH($('#txtFinishDate').val()),
             LastUpdate: CDateTH(GetToday()),
         };
-        if (obj.Code != "") {
-            if (obj.TName == '') {
-                alert('Please enter currency name');
+        if (obj.Type != "") {
+            if (obj.Description == '') {
+                alert('Please enter description');
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.Code +"?");
+            var ask = confirm("Do you need to Save " + obj.Type + "/" + obj.Description +"?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
-                url: "@Url.Action("SetCurrency", "Master")",
+                url: "@Url.Action("SetDeclareType", "Master")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
                     if (response.result.data != null) {
-                        $('#txtCode').val(response.result.data);
-                        $('#txtCode').focus();
+                        $('#txtType').val(response.result.data);
+                        $('#txtType').focus();
                     }
                     alert(response.result.msg);
                 },
@@ -140,11 +138,25 @@ End Code
             alert('No data to save');
         }
     }
-    function SearchData(type) {
-        switch (type) {
-            case 'currency':
-                SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadData);
-                break;
-        }
+    function ClearData() {
+
+        $('#txtType').val('');
+        $('#txtDescription').val('');
+        $('#txtCategory').val('');
+        $('#txtStartDate').val('');
+        $('#txtFinishDate').val('');
+        $('#txtLastUpdate').val(CDateEN(GetToday()));
+
+        $('#txtType').focus();
+    }
+    function DeleteData() {
+        var code = $('#txtType').val();
+        var ask = confirm("Do you need to Delete " + code + "?");
+        if (ask == false) return;
+
+        $.get(path + 'master/deldeclaretype?code=' + code, function (r) {
+            alert(r.RFDCT.result);
+            ClearData();
+        });
     }
 </script>

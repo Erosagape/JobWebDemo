@@ -1,29 +1,18 @@
 ﻿@Code
-    ViewBag.Title = "Currency"
+    ViewBag.Title = "Service Units"
 End Code
 <div class="panel-body">
     <div class="container">
         <div id="dvForm">
-            <div class="row">
-                <div class="col-sm-3">
-                    <a href="#" onclick="SearchData('currency')">Currency Code</a> :
-                    <br /><input type="text" id="txtCode" class="form-control" tabIndex="1">
-                </div>
-                <div class="col-sm-9">
-                    Currency Name :<br /><input type="text" id="txtTName" class="form-control" tabIndex="2">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    Begin Date :<br /><input type="date" id="txtStartDate" class="form-control" tabIndex="3">
-                </div>
-                <div class="col-sm-4">
-                    Expire Date :<br /><input type="date" id="txtFinishDate" class="form-control" tabIndex="4">
-                </div>
-                <div class="col-sm-4">
-                    Last Update :<br /><input type="date" id="txtLastUpdate" class="form-control" disabled>
-                </div>
-            </div>
+            <a href="#" onclick="SearchData('unit')">Code:</a><br /><input type="text" id="txtUnitType" class="form-control" tabIndex="1">
+            Name (TH) :<br /><input type="text" id="txtUName" class="form-control" tabIndex="2">
+            English :<br /><input type="text" id="txtEName" class="form-control" tabIndex="3">
+            Type :<br />
+                  <select id="txtIsCTNUnit" class="form-control dropdown" tabIndex="4">
+                      <option value="-1">เป็นหน่วยงานบริการ</option>
+                      <option value="0">เป็นหน่วยนับสินค้า</option>
+                      <option value="1">เป็นหน่วยตู้/ขนส่ง</option>
+                  </select>
         </div>
         <div id="dvCommand">
             <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
@@ -42,17 +31,17 @@ End Code
         ClearData();
     });
     function SetEvents() {
-        $('#txtCode').keydown(function (event) {
-            if (event.which == 13) {
-                var code = $('#txtCode').val();
+        $('#txtUnitType').keydown(function (event) {
+            if (event.which == 13) {                
+                var code = $('#txtUnitType').val();
                 ClearData();
-                $('#txtCode').val(code);
-                CallBackQueryCurrency(path, code, ReadData);
+                $('#txtUnitType').val(code);
+                CallBackQueryServUnit(path, code, ReadData);
             }
         });
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             var dv = document.getElementById("dvLOVs");
-            CreateLOV(dv, '#frmSearchCurr', '#tbCurr', 'Currency', response, 2);
+            CreateLOV(dv, '#frmSearchUnit', '#tbUnit', 'Units', response, 2);
         });
     }
     function SetEnterToTab() {
@@ -78,57 +67,47 @@ End Code
         });
     }
     function ReadData(dr) {
-        $('#txtCode').val(dr.Code);
-        $('#txtTName').val(dr.TName);
-        $('#txtStartDate').val(CDateEN(dr.StartDate));
-        $('#txtFinishDate').val(CDateEN(dr.FinishDate));
-        $('#txtLastUpdate').val(CDateEN(dr.LastUpdate));
-    }
-    function ClearData() {
-        $('#txtCode').val('');
-        $('#txtTName').val('');
-        $('#txtStartDate').val('');
-        $('#txtFinishDate').val('');
-        $('#txtLastUpdate').val(GetToday());
-
-        $('#txtCode').focus();
+        $('#txtUnitType').val(dr.UnitType);
+        $('#txtUName').val(dr.UName);
+        $('#txtEName').val(dr.EName);
+        $('#txtIsCTNUnit').val(dr.IsCTNUnit);
     }
     function DeleteData() {
-        var code = $('#txtCode').val();
+        var code = $('#txtUnitType').val();
         var ask = confirm("Do you need to Delete " + code + "?");
         if (ask == false) return;
 
-        $.get(path + 'master/delcurrency?code=' + code, function (r) {
-            alert(r.currency.result);
+        $.get(path + 'master/delservunit?code=' + code, function (r) {
+            alert(r.servunit.result);
             ClearData();
         });
     }
     function SaveData() {
         var obj = {
-            Code: $('#txtCode').val(),
-            TName: $('#txtTName').val(),
-            StartDate: CDateTH($('#txtStartDate').val()),
-            FinishDate: CDateTH($('#txtFinishDate').val()),
-            LastUpdate: CDateTH(GetToday()),
+            UnitType: $('#txtUnitType').val(),
+            UName: $('#txtUName').val(),
+            EName: $('#txtEName').val(),
+            IsCTNUnit: $('#txtIsCTNUnit').val(),
         };
-        if (obj.Code != "") {
-            if (obj.TName == '') {
-                alert('Please enter currency name');
+        if (obj.UnitType != "") {
+            if (obj.UName == '') {
+                alert('Please enter unit name');
+                $('#txtUName').focus();
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.Code +"?");
+            var ask = confirm("Do you need to Save " + obj.UnitType + "?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
-                url: "@Url.Action("SetCurrency", "Master")",
+                url: "@Url.Action("SetServUnit", "Master")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
                     if (response.result.data != null) {
-                        $('#txtCode').val(response.result.data);
-                        $('#txtCode').focus();
+                        $('#txtUnitType').val(response.result.data);
+                        $('#txtUnitType').focus();
                     }
                     alert(response.result.msg);
                 },
@@ -140,10 +119,18 @@ End Code
             alert('No data to save');
         }
     }
+    function ClearData() {
+        $('#txtUnitType').val('');
+        $('#txtUName').val('');
+        $('#txtEName').val('');
+        $('#txtIsCTNUnit').val('');
+
+        $('#txtUnitType').focus();
+    }
     function SearchData(type) {
         switch (type) {
-            case 'currency':
-                SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadData);
+            case 'unit':
+                SetGridServUnit(path, '#tbUnit', '#frmSearchUnit', ReadData);
                 break;
         }
     }

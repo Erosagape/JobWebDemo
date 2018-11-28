@@ -76,6 +76,7 @@ End Code
     var row = {};
     $(document).ready(function () {
         SetEvents();
+        SetLOVs();
         SetEnterToTab();
         ClearData();
     });
@@ -106,13 +107,29 @@ End Code
         return dr;
     }
     function ClearData() {
-        $.get(path + 'master/getnewvender', function (r) {
-            if (r.vender.data != undefined) {
-                ReadVender(r.vender.data);
-                $('#txtVenCode').focus();
-                return;
-            }
-        });
+        $('#txtVenCode').val('');
+        $('#txtBranchCode').val('');
+        $('#txtTaxNumber').val('');
+        $('#txtTitle').val('');
+        $('#txtTName').val('');
+        $('#txtEnglish').val('');
+        $('#txtTAddress1').val('');
+        $('#txtTAddress2').val('');
+        $('#txtEAddress1').val('');
+        $('#txtEAddress2').val('');
+        $('#txtPhone').val('');
+        $('#txtFaxNumber').val('');
+        $('#txtLoginName').val('');
+        $('#txtLoginPassword').val('');
+        $('#txtGLAccountCode').val('');
+        $('#txtContactAcc').val('');
+        $('#txtContactSale').val('');
+        $('#txtContactSupport1').val('');
+        $('#txtContactSupport2').val('');
+        $('#txtContactSupport3').val('');
+        $('#txtWEB_SITE').val('');
+
+        $('#txtVenCode').focus();
     }
     function DeleteData() {
         var code = $('#txtVenCode').val();
@@ -206,7 +223,10 @@ End Code
     function SetEvents() {
         $('#txtVenCode').keydown(function (event) {
             if (event.which == 13) {
-                CallBackQueryVender(path, $('#txtVenCode').val(), ReadVender);
+                var code = $('#txtVenCode').val();
+                ClearData();
+                $('#txtVenCode').val(code);
+                CallBackQueryVender(path, code, ReadVender);
             }
         });
     }

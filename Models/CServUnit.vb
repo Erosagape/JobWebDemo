@@ -51,12 +51,11 @@ Public Class CServUnit
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
-                cn.Open()
-
+                cn.Open
                 Using da As New SqlDataAdapter("SELECT * FROM Mas_ServUnitType" & pSQLWhere, cn)
                     Using cb As New SqlCommandBuilder(da)
                         Using dt As New DataTable
-                            da.Fill(dt)
+                            da.fill(dt)
                             Dim dr As DataRow = dt.NewRow
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("UnitType") = Me.UnitType
@@ -64,7 +63,7 @@ Public Class CServUnit
                             dr("EName") = Me.EName
                             dr("IsCTNUnit") = Me.IsCTNUnit
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            da.update(dt)
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -87,7 +86,7 @@ Public Class CServUnit
         Using cn As New SqlConnection(m_ConnStr)
             Dim row As CServUnit
             Try
-                cn.Open()
+                cn.Open
                 Dim rd As SqlDataReader = New SqlCommand("SELECT * FROM Mas_ServUnitType" & pSQLWhere, cn).ExecuteReader()
                 While rd.Read()
                     row = New CServUnit(m_ConnStr)
@@ -114,14 +113,13 @@ Public Class CServUnit
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
-                cn.Open()
-
+                cn.Open
                 Using cm As New SqlCommand("DELETE FROM Mas_ServUnitType" + pSQLWhere, cn)
-                    cm.CommandTimeout = 0
+                    cm.CommandTimeOut = 0
                     cm.CommandType = CommandType.Text
-                    cm.ExecuteNonQuery()
+                    cm.ExecuteNonQuery
                 End Using
-                cn.Close()
+                cn.close
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message

@@ -92,7 +92,17 @@ End Code
         });
         $('#txtUserID').keydown(function (event) {
             if (event.which == 13) {
-                CallBackQueryUser(path, $('#txtUserID').val(), ReadUser);
+                var code = $('#txtUserID').val();
+                $('#txtUPassword').val('');
+                $('#txtTName').val('');
+                $('#txtEName').val('');
+                $('#txtTPosition').val('');
+                $('#txtUPosition').val('');
+                $('#txtEMail').val('');
+                $('#txtMobilePhone').val('');
+                $('#txtUserUpline').val('');
+                $('#txtUsedLanguage').val('');
+                CallBackQueryUser(path,code , ReadUser);
             }
         });
     }

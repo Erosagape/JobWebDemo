@@ -34,30 +34,232 @@ Namespace Controllers
         Function Venders() As ActionResult
             Return GetView("Venders")
         End Function
-        Function GetServUnit() As ActionResult
+        Function Country() As ActionResult
+            Return GetView("Country")
+        End Function
+        Function ServUnit() As ActionResult
+            Return GetView("ServUnit")
+        End Function
+        Function DeclareType() As ActionResult
+            Return GetView("DeclareType")
+        End Function
+        Function CustomsPort() As ActionResult
+            Return GetView("CustomsPort")
+        End Function
+        Function InterPort() As ActionResult
+            Return GetView("InterPort")
+        End Function
+        Function GetInterPort() As ActionResult
             Try
-                Dim tSqlw As String = " WHERE [UnitType]<>'' "
+                Dim tSqlw As String = " WHERE PortCode<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND [UnitType]='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format(" AND PortCode ='{0}'", Request.QueryString("Code").ToString)
                 End If
-                Dim oData = New CServUnit(jobMasConn).GetData(tSqlw)
+                If Not IsNothing(Request.QueryString("Key")) Then
+                    tSqlw &= String.Format(" AND CountryCode ='{0}'", Request.QueryString("Key").ToString)
+                End If
+                Dim oData = New CInterPort(jobMasConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""servunit"":{""data"":" & json & "}}"
+                json = "{""interport"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetInterPort(<FromBody()> data As CInterPort) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.PortCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Port Code""}}", jsonContent)
+                    End If
+                    If "" & data.CountryCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Country Code""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE PortCode='{0}' AND CountryCode='{1}' ", data.PortCode, data.CountryCode))
+                    Dim json = "{""result"":{""data"":""" & data.PortCode & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelInterPort() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE PortCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND PortCode Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""interport"":{""result"":""Please Select Port Code"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Key")) Then
+                    tSqlw &= String.Format(" AND CountryCode Like '{0}'", Request.QueryString("Key").ToString)
+                Else
+                    Return Content("{""interport"":{""result"":""Please Select Country Code"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CInterPort(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""interport"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+
+        Function GetCustomsPort() As ActionResult
+            Try
+
+                Dim tSqlw As String = " WHERE AreaCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND AreaCode ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CCustomsPort(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""RFARS"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetCustomsPort(<FromBody()> data As CCustomsPort) As ActionResult
+
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.AreaCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE AreaCode='{0}' ", data.AreaCode))
+                    Dim json = "{""result"":{""data"":""" & data.AreaCode & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+
+        End Function
+        Function DelCustomsPort() As ActionResult
+
+            Try
+                Dim tSqlw As String = " WHERE AreaCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND AreaCode Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""RFARS"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CCustomsPort(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""RFARS"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
             End Try
 
         End Function
-        Function GetCustomsPort() As ActionResult
+        Function SetDeclareType(<FromBody()> data As CDeclareType) As ActionResult
+
             Try
-                Dim tSqlw As String = " WHERE [AreaCode]<>'' "
-                If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND [AreaCode]='{0}'", Request.QueryString("Code").ToString)
+                If Not IsNothing(data) Then
+                    If "" & data.Type = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE Type='{0}' ", data.Type))
+                    Dim json = "{""result"":{""data"":""" & data.Type & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
                 End If
-                Dim oData = New CCustomsPort(jobMasConn).GetData(tSqlw)
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+
+        End Function
+        Function DelDeclareType() As ActionResult
+
+            Try
+                Dim tSqlw As String = " WHERE Type<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND Type Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""RFDCT"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CDeclareType(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""RFDCT"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
+        End Function
+        Function GetServUnit() As ActionResult
+            Try
+
+                Dim tSqlw As String = " WHERE UnitType<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND UnitType ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CServUnit(jobMasConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""RFARS"":{""data"":" & json & "}}"
+                json = "{""servunit"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetServUnit(<FromBody()> data As CServUnit) As ActionResult
+
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.UnitType = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE UnitType='{0}' ", data.UnitType))
+                    Dim json = "{""result"":{""data"":""" & data.UnitType & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+
+        End Function
+        Function DelServUnit() As ActionResult
+
+            Try
+                Dim tSqlw As String = " WHERE UnitType<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND UnitType Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""servunit"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CServUnit(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""servunit"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
@@ -132,7 +334,7 @@ Namespace Controllers
                 Dim oData As New CCurrency(jobMasConn)
                 Dim msg = oData.DeleteData(tSqlw)
 
-                Dim json = "{""currency"":{""result"":""" & msg & """,""data"":[""" & JsonConvert.SerializeObject(oData) & """]}}"
+                Dim json = "{""currency"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
@@ -193,28 +395,70 @@ Namespace Controllers
             Try
                 Dim tSqlw As String = " WHERE CTYCODE<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND CTYCODE='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND CTYCODE ='{0}'", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CCountry(jobMasConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""country"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
+
             Catch ex As Exception
                 Return Content("[]", jsonContent)
             End Try
+        End Function
+        Function SetCountry(<FromBody()> data As CCountry) As ActionResult
+
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.CTYCODE = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE CTYCODE='{0}' ", data.CTYCODE))
+                    Dim json = "{""result"":{""data"":""" & data.CTYCODE & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+
+        End Function
+        Function DelCountry() As ActionResult
+
+            Try
+                Dim tSqlw As String = " WHERE CTYCODE<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND CTYCODE Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""country"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CCountry(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""country"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
         End Function
         Function GetCompany() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE CustCode<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND CustCode='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format(" AND CustCode='{0}'", Request.QueryString("Code").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlw &= String.Format("AND Branch='{0}'", Request.QueryString("Branch").ToString)
+                    tSqlw &= String.Format(" AND Branch='{0}'", Request.QueryString("Branch").ToString)
                 End If
                 Dim oData = New CCompany(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""company"":{""data"":" & json & "}}"
+                json = "{""company"":{""data"":" & json & "},""sql"":""" & tSqlw & """}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
@@ -234,14 +478,14 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
-        Function GetInterPort() As ActionResult
+        Function _GetInterPort() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE CountryCode<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND PortCode='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format(" AND PortCode='{0}'", Request.QueryString("Code").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Key")) Then
-                    tSqlw &= String.Format("AND CountryCode='{0}'", Request.QueryString("Key").ToString)
+                    tSqlw &= String.Format(" AND CountryCode='{0}'", Request.QueryString("Key").ToString)
                 End If
                 Dim oData = New CInterPort(jobMasConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
@@ -480,7 +724,7 @@ Namespace Controllers
                 Dim oData As New CBranch(jobWebConn)
                 Dim msg = oData.DeleteData(tSqlw)
 
-                Dim json = "{""branch"":{""result"":""" & msg & """,""data"":[""" & JsonConvert.SerializeObject(oData) & """]}}"
+                Dim json = "{""branch"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

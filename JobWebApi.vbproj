@@ -394,6 +394,7 @@
     <Compile Include="Models\CServiceCode.vb" />
     <Compile Include="Models\CServUnit.vb" />
     <Compile Include="Models\CUser.vb" />
+    <Compile Include="Models\CUserAuth.vb" />
     <Compile Include="Models\CUtil.vb" />
     <Compile Include="Models\CVender.vb" />
     <Compile Include="Models\cXMLData.vb" />
@@ -469,6 +470,12 @@
     <Content Include="Scripts\bootstrap-select.js.map" />
     <Content Include="Views\Master\Branch.vbhtml" />
     <Content Include="Views\Master\Currency.vbhtml" />
+    <Content Include="Views\Master\Country.vbhtml" />
+    <Content Include="Views\Master\ServUnit.vbhtml" />
+    <Content Include="Views\Master\DeclareType.vbhtml" />
+    <Content Include="Views\Master\CustomsPort.vbhtml" />
+    <Content Include="Views\Master\InterPort.vbhtml" />
+    <Content Include="Views\Config\UserAuth.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

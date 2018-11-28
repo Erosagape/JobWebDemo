@@ -354,9 +354,33 @@ function DummyAdvanceData() {
     return data;
 }
 //public query functions
+function CallBackQueryInterPort(p, code,key, ev) {
+    $.get(p + 'master/getinterport?Code=' + code + '&Key='+key).done(function (r) {
+        var dr = r.interport.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryService(p, code, ev) {
+    $.get(p + 'master/getservicecode?code=' + code).done(function (r) {
+        var dr = r.servicecode.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function CallBackQueryCustomer(p, cno, br, ev) {
     $.get(p + 'master/getcompany?Code=' + cno + '&Branch' + br).done(function (r) {
         var dr = r.company.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryCountry(p, code, ev) {
+    $.get(p + 'master/getcountry?Code=' + code).done(function (r) {
+        var dr = r.country.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -396,6 +420,38 @@ function CallBackQueryVender(p, VenCode, ev) {
             }
         });
 }
+function CallBackQueryServUnit(p, code, ev) {
+    $.get(p + 'master/getservunit?Code=' + code).done(function (r) {
+        var dr = r.servunit.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryDeclareType(p, code, ev) {
+    $.get(p + 'master/getdeclaretype?Code=' + code).done(function (r) {
+        var dr = r.RFDCT.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryCustomsPort(p, code, ev) {
+    $.get(p + 'master/getcustomsport?Code=' + code).done(function (r) {
+        var dr = r.RFARS.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryUserAuth(p, code,app,menu, ev) {
+    $.get(p + 'config/getuserauth?Code=' + code+'&App='+app+'&Menu='+menu).done(function (r) {
+        var dr = r.userauth.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function ShowConfigValue(path, Code, Key, ControlID) {
     var strParam = "";
     if (Code != "") {
@@ -415,6 +471,7 @@ function ShowConfigValue(path, Code, Key, ControlID) {
             $(ControlID).val(response.config.data[0].ConfigValue);
         });
 }
+
 //call linked page function
 function CallOpenJob(p, br, jno) {
     window.open(p + 'joborder/showjob?BranchCode=' + br + '&JNo=' + jno);
