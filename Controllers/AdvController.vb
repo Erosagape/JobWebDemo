@@ -16,14 +16,26 @@ Namespace Controllers
             Return GetView("Payment", "MODULE_ADV")
         End Function
         Function FormAdv() As ActionResult
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print advance", textContent)
+            End If
+
             Return View()
         End Function
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
             Try
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)
                     If data.AdvNo = "" Then
+                        If AuthorizeStr.IndexOf("I") < 0 Then
+                            Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
+                        End If
                         data.AddNew(advPrefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+                    End If
+                    If AuthorizeStr.IndexOf("E") < 0 Then
+                        Return Content("{""result"":{""data"":null,""msg"":""You are not allow to edit advance""}}", jsonContent)
                     End If
                     Dim msg As String = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}'", data.BranchCode, data.AdvNo))
                     'Dim msg = JsonConvert.SerializeObject(data)
@@ -40,22 +52,40 @@ Namespace Controllers
             End Try
         End Function
         Function SaveAdvanceDetail(<FromBody()> ByVal data As CAdvDetail) As ActionResult
-            If Not IsNothing(data) Then
-                data.SetConnect(jobWebConn)
-                If data.ItemNo = 0 Then
-                    data.AddNew()
+            Try
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    If data.ItemNo = 0 Then
+                        If AuthorizeStr.IndexOf("I") < 0 Then
+                            Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
+                        End If
+                        data.AddNew()
+                    End If
+                    If AuthorizeStr.IndexOf("E") < 0 Then
+                        Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
+                    End If
+
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}' AND ItemNo={2} ", data.BranchCode, data.AdvNo, data.ItemNo))
+                    'Dim msg = JsonConvert.SerializeObject(data)
+                    Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
                 End If
-                Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}' AND ItemNo={2} ", data.BranchCode, data.AdvNo, data.ItemNo))
-                'Dim msg = JsonConvert.SerializeObject(data)
-                Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" + ex.Message + """}}"
                 Return Content(json, jsonContent)
-            Else
-                Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
-                Return Content(json, jsonContent)
-            End If
+            End Try
         End Function
         Function DelAdvanceDetail() As ActionResult
             Try
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("D") < 0 Then
+                    Return Content("{""adv"":{""result"":""You are not allow to Delete Adv""}}", jsonContent)
+                End If
+
                 Dim oADVD As New CAdvDetail(jobWebConn)
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
@@ -80,6 +110,11 @@ Namespace Controllers
         End Function
         Function DelAdvanceHeader() As ActionResult
             Try
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("D") < 0 Then
+                    Return Content("{""adv"":{""result"":""you are not allow to delete advance""}}", jsonContent)
+                End If
+
                 Dim oAdvH As New CAdvHeader(jobWebConn)
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
@@ -124,7 +159,6 @@ Namespace Controllers
         End Function
         Function GetNewAdvanceDetail() As ActionResult
             Try
-                Dim oAdvD As New CAdvDetail(jobWebConn)
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
@@ -133,9 +167,13 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     AdvNo = Request.QueryString("AdvNo")
                 End If
-                oAdvD.BranchCode = Branch
-                oAdvD.AdvNo = AdvNo
-                oAdvD.ItemNo = 0
+                Dim oAdvD As New CAdvDetail(jobWebConn) With
+                    {
+                        .BranchCode = Branch,
+                        .AdvNo = AdvNo,
+                        .ItemNo = 0
+                    }
+
                 'Dim msg As String = oAdvD.SaveData(String.Format(" WHERE BranchCode='{0}' And AdvNo='{1}' And ItemNo={2}", oAdvD.BranchCode, oAdvD.AdvNo, oAdvD.ItemNo))
                 Dim jsonh As String = JsonConvert.SerializeObject(oAdvD)
                 Dim json = "{""adv"":{""detail"":" & jsonh & ",""result"":""OK""}}"

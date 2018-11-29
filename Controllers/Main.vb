@@ -94,7 +94,7 @@ Module Main
         'D=Can Delete Data
         'P=Can Print Data
         Dim auth = New CUserAuth(jobWebConn).GetData(" WHERE UserID='" & uname & "' AND AppID='" & app & "' AND MenuID='" & mnu & "'")
-        Dim data = If(auth.Count > 0, "" & auth(0).Author, "MIREDP")
+        Dim data = If(auth.Count > 0, "" & auth(0).Author, "*MIREDP")
         Return data
     End Function
 End Module

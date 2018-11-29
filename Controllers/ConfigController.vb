@@ -14,6 +14,25 @@ Namespace Controllers
         Function UserAuth() As ActionResult
             Return GetView("UserAuth", "MODULE_MAS")
         End Function
+        Function CheckMenuAuth() As ActionResult
+            Dim user As String = ""
+            If IsNothing(Session("CurrUser")) = False Then
+                user = Session("CurrUser").ToString()
+            End If
+            Dim app As String = ""
+            Dim menu As String = ""
+            If Not IsNothing(Request.QueryString("Code")) Then
+                user = Request.QueryString("Code").ToString
+            End If
+            If Not IsNothing(Request.QueryString("App")) Then
+                app = Request.QueryString("App").ToString
+            End If
+            If Not IsNothing(Request.QueryString("Menu")) Then
+                menu = Request.QueryString("Menu").ToString
+            End If
+            Dim result = Main.GetAuthorize(user, app, menu)
+            Return Content(result, textContent)
+        End Function
         Function GetUserAuth() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE UserID<>'' "

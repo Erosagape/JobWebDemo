@@ -208,6 +208,15 @@ function DummyCompanyData() {
     return o;
 }
 //public query functions
+function CallBackAuthorize(p, app, mnu, chk ,ev) {
+    $.get(p + 'config/checkmenuauth?app=' + app+'&menu='+mnu).done(function (r) {
+        if (r.indexOf(chk) >= 0) {
+            ev(true);
+        } else {
+            ev(false);
+        }
+    });
+}
 function CallBackQueryInterPort(p, code,key, ev) {
     $.get(p + 'master/getinterport?Code=' + code + '&Key='+key).done(function (r) {
         var dr = r.interport.data;

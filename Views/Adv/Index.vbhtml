@@ -345,24 +345,26 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var user = '@ViewBag.User';
+    var userRights = '@ViewBag.UserRights';
     var serv = []; //must be array of object
     var hdr = {}; //simple object
     var dtl = {}; //simple object
     var job = '';
     var isjobmode = false;
+    var chkmode = false;
     $(document).ready(function () {       
         SetLOVs();
         SetEvents();
         SetEnterToTab();
         CheckParam();
-        AddHeader();
-        $('#txtAdvNo').focus();
     });
     function CheckParam() {
         //read query string parameters
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
         var jno = getQueryString('JNo');
+        var jt = getQueryString('JType');
+        var sb = getQueryString('SBy');
 
         //Combos
         var lists = 'JOB_TYPE=#cboJobType';
@@ -380,12 +382,15 @@ End Code
         if (jno.length > 0) {
             job = jno;
             isjobmode = true;
+
             CallBackQueryJob(path, $('#txtBranchCode').val(), jno, LoadJob);
+        } else {
+            AddHeader();
         }
         if (ano.length > 0) {
             $('#txtAdvNo').val(ano);
             ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
-        }
+        } 
     }
     function LoadJob(dt) {
         if (dt.length > 0) {
@@ -396,6 +401,7 @@ End Code
             $('#txtInvNo').val(dr.InvNo);
             $('#cboJobType').val(CCode(dr.JobType));
             $('#cboShipBy').val(CCode(dr.ShipBy));
+
             ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             
             $('#txtCustCode').attr('disabled', 'disabled');
@@ -430,6 +436,10 @@ End Code
         });
     }
     function SetEvents() {        
+        if (userRights.indexOf('I') < 0) $('#btnNew').attr('disabled', 'disabled');
+        if (userRights.indexOf('E') < 0) $('#btnSave').attr('disabled', 'disabled');
+        if (userRights.indexOf('P') < 0) $('#btnPrint').attr('disabled', 'disabled');
+
         $('#frmDetail').on('shown.bs.modal', function () {
             $('#txtSICode').focus();
         });
@@ -493,20 +503,17 @@ End Code
             $('#' + this.id).attr('disabled', 'disabled');
             $('#chk' + this.id.substr(6)).prop('checked', false);
         });
-        $('#chkApprove').on('click',function () {
-            $('#txtApproveBy').val(this.checked ? user : '');
-            $('#txtApproveDate').val(this.checked ? CDateEN(GetToday()) : '');
-            $('#txtApproveTime').val(this.checked ? ShowTime(GetTime()) : '');
+        $('#chkApprove').on('click', function () {
+            chkmode = this.checked;
+            CallBackAuthorize(path, 'MODULE_ADV', 'Approve',(chkmode ? 'I':'D'), SetApprove);
         });
         $('#chkPayment').on('click', function () {
-            $('#txtPaymentBy').val(this.checked ? user : '');
-            $('#txtPaymentDate').val(this.checked ? CDateEN(GetToday()) : '');
-            $('#txtPaymentTime').val(this.checked ? ShowTime(GetTime()) : '');
+            chkmode = this.checked;
+            CallBackAuthorize(path, 'MODULE_ADV', 'Payment', (chkmode ? 'I' : 'D'), SetPayment);
         });
         $('#chkCancel').on('click', function () {
-            $('#txtCancelProve').val(this.checked ? user : '');
-            $('#txtCancelDate').val(this.checked ? CDateEN(GetToday()) : '');
-            $('#txtCancelTime').val(this.checked ? ShowTime(GetTime()) : '');
+            chkmode = this.checked;
+            CallBackAuthorize(path, 'MODULE_ADV', 'Index', 'D', SetCancel);
         });
         $('#txtBranchCode').keydown(function (event) {
             if (event.which == 13) {
@@ -576,6 +583,36 @@ End Code
                 }
             }
         });
+    }
+    function SetApprove(b) {
+        if (b == true) {
+            $('#txtApproveBy').val(chkmode ? user : '');
+            $('#txtApproveDate').val(chkmode ? CDateEN(GetToday()) : '');
+            $('#txtApproveTime').val(chkmode ? ShowTime(GetTime()) : '');
+            return;
+        }
+        alert('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
+        $('#chkApprove').prop('checked', !chkmode);
+    }
+    function SetPayment(b) {
+        if (b == true) {
+            $('#txtPaymentBy').val(chkmode ? user : '');
+            $('#txtPaymentDate').val(chkmode ? CDateEN(GetToday()) : '');
+            $('#txtPaymentTime').val(chkmode ? ShowTime(GetTime()) : '');
+            return;
+        }
+        alert('You are not allow to ' + (b ? 'payment Advance!' : 'cancel payment!'));
+        $('#chkPayment').prop('checked', !chkmode);
+    }
+    function SetCancel(b) {
+        if (b == true) {
+            $('#txtCancelProve').val(chkmode ? user : '');
+            $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
+            $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+            return;
+        }
+        alert('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
+        $('#chkCancel').prop('checked', !chkmode);
     }
     function SetLOVs() {
         //3 Fields Show
@@ -755,14 +792,17 @@ End Code
         $.get(path + 'adv/getnewadvanceheader?branchcode=' + $('#txtBranchCode').val() , function (r) {
             var h = r.adv.header;
             ReadAdvHeader(h);
-            $('#cboJobType').val('01');
-            $('#cboShipBy').val('01');
-            $('#cboDocStatus').val('01');
-            $('#cboAdvType').val('01');
+            if (isjobmode == false) {
+                $('#cboJobType').val('01');
+                $('#cboShipBy').val('01');
+                $('#cboDocStatus').val('01');
+                $('#cboAdvType').val('01');
 
+            }
             var d = r.adv.detail;
             ReadAdvDetail(d);
             ClearDetail();
+            $('#txtAdvNo').focus();
         });
     }
     function AddDetail() {

@@ -125,7 +125,7 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtUserID').val();
-        var key = $('#txtAppID').val();
+        var key ="MODULE_"+ $('#txtAppID').val();
         var menu = $('#txtMenuID').val();
         var ask = confirm("Do you need to Delete " + code + "?");
         if (ask == false) return;
@@ -135,7 +135,7 @@ End Code
         });
     }
     function ReadData(dr) {
-        var data = dr.Author;
+        var data = (dr.Author ==null? '':dr.Author);        
         $('#txtAuthor').val(data);
         $('#chkManage').prop('checked', data.indexOf('M') >= 0 ? true : false);
         $('#chkInsert').prop('checked', data.indexOf('I') >= 0 ? true : false);
@@ -146,15 +146,16 @@ End Code
     }
     function ShowData() {
         var code = $('#txtUserID').val();
-        var app = $('#txtAppID').val();
+        var app = "MODULE_" +$('#txtAppID').val();
         var menu = $('#txtMenuID').val();
         ClearData();
         CallBackQueryUserAuth(path, code, app, menu, ReadData);
     }
-    function SaveData(){
+    function SaveData() {
+        SetAuth();
         var obj = {
             UserID:$('#txtUserID').val(),
-            AppID:$('#txtAppID').val(),
+            AppID: $('#txtAppID').val(),
             MenuID:$('#txtMenuID').val(),
             Author:$('#txtAuthor').val()
         };
@@ -163,11 +164,12 @@ End Code
                 alert('Please select Application');
                 return;
             }
+            obj.AppID = "MODULE_" + $('#txtAppID').val();
             if (obj.MenuID === "") {
                 alert('Please select Menu');
                 return;
             }
-            var ask = confirm("Do you need to Save This Authorize for " + obj.UserID + "?");
+            var ask = confirm("Do you need to Save This Authorize '" + obj.Author +"' for " + obj.UserID + " ("+ obj.AppID +"/" + obj.MenuID + ")?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
             $.ajax({
@@ -187,12 +189,12 @@ End Code
         }
     }
     function ClearData(){
-        $('#txtAuthor').val('');
-        $('#chkManage').prop('checked', false);
-        $('#chkInsert').prop('checked', false);
-        $('#chkRead').prop('checked', false);
-        $('#chkEdit').prop('checked', false);
-        $('#chkDelete').prop('checked', false);
-        $('#chkPrint').prop('checked', false);
+        $('#txtAuthor').val('*MIREDP');
+        $('#chkManage').prop('checked', true);
+        $('#chkInsert').prop('checked', true);
+        $('#chkRead').prop('checked', true);
+        $('#chkEdit').prop('checked', true);
+        $('#chkDelete').prop('checked', true);
+        $('#chkPrint').prop('checked', true);
     }
 </script>
