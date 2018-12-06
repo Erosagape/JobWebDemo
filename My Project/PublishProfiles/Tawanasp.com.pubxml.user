@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/21/2018 16:36:16</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>11/29/2018 17:25:32</publishTime>
+      <publishTime>06/12/2018 11:16:27</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>11/29/2018 17:25:32</publishTime>
+      <publishTime>06/12/2018 11:16:27</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>11/29/2018 17:25:31</publishTime>
+      <publishTime>06/12/2018 11:16:27</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -620,7 +620,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/20/2018 10:32:35</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>11/29/2018 16:11:30</publishTime>
+      <publishTime>12/06/2018 11:07:01</publishTime>
     </File>
     <File Include="Scripts/i18n/defaults-ar_AR.js">
       <publishTime>11/21/2018 14:59:42</publishTime>
@@ -956,19 +956,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/24/2018 13:17:48</publishTime>
     </File>
     <File Include="Test.html">
-      <publishTime>11/27/2018 12:35:27</publishTime>
+      <publishTime>04/12/2018 11:01:19</publishTime>
     </File>
     <File Include="Test2.html">
       <publishTime>10/25/2018 13:03:24</publishTime>
     </File>
     <File Include="Views/Adv/Approve.vbhtml">
-      <publishTime>11/28/2018 15:59:13</publishTime>
+      <publishTime>06/12/2018 17:13:51</publishTime>
     </File>
     <File Include="Views/Adv/FormAdv.vbhtml">
       <publishTime>10/25/2018 11:25:20</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
-      <publishTime>11/29/2018 17:37:30</publishTime>
+      <publishTime>12/06/2018 17:35:46</publishTime>
     </File>
     <File Include="Views/Adv/Payment.vbhtml">
       <publishTime>11/28/2018 15:59:19</publishTime>
@@ -989,7 +989,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Views/JobOrder/CreateJob.vbhtml">
-      <publishTime>11/21/2018 15:22:26</publishTime>
+      <publishTime>12/06/2018 16:10:54</publishTime>
     </File>
     <File Include="Views/JobOrder/FormJob.vbhtml">
       <publishTime>10/25/2018 11:11:26</publishTime>
@@ -1001,7 +1001,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/11/2018 10:43:09</publishTime>
     </File>
     <File Include="Views/JobOrder/ShowJob.vbhtml">
-      <publishTime>11/21/2018 15:15:42</publishTime>
+      <publishTime>12/06/2018 16:10:54</publishTime>
     </File>
     <File Include="Views/Master/Branch.vbhtml">
       <publishTime>11/22/2018 16:39:46</publishTime>
@@ -1043,7 +1043,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/28/2018 16:12:08</publishTime>
     </File>
     <File Include="Views/Menu/Index.vbhtml">
-      <publishTime>11/28/2018 17:08:02</publishTime>
+      <publishTime>04/12/2018 13:00:16</publishTime>
     </File>
     <File Include="Views/Shared/Error.vbhtml">
       <publishTime>08/21/2018 16:00:15</publishTime>

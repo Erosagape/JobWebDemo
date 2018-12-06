@@ -281,21 +281,14 @@ End Code
             $('#lblCompanyName').text('Shipping Control System');
         }
     }
-    function CheckRights(mnuID) {
-        //if (userID.toUpperCase() == 'ADMIN') {
-        //    return 'Y';
-        //}
-        return 'Y';
-    }
     function OpenMenu(mnuID) {
         if (userID !== '') {
-            if (CheckRights(mnuID) == 'N') {
-                alert('You are not authorized');
-                return;
-            }
             switch (mnuID) {
                 case 'Advance':
                     window.location.href = path+'Adv/Index';
+                    break;
+                case 'AppAdvance':
+                    window.location.href = path + 'Adv/Approve';
                     break;
                 case 'Branch':
                     window.location.href = path + 'Master/Branch';

@@ -19,46 +19,72 @@
             </h4>
         </div>
         <div class="panel-body">
-            <div id="dvForm">
+            <div class="container">
                 <div class="row">
-                    <div class="col-sm-3">
-                        <a href="#" onclick="SearchData('country')">Country Code</a> :<br />
-                        <input type="text" id="txtCTYCODE" class="form-control" tabIndex="1">
+                    <div class="col-sm-4">
+                        Branch :<br/>
+                        <input type="text" id="txtBranchCode" style="width:50px" />
+                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
+                        <input type="text" id="txtBranchName" style="width:200px" disabled />
                     </div>
-                    <div class="col-sm-9">
-                        Country Name :<br /><input type="text" id="txtCTYName" class="form-control" tabIndex="2">
+                    <div class="col-sm-2">
+                        Request Date From:<br />
+                        <input type="date" id="txtAdvDateF" tabindex="1" />
+                    </div>
+                    <div class="col-sm-2">
+                        Request Date To:<br />
+                        <input type="date" id="txtAdvDateT" tabindex="1" />
+                    </div>
+                    <div class="col-sm-2">
+                        Job Type: <br />
+                        <select id="cboJobType" class="form-control dropdown"></select>
+                    </div>
+                    <div class="col-sm-2">
+                        Ship By:<br />
+                        <select id="cboShipBy" class="form-control dropdown"></select>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-2">
-                        <a href="#" onclick="SearchData('currency')">Currency Code </a>
-                        <br /><input type="text" id="txtCURCODE" class="form-control" tabIndex="3">
+                    <div class="col-sm-6">
+                        Request By :<br/>
+                        <input type="text" id="txtReqBy" style="width:100px" tabindex="3" />
+                        <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
+                        <input type="text" id="txtReqName" style="width:300px" disabled />
                     </div>
                     <div class="col-sm-6">
-                        Currency Name:
-                        <br /><input type="text" id="txtCURNAME" class="form-control" disabled>
-                    </div>
-                    <div class="col-sm-2">
-                        FT CODE :<br /><input type="number" id="txtFTCODE" class="form-control" tabIndex="4" value="0">
-                    </div>
-                    <div class="col-sm-2">
-                        CU CODE :<br /><input type="number" id="txtCUCODE" class="form-control" tabIndex="5" value="0">
+                        Customer Code :<br />
+                        <input type="text" id="txtCustCode" style="width:120px" tabindex="4" />
+                        <input type="text" id="txtCustBranch" style="width:50px" tabindex="5" />
+                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
+                        <input type="text" id="txtCustName" style="width:300px" disabled />
                     </div>
                 </div>
-            </div>
-            <div id="dvCommand">
-                <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-                <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-                <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-warning" id="btnRefresh" onclick="LoadGrid()">Show</button>
+                        <table id="tbAdv" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                    <th>Adv.No</th>
+                                    <th>Req.date</th>
+                                    <th>Job No</th>
+                                    <th>Inv.No</th>
+                                    <th>customer</th>
+                                    <th>Total</th>
+                                    <th>W-Tax</th>
+                                    <th>Req.By</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="panel-footer">
             <p>&copy; Tawan Technology Co.,ltd</p>
         </div>
     </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
-        });
-    </script>
+
 </body>
 </html>

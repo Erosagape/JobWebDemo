@@ -322,6 +322,7 @@ End Code
                                         <th>CustCode</th>
                                         <th>ReqBy</th>
                                         <th>Job</th>
+                                        <th>Inv No</th>
                                         <th>Status</th>
                                         <th>Amount</th>
                                         <th>WTDoc</th>
@@ -361,36 +362,23 @@ End Code
     function CheckParam() {
         //read query string parameters
         var br = getQueryString('BranchCode');
-        var ano = getQueryString('AdvNo');
-        var jno = getQueryString('JNo');
-        var jt = getQueryString('JType');
-        var sb = getQueryString('SBy');
-
-        //Combos
-        var lists = 'JOB_TYPE=#cboJobType';
-        lists += ',SHIP_BY=#cboShipBy';
-        lists += ',ADV_STATUS=#cboDocStatus';
-        lists += ',ADV_TYPE=#cboAdvType';
-
-        loadCombos(path, lists);
-
-        LoadService();        
         if (br.length > 0) {
             $('#txtBranchCode').val(br);
-        }
-        ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName')
-        if (jno.length > 0) {
-            job = jno;
-            isjobmode = true;
+            ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
+            var ano = getQueryString('AdvNo');
+            if (ano.length > 0) {
+                $('#txtAdvNo').val(ano);
+                ShowData(br, $('#txtAdvNo').val());
+            } else {
+                job = getQueryString('JNo');
+                if (job.length > 0) {
+                    isjobmode = true;
+                    $('#txtAdvNo').attr('disabled', 'disabled');
+                    CallBackQueryJob(path, $('#txtBranchCode').val(), job, LoadJob);                    
+                }
+            }
 
-            CallBackQueryJob(path, $('#txtBranchCode').val(), jno, LoadJob);
-        } else {
-            AddHeader();
         }
-        if (ano.length > 0) {
-            $('#txtAdvNo').val(ano);
-            ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
-        } 
     }
     function LoadJob(dt) {
         if (dt.length > 0) {
@@ -401,6 +389,7 @@ End Code
             $('#txtInvNo').val(dr.InvNo);
             $('#cboJobType').val(CCode(dr.JobType));
             $('#cboShipBy').val(CCode(dr.ShipBy));
+            $('#cboDocStatus').val('01');
 
             ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             
@@ -411,6 +400,11 @@ End Code
             $('#btnBrowseJ').attr('disabled', 'disabled');
             $('#cboJobType').attr('disabled', 'disabled');
             $('#cboShipBy').attr('disabled', 'disabled');
+
+            $('#txtAdvBy').val(user);
+            ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
+
+            $('#txtAdvBy').focus();
         }
     }
     function SetEnterToTab() {
@@ -437,7 +431,10 @@ End Code
     }
     function SetEvents() {        
         if (userRights.indexOf('I') < 0) $('#btnNew').attr('disabled', 'disabled');
+        if (userRights.indexOf('I') < 0) $('#btnAdd').attr('disabled', 'disabled');
         if (userRights.indexOf('E') < 0) $('#btnSave').attr('disabled', 'disabled');
+        if (userRights.indexOf('E') < 0) $('#btnUpdate').attr('disabled', 'disabled');
+        if (userRights.indexOf('D') < 0) $('#btnDel').attr('disabled', 'disabled');
         if (userRights.indexOf('P') < 0) $('#btnPrint').attr('disabled', 'disabled');
 
         $('#frmDetail').on('shown.bs.modal', function () {
@@ -522,7 +519,6 @@ End Code
         });
         $('#txtAdvNo').keydown(function (event) {
             if (event.which == 13) {
-                isjobmode = false;
                 ShowData($('#txtBranchCode').val(),$('#txtAdvNo').val());
             }
         });
@@ -615,6 +611,16 @@ End Code
         $('#chkCancel').prop('checked', !chkmode);
     }
     function SetLOVs() {
+        //Combos
+        var lists = 'JOB_TYPE=#cboJobType';
+        lists += ',SHIP_BY=#cboShipBy';
+        lists += ',ADV_STATUS=#cboDocStatus';
+        lists += ',ADV_TYPE=#cboAdvType';
+
+        loadCombos(path, lists);
+
+        LoadService();        
+
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             var dv = document.getElementById("dvLOVs");
@@ -631,7 +637,19 @@ End Code
             CreateLOV(dv, '#frmSearchSICode', '#tbServ', 'Service Code', response, 2);
         });
     }
-    function ShowData(branchcode,advno) {
+    function ShowData(branchcode, advno) {
+        if (branchcode == '') {
+            alert('Please select branch');
+            return;
+        }
+        if (advno == '') {
+            alert('Please enter advance no');
+            return;
+        }
+        if (userRights.indexOf('R') < 0) {
+            alert('you are not authorize to view data');
+            return;
+        }
         $.get(path + 'adv/getadvance?branchcode='+branchcode+'&advno='+ advno, function (r) {
             var h = r.adv.header[0];
             ReadAdvHeader(h);
@@ -640,11 +658,25 @@ End Code
         });
     }
     function PrintData() {
+        if (userRights.indexOf('P') < 0) {
+            alert('you are not authorize to print');
+            return;
+        }
         window.open(path + 'Adv/FormAdv?branch=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val());
     }
     function SaveHeader() {
         if (hdr != undefined) {
             var obj = GetDataHeader(hdr);
+            if (obj.AdvNo == '') {
+                if (userRights.indexOf('I') < 0) {
+                    alert('you are not authorize to add');
+                    return;
+                }
+            }
+            if (userRights.indexOf('E') < 0) {
+                alert('you are not authorize to save');
+                return;
+            }
             var jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
             $.ajax({
@@ -672,8 +704,8 @@ End Code
             BranchCode : $('#txtBranchCode').val(),
             AdvNo : $('#txtAdvNo').val(),
             AdvDate : CDateTH($('#txtAdvDate').val()),
-            EmpCode : $('#txtAdvBy').val(),
-            AdvBy : $('#txtReqBy').val(),
+            EmpCode : $('#txtReqBy').val(),
+            AdvBy : $('#txtAdvBy').val(),
             CustCode : $('#txtCustCode').val(),
             CustBranch : $('#txtCustBranch').val(),
             Doc50Tavi : $('#txtDoc50Tavi').val(),
@@ -724,13 +756,14 @@ End Code
             $('#txtBranchCode').val(dt.BranchCode);
             $('#txtAdvNo').val(dt.AdvNo);
             $('#txtAdvDate').val(CDateEN(dt.AdvDate));
-            $('#txtAdvBy').val(dt.EmpCode);
-            $('#txtReqBy').val(dt.AdvBy);
+            $('#txtAdvBy').val(dt.AdvBy);
+            $('#txtReqBy').val(dt.EmpCode);
             if (isjobmode == false) {
                 $('#txtCustCode').val(dt.CustCode);
                 $('#txtCustBranch').val(dt.CustBranch);
                 $('#cboJobType').val(CCode(dt.JobType));
                 $('#cboShipBy').val(CCode(dt.ShipBy));
+                ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
             $('#txtDoc50Tavi').val(dt.Doc50Tavi);
             $('#txtPaymentNo').val(dt.PaymentNo);
@@ -778,7 +811,7 @@ End Code
             ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
 
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-            ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
+            
             $('#btnSave').removeAttr('disabled');
             $('#btnPrint').removeAttr('disabled');
             $('#btnAdd').removeAttr('disabled');
@@ -788,17 +821,22 @@ End Code
         ClearHeader();
     }
     function AddHeader() {
+        if (userRights.indexOf('I') < 0) {
+            alert('you are not authorize to add');
+            return;
+        }
         $('#txtAdvNo').val('');
         $.get(path + 'adv/getnewadvanceheader?branchcode=' + $('#txtBranchCode').val() , function (r) {
             var h = r.adv.header;
             ReadAdvHeader(h);
             if (isjobmode == false) {
-                $('#cboJobType').val('01');
-                $('#cboShipBy').val('01');
+                $('#cboJobType').val('');
+                $('#cboShipBy').val('');
                 $('#cboDocStatus').val('01');
                 $('#cboAdvType').val('01');
-
             }
+            $('#txtAdvBy').val(user);
+            ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
             var d = r.adv.detail;
             ReadAdvDetail(d);
             ClearDetail();
@@ -815,6 +853,10 @@ End Code
     }
     function DeleteDetail() {
         if (dtl != undefined) {
+            if (userRights.indexOf('D') < 0) {
+                alert('you are not authorize to delete');
+                return;
+            }
             $.get(path + 'adv/deladvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val() + '&itemno=' + dtl.ItemNo, function (r) {
                 alert(r.adv.result);
                 ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
@@ -826,13 +868,14 @@ End Code
     function ClearHeader() {
         hdr = {};
         $('#txtAdvDate').val('');
-        $('#txtAdvBy').val('');
+        $('#txtAdvBy').val(user);
         $('#txtReqBy').val('');
         if (isjobmode == false) {
             $('#txtCustCode').val('');
             $('#txtCustBranch').val('');
             $('#cboJobType').val('');
             $('#cboShipBy').val('');
+            ShowCustomer(path, '', $('#txtCustBranch').val(), '#txtCustName');
         }
         $('#txtDoc50Tavi').val('');
         $('#txtPaymentNo').val('');
@@ -873,13 +916,12 @@ End Code
 
         //Combos
 
-        $('#cboAdvType').val('');
-        $('#cboDocStatus').val('');
+        $('#cboAdvType').val('01');
+        $('#cboDocStatus').val('01');
 
-        ShowUser(path, '', '#txtAdvName');
+        ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
         ShowUser(path, '', '#txtReqName');
 
-        ShowCustomer(path, '', $('#txtCustBranch').val(), '#txtCustName');
         $('#btnSave').removeAttr('disabled');
         $('#btnPrint').attr('disabled', 'disabled');
 
@@ -891,6 +933,7 @@ End Code
         $('#btnDel').attr('disabled', 'disabled');
     }
     function SaveDetail() {
+
         if (hdr == undefined) {
             alert('Please add header before');
             return;
@@ -901,6 +944,16 @@ End Code
         }
         if (dtl != undefined) {
             var obj = GetDataDetail();
+            if (obj.ItemNo == 0) {
+                if (userRights.indexOf('I') < 0) {
+                    alert('you are not authorize to add');
+                    return;
+                }
+            }
+            if (userRights.indexOf('E') < 0) {
+                alert('you are not authorize to edit');
+                return;
+            }
             var jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
             $.ajax({
@@ -1053,10 +1106,29 @@ End Code
     function SetGridAdv() {
         var w = '';
         if (job.length > 0) {
-            w = '&jobno=' + job;
+            w += '&jobno=' + job;
+        }
+        if ($('#txtCustCode').val()!=='') {
+            w += '&custcode=' + $('#txtCustCode').val();
+        }
+        if ($('#txtCustBranch').val() !== '') {
+            w += '&custbranch=' + $('#txtCustBranch').val();
+        }
+        if ($('#cboJobType').val() !== '') {
+            w += '&jtype=' + $('#cboJobType').val();
+        }
+        if ($('#cboShipBy').val() !== '') {
+            w += '&sby=' + $('#cboShipBy').val();
+        }
+        if ($('#txtReqBy').val() !== '') {
+            w += '&reqby=' + $('#txtReqBy').val();
         }
         $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
-            var h = r[0].Table;
+            if (r.adv.data.length == 0) {
+                alert('data not found on this branch');
+                return;
+            }
+            var h = r.adv.data[0].Table;
             $('#tbHeader').DataTable({
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
@@ -1066,6 +1138,7 @@ End Code
                     { data: "CustCode", title: "Customer" },
                     { data: "EmpCode", title: "Request By" },
                     { data: "JobNo", title: "Job Number" },
+                    { data: "CustInvNo", title: "Cust Inv" },
                     { data: "DocStatus", title: "Status" },
                     { data: "TotalAdvance", title: "Total" },
                     { data: "Doc50Tavi", title: "W/T No" },

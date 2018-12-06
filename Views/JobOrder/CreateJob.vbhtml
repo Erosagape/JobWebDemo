@@ -45,7 +45,7 @@ End Code
         </tr>
         <tr>
             <td>
-                รหัสลูกค้า<br />
+                <a href="/Master/Customers">รหัสลูกค้า</a><br />
                 <input type="text" style="width:80px" id="txtCustCode" tabindex="4" />
                 <input type="text" style="width:40px" id="txtCustBranch" tabindex="5" />
             </td>

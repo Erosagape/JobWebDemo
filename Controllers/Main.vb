@@ -86,7 +86,7 @@ Module Main
         End If
         Return retStr
     End Function
-    Public Function GetAuthorize(uname As String, app As String, mnu As String) As String
+    Friend Function GetAuthorize(uname As String, app As String, mnu As String) As String
         'M=Can Manage
         'I=Can Insert Data
         'R=Can Query Data
@@ -96,5 +96,22 @@ Module Main
         Dim auth = New CUserAuth(jobWebConn).GetData(" WHERE UserID='" & uname & "' AND AppID='" & app & "' AND MenuID='" & mnu & "'")
         Dim data = If(auth.Count > 0, "" & auth(0).Author, "*MIREDP")
         Return data
+    End Function
+    Friend Function DBExecute(conn As String, SQL As String) As String
+        Try
+            Using cn As New SqlConnection(conn)
+                cn.Open()
+                Using cm As New SqlCommand()
+                    cm.Connection = cn
+                    cm.CommandType = CommandType.Text
+                    cm.CommandText = SQL
+                    cm.ExecuteNonQuery()
+                End Using
+                cn.Close()
+            End Using
+            Return "OK"
+        Catch ex As Exception
+            Return "[ERROR]" & ex.Message
+        End Try
     End Function
 End Module

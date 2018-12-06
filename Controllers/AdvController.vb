@@ -1,6 +1,9 @@
 ﻿Imports System.Web.Http
 Imports System.Web.Mvc
 Imports Newtonsoft.Json
+Imports System.Data.SqlClient
+Imports System.Net.Http
+Imports System.Net
 
 Namespace Controllers
     Public Class AdvController
@@ -16,6 +19,7 @@ Namespace Controllers
             Return GetView("Payment", "MODULE_ADV")
         End Function
         Function FormAdv() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
             If AuthorizeStr.IndexOf("P") < 0 Then
                 Return Content("You are not allow to print advance", textContent)
@@ -23,8 +27,39 @@ Namespace Controllers
 
             Return View()
         End Function
+        Function ApproveAdvance(<FromBody()> ByVal data As String()) As HttpResponseMessage
+            Try
+                Dim json As String = ""
+                If IsNothing(data) Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+                Dim lst As String = ""
+                Dim user As String = ""
+                For Each str As String In data
+                    If str.IndexOf("|") >= 0 Then
+                        If lst <> "" Then lst &= ","
+                        lst &= "'" & str & "'"
+                    Else
+                        user = str
+                    End If
+                Next
+
+                If lst <> "" Then
+                    Dim tSQL As String = String.Format("UPDATE Job_AdvHeader SET DocStatus=2,ApproveBy='" & user & "',ApproveDate='" & DateTime.Now.ToString("yyyy-MM-dd") & "',ApproveTime='" & DateTime.Now.ToString("HH:mm:ss") & "' 
+ WHERE DocStatus=1 AND BranchCode+'|'+AdvNo in({0})", lst)
+                    Dim result = Main.DBExecute(jobWebConn, tSQL)
+                    If result = "OK" Then
+                        Return New HttpResponseMessage(HttpStatusCode.OK)
+                    End If
+                End If
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            Catch ex As Exception
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End Try
+        End Function
         Function SaveAdvanceHeader(<FromBody()> ByVal data As CAdvHeader) As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)
@@ -53,6 +88,7 @@ Namespace Controllers
         End Function
         Function SaveAdvanceDetail(<FromBody()> ByVal data As CAdvDetail) As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)
@@ -81,6 +117,7 @@ Namespace Controllers
         End Function
         Function DelAdvanceDetail() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If AuthorizeStr.IndexOf("D") < 0 Then
                     Return Content("{""adv"":{""result"":""You are not allow to Delete Adv""}}", jsonContent)
@@ -110,6 +147,7 @@ Namespace Controllers
         End Function
         Function DelAdvanceHeader() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If AuthorizeStr.IndexOf("D") < 0 Then
                     Return Content("{""adv"":{""result"":""you are not allow to delete advance""}}", jsonContent)
@@ -144,6 +182,7 @@ Namespace Controllers
                 oAdvH.BranchCode = Branch
                 oAdvH.AdvNo = ""
                 oAdvH.AdvDate = DateTime.Today
+                oAdvH.DocStatus = 1
                 Dim oAdvD As New CAdvDetail(jobWebConn) With {
                     .BranchCode = Branch,
                     .AdvNo = "",
@@ -193,6 +232,30 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("JobNo")) Then
                     tSqlW &= " AND a.AdvNo IN(SELECT AdvNo FROM Job_AdvDetail WHERE BranchCode='" & Branch & "' And ForJNo='" & Request.QueryString("JobNo") & "')"
                 End If
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND a.JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlW &= " AND a.ShipBy=" & Request.QueryString("SBy") & ""
+                End If
+                If Not IsNothing(Request.QueryString("ReqBy")) Then
+                    tSqlW &= " AND a.Empcode='" & Request.QueryString("ReqBy") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    tSqlW &= " AND a.CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustBranch")) Then
+                    tSqlW &= " AND a.CustBranch='" & Request.QueryString("CustBranch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlW &= " AND a.Advdate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlW &= " AND a.Advdate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlW &= " AND a.DocStatus='" & Request.QueryString("Status") & "' "
+                End If
                 Dim sql As String = "
 select a.*,
 (SELECT STUFF((
@@ -201,13 +264,20 @@ FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
 AND AdvNo=a.AdvNo AND ForJNo<>'' 
 FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 )) as JobNo
+,
+(SELECT STUFF((
+SELECT DISTINCT ',' + InvNo
+FROM Job_Order WHERE BranchCode=a.BranchCode AND JNo in(SELECT ForJNo FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
+AND AdvNo=a.AdvNo AND ForJNo<>'')
+FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
+)) as CustInvNo
 FROM Job_AdvHeader as a
 "
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
-                Dim json As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())
+                Dim json = "{""adv"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""adv"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function GetAdvance() As ActionResult

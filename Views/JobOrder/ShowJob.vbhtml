@@ -20,7 +20,7 @@ End Code
             <div id="tabinfo" class="tab-pane fade in active">
                 <div class="row">
                     <div class="col-md-8">
-                        <label for="txtCustCode">Customer :</label>
+                        <label for="txtCustCode" onclick="window.open('/Master/Customers');">Customer :</label>
                         <input type="text" id="txtCustCode" style="width:130px" tabindex="0" />
                         <input type="text" id="txtCustBranch" style="width:40px" tabindex="1" />
                         <input type="button" id="btnBrowseCust" value="..." onclick="SearchData('CUSTOMER')" />
@@ -114,7 +114,7 @@ End Code
                         <label for="txtMeasurement">Measurement(M3) :</label>
                         <input type="text" id="txtMeasurement" style="width:40px" tabindex="16" />
                         <br />
-                        <label for="txtInvCurrency">Currency :</label>
+                        <label for="txtInvCurrency" onclick="window.open('/Master/Currency');">Currency :</label>
                         <input type="text" id="txtInvCurrency" style="width:40px" tabindex="17" />
                         <input type="button" id="btnBrowseRate" value="..." onclick="SearchData('CURRENCY')" />
                         <label for="txtInvCurRate">Exchange Rate :</label>
@@ -130,7 +130,7 @@ End Code
                         <input type="text" id="txtVesselName" style="width:200px" tabindex="21" />
                         <input type="button" id="btnBrowseVsl1" value="..." onclick="SearchData('vessel')" />
                         <br />
-                        <label for="txtInterPort">Inter Port:</label>
+                        <label for="txtInterPort" onclick="window.open('/Master/InterPort');">Inter Port:</label>
                         <input type="text" id="txtInterPort" style="width:130px" tabindex="22" />
                         <input type="button" id="btnBrowseIPort" value="..." onclick="SearchData('interport')" />
                         <input type="text" id="txtInterPortName" style="width:160px" disabled />
@@ -177,7 +177,7 @@ End Code
                         <label for="txtMAWB">Master BL/AWB :</label>
                         <input type="text" id="txtMAWB" style="width:130px" tabindex="34" />
                         <br />
-                        <label for="txtForwarder">Agent:</label>
+                        <label for="txtForwarder" onclick="window.open('/Master/Venders');">Agent:</label>
                         <input type="text" id="txtForwarder" style="width:130px" tabindex="35" />
                         <input type="button" id="btnBrowseFwdr" value="..." onclick="SearchData('forwarder')" />
                         <input type="text" id="txtForwarderName" style="width:300px" disabled />
@@ -227,7 +227,7 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="txtDeclareType">Declare Type :</label>
+                        <label for="txtDeclareType" onclick="window.open('/Master/DeclareType');">Declare Type :</label>
                         <input type="text" id="txtDeclareType" style="width:130px" tabindex="47" />
                         <input type="button" id="btnBrowseDCType" value="..." onclick="SearchData('RFDCT')" />
                         <input type="text" id="txtDeclareTypeName" style="width:200px" disabled />
@@ -270,7 +270,7 @@ End Code
                         <label class="radio-inline"><input type="radio" name="optDeclareStatus" value="M"><label style="color:blue;font:bold">Manual</label></label>
                     </div>
                     <div class="col-md-7">
-                        <label for="txtReleasePort">Release Port :</label>
+                        <label for="txtReleasePort" onclick="window.open('/Master/CustomsPort');">Release Port :</label>
                         <input type="text" id="txtReleasePort" style="width:50px" tabindex="51" />
                         <input type="button" id="btnBrowseLCPort" value="..." onclick="SearchData('RFARS')" />
                         <input type="text" id="txtReleasePortName" style="width:200px" disabled />
@@ -929,7 +929,7 @@ End Code
         window.open(path + 'JobOrder/FormJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
     }
     function OpenAdvance() {
-        window.open(path + 'Adv/Index?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val() + '&JType=' + rec.JobType + '&SBy=' + rec.ShipBy, '', '');
+        window.open(path + 'Adv/Index?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
     }
     function GetDataSave(dr) {
         dr.CustCode = $('#txtCustCode').val();

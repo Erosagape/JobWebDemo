@@ -258,7 +258,7 @@ function CallBackQueryCurrency(p, cno, ev) {
     });
 }
 function CallBackQueryJob(p, br, jno, ev) {
-    $.get(p + 'joborder/getjobsql?Branch=' + br + '&JNo' + jno).done(function (r) {
+    $.get(p + 'joborder/getjobsql?Branch=' + br + '&JNo=' + jno).done(function (r) {
         var dr = r.job.data;
         if (dr.length > 0) {
             ev(dr);
