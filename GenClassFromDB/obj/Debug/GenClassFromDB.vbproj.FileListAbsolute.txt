@@ -27,10 +27,10 @@ D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.exe
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.pdb
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\bin\Debug\GenClassFromDB.xml
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbprojAssemblyReference.cache
-D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.Form1.resources
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.Resources.resources
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbproj.GenerateResource.cache
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.vbproj.CoreCompileInputs.cache
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.exe
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.xml
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.pdb
+D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.frmGenCode.resources

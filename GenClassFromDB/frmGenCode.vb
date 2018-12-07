@@ -1,5 +1,5 @@
 ﻿Imports System.Data.OleDb
-Public Class Form1
+Public Class frmGenCode
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TextBox1.Text = My.Settings.ConnectionStr
         TextBox2.Text = My.Settings.DefaultSQL
@@ -84,6 +84,8 @@ Public Class Form1
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
+
+                    strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
                 Case "Double", "Integer"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Double"
 
@@ -106,6 +108,8 @@ Public Class Form1
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CNum($('#txt" & dc.ColumnName & "').val()),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('0.00');"
+
+                    strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
                 Case "DateTime"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Date"
 
@@ -128,6 +132,8 @@ Public Class Form1
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(CDateEN(dr." & dc.ColumnName & "));"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CDateTH($('#txt" & dc.ColumnName & "').val()),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
+
+                    strWriter &= "dr(""" & dc.ColumnName & """)=IF(me." & dc.ColumnName & ".Year <1900,System.DBNull.Value,me." & dc.ColumnName & ")"
                 Case Else
                     strPrivate &= "Private m_" & dc.ColumnName & " as Integer"
 
@@ -150,9 +156,9 @@ Public Class Form1
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
+                    strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
             End Select
 
-            strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
             strProperty &= vbCrLf & "End Property"
             strPrivate &= strProperty
             strGet &= vbCrLf & "Dim v" & dc.ColumnName & "=obj." & dc.ColumnName & ""

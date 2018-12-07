@@ -570,6 +570,56 @@ function SetGridInvProduct(p, g, d, ev) {
                 BindEvent(g, d, ev);
             }
         });
-
-
+}
+function SetGridBank(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetBank', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'bank.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "Code", title: "รหัส" },
+            { data: "BName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridBookAccount(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetBookAccount', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'bookaccount.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "BookCode", title: "รหัส" },
+            { data: "BookName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
 }

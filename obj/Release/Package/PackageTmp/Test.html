@@ -20,65 +20,7 @@
         </div>
         <div class="panel-body">
             <div class="container">
-                <div class="row">
-                    <div class="col-sm-4">
-                        Branch :<br/>
-                        <input type="text" id="txtBranchCode" style="width:50px" />
-                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                        <input type="text" id="txtBranchName" style="width:200px" disabled />
-                    </div>
-                    <div class="col-sm-2">
-                        Request Date From:<br />
-                        <input type="date" id="txtAdvDateF" tabindex="1" />
-                    </div>
-                    <div class="col-sm-2">
-                        Request Date To:<br />
-                        <input type="date" id="txtAdvDateT" tabindex="1" />
-                    </div>
-                    <div class="col-sm-2">
-                        Job Type: <br />
-                        <select id="cboJobType" class="form-control dropdown"></select>
-                    </div>
-                    <div class="col-sm-2">
-                        Ship By:<br />
-                        <select id="cboShipBy" class="form-control dropdown"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        Request By :<br/>
-                        <input type="text" id="txtReqBy" style="width:100px" tabindex="3" />
-                        <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                        <input type="text" id="txtReqName" style="width:300px" disabled />
-                    </div>
-                    <div class="col-sm-6">
-                        Customer Code :<br />
-                        <input type="text" id="txtCustCode" style="width:120px" tabindex="4" />
-                        <input type="text" id="txtCustBranch" style="width:50px" tabindex="5" />
-                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                        <input type="text" id="txtCustName" style="width:300px" disabled />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <button class="btn btn-warning" id="btnRefresh" onclick="LoadGrid()">Show</button>
-                        <table id="tbAdv" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>Adv.No</th>
-                                    <th>Req.date</th>
-                                    <th>Job No</th>
-                                    <th>Inv.No</th>
-                                    <th>customer</th>
-                                    <th>Total</th>
-                                    <th>W-Tax</th>
-                                    <th>Req.By</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
+
             </div>
         </div>
         <div class="panel-footer">

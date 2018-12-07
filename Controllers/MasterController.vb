@@ -41,6 +41,118 @@ Namespace Controllers
         Function InterPort() As ActionResult
             Return GetView("InterPort", "MODULE_MAS")
         End Function
+        Function BookAccount() As ActionResult
+            Return GetView("BookAccount", "MODULE_MAS")
+        End Function
+        Function Bank() As ActionResult
+            Return GetView("Bank", "MODULE_MAS")
+        End Function
+        Function GetBank() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code] ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CBank(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""bank"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetBank(<FromBody()> data As CBank) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.Code = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE [Code]='{0}' ", data.Code))
+                    Dim json = "{""result"":{""data"":""" & data.Code & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelBank() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code] Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""bank"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CBank(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""bank"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetBookAccount() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE BookCode<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BookCode ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CBookAccount(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""bookaccount"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetBookAccount(<FromBody()> data As CBookAccount) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BookCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BookCode='{1}' ", data.BranchCode, data.BookCode))
+                    Dim json = "{""result"":{""data"":""" & data.BookCode & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelBookAccount() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE BookCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BookCode = '{0}' ", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""bookaccount"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                Dim oData As New CBookAccount(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""bookaccount"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetInterPort() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE PortCode<>'' "

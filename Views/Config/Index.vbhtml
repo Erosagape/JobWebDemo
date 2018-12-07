@@ -171,7 +171,7 @@ End Code
     function ShowData(Code, Key) {
     //function for show grid data
         $('#txtCode').val(Code);
-        var table = $('#tblData').DataTable({
+        $('#tblData').DataTable({
             ajax: {
                 url: path + "Config/getConfig" + GetParam(Code, Key),
                 dataSrc: "config.data"

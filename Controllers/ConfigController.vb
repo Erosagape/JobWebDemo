@@ -14,6 +14,51 @@ Namespace Controllers
         Function UserAuth() As ActionResult
             Return GetView("UserAuth", "MODULE_MAS")
         End Function
+        Function SQLAdmin() As ActionResult
+            Return GetView("SQLAdmin", "MODULE_ADM")
+        End Function
+        Function FileManager() As ActionResult
+            Return GetView("FileManager", "MODULE_ADM")
+        End Function
+        Function GetSQLResult(<FromBody> data As CResult) As ActionResult
+            Dim tSQL As String = data.Source
+            Dim tConn As String = ""
+            Select Case data.Param
+                Case "JOB"
+                    tConn = jobWebConn
+                Case "MAS"
+                    tConn = jobMasConn
+            End Select
+            Dim msg As String = "No Data Execute"
+            Dim json As String = "[]"
+            'Dim columns As String = "[]"
+            If tConn <> "" Then
+                Select Case data.Result
+                    Case "Y"
+                        Try
+                            Dim oUtil As New CUtil(tConn)
+                            Dim oTable = oUtil.GetTableFromSQL(data.Source)
+                            If oTable.Columns.Count > 0 Then
+                                'columns = "["
+                                'For Each col As DataColumn In oTable.Columns
+                                'If columns <> "[" Then columns &= ","
+                                'columns &= "{""data"":""" & col.ColumnName & """,""title"":""" & col.ColumnName & """}"
+                                'Next
+                                'columns &= "]"
+                                json = JsonConvert.SerializeObject(oTable.AsEnumerable().ToList())
+                                msg = "OK"
+                            Else
+                                msg = oUtil.Message
+                            End If
+                        Catch ex As Exception
+                            msg = "[ERROR]" & ex.Message
+                        End Try
+                    Case Else
+                        msg = Main.DBExecute(tConn, data.Source)
+                End Select
+            End If
+            Return Content("{""result"":{""data"":" & json & ",""msg"":""" + msg + """}}", jsonContent)
+        End Function
         Function CheckMenuAuth() As ActionResult
             Dim user As String = ""
             If IsNothing(Session("CurrUser")) = False Then
@@ -328,9 +373,6 @@ Namespace Controllers
             End Try
             If msg = "" Then msg = "No File To Upload"
             Return Content(msg, textContent)
-        End Function
-        Function FileManager() As ActionResult
-            Return View()
         End Function
         Function GetFileList() As ActionResult
             Dim path As String = ""

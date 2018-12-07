@@ -144,29 +144,10 @@ End Code
                                     </div>
                                 </div>
                                 <div id="mnuMas" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <a href="#mnuSubMas1" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลระบบ</a>
-                                        <div class="collapse" id="mnuSubMas1">
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Branch')">สาขา</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('users');">ผู้ใช้งาน</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</a>
-                                        </div>
-                                        <a href="#mnuSubMas2" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลทั่วไป</a>
-                                        <div class="collapse" id="mnuSubMas2">
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Currency')">สกุลเงิน</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Country')">ประเทศ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('DeclareType')">ประเภทใบขน</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</a>
-                                        </div>
-                                        <a href="#mnuSubMas3" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas">ข้อมูลบัญชี</a>
-                                        <div class="collapse" id="mnuSubMas3">
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('venders')">ผู้ให้บริการ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('ServUnit')">หน่วยบริการ</a>
-                                        </div>
+                                    <div class="panel-body">                                        
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasS')">ข้อมูลระบบ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasG')">ข้อมูลทั่วไป</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasA')">ข้อมูลบัญชี</a>
                                     </div>
                                 </div>
                             </div>
@@ -180,6 +161,81 @@ End Code
         </div>
         <div class="panel-footer">
             <p>&copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
+        </div>
+    </div>
+    <div id="dvMasA" class="modal" style="width:100%">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:black">
+                    <div class="modal-title" style="color:white;text-align:center">
+                        Account Master Files
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button class="btn btn-default" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</button>
+                            <button class="btn btn-default" onclick="OpenMenu('venders')">ผู้ให้บริการ</button>
+                            <button class="btn btn-default" onclick="OpenMenu('ServUnit')">หน่วยบริการ</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-default" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
+                            <button class="btn btn-default" onclick="OpenMenu('Bank')">ธนาคาร</button>
+                            <button class="btn btn-default" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dvMasS" class="modal" style="width:100%">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:black">
+                    <div class="modal-title" style="color:white;text-align:center">
+                        System Master Files
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <button class="btn btn-default" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
+                    <button class="btn btn-default" onclick="OpenMenu('Branch')">สาขา</button>
+                    <button class="btn btn-default" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
+                    <button class="btn btn-default" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dvMasG" class="modal" style="width:100%">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:black">
+                    <div class="modal-title" style="color:white;text-align:center">
+                        General Master Files
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button class="btn btn-default" onclick="OpenMenu('Currency')">สกุลเงิน</button>
+                            <button class="btn btn-default" onclick="OpenMenu('Country')">ประเทศ</button>
+                            <button class="btn btn-default" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-default" onclick="OpenMenu('DeclareType')">ประเภทใบขน</button>
+                            <button class="btn btn-default" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
     <div id="dvLogin" class="modal" style="width:100%">
@@ -290,6 +346,12 @@ End Code
                 case 'AppAdvance':
                     window.location.href = path + 'Adv/Approve';
                     break;
+                case 'Bank':
+                    window.location.href = path + 'Master/Bank';
+                    break;
+                case 'BookAccount':
+                    window.location.href = path + 'Master/BookAccount';
+                    break;
                 case 'Branch':
                     window.location.href = path + 'Master/Branch';
                     break;
@@ -334,6 +396,15 @@ End Code
                     break;
                 case 'customers':
                     window.location.href = path +'Master/Customers';
+                    break;
+                case 'MasS':
+                    $('#dvMasS').modal('show');
+                    break;
+                case 'MasG':
+                    $('#dvMasG').modal('show');
+                    break;
+                case 'MasA':
+                    $('#dvMasA').modal('show');
                     break;
                 default:
                     alert('Under Development, Coming soon!');

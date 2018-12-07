@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Form1
+Partial Class frmGenCode
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -228,7 +228,7 @@ Partial Class Form1
         Me.CheckBox5.Text = "CONTROLLER"
         Me.CheckBox5.UseVisualStyleBackColor = True
         '
-        'Form1
+        'frmGenCode
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -253,8 +253,8 @@ Partial Class Form1
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.TextBox2)
         Me.Controls.Add(Me.TextBox1)
-        Me.Name = "Form1"
-        Me.Text = "Form1"
+        Me.Name = "frmGenCode"
+        Me.Text = "Generate Code"
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()

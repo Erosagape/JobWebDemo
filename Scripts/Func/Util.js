@@ -208,6 +208,22 @@ function DummyCompanyData() {
     return o;
 }
 //public query functions
+function CallBackQueryBank(p, code, ev) {
+    $.get(p + 'master/getbank?Code=' + code).done(function (r) {
+        var dr = r.bank.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryBookAccount(p,br, code, ev) {
+    $.get(p + 'master/getbookaccount?Branch='+br+'&Code=' + code).done(function (r) {
+        var dr = r.bank.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function CallBackAuthorize(p, app, mnu, chk ,ev) {
     $.get(p + 'config/checkmenuauth?app=' + app+'&menu='+mnu).done(function (r) {
         if (r.indexOf(chk) >= 0) {

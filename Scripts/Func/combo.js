@@ -155,6 +155,16 @@ function ShowUser(path ,UserID, ControlID) {
             });
     }
 }
+function ShowBank(path, Code, ControlID) {
+    $(ControlID).val('');
+    $.get(path + 'Master/GetBank?Code=' + Code)
+        .done(function (r) {
+            if (r.bank.data.length > 0) {
+                var b = r.bank.data[0];
+                $(ControlID).val(b.BName);
+            }
+        });
+}
 function ShowBranch(path, Branch, ControlID) {
     $(ControlID).val('');
     $.get(path + 'Config/GetBranch?Code=' + Branch)
