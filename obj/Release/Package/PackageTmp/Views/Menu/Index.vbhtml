@@ -174,14 +174,14 @@ End Code
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <button class="btn btn-default" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</button>
-                            <button class="btn btn-default" onclick="OpenMenu('venders')">ผู้ให้บริการ</button>
-                            <button class="btn btn-default" onclick="OpenMenu('ServUnit')">หน่วยบริการ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('venders')">ผู้ให้บริการ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('ServUnit')">หน่วยบริการ</button>
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-default" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
-                            <button class="btn btn-default" onclick="OpenMenu('Bank')">ธนาคาร</button>
-                            <button class="btn btn-default" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Bank')">ธนาคาร</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
                         </div>
                     </div>
                 </div>
@@ -200,10 +200,10 @@ End Code
                     </div>
                 </div>
                 <div class="modal-body">
-                    <button class="btn btn-default" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
-                    <button class="btn btn-default" onclick="OpenMenu('Branch')">สาขา</button>
-                    <button class="btn btn-default" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
-                    <button class="btn btn-default" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
+                    <button class="btn btn-default btn-block" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
+                    <button class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
+                    <button class="btn btn-default btn-block" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
+                    <button class="btn btn-default btn-block" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -222,13 +222,13 @@ End Code
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <button class="btn btn-default" onclick="OpenMenu('Currency')">สกุลเงิน</button>
-                            <button class="btn btn-default" onclick="OpenMenu('Country')">ประเทศ</button>
-                            <button class="btn btn-default" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Currency')">สกุลเงิน</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Country')">ประเทศ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</button>
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-default" onclick="OpenMenu('DeclareType')">ประเภทใบขน</button>
-                            <button class="btn btn-default" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('DeclareType')">ประเภทใบขน</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</button>
                         </div>
                     </div>
                 </div>
@@ -345,6 +345,9 @@ End Code
                     break;
                 case 'AppAdvance':
                     window.location.href = path + 'Adv/Approve';
+                    break;
+                case 'PayAdvance':
+                    window.location.href = path + 'Adv/Payment';
                     break;
                 case 'Bank':
                     window.location.href = path + 'Master/Bank';

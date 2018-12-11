@@ -147,6 +147,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\jquery.datatables.min.css" />
+    <Content Include="Content\sheets-of-paper-a4-landscape.css" />
     <Content Include="Content\sheets-of-paper-a4.css" />
     <Content Include="Content\sheets-of-paper.css" />
     <Content Include="Content\Site.css" />
@@ -377,6 +378,7 @@
     <Compile Include="Controllers\JobOrderController.vb" />
     <Compile Include="Controllers\Main.vb" />
     <Compile Include="Controllers\MenuController.vb" />
+    <Compile Include="Controllers\ReportController.vb" />
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -488,6 +490,8 @@
     <Content Include="Views\Master\Bank.vbhtml" />
     <Content Include="Views\Master\BookAccount.vbhtml" />
     <Content Include="Views\Config\SQLAdmin.vbhtml" />
+    <Content Include="Views\Report\Index.vbhtml" />
+    <Content Include="Views\Shared\_ReportLandscape.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

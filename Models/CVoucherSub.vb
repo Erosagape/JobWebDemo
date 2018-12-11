@@ -246,29 +246,14 @@ Public Class CVoucherSub
         End Using
         Return msg
     End Function
-    Public Sub AddNew()
-
-        m_BranchCode = ""
-        m_ControlNo = ""
-        m_ItemNo = 0
-        m_PRVoucher = ""
-        m_PRType = ""
-        m_ChqNo = ""
-        m_BookCode = ""
-        m_BankCode = ""
-        m_BankBranch = ""
-        m_ChqDate = DateTime.MinValue
-        m_CashAmount = 0
-        m_ChqAmount = 0
-        m_CreditAmount = 0
-        m_IsLocal = 0
-        m_ChqStatus = ""
-        m_TRemark = ""
-        m_PayChqTo = ""
-        m_DocNo = ""
-        m_SICode = ""
-        m_RecvBank = ""
-        m_RecvBranch = ""
+    Public Sub AddNew(pFormatSQL As String)
+        If pFormatSQL = "" Then
+            m_PRVoucher = ""
+        Else
+            Dim tSql As String = String.Format("SELECT MAX(PRVoucher) as t FROM Job_CashControlSub WHERE BranchCode='{0}' And PRVoucher Like '%{1}' ", m_BranchCode, pFormatSQL)
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, tSql, pFormatSQL)
+            m_PRVoucher = retStr
+        End If
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CVoucherSub)
         Dim lst As New List(Of CVoucherSub)

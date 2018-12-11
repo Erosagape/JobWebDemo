@@ -1134,7 +1134,12 @@ End Code
                 selected: true, //ให้สามารถเลือกแถวได้
                 columns: [ //กำหนด property ของ header column
                     { data: "AdvNo", title: "Advance No" },
-                    { data: "AdvDate", title: "Date" },
+                    {
+                        data: "AdvDate", title: "Date",
+                        render: function (data) {
+                            return CDateEN(data);
+                        }
+                    },
                     { data: "CustCode", title: "Customer" },
                     { data: "EmpCode", title: "Request By" },
                     { data: "JobNo", title: "Job Number" },

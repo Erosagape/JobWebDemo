@@ -40,6 +40,7 @@ End Code
                 <thead>
                     <tr>
                         <th>JobNo</th>
+                        <th>InspectDate</th>
                         <th>Inv.Customer</th>
                         <th>Customer</th>
                         <th>DeclareNo</th>
@@ -102,6 +103,12 @@ End Code
             "destroy": true,
             "columns": [
                 { "data": "JNo", "title": "Job Number" },
+                {
+                    "data": "DutyDate", "title": "Clearance Date",
+                    "render" : function (data) {
+                        return CDateEN(data);
+                    }
+                },
                 { "data": "InvNo", "title": "Customer Inv." },
                 { "data": "CustCode", "title": "Customer" },
                 { "data": "DeclareNumber", "title": "Declare No." },

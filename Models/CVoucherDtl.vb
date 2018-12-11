@@ -147,7 +147,6 @@ Public Class CVoucherDtl
         Return msg
     End Function
     Public Sub AddNew()
-
         m_BranchCode = ""
         m_ControlNo = ""
         m_ItemNo = 0

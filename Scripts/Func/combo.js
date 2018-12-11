@@ -68,6 +68,23 @@ function loadConfig(e, code, path, def) {
         }
     });
 }
+function loadBank(cb, path) {
+    $.get(path + 'Master/GetBank').done(function (r) {
+        var dr = r.bank.data;
+        for (var j = 0; j < cb.length; j++) {
+            var e = cb[j];
+            $(e).empty();
+            $(e).append($('<option>', { value: '' })
+                .text('N/A'));
+            if (dr.length > 0) {
+                for (var i = 0; i < dr.length; i++) {
+                    $(e).append($('<option>', { value: dr[i].Code.trim() })
+                        .text(dr[i].BName.trim()));
+                }
+            }
+        }
+    });
+}
 function loadMonth(e) {
     $(e).empty();
     $(e).append($('<option>', { value: '' })
