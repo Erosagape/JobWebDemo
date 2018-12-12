@@ -108,7 +108,7 @@ End Code
                     "render" : function (data) {
                         return CDateEN(data);
                     }
-                }
+                },
                 { "data": "InvNo", "title": "Customer Inv." },
                 { "data": "CustCode", "title": "Customer" },
                 { "data": "DeclareNumber", "title": "Declare No." },

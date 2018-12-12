@@ -372,6 +372,7 @@
     <Compile Include="App_Start\FilterConfig.vb" />
     <Compile Include="App_Start\RouteConfig.vb" />
     <Compile Include="App_Start\WebApiConfig.vb" />
+    <Compile Include="Controllers\AccController.vb" />
     <Compile Include="Controllers\AdvController.vb" />
     <Compile Include="Controllers\ConfigController.vb" />
     <Compile Include="Controllers\MasterController.vb" />
@@ -492,6 +493,7 @@
     <Content Include="Views\Config\SQLAdmin.vbhtml" />
     <Content Include="Views\Report\Index.vbhtml" />
     <Content Include="Views\Shared\_ReportLandscape.vbhtml" />
+    <Content Include="Views\Acc\Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -13,7 +13,7 @@ Public Class CAdvDetail
     End Sub
     Public Sub AddNew()
         Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_AdvDetail WHERE BranchCode='{0}' And AdvNo ='{1}' ", m_BranchCode, m_AdvNo), "____")
-        m_ItemNo = retStr
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Private m_BranchCode As String
     Public Property BranchCode As String

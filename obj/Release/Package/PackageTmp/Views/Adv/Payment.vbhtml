@@ -203,6 +203,7 @@ End Code
     var user = '@ViewBag.User';
     var arr = [];
     var list = [];
+    var docno = '';
     $(document).ready(function () {
         SetEvents();
     });
@@ -283,6 +284,7 @@ End Code
         arr = [];
         ClearData();
         ShowSummary();
+        docno = '';
 
         var w = '';
         if ($('#txtReqBy').val() !== "") {
@@ -403,7 +405,7 @@ End Code
                 DocType: 'ADV',
                 DocNo: o.AdvNo,
                 DocDate: CDateEN(o.AdvDate),
-                CmpType: 'CUS',
+                CmpType: 'C',
                 CmpCode: o.CustCode,
                 CmpBranch: o.CustBranch,
                 PaidAmount: CDbl((o.TotalAdvance +o.TotalVAT - o.Total50Tavi),2),
@@ -442,27 +444,219 @@ End Code
         $('#txtAdvCred').val(CDbl(cred, 2));
         $('#txtListApprove').val(doc);
     }
+    function SavePayment() {
+        var oData = [];
+        var i = 0;
+        if ($('#txtAdvCash').val() > 0) {
+            i = i + 1;
+            oData.push({
+                BranchCode: $('#txtBranchCode').val(),
+                ControlNo: docno,
+                ItemNo: i,
+                PRVoucher: '',
+                PRType: 'P',
+                ChqNo: '',
+                BookCode: $('#txtBookCash').val(),
+                BankCode: '',
+                BankBranch: '',
+                ChqDate: '',
+                CashAmount: CNum($('#txtAdvCash').val()),
+                ChqAmount: 0,
+                CreditAmount: 0,
+                IsLocal: 0,
+                ChqStatus: 0,
+                TRemark: $('#txtCashTranDate').val() + '-' + $('#txtCashTranTime').val(),
+                PayChqTo: $('#txtCashPayTo').val(),
+                DocNo: $('#txtRefNoCash').val(),
+                SICode: '',
+                RecvBank: $('#cboBankCash').val(),
+                RecvBranch: $('#txtBankBranchCash').val()
+            });
+        }
+        if ($('#txtAdvChqCash').val() > 0) {
+            i = i + 1;
+            oData.push({
+                BranchCode: $('#txtBranchCode').val(),
+                ControlNo: docno,
+                ItemNo: i,
+                PRVoucher: '',
+                PRType: 'P',
+                ChqNo: $('#txtRefNoChqCash').val(),
+                BookCode: $('#txtBookChqCash').val(),
+                BankCode: '',
+                BankBranch: '',
+                ChqDate: CDateTH($('#txtChqCashTranDate').val()),
+                CashAmount: 0,
+                ChqAmount: CNum($('#txtAdvChqCash').val()),
+                CreditAmount: 0,
+                IsLocal: 0,
+                ChqStatus: $('#chkStatusChq').prop('checked')==true? 'P':'',
+                TRemark: '',
+                PayChqTo: $('#txtChqCashPayTo').val(),
+                DocNo: '',
+                SICode: '',
+                RecvBank: $('#cboBankChqCash').val(),
+                RecvBranch: $('#txtBankBranchChqCash').val()
+            });
+        }
+        if ($('#txtAdvChq').val() > 0) {
+            oData.push({
+                BranchCode: $('#txtBranchCode').val(),
+                ControlNo: docno,
+                ItemNo: i,
+                PRVoucher: '',
+                PRType: 'P',
+                ChqNo: $('#txtRefNoChq').val(),
+                BookCode: $('#txtBookChq').val(),
+                BankCode: $('#cboBankChq').val(),
+                BankBranch: $('#txtBankBranchChq').val(),
+                ChqDate: CDateTH($('#txtChqTranDate').val()),
+                CashAmount: 0,
+                ChqAmount: CNum($('#txtAdvChq').val()),
+                CreditAmount: 0,
+                IsLocal: $('#chkIsLocal').prop('checked') == true ? 'P' : '',
+                ChqStatus: '',
+                TRemark: '',
+                PayChqTo: $('#txtChqPayTo').val(),
+                DocNo: '',
+                SICode: '',
+                RecvBank: '',
+                RecvBranch: ''
+            });
+        }
+        if ($('#txtAdvCred').val() > 0) {
+            i = i + 1;
+            oData.push({
+                BranchCode: $('#txtBranchCode').val(),
+                ControlNo: docno,
+                ItemNo: i,
+                PRVoucher: '',
+                PRType: 'P',
+                ChqNo: '',
+                BookCode: $('#txtBookCred').val(),
+                BankCode: '',
+                BankBranch: '',
+                ChqDate: CDateTH($('#txtCredTranDate').val()),
+                CashAmount: 0,
+                ChqAmount: 0,
+                CreditAmount: CNum($('#txtAdvCred').val()),
+                IsLocal: 0,
+                ChqStatus: '',
+                TRemark: '',
+                PayChqTo: $('#txtCredPayTo').val(),
+                DocNo: $('#txtRefNoCred').val(),
+                SICode: '',
+                RecvBank: '',
+                RecvBranch: ''
+            });
+        }
+        if (oData.length > 0) {
+            var jsonString = JSON.stringify({ data: oData });
+            $.ajax({
+                url: "@Url.Action("SetVoucherSub", "Acc")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonString,
+                success: function (response) {
+                    if (response.result.data != null) {
+                        SaveDetail();
+                    }
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        } else {
+            alert('No data need to payment');
+        }
+    }
+    function SaveDetail() {
+        if (list.length > 0) {
+            for (var i = 0; i < list.length; i++) {
+                var o = list[i];
+                o.ControlNo = docno;
+            }
+            var jsonString = JSON.stringify({ data: list });
+            $.ajax({
+                url: "@Url.Action("SetVoucherDoc", "Acc")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonString,
+                success: function (response) {
+                    if (response.result.data != null) {
+                        UpdateAdvance(response.result.data);
+                    }
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        }
+    }
+    function UpdateAdvance(cno) {
+        var msg = "Payment " + cno + " Completed!";
+
+        var dataApp = [];
+        dataApp.push(user + '|' + cno);
+        for (var i = 0; i < list.length; i++) {
+            dataApp.push(list[i].BranchCode + '|' + arr[i].DocNo);
+        }
+
+        var jsonString = JSON.stringify({ data: dataApp });
+        $.ajax({
+            url: "@Url.Action("PaymentAdvance", "Adv")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonString,
+            success: function (response) {
+                SetGridAdv();
+                response ? alert(msg) : alert("Cannot Payment");
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    }
     function ApproveData() {
         if (arr.length < 0) {
             alert('no data to approve');
             return;
         }
-        var dataApp = [];
-
-        //var jsonString = JSON.stringify({ data: dataApp });
-        //$.ajax({
-        //    url: "@Url.Action("SetVoucher", "Acc")",
-        //    type: "POST",
-        //    contentType: "application/json",
-        //    data: jsonString,
-        //    success: function (response) {
-        //        SetGridAdv();
-        //        response ? alert("Payment Completed!") : alert("Cannot Payment");
-        //    },
-        //    error: function (e) {
-        //        alert(e);
-        //    }
-        //});
+        var oHeader = {
+            BranchCode: $('#txtBranchCode').val(),
+            ControlNo: '',
+            VoucherDate: CDateTH($('#txtPaymentDate').val()),
+            TRemark: $('#txtTRemark').val(),
+            RecUser: user,
+            RecDate: CDateTH(GetToday()),
+            RecTime: CDateTH(GetTime()),
+            PostedBy: '',
+            PostedDate: '',
+            PostedTime: '',
+            CancelReson: '',
+            CancelProve: '',
+            CancelDate: '',
+            CancelTime: ''
+        };
+        docno = '';
+        var jsonString = JSON.stringify({ data: oHeader });
+        $.ajax({
+            url: "@Url.Action("SetVoucherHeader", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonString,
+            success: function (response) {
+                if (response.result.data != null) {
+                    docno = response.result.data;
+                    if (docno != '') {
+                        SavePayment();
+                    }
+                }
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
         return;
     }
     function SearchData(type) {

@@ -236,7 +236,7 @@ Public Class CVoucherSub
                             dr("RecvBranch") = Me.RecvBranch
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            msg = "Save Complete"
+                            msg = Me.PRVoucher
                         End Using
                     End Using
                 End Using

@@ -219,7 +219,7 @@ End Code
         var dataApp = [];
         dataApp.push(user);
         for (var i = 0; i < arr.length; i++) {
-            dataApp.push(arr[0].BranchCode + '|' + arr[0].AdvNo);
+            dataApp.push(arr[i].BranchCode + '|' + arr[i].AdvNo);
         }
         var jsonString = JSON.stringify({ data: dataApp });
         $.ajax({

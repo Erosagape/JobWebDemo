@@ -257,7 +257,7 @@ Public Class CVoucher
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception
-                msg = ex.Message
+                msg = "[ERROR]" & ex.Message
             End Try
         End Using
         Return msg

@@ -1,6 +1,6 @@
 ﻿'-----Class Definition-----
 Imports System.Data.SqlClient
-Public Class CVoucherDtl
+Public Class CVoucherDoc
     Private m_ConnStr As String
     Public Sub New()
 
@@ -141,33 +141,24 @@ Public Class CVoucherDtl
                     End Using
                 End Using
             Catch ex As Exception
-                msg = ex.Message
+                msg = "[ERROR]" & ex.Message
             End Try
         End Using
         Return msg
     End Function
     Public Sub AddNew()
-        m_BranchCode = ""
-        m_ControlNo = ""
-        m_ItemNo = 0
-        m_DocType = ""
-        m_DocNo = ""
-        m_DocDate = DateTime.MinValue
-        m_CmpType = ""
-        m_CmpCode = ""
-        m_CmpBranch = ""
-        m_PaidAmount = 0
-        m_TotalAmount = 0
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_CashControlDoc WHERE BranchCode='{0}' And ControlNo ='{1}' ", m_BranchCode, m_ControlNo), "____")
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
-    Public Function GetData(pSQLWhere As String) As List(Of CVoucherDtl)
-        Dim lst As New List(Of CVoucherDtl)
+    Public Function GetData(pSQLWhere As String) As List(Of CVoucherDoc)
+        Dim lst As New List(Of CVoucherDoc)
         Using cn As New SqlConnection(m_ConnStr)
-            Dim row As CVoucherDtl
+            Dim row As CVoucherDoc
             Try
                 cn.Open()
                 Dim rd As SqlDataReader = New SqlCommand("SELECT * FROM Job_CashControlDoc" & pSQLWhere, cn).ExecuteReader()
                 While rd.Read()
-                    row = New CVoucherDtl(m_ConnStr)
+                    row = New CVoucherDoc(m_ConnStr)
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("BranchCode"))) = False Then
                         row.BranchCode = rd.GetString(rd.GetOrdinal("BranchCode")).ToString()
                     End If

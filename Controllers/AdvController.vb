@@ -27,6 +27,41 @@ Namespace Controllers
 
             Return View()
         End Function
+        Function PaymentAdvance(<FromBody()> ByVal data As String()) As HttpResponseMessage
+            Try
+                Dim json As String = ""
+                If IsNothing(data) Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+                Dim lst As String = ""
+                Dim user As String = ""
+                Dim docno As String = ""
+                Dim i As Integer = 0
+                For Each str As String In data
+                    i = i + 1
+                    If i = 1 Then
+                        user = str.Split("|")(0)
+                        docno = str.Split("|")(1)
+                    Else
+                        If str.IndexOf("|") >= 0 Then
+                            If lst <> "" Then lst &= ","
+                            lst &= "'" & str & "'"
+                        End If
+                    End If
+                Next
+                If lst <> "" Then
+                    Dim tSQL As String = String.Format("UPDATE Job_AdvHeader SET DocStatus=3,PaymentRef='" & docno & "',PaymentBy='" & user & "',PaymentDate='" & DateTime.Now.ToString("yyyy-MM-dd") & "',PaymentTime='" & DateTime.Now.ToString("HH:mm:ss") & "' 
+ WHERE DocStatus=2 AND BranchCode+'|'+AdvNo in({0})", lst)
+                    Dim result = Main.DBExecute(jobWebConn, tSQL)
+                    If result = "OK" Then
+                        Return New HttpResponseMessage(HttpStatusCode.OK)
+                    End If
+                End If
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            Catch ex As Exception
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End Try
+        End Function
         Function ApproveAdvance(<FromBody()> ByVal data As String()) As HttpResponseMessage
             Try
                 Dim json As String = ""
