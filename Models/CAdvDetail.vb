@@ -186,6 +186,51 @@ Public Class CAdvDetail
             m_Doc50Tavi = value
         End Set
     End Property
+    Private m_VenCode As String
+    Public Property VenCode As String
+        Get
+            Return m_VenCode
+        End Get
+        Set(value As String)
+            m_VenCode = value
+        End Set
+    End Property
+    Private m_CurrencyCode As String
+    Public Property CurrencyCode As String
+        Get
+            Return m_CurrencyCode
+        End Get
+        Set(value As String)
+            m_CurrencyCode = value
+        End Set
+    End Property
+    Private m_ExchangeRate As Double
+    Public Property ExchangeRate As Double
+        Get
+            Return m_ExchangeRate
+        End Get
+        Set(value As Double)
+            m_ExchangeRate = value
+        End Set
+    End Property
+    Private m_AdvQty As Double
+    Public Property AdvQty As Double
+        Get
+            Return m_AdvQty
+        End Get
+        Set(value As Double)
+            m_AdvQty = value
+        End Set
+    End Property
+    Private m_UnitPrice As Double
+    Public Property UnitPrice As Double
+        Get
+            Return m_UnitPrice
+        End Get
+        Set(value As Double)
+            m_UnitPrice = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -217,6 +262,11 @@ Public Class CAdvDetail
                             dr("Is50Tavi") = Me.Is50Tavi
                             dr("PayChqTo") = Me.PayChqTo
                             dr("Doc50Tavi") = Me.Doc50Tavi
+                            dr("VenCode") = Me.VenCode
+                            dr("CurrencyCode") = Me.CurrencyCode
+                            dr("ExchangeRate") = Me.ExchangeRate
+                            dr("AdvQty") = Me.AdvQty
+                            dr("UnitPrice") = Me.UnitPrice
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             If da.Update(dt) > 0 Then
                                 UpdateTotal(cn)
@@ -316,6 +366,21 @@ Public Class CAdvDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Doc50Tavi"))) = False Then
                         row.Doc50Tavi = rd.GetString(rd.GetOrdinal("Doc50Tavi")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("VenCode"))) = False Then
+                        row.VenCode = rd.GetString(rd.GetOrdinal("VenCode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("CurrencyCode"))) = False Then
+                        row.CurrencyCode = rd.GetString(rd.GetOrdinal("CurrencyCode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ExchangeRate"))) = False Then
+                        row.ExchangeRate = rd.GetDouble(rd.GetOrdinal("ExchangeRate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AdvQty"))) = False Then
+                        row.AdvQty = rd.GetDouble(rd.GetOrdinal("AdvQty"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("UnitPrice"))) = False Then
+                        row.UnitPrice = rd.GetDouble(rd.GetOrdinal("UnitPrice"))
                     End If
                     lst.Add(row)
                 End While

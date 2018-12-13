@@ -132,8 +132,11 @@ Public Class frmGenCode
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(CDateEN(dr." & dc.ColumnName & "));"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CDateTH($('#txt" & dc.ColumnName & "').val()),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
-
-                    strWriter &= "dr(""" & dc.ColumnName & """)=IF(me." & dc.ColumnName & ".Year <1900,System.DBNull.Value,me." & dc.ColumnName & ")"
+                    If dc.ColumnName.IndexOf("time", StringComparison.InvariantCultureIgnoreCase) < 0 Then
+                        strWriter &= "dr(""" & dc.ColumnName & """)=Main.GetDBDate(me." & dc.ColumnName & ")"
+                    Else
+                        strWriter &= "dr(""" & dc.ColumnName & """)=Main.GetDBTime(me." & dc.ColumnName & ")"
+                    End If
                 Case Else
                     strPrivate &= "Private m_" & dc.ColumnName & " as Integer"
 

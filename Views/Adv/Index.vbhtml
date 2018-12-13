@@ -118,13 +118,14 @@ End Code
                     <div class="col-sm-7">
                         Advance Type:
                         <select id="cboAdvType" class="form-control dropdown" style="width:100%" tabindex="10"></select>
-                        <br />
+                        <br/>
                         Remark:
                         <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
                     </div>
                     <div class="col-sm-5">
+                        <a onclick="SearchData('subcurrency')">Request Currency:</a>
+                        <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled/>
                         <br />
-                        Payment Method:
                         <table>
                             <tr>
                                 <td>
@@ -132,7 +133,7 @@ End Code
                                     <label for="chkCash">Cash</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvCash" style="width:100px;text-align:right" disabled/>
+                                    <input type="text" id="txtAdvCash" style="width:100px;text-align:right" disabled />
                                 </td>
                             </tr>
                             <tr>
@@ -141,7 +142,7 @@ End Code
                                     <label for="chkChq">Cashier Chq</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvChq" style="width:100px;text-align:right" disabled/>
+                                    <input type="text" id="txtAdvChq" style="width:100px;text-align:right" disabled />
                                 </td>
                             </tr>
                             <tr>
@@ -150,7 +151,7 @@ End Code
                                     <label for="chkChqCash">Customer Chq</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" disabled/>
+                                    <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" disabled />
                                 </td>
                             </tr>
                             <tr>
@@ -159,7 +160,7 @@ End Code
                                     <label for="chkCred">Credit</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="txtAdvCred" style="width:100px;text-align:right" disabled/>
+                                    <input type="text" id="txtAdvCred" style="width:100px;text-align:right" disabled />
                                 </td>
                             </tr>
                         </table>
@@ -220,6 +221,7 @@ End Code
                                     <th>Vat</th>
                                     <th>WH-Tax</th>
                                     <th>Net</th>
+                                    <th>Currency</th>
                                     <th>Remark</th>
                                 </tr>
                             </thead>
@@ -230,6 +232,10 @@ End Code
                     <div class="col-sm-9">
                         <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
                         <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
+                        Main Currency:
+                        <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
+                        Exchange Rate:
+                        <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -273,31 +279,43 @@ End Code
                             <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                             Cust.Inv : <input type="text" id="txtInvNo" style="width:230px" disabled />
                             <br />
+                            <label for="txtAdvQty">Qty:</label>
+                            <input type="text" id="txtAdvQty" style="width:100px;text-align:right" tabindex="15" />
+                            <label for="txtUnitPrice">Price :</label>
+                            <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="16" />
                             <label for="txtAmount">Amount :</label>
-                            <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="15" />
+                            <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="17" />
+                            <br />
                             <label for="txtVATRate">VAT :</label>
-                            <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="16" />
+                            <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="18" />
                             Type :
                             <select id="txtVatType" class="dropdown" disabled>
                                 <option value="0">NO</option>
                                 <option value="1">EX</option>
                                 <option value="2">IN</option>
                             </select>
-                            <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="17" />
+                            <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="19" />
                             <br />
                             <label for="txtWHTRate">WH-Tax :</label>
-                            <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="18" />
-                            <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="19" />
-                            Reference No :
+                            <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="20" />
+                            <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="21" />
+                            WH-Tax No :
                             <input type="text" id="txt50Tavi" style="width:200px" />
                             <br />
+                            <a onclick="SearchData('detcurrency')">Currency :</a>
+                            <input type="text" id="txtCurrencyCode" style="width:50px" tabindex="22" />
+                            <label for="txtExcRate">Exchange Rate :</label>
+                            <input type="text" id="txtExcRate" style="width:80px;text-align:right" tabindex="23" />
                             <label for="txtNETAmount">Net Amount :</label>
-                            <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="20" />
-                            Pay To Vender :
-                            <input type="text" id="txtPayChqTo" style="width:220px" />
+                            <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="24" />
                             <br />
-                            Remark : 
-                            <textarea id="txtRemark" style="width:100%;height:80px" tabindex="21"></textarea>
+                            Pay To Vender :
+                            <input type="text" id="txtVenCode" style="width:50px" tabindex="25" />
+                            <input type="button" id="btnBrowseVen" onclick="SearchData('vender')" value="..." />
+                            <input type="text" id="txtPayChqTo" style="width:200px" tabindex="26" />
+                            <br />
+                            Remark :
+                            <textarea id="txtRemark" style="width:100%;height:80px" tabindex="27"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
@@ -325,6 +343,7 @@ End Code
                                         <th>Inv No</th>
                                         <th>Status</th>
                                         <th>Amount</th>
+                                        <th>Currency</th>
                                         <th>WTDoc</th>
                                         <th>APDoc</th>
                                         <th>Remark</th>
@@ -626,6 +645,8 @@ End Code
             var dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
+            //Venders
+            CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
             //Job
             CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job List', response, 3);
             //Users
@@ -635,6 +656,9 @@ End Code
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
             //SICode
             CreateLOV(dv, '#frmSearchSICode', '#tbServ', 'Service Code', response, 2);
+            //Currency
+            CreateLOV(dv, '#frmSearchSubCur', '#tbSubCur', 'Currency Code', response, 2);
+            CreateLOV(dv, '#frmSearchExpCur', '#tbExpCur', 'Currency Code', response, 2);
         });
     }
     function ShowData(branchcode, advno) {
@@ -744,7 +768,11 @@ End Code
             InvNo: null,
             VATRate: 0,
             PayChqTo: null,
-            PayChqDate: ''
+            PayChqDate: '',
+
+            MainCurrency: $('#txtMainCurrency').val(),
+            SubCurrency: $('#txtSubCurrency').val(),
+            ExchangeRate: $('#txtExchangeRate').val()
         };
 
         return dt;
@@ -802,8 +830,10 @@ End Code
             $('#chkChqCash').prop('checked', dt.AdvChqCash > 0 ? true : false);
             $('#chkCred').prop('checked', dt.AdvCred > 0 ? true : false);
 
+            $('#txtMainCurrency').val(dt.MainCurrency);
+            $('#txtSubCurrency').val(dt.SubCurrency);
+            $('#txtExchangeRate').val(CDbl(dt.ExchangeRate, 2));
             //Combos
-
             $('#cboAdvType').val(CCode(dt.AdvType));
             $('#cboDocStatus').val(CCode(dt.DocStatus));
 
@@ -811,11 +841,20 @@ End Code
             ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
 
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-            
-            $('#btnSave').removeAttr('disabled');
-            $('#btnPrint').removeAttr('disabled');
-            $('#btnAdd').removeAttr('disabled');
-            $('#btnDel').removeAttr('disabled');
+
+            if (dt.DocStatus > 2) {
+                //if document paymented/cancelled/cleared then disable save button
+                $('#btnSave').attr('disabled', 'disabled');
+            } else {
+                //if document approved by this user or not then check authorized to unlock 
+                if (dt.DocStatus == 2 && user == dt.ApproveBy && userRights.indexOf('E') >= 0) {
+                    $('#btnSave').removeAttr('disabled');
+                } else {
+                    if (dt.DocStatus == 2) {
+                        $('#btnSave').attr('disabled', 'disabled');
+                    }
+                }
+            }                
             return;
         } 
         ClearHeader();
@@ -905,6 +944,10 @@ End Code
         $('#txtWhtAmount').val('');
         $('#txtTotalAmount').val('');
 
+        $('#txtMainCurrency').val('@ViewBag.PROFILE_CURRENCY');
+        $('#txtSubCurrency').val('@ViewBag.PROFILE_CURRENCY');
+        $('#txtExchangeRate').val(1);
+
         $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
         $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
         $('#chkPayment').prop('checked', $('#txtPaymentBy').val() == '' ? false : true);
@@ -915,22 +958,33 @@ End Code
         $('#chkCred').prop('checked', false);
 
         //Combos
-
         $('#cboAdvType').val('01');
         $('#cboDocStatus').val('01');
 
         ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
         ShowUser(path, '', '#txtReqName');
 
-        $('#btnSave').removeAttr('disabled');
         $('#btnPrint').attr('disabled', 'disabled');
-
         $('#txtAdvCash').attr('disabled', 'disabled');
         $('#txtAdvChq').attr('disabled', 'disabled');
         $('#txtAdvChqCash').attr('disabled', 'disabled');
         $('#txtAdvCred').attr('disabled', 'disabled');
         $('#btnAdd').attr('disabled', 'disabled');
         $('#btnDel').attr('disabled', 'disabled');
+
+        if (userRights.indexOf('E') >= 0){
+            $('#btnSave').removeAttr('disabled');
+        }
+        if (userRights.indexOf('I') >= 0) {
+            $('#btnSave').removeAttr('disabled');
+            $('#btnAdd').removeAttr('disabled');    
+        }
+        if (userRights.indexOf('D') >= 0) {
+            $('#btnDel').removeAttr('disabled');    
+        }        
+        if (userRights.indexOf('P') >= 0) {
+            $('#btnPrint').removeAttr('disabled');
+        }        
     }
     function SaveDetail() {
 
@@ -984,6 +1038,7 @@ End Code
                 { data: "ChargeVAT", title: "VAT" },
                 { data: "Charge50Tavi", title: "WH-Tax" },
                 { data: "AdvNet", title: "Net" },
+                { data: "CurrencyCode", title: "Currency" },
                 { data: "TRemark", title: "Remark" }
             ],
             "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
@@ -1029,6 +1084,11 @@ End Code
             ChargeVAT : $('#txtVAT').val(),
             Charge50Tavi : $('#txtWHT').val(),
             AdvNet: $('#txtNET').val(),
+            AdvQty: $('#txtAdvQty').val(),
+            UnitPrice: $('#txtUnitPrice').val(),
+            CurrencyCode: $('#txtCurrencyCode').val(),
+            ExchangeRate: $('#txtExcRate').val(),
+            VenCode: $('#txtVenCode').val(),
             IsDuplicate: ($('#chkDuplicate').prop('checked')==true? 1:0)
         };
         return dt;
@@ -1055,6 +1115,11 @@ End Code
             $('#txtVAT').val(dt.ChargeVAT);
             $('#txtWHT').val(dt.Charge50Tavi);
             $('#txtNET').val(dt.AdvNet);
+            $('#txtAdvQty').val(dt.AdvQty);
+            $('#txtExcRate').val(dt.ExchangeRate);
+            $('#txtUnitPrice').val(dt.UnitPrice);
+            $('#txtCurrencyCode').val(dt.CurrencyCode);
+            $('#txtVenCode').val(dt.VenCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
             return;
         }
@@ -1080,6 +1145,12 @@ End Code
         $('#txtVAT').val(0);
         $('#txtWHT').val(0);
         $('#txtNET').val(0);
+        $('#txtAdvQty').val(1);
+        $('#txtExcRate').val($('#txtExchangeRate').val());
+        $('#txtUnitPrice').val(0);
+        $('#txtCurrencyCode').val($('#txtSubCurrency').val());
+        $('#txtVenCode').val('');
+
         $('#chkDuplicate').prop('checked', false);
         $('#txtAMT').removeAttr('disabled');
         $('#txtVATRate').removeAttr('disabled');
@@ -1146,6 +1217,7 @@ End Code
                     { data: "CustInvNo", title: "Cust Inv" },
                     { data: "DocStatus", title: "Status" },
                     { data: "TotalAdvance", title: "Total" },
+                    { data: "SubCurrency", title: "Currency" },
                     { data: "Doc50Tavi", title: "W/T No" },
                     { data: "PaymentNo", title: "A/P No" },
                     { data: "TRemark", title: "Remark" },
@@ -1189,6 +1261,15 @@ End Code
             case 'job':
                 SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam(), ReadJob);
                 break;
+            case 'subcurrency':
+                SetGridCurrency(path, '#tbSubCur', '#frmSearchSubCur', ReadCurrencyH);
+                break;
+            case 'detcurrency':
+                SetGridCurrency(path, '#tbSubExp', '#frmSearchSubExp', ReadCurrencyD);
+                break;
+            case 'vender':
+                SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender);
+                break;
         }
     }
     function GetParam() {
@@ -1198,6 +1279,19 @@ End Code
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
         strParam += '&CustCode=' + $('#txtCustCode').val();
         return strParam;
+    }
+    function ReadVender(dt) {
+        $('#txtVenCode').val(dt.VenCode);
+        $('#txtPayChqTo').val(dt.TName);
+        $('#txtPayChqTo').focus();
+    }
+    function ReadCurrencyD(dt) {
+        $('#txtCurrencyCode').val(dt.Code);
+        $('#txtExcRate').focus();
+    }
+    function ReadCurrencyH(dt) {
+        $('#txtSubCurrency').val(dt.Code);
+        $('#txtExchangeRate').focus();
     }
     function ReadAdvBy(dt) {
         $('#txtAdvBy').val(dt.UserID);

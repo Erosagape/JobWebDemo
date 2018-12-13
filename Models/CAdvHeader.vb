@@ -352,6 +352,33 @@ Public Class CAdvHeader
             m_Doc50Tavi = value
         End Set
     End Property
+    Private m_MainCurrency As String
+    Public Property MainCurrency As String
+        Get
+            Return m_MainCurrency
+        End Get
+        Set(value As String)
+            m_MainCurrency = value
+        End Set
+    End Property
+    Private m_ExchangeRate As Double
+    Public Property ExchangeRate As Double
+        Get
+            Return m_ExchangeRate
+        End Get
+        Set(value As Double)
+            m_ExchangeRate = value
+        End Set
+    End Property
+    Private m_SubCurrency As String
+    Public Property SubCurrency As String
+        Get
+            Return m_SubCurrency
+        End Get
+        Set(value As String)
+            m_SubCurrency = value
+        End Set
+    End Property
     Private Function GetDocStatus() As Integer
         If Me.CancelProve <> "" Then
             Return 99
@@ -425,6 +452,9 @@ Public Class CAdvHeader
                             dr("PayChqTo") = Me.PayChqTo
                             dr("PayChqDate") = Main.GetDBDate(Me.PayChqDate)
                             dr("Doc50Tavi") = Me.Doc50Tavi
+                            dr("MainCurrency") = Me.MainCurrency
+                            dr("ExchangeRate") = Me.ExchangeRate
+                            dr("SubCurrency") = Me.SubCurrency
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             If da.Update(dt) > 0 Then
                                 UpdateTotal(cn)
@@ -578,6 +608,15 @@ Public Class CAdvHeader
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Doc50Tavi"))) = False Then
                         row.Doc50Tavi = rd.GetString(rd.GetOrdinal("Doc50Tavi")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("MainCurrency"))) = False Then
+                        row.MainCurrency = rd.GetString(rd.GetOrdinal("MainCurrency")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ExchangeRate"))) = False Then
+                        row.ExchangeRate = rd.GetDouble(rd.GetOrdinal("ExchangeRate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("SubCurrency"))) = False Then
+                        row.SubCurrency = rd.GetString(rd.GetOrdinal("SubCurrency")).ToString()
                     End If
                     lst.Add(row)
                 End While

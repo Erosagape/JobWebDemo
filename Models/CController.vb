@@ -9,7 +9,16 @@ Public Class CController
             Return False
         End If
     End Function
+    Friend Sub LoadCompanyProfile()
+        ViewBag.PROFILE_LOGO = Main.GetValueConfig("PROFILE", "COMPANY_LOGO")
+        ViewBag.PROFILE_COMPANY_NAME = Main.GetValueConfig("PROFILE", "COMPANY_NAME")
+        ViewBag.PROFILE_COMPANY_ADDR1 = Main.GetValueConfig("PROFILE", "COMPANY_ADDRESS1")
+        ViewBag.PROFILE_COMPANY_ADDR2 = Main.GetValueConfig("PROFILE", "COMPANY_ADDRESS2")
+        ViewBag.PROFILE_CURRENCY = Main.GetValueConfig("PROFILE", "CURRENCY")
+        ViewBag.PROFILE_VATRATE = Main.GetValueConfig("PROFILE", "VAT_RATE")
+    End Sub
     Friend Function GetView(vName As String, Optional modName As String = "") As ActionResult
+        LoadCompanyProfile()
         If CheckSession("CurrUser") Then
             Session("CurrUser") = ""
         End If

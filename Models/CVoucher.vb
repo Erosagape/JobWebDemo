@@ -152,18 +152,18 @@ Public Class CVoucher
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("ControlNo") = Me.ControlNo
-                            dr("VoucherDate") = If(Me.VoucherDate.Year < 1900, System.DBNull.Value, Me.VoucherDate)
+                            dr("VoucherDate") = Main.GetDBDate(Me.VoucherDate)
                             dr("TRemark") = Me.TRemark
                             dr("RecUser") = Me.RecUser
-                            dr("RecDate") = If(Me.RecDate.Year < 1900, System.DBNull.Value, Me.RecDate)
-                            dr("RecTime") = Me.RecTime
+                            dr("RecDate") = Main.GetDBDate(Me.RecDate)
+                            dr("RecTime") = Main.GetDBTime(Me.RecTime)
                             dr("PostedBy") = Me.PostedBy
-                            dr("PostedDate") = If(Me.PostedDate.Year < 1900, System.DBNull.Value, Me.PostedDate)
-                            dr("PostedTime") = Me.PostedTime
+                            dr("PostedDate") = Main.GetDBDate(Me.PostedDate)
+                            dr("PostedTime") = Main.GetDBTime(Me.PostedTime)
                             dr("CancelReson") = Me.CancelReson
                             dr("CancelProve") = Me.CancelProve
-                            dr("CancelDate") = If(Me.CancelDate.Year < 1900, System.DBNull.Value, Me.CancelDate)
-                            dr("CancelTime") = Me.CancelTime
+                            dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
+                            dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"

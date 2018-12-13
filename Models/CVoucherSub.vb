@@ -222,7 +222,7 @@ Public Class CVoucherSub
                             dr("BookCode") = Me.BookCode
                             dr("BankCode") = Me.BankCode
                             dr("BankBranch") = Me.BankBranch
-                            dr("ChqDate") = If(Me.ChqDate.Year < 1900, System.DBNull.Value, Me.ChqDate)
+                            dr("ChqDate") = Main.GetDBDate(Me.ChqDate)
                             dr("CashAmount") = Me.CashAmount
                             dr("ChqAmount") = Me.ChqAmount
                             dr("CreditAmount") = Me.CreditAmount

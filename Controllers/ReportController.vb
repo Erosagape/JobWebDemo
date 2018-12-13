@@ -2,11 +2,12 @@
 
 Namespace Controllers
     Public Class ReportController
-        Inherits Controller
+        Inherits CController
 
         ' GET: Report
         Function Index() As ActionResult
-            Return View()
+            ViewBag.ReportName = "Shipment Total Report"
+            Return GetView("Index")
         End Function
     End Class
 End Namespace

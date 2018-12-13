@@ -46,7 +46,7 @@ Namespace Controllers
                                 'Next
                                 'columns &= "]"
                                 json = JsonConvert.SerializeObject(oTable.AsEnumerable().ToList())
-                                msg = "OK"
+                                msg = "OK (" & oTable.Rows.Count & " Rows selected)"
                             Else
                                 msg = oUtil.Message
                             End If
