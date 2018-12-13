@@ -14,7 +14,7 @@ Namespace Controllers
             Return GetView("ShowJob", "MODULE_CS")
         End Function
         Function FormJob() As ActionResult
-            Return View()
+            Return GetView("FormJob")
         End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")

@@ -841,11 +841,20 @@ End Code
             ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
 
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-            
-            $('#btnSave').removeAttr('disabled');
-            $('#btnPrint').removeAttr('disabled');
-            $('#btnAdd').removeAttr('disabled');
-            $('#btnDel').removeAttr('disabled');
+
+            if (dt.DocStatus > 2) {
+                //if document paymented/cancelled/cleared then disable save button
+                $('#btnSave').attr('disabled', 'disabled');
+            } else {
+                //if document approved by this user or not then check authorized to unlock 
+                if (dt.DocStatus == 2 && user == dt.ApproveBy && userRights.indexOf('E') >= 0) {
+                    $('#btnSave').removeAttr('disabled');
+                } else {
+                    if (dt.DocStatus == 2) {
+                        $('#btnSave').attr('disabled', 'disabled');
+                    }
+                }
+            }                
             return;
         } 
         ClearHeader();
@@ -955,15 +964,27 @@ End Code
         ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
         ShowUser(path, '', '#txtReqName');
 
-        $('#btnSave').removeAttr('disabled');
         $('#btnPrint').attr('disabled', 'disabled');
-
         $('#txtAdvCash').attr('disabled', 'disabled');
         $('#txtAdvChq').attr('disabled', 'disabled');
         $('#txtAdvChqCash').attr('disabled', 'disabled');
         $('#txtAdvCred').attr('disabled', 'disabled');
         $('#btnAdd').attr('disabled', 'disabled');
         $('#btnDel').attr('disabled', 'disabled');
+
+        if (userRights.indexOf('E') >= 0){
+            $('#btnSave').removeAttr('disabled');
+        }
+        if (userRights.indexOf('I') >= 0) {
+            $('#btnSave').removeAttr('disabled');
+            $('#btnAdd').removeAttr('disabled');    
+        }
+        if (userRights.indexOf('D') >= 0) {
+            $('#btnDel').removeAttr('disabled');    
+        }        
+        if (userRights.indexOf('P') >= 0) {
+            $('#btnPrint').removeAttr('disabled');
+        }        
     }
     function SaveDetail() {
 

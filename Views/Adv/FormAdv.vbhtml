@@ -1,164 +1,151 @@
 ﻿@Code
     Layout = "~/Views/Shared/_Report.vbhtml"
     ViewBag.Title = "Advance Slip"
+    ViewBag.ReportName = ""
 End Code
-<div class="page" contenteditable="false">
-    <table id="tblHeader" width="100%">
-        <tr>
-            <td>
-                <img id="imgLogo" src="~/Resource/logo-idl.jpg" width="80%" />
-            </td>
-            <td>
-                <div id="divCompany" style="text-align:left;color:darkblue;"></div>
-            </td>
-        </tr>
-    </table>
-    <hr />
-    <table id="tbAdvInfo" width="100%">
-        <tr>
-            <td colspan="3" style="font-size:11px">
-                <b>Advance No : </b><label id="lblAdvNo" style="text-decoration-line:underline"></label>
-            </td>
-            <td align="right" style="font-size:11px">
-                <input type="text" value="ADVANCE" style="text-align:center;background-color:yellow;font:bold;font-size:large;" disabled />
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" style="font-size:11px">
-                <b>Customer : </b><label id="lblCustCode" style="text-decoration-line:underline;"></label>
-                <br /><label id="lblCustName" style="text-decoration-line:underline;"></label>
-            </td>
-            <td align="right" style="font-size:11px">
-                <b>Advance Date : </b><label id="lblAdvDate" style="text-decoration-line:underline;"></label>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="font-size:11px">
-                <b>Job Type : </b><label id="lblJobType" style="text-decoration-line:underline;"></label>
-                <b>Ship By : </b><label id="lblShipBy" style="text-decoration-line:underline;"></label>
-            </td>
-            <td align="right" colspan="2" style="font-size:11px">
-                <b>Advance Type : </b><label id="lblAdvType" style="text-decoration-line:underline;"></label>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" style="font-size:11px">
-                <b>Remark</b>
-                <label id="lblRemark" style="text-decoration-line:underline;"></label>
-            </td>
-            <td align="right" style="font-size:11px">
-                <b>Request Date : </b><label id="lblReqDate" style="text-decoration-line:underline;"></label>
-            </td>
-        </tr>
-    </table>
-    <br />
-    <table width="100%" style="border-collapse:collapse;">
-        <tr style="text-align:center;">
-            <td style="border-style:solid;border-width:thin;font-size:11px">
-                <b>Advance Expenses</b>
-            </td>
-            <td style="border-style:solid;border-width:thin;font-size:11px"><b>Job Number</b></td>
-            <td style="border-style:solid;border-width:thin;font-size:11px"><b>Amount</b></td>
-        </tr>
-        <tr style="height:450px;vertical-align:top">
-            <td style="border-style:solid;border-width:thin;text-align:left">
-                <div id="divDesc" style="font-size:12px"></div>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:left">
-                <div id="divJob" style="font-size:12px"></div>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:right">
-                <div id="divAmt" style="font-size:12px"></div>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left;font-size:11px">
-                <input type="checkbox" id="chkCash" /> CASH/TRANSFER : <label id="lblAccNo">______________</label>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Net Amount</td>
-            <td style="border-style:solid;border-width:thin" width="150px">
-                <input type="text" style="border:none;text-align:right;font-size:11px" id="txtNetAmt" />
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left;font-size:11px">
-                <input type="checkbox" id="chkCustChq" /> CUST.CHQ NO : <label id="lblcustChqNo">__________</label> DEP.DATE : <label id="lblDepDate">________</label>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">
-                VAT
-            </td>
-            <td style="border-style:solid;border-width:thin" width="150px">
-                <input type="text" style="border:none;text-align:right;font-size:11px" id="txtVATAmt" />
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left;font-size:11px">
-                <input type="checkbox" id="chkCompChq" /> CHQ NO : <label id="lblCompChqNo">__________</label> CHQ.DATE : <label id="lblChqDate">________</label>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">WH-Tax</td>
-            <td style="border-style:solid;border-width:thin" width="150px">
-                <input type="text" style="border:none;text-align:right;font-size:11px" id="txtWHTAmt" />
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left;font-size:11px;">
-                <input type="checkbox" id="chkCredit" /> ACCOUNT PAYABLES :
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Total</td>
-            <td style="border-style:solid;border-width:thin" width="150px">
-                <input type="text" style="border:none;text-align:right;font-size:11px" id="txtTotalAmt" />
-            </td>
-        </tr>
-    </table>
-    <br />
-    TOTAL : <input type="text" id="txtTotalText" value="ZERO BAHT ONLY" style="font-size:11px;background-color:burlywood;font:bold;text-align:center;width:90%;" disabled />
-    <br />
-    PAY TO : <label id="lblPayTo" style="font-size:11px">________________________________________________________________________</label>
-    <br />
-    <br />
-    <table width="100%" style="border-collapse:collapse;">
-        <tr>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-                REQUEST.BY
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-                APPROVE.BY
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-                PAYMENT.BY
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-                POSTED.BY
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-                CLEARED.BY
-            </td>
-        </tr>
-        <tr>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom" height="100px">
-                <label id="lblReqBy" style="font-size:10px">(__________________)</label><br />
-                <label id="lblRequestDate" style="font-size:9px">__/__/____</label>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-                <label id="lblAppBy" style="font-size:10px">(__________________)</label><br />
-                <label id="lblAppDate" style="font-size:9px">__/__/____</label>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-                <label id="lblPayBy" style="font-size:10px">(__________________)</label><br />
-                <label id="lblPayDate" style="font-size:9px">__/__/____</label>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-                <label id="lblPostBy" style="font-size:9px">(__________________)</label><br />
-                <label id="lblPostDate" style="font-size:9px">__/__/____</label>
-            </td>
-            <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-                <label id="lblClrBy" style="font-size:9px">(__________________)</label><br />
-                <label id="lblClrDate" style="font-size:9px">__/__/____</label>
-            </td>
-        </tr>
-    </table>
-    <p style="text-align:right">Printed By : @ViewBag.User Printed Date : @DateTime.Now &copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
-</div>
+<table id="tbAdvInfo" width="100%">
+    <tr>
+        <td colspan="3" style="font-size:11px">
+            <b>Advance No : </b><label id="lblAdvNo" style="text-decoration-line:underline"></label>
+        </td>
+        <td align="right" style="font-size:11px">
+            <input type="text" value="ADVANCE" style="text-align:center;background-color:yellow;font:bold;font-size:large;" disabled />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" style="font-size:11px">
+            <b>Customer : </b><label id="lblCustCode" style="text-decoration-line:underline;"></label>
+            <br /><label id="lblCustName" style="text-decoration-line:underline;"></label>
+        </td>
+        <td align="right" style="font-size:11px">
+            <b>Advance Date : </b><label id="lblAdvDate" style="text-decoration-line:underline;"></label>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="font-size:11px">
+            <b>Job Type : </b><label id="lblJobType" style="text-decoration-line:underline;"></label>
+            <b>Ship By : </b><label id="lblShipBy" style="text-decoration-line:underline;"></label>
+        </td>
+        <td align="right" colspan="2" style="font-size:11px">
+            <b>Advance Type : </b><label id="lblAdvType" style="text-decoration-line:underline;"></label>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" style="font-size:11px">
+            <b>Remark</b>
+            <label id="lblRemark" style="text-decoration-line:underline;"></label>
+        </td>
+        <td align="right" style="font-size:11px">
+            <b>Request Date : </b><label id="lblReqDate" style="text-decoration-line:underline;"></label>
+        </td>
+    </tr>
+</table>
+<br />
+<table width="100%" style="border-collapse:collapse;">
+    <tr style="text-align:center;">
+        <td style="border-style:solid;border-width:thin;font-size:11px">
+            <b>Advance Expenses</b>
+        </td>
+        <td style="border-style:solid;border-width:thin;font-size:11px"><b>Job Number</b></td>
+        <td style="border-style:solid;border-width:thin;font-size:11px"><b>Amount</b></td>
+    </tr>
+    <tr style="height:450px;vertical-align:top">
+        <td style="border-style:solid;border-width:thin;text-align:left">
+            <div id="divDesc" style="font-size:12px"></div>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:left">
+            <div id="divJob" style="font-size:12px"></div>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:right">
+            <div id="divAmt" style="font-size:12px"></div>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:left;font-size:11px">
+            <input type="checkbox" id="chkCash" /> CASH/TRANSFER : <label id="lblAccNo">______________</label>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Net Amount</td>
+        <td style="border-style:solid;border-width:thin" width="150px">
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtNetAmt" />
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:left;font-size:11px">
+            <input type="checkbox" id="chkCustChq" /> CUST.CHQ NO : <label id="lblcustChqNo">__________</label> DEP.DATE : <label id="lblDepDate">________</label>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">
+            VAT
+        </td>
+        <td style="border-style:solid;border-width:thin" width="150px">
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtVATAmt" />
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:left;font-size:11px">
+            <input type="checkbox" id="chkCompChq" /> CHQ NO : <label id="lblCompChqNo">__________</label> CHQ.DATE : <label id="lblChqDate">________</label>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">WH-Tax</td>
+        <td style="border-style:solid;border-width:thin" width="150px">
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtWHTAmt" />
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:left;font-size:11px;">
+            <input type="checkbox" id="chkCredit" /> ACCOUNT PAYABLES :
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Total</td>
+        <td style="border-style:solid;border-width:thin" width="150px">
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtTotalAmt" />
+        </td>
+    </tr>
+</table>
+<br />
+TOTAL : <input type="text" id="txtTotalText" value="ZERO BAHT ONLY" style="font-size:11px;background-color:burlywood;font:bold;text-align:center;width:90%;" disabled />
+<br />
+PAY TO : <label id="lblPayTo" style="font-size:11px">________________________________________________________________________</label>
+<br />
+<br />
+<table width="100%" style="border-collapse:collapse;">
+    <tr>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+            REQUEST.BY
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+            APPROVE.BY
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+            PAYMENT.BY
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+            POSTED.BY
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+            CLEARED.BY
+        </td>
+    </tr>
+    <tr>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom" height="100px">
+            <label id="lblReqBy" style="font-size:10px">(__________________)</label><br />
+            <label id="lblRequestDate" style="font-size:9px">__/__/____</label>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+            <label id="lblAppBy" style="font-size:10px">(__________________)</label><br />
+            <label id="lblAppDate" style="font-size:9px">__/__/____</label>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+            <label id="lblPayBy" style="font-size:10px">(__________________)</label><br />
+            <label id="lblPayDate" style="font-size:9px">__/__/____</label>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+            <label id="lblPostBy" style="font-size:9px">(__________________)</label><br />
+            <label id="lblPostDate" style="font-size:9px">__/__/____</label>
+        </td>
+        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+            <label id="lblClrBy" style="font-size:9px">(__________________)</label><br />
+            <label id="lblClrDate" style="font-size:9px">__/__/____</label>
+        </td>
+    </tr>
+</table>    
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var serv = [];

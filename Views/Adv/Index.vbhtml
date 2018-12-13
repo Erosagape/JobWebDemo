@@ -562,6 +562,21 @@ End Code
                 ReadService(dt);
             }
         });
+        $('#txtAdvQty').keydown(function (event) {
+            if (event.which == 13) {
+                CalAmount();
+            }
+        });
+        $('#txtUnitPrice').keydown(function (event) {
+            if (event.which == 13) {
+                CalAmount();
+            }
+        });
+        $('#txtExcRate').keydown(function (event) {
+            if (event.which == 13) {
+                CalAmount();
+            }
+        });
         $('#txtAMT').keydown(function (event) {
             if (event.which == 13) {
                 CalVATWHT();
@@ -1365,6 +1380,30 @@ End Code
         var total = SumTotal();
         return CDbl(CNum($('#txtTotalAmount').val()) - total,2);
     }
+    function CalAmount() {
+        var price = CDbl($('#txtUnitPrice').val(), 2);
+        var qty = CDbl($('#txtAdvQty').val(), 2);
+        var rate = CDbl($('#txtExcRate').val(), 2); //rate ของ detail
+        var type = $('#txtVatType').val();
+        var controlRate = CDbl($('#txtExchangeRate').val(), 2); //rate ของ เอกสาร
+        if (qty > 0) {
+            var amt = CNum(qty) * CNum(price) * CNum(rate);
+            if (controlRate <= 0) controlRate = 1;
+            if (type == '2') {
+                $('#txtNET').val(CDbl(CNum(amt) / controlRate, 2));
+            }
+            if (type == '1') {
+                $('#txtAMT').val(CDbl(CNum(amt) / controlRate, 2));
+            }
+            CalVATWHT();
+        } else {
+            $('#txtUnitPrice').val(0);
+            $('#txtAMT').val(0);
+            $('#txtNET').val(0);
+            $('#txtVAT').val(0);
+            $('#txtWHT').val(0);
+        }
+    }
     function CalTotal() {
         var amt = CDbl($('#txtAMT').val(),2);
         var vat = CDbl($('#txtVAT').val(),2);
@@ -1375,6 +1414,7 @@ End Code
         if (type == '2') {
             $('#txtAMT').val(CDbl(CNum(net) - CNum(vat) + CNum(wht), 2));
             $('#txtNET').val(CDbl(net, 2));
+            CalAmount();
         }
         if (type == '1') {
             $('#txtNET').val(CDbl(CNum(amt) + CNum(vat) - CNum(wht), 2));
@@ -1392,7 +1432,6 @@ End Code
         var whtrate = CDbl($('#txtWHTRate').val(),2);
         var vat = 0;
         var wht = 0;
-        var net = 0;
         if (type == "2") {
             var base = amt * 100 / (100 + (vatrate - whtrate));
             vat = base * vatrate * 0.01;
@@ -1401,7 +1440,6 @@ End Code
         if (type == "1") {
             vat = amt * vatrate * 0.01;
             wht = amt * whtrate * 0.01;
-            net = amt + vat - wht;
         }
         $('#txtVAT').val(CDbl(vat, 2));
         $('#txtWHT').val(CDbl(wht, 2));

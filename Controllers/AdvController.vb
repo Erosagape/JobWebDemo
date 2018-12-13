@@ -24,8 +24,7 @@ Namespace Controllers
             If AuthorizeStr.IndexOf("P") < 0 Then
                 Return Content("You are not allow to print advance", textContent)
             End If
-
-            Return View()
+            Return GetView("FormAdv")
         End Function
         Function PaymentAdvance(<FromBody()> ByVal data As String()) As HttpResponseMessage
             Try

@@ -599,7 +599,7 @@ End Code
         var dataApp = [];
         dataApp.push(user + '|' + cno);
         for (var i = 0; i < list.length; i++) {
-            dataApp.push(list[i].BranchCode + '|' + arr[i].DocNo);
+            dataApp.push(list[i].BranchCode + '|' + list[i].DocNo);
         }
 
         var jsonString = JSON.stringify({ data: dataApp });
