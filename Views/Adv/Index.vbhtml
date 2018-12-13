@@ -123,8 +123,8 @@ End Code
                         <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
                     </div>
                     <div class="col-sm-5">
-                        <a onclick="SearchData('subcurrency')">Request Currency:</a>
-                        <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled/>
+                        Main Currency:
+                        <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
                         <br />
                         <table>
                             <tr>
@@ -232,8 +232,8 @@ End Code
                     <div class="col-sm-9">
                         <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
                         <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
-                        Main Currency:
-                        <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
+                        <a onclick="SearchData('subcurrency')">Request Currency:</a>
+                        <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled />
                         Exchange Rate:
                         <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
                     </div>
@@ -661,19 +661,19 @@ End Code
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
             //Venders
-            CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
+            CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response,4);
             //Job
             CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job List', response, 3);
             //Users
-            CreateLOV(dv, '#frmSearchAdv', '#tbAdv', 'Advance By', response, 2);
-            CreateLOV(dv, '#frmSearchReq', '#tbReq', 'Request By', response, 2);
+            CreateLOV(dv, '#frmSearchAdv', '#tbAdv', 'Advance By', response,4);
+            CreateLOV(dv, '#frmSearchReq', '#tbReq', 'Request By', response,4);
             //Branch
-            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response,4);
             //SICode
-            CreateLOV(dv, '#frmSearchSICode', '#tbServ', 'Service Code', response, 2);
+            CreateLOV(dv, '#frmSearchSICode', '#tbServ', 'Service Code', response,4);
             //Currency
-            CreateLOV(dv, '#frmSearchSubCur', '#tbSubCur', 'Currency Code', response, 2);
-            CreateLOV(dv, '#frmSearchExpCur', '#tbExpCur', 'Currency Code', response, 2);
+            CreateLOV(dv, '#frmSearchSubCur', '#tbSubCur', 'Currency Code', response,4);
+            CreateLOV(dv, '#frmSearchExpCur', '#tbExpCur', 'Currency Code', response,4);
         });
     }
     function ShowData(branchcode, advno) {
@@ -826,15 +826,15 @@ End Code
             $('#txtApproveDate').val(CDateEN(dt.ApproveDate));
             $('#txtApproveTime').val(ShowTime(dt.ApproveTime));
 
-            $('#txtAdvCash').val(CDbl(dt.AdvCash,2));
-            $('#txtAdvChq').val(CDbl(dt.AdvChq, 2));
-            $('#txtAdvChqCash').val(CDbl(dt.AdvChqCash, 2));
-            $('#txtAdvCred').val(CDbl(dt.AdvCred, 2));
+            $('#txtAdvCash').val(CDbl(dt.AdvCash,4));
+            $('#txtAdvChq').val(CDbl(dt.AdvChq, 4));
+            $('#txtAdvChqCash').val(CDbl(dt.AdvChqCash,4));
+            $('#txtAdvCred').val(CDbl(dt.AdvCred,4));
 
-            $('#txtAdvAmount').val(CDbl(dt.TotalAdvance, 2));
-            $('#txtVatAmount').val(CDbl(dt.TotalVAT, 2));
-            $('#txtWhtAmount').val(CDbl(dt.Total50Tavi, 2));
-            $('#txtTotalAmount').val(CDbl((dt.TotalAdvance+dt.TotalVAT-dt.Total50Tavi),2));
+            $('#txtAdvAmount').val(CDbl(dt.TotalAdvance,4));
+            $('#txtVatAmount').val(CDbl(dt.TotalVAT,4));
+            $('#txtWhtAmount').val(CDbl(dt.Total50Tavi,4));
+            $('#txtTotalAmount').val(CDbl((dt.TotalAdvance+dt.TotalVAT-dt.Total50Tavi),4));
 
             $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
             $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
@@ -847,7 +847,7 @@ End Code
 
             $('#txtMainCurrency').val(dt.MainCurrency);
             $('#txtSubCurrency').val(dt.SubCurrency);
-            $('#txtExchangeRate').val(CDbl(dt.ExchangeRate, 2));
+            $('#txtExchangeRate').val(CDbl(dt.ExchangeRate,4));
             //Combos
             $('#cboAdvType').val(CCode(dt.AdvType));
             $('#cboDocStatus').val(CCode(dt.DocStatus));
@@ -890,6 +890,11 @@ End Code
                 $('#cboAdvType').val('01');
             }
             $('#txtAdvBy').val(user);
+            $('#txtMainCurrency').val('@ViewBag.PROFILE_CURRENCY');
+            $('#txtSubCurrency').val('@ViewBag.PROFILE_CURRENCY');
+            $('#txtExchangeRate').val(1);
+            $('#txtExcRate').val(1);
+
             ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
             var d = r.adv.detail;
             ReadAdvDetail(d);
@@ -902,6 +907,8 @@ End Code
             var d = r.adv.detail[0];
             LoadDetail(d);
             $('#frmDetail').modal('show');
+            $('#txtCurrencyCode').val($('#txtSubCurrency').val());
+            $('#txtExcRate').val($('#txtExchangeRate').val());
             $('#txtSICode').focus();
         });
     }
@@ -958,10 +965,6 @@ End Code
         $('#txtVatAmount').val('');
         $('#txtWhtAmount').val('');
         $('#txtTotalAmount').val('');
-
-        $('#txtMainCurrency').val('@ViewBag.PROFILE_CURRENCY');
-        $('#txtSubCurrency').val('@ViewBag.PROFILE_CURRENCY');
-        $('#txtExchangeRate').val(1);
 
         $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
         $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
@@ -1370,30 +1373,28 @@ End Code
         $('#txtForJNo').focus();
     }
     function SumTotal() {
-        var cash = CDbl($('#txtAdvCash').val(),2);
-        var chq = CDbl($('#txtAdvChq').val(),2);
-        var chqcash = CDbl($('#txtAdvChqCash').val(),2);
-        var cred = CDbl($('#txtAdvCred').val(),2);
-        return CDbl(Number(cash) + Number(chq) + Number(chqcash) + Number(cred),2);
+        var cash = CDbl($('#txtAdvCash').val(),4);
+        var chq = CDbl($('#txtAdvChq').val(),4);
+        var chqcash = CDbl($('#txtAdvChqCash').val(),4);
+        var cred = CDbl($('#txtAdvCred').val(),4);
+        return CDbl(Number(cash) + Number(chq) + Number(chqcash) + Number(cred),4);
     }
     function GetTotal() {
         var total = SumTotal();
-        return CDbl(CNum($('#txtTotalAmount').val()) - total,2);
+        return CDbl(CNum($('#txtTotalAmount').val()) * CNum($('#txtExchangeRate').val()) - total,4);
     }
     function CalAmount() {
-        var price = CDbl($('#txtUnitPrice').val(), 2);
-        var qty = CDbl($('#txtAdvQty').val(), 2);
-        var rate = CDbl($('#txtExcRate').val(), 2); //rate ของ detail
+        var price = CDbl($('#txtUnitPrice').val(),4);
+        var qty = CDbl($('#txtAdvQty').val(),4);
+        var rate = CDbl($('#txtExcRate').val(),4); //rate ของ detail
         var type = $('#txtVatType').val();
-        var controlRate = CDbl($('#txtExchangeRate').val(), 2); //rate ของ เอกสาร
         if (qty > 0) {
             var amt = CNum(qty) * CNum(price) * CNum(rate);
-            if (controlRate <= 0) controlRate = 1;
             if (type == '2') {
-                $('#txtNET').val(CDbl(CNum(amt) / controlRate, 2));
+                $('#txtNET').val(CDbl(CNum(amt),4));
             }
             if (type == '1') {
-                $('#txtAMT').val(CDbl(CNum(amt) / controlRate, 2));
+                $('#txtAMT').val(CDbl(CNum(amt),4));
             }
             CalVATWHT();
         } else {
@@ -1405,31 +1406,30 @@ End Code
         }
     }
     function CalTotal() {
-        var amt = CDbl($('#txtAMT').val(),2);
-        var vat = CDbl($('#txtVAT').val(),2);
-        var wht = CDbl($('#txtWHT').val(),2);
-        var net = CDbl($('#txtNET').val(),2);
+        var amt = CDbl($('#txtAMT').val(),4);
+        var vat = CDbl($('#txtVAT').val(),4);
+        var wht = CDbl($('#txtWHT').val(),4);
+        var net = CDbl($('#txtNET').val(),4);
         var type = $('#txtVatType').val();
         if (type == '') type = '1';
         if (type == '2') {
-            $('#txtAMT').val(CDbl(CNum(net) - CNum(vat) + CNum(wht), 2));
-            $('#txtNET').val(CDbl(net, 2));
-            CalAmount();
+            $('#txtAMT').val(CDbl(CNum(net) - CNum(vat) + CNum(wht),4));
+            $('#txtNET').val(CDbl(net,4));
         }
         if (type == '1') {
-            $('#txtNET').val(CDbl(CNum(amt) + CNum(vat) - CNum(wht), 2));
-            $('#txtAMT').val(CDbl(amt, 2));
+            $('#txtNET').val(CDbl(CNum(amt) + CNum(vat) - CNum(wht),4));
+            $('#txtAMT').val(CDbl(amt,4));
         }
     }
     function CalVATWHT() {
         var type = $('#txtVatType').val();
         if (type == '') type = '1';
-        var amt = CDbl($('#txtAMT').val(),2);
+        var amt = CDbl($('#txtAMT').val(),4);
         if (type == '2') {
-            amt = CDbl($('#txtNET').val(),2);
+            amt = CDbl($('#txtNET').val(),4);
         }
-        var vatrate = CDbl($('#txtVATRate').val(),2);
-        var whtrate = CDbl($('#txtWHTRate').val(),2);
+        var vatrate = CDbl($('#txtVATRate').val(),4);
+        var whtrate = CDbl($('#txtWHTRate').val(),4);
         var vat = 0;
         var wht = 0;
         if (type == "2") {
@@ -1441,8 +1441,8 @@ End Code
             vat = amt * vatrate * 0.01;
             wht = amt * whtrate * 0.01;
         }
-        $('#txtVAT').val(CDbl(vat, 2));
-        $('#txtWHT').val(CDbl(wht, 2));
+        $('#txtVAT').val(CDbl(vat,4));
+        $('#txtWHT').val(CDbl(wht,4));
         CalTotal();
     }
 </script>
