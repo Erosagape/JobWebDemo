@@ -118,6 +118,18 @@ function loadYear(path) {
     });
 }
 //Show Data Related from Combo or Text After Input
+function ShowInvNo(path, Branch, Code, ControlID) {
+    $(ControlID).val('');
+    if ((Code + Branch).length > 0) {
+        $.get(path + 'JobOrder/GetJobSql?Branch=' + Branch + '&JNo=' + Code)
+            .done(function (r) {
+                if (r.job.data.length > 0) {
+                    var c = r.job.data[0];
+                    $(ControlID).val(c.InvNo);
+                }
+            });
+    }
+}
 function ShowCustomer(path, Code, Branch, ControlID) {
     $(ControlID).val('');
     if ((Code + Branch).length > 0) {
@@ -171,6 +183,16 @@ function ShowUser(path ,UserID, ControlID) {
                 }
             });
     }
+}
+function ShowCurrency(path, Code, ControlID) {
+    $(ControlID).val('');
+    $.get(path + 'Master/GetCurrency?Code=' + Code)
+        .done(function (r) {
+            if (r.currency.data.length > 0) {
+                var b = r.currency.data[0];
+                $(ControlID).val(b.TName);
+            }
+        });
 }
 function ShowBank(path, Code, ControlID) {
     $(ControlID).val('');

@@ -123,8 +123,8 @@ End Code
                         <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
                     </div>
                     <div class="col-sm-5">
-                        Main Currency:
-                        <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
+                        <a onclick="SearchData('subcurrency')">Request Currency:</a>
+                        <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled />
                         <br />
                         <table>
                             <tr>
@@ -232,8 +232,8 @@ End Code
                     <div class="col-sm-9">
                         <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
                         <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
-                        <a onclick="SearchData('subcurrency')">Request Currency:</a>
-                        <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled />
+                        Main Currency:
+                        <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
                         Exchange Rate:
                         <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
                     </div>
@@ -279,43 +279,48 @@ End Code
                             <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                             Cust.Inv : <input type="text" id="txtInvNo" style="width:230px" disabled />
                             <br />
-                            <label for="txtAdvQty">Qty:</label>
-                            <input type="text" id="txtAdvQty" style="width:100px;text-align:right" tabindex="15" />
-                            <label for="txtUnitPrice">Price :</label>
-                            <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="16" />
-                            <label for="txtAmount">Amount :</label>
-                            <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="17" />
+                            <a onclick="SearchData('detcurrency')">Currency :</a>
+                            <input type="text" id="txtCurrencyCode" style="width:50px" tabindex="15" />
+                            <input type="text" id="txtCurrencyName" style="width:200px" disabled />
+                            <label for="txtExcRate">Rate :</label>
+                            <input type="text" id="txtDetCurrency" style="width:50px" disabled />
+                            <input type="text" id="txtExcRate" style="width:80px;text-align:right" tabindex="16" />
                             <br />
-                            <label for="txtVATRate">VAT :</label>
-                            <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="18" />
+                            <label for="txtAdvQty">Qty:</label>
+                            <input type="text" id="txtAdvQty" style="width:100px;text-align:right" tabindex="17" />
+                            <label id="lblUnitPrice" for="txtUnitPrice">Price :</label>
+                            <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="18" />
+                            <label id="lblAMTCal" for="txtAMTCal">Amount :</label>
+                            <input type="text" id="txtAMTCal" style="width:100px;text-align:right" disabled />
+                            <br />
+                            <label id="lblAmount" for="txtAmount">Amount :</label>
+                            <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="19" />
+                            <label id="lblVATRate" for="txtVATRate">VAT :</label>
+                            <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="20" />
                             Type :
                             <select id="txtVatType" class="dropdown" disabled>
                                 <option value="0">NO</option>
                                 <option value="1">EX</option>
                                 <option value="2">IN</option>
                             </select>
-                            <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="19" />
+                            <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="21" />
                             <br />
-                            <label for="txtWHTRate">WH-Tax :</label>
-                            <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="20" />
-                            <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="21" />
-                            WH-Tax No :
-                            <input type="text" id="txt50Tavi" style="width:200px" />
-                            <br />
-                            <a onclick="SearchData('detcurrency')">Currency :</a>
-                            <input type="text" id="txtCurrencyCode" style="width:50px" tabindex="22" />
-                            <label for="txtExcRate">Exchange Rate :</label>
-                            <input type="text" id="txtExcRate" style="width:80px;text-align:right" tabindex="23" />
-                            <label for="txtNETAmount">Net Amount :</label>
+                            <label id="lblWHTRate" for="txtWHTRate">WH-Tax :</label>
+                            <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="22" />
+                            <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="23" />
+                            <label id="lblNETAmount" for="txtNETAmount">Net Amount :</label>
                             <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="24" />
                             <br />
-                            Pay To Vender :
-                            <input type="text" id="txtVenCode" style="width:50px" tabindex="25" />
-                            <input type="button" id="btnBrowseVen" onclick="SearchData('vender')" value="..." />
-                            <input type="text" id="txtPayChqTo" style="width:200px" tabindex="26" />
+                            WH-Tax No :
+                            <input type="text" id="txt50Tavi" style="width:200px" tabindex="25" />
                             <br />
+                            Pay To Vender :
+                            <input type="text" id="txtVenCode" style="width:50px" tabindex="26" />
+                            <input type="button" id="btnBrowseVen" onclick="SearchData('vender')" value="..." />
+                            <input type="text" id="txtPayChqTo" style="width:200px" tabindex="27" />
+                            <br/>
                             Remark :
-                            <textarea id="txtRemark" style="width:100%;height:80px" tabindex="27"></textarea>
+                            <textarea id="txtRemark" style="width:100%;height:80px" tabindex="28"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
@@ -531,6 +536,12 @@ End Code
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Index', 'D', SetCancel);
         });
+        $('#txtCurrencyCode').keydown(function (event) {
+            if (event.which == 13) {
+                ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');  
+                ShowCaption();
+            }
+        });
         $('#txtBranchCode').keydown(function (event) {
             if (event.which == 13) {
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
@@ -600,6 +611,11 @@ End Code
         $('#txtWHT').keydown(function (event) {
             if (event.which == 13) {
                 CalTotal();
+            }
+        });
+        $('#txtForJNo').keydown(function (event) {
+            if (event.which == 13) {
+                ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
             }
         });
         $('#txtNET').keydown(function (event) {
@@ -1120,8 +1136,17 @@ End Code
             $('#cboSTCode').val(dt.STCode);
             var r = FindService($('#txtSICode').val())
             ReadService(r);
-            if (isjobmode == false)
+            if (isjobmode == false) {
                 $('#txtForJNo').val(dt.ForJNo);
+                $('#txtInvNo').val('');
+                if ($('#txtForJNo').val()!= '') {
+                    ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+                }
+            }                
+            $('#txtAdvQty').val(dt.AdvQty);
+            $('#txtExcRate').val(dt.ExchangeRate);
+            $('#txtUnitPrice').val(dt.UnitPrice);
+            CalAmount();
             $('#txtRemark').val(dt.TRemark);
             $('#txt50Tavi').val(dt.Doc50Tavi);
             $('#txtPayChqTo').val(dt.PayChqTo);
@@ -1133,12 +1158,11 @@ End Code
             $('#txtVAT').val(dt.ChargeVAT);
             $('#txtWHT').val(dt.Charge50Tavi);
             $('#txtNET').val(dt.AdvNet);
-            $('#txtAdvQty').val(dt.AdvQty);
-            $('#txtExcRate').val(dt.ExchangeRate);
-            $('#txtUnitPrice').val(dt.UnitPrice);
-            $('#txtCurrencyCode').val(dt.CurrencyCode);
             $('#txtVenCode').val(dt.VenCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
+            $('#txtCurrencyCode').val(dt.CurrencyCode);
+            ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
+            ShowCaption();
             return;
         }
         ClearDetail();
@@ -1163,10 +1187,14 @@ End Code
         $('#txtVAT').val(0);
         $('#txtWHT').val(0);
         $('#txtNET').val(0);
+        $('#txtAMTCal').val(0);
         $('#txtAdvQty').val(1);
         $('#txtExcRate').val($('#txtExchangeRate').val());
         $('#txtUnitPrice').val(0);
         $('#txtCurrencyCode').val($('#txtSubCurrency').val());
+        ShowCurrency(path, $('#txtSubCurrency').val(), '#txtCurrencyName');
+        ShowCaption();
+        $('#txtDetCurrency').val($('#txtMainCurrency').val());
         $('#txtVenCode').val('');
 
         $('#chkDuplicate').prop('checked', false);
@@ -1283,7 +1311,7 @@ End Code
                 SetGridCurrency(path, '#tbSubCur', '#frmSearchSubCur', ReadCurrencyH);
                 break;
             case 'detcurrency':
-                SetGridCurrency(path, '#tbSubExp', '#frmSearchSubExp', ReadCurrencyD);
+                SetGridCurrency(path, '#tbExpCur', '#frmSearchExpCur', ReadCurrencyD);
                 break;
             case 'vender':
                 SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender);
@@ -1298,6 +1326,14 @@ End Code
         strParam += '&CustCode=' + $('#txtCustCode').val();
         return strParam;
     }
+    function ShowCaption() {
+        $('#lblUnitPrice').text("Price (" + $('#txtCurrencyCode').val() + "):");
+        $('#lblAMTCal').text("Amount (" + $('#txtCurrencyCode').val() + "):");
+        $('#lblAmount').text("Amount (" + $('#txtMainCurrency').val() + "):");
+        $('#lblVATRate').text("VAT (" + $('#txtMainCurrency').val() + "):");
+        $('#lblWHTRate').text("WHT (" + $('#txtMainCurrency').val() + "):");
+        $('#lblNETAmount').text("Net (" + $('#txtMainCurrency').val() + "):");
+    }
     function ReadVender(dt) {
         $('#txtVenCode').val(dt.VenCode);
         $('#txtPayChqTo').val(dt.TName);
@@ -1305,6 +1341,10 @@ End Code
     }
     function ReadCurrencyD(dt) {
         $('#txtCurrencyCode').val(dt.Code);
+        $('#txtCurrencyName').val(dt.TName);
+        $('#txtExcRate').val(0);
+        CalAmount();
+        ShowCaption();
         $('#txtExcRate').focus();
     }
     function ReadCurrencyH(dt) {
@@ -1381,7 +1421,7 @@ End Code
     }
     function GetTotal() {
         var total = SumTotal();
-        return CDbl(CNum($('#txtTotalAmount').val()) * CNum($('#txtExchangeRate').val()) - total,4);
+        return CDbl(CNum($('#txtTotalAmount').val()) / CNum($('#txtExchangeRate').val()) - total,4);
     }
     function CalAmount() {
         var price = CDbl($('#txtUnitPrice').val(),4);
@@ -1389,12 +1429,17 @@ End Code
         var rate = CDbl($('#txtExcRate').val(),4); //rate ของ detail
         var type = $('#txtVatType').val();
         if (qty > 0) {
-            var amt = CNum(qty) * CNum(price) * CNum(rate);
+            var amt = CNum(qty) * CNum(price);
+            $('#txtAMTCal').val(CDbl(CNum(amt), 4));
+            //var exc = CDbl($('#txtExchangeRate').val(), 4); //rate ของ header
+            //var total = CDbl(CNum(amt) / CNum(exc),4);
             if (type == '2') {
-                $('#txtNET').val(CDbl(CNum(amt),4));
+                //$('#txtNET').val(CDbl(CNum(total),4));
+                $('#txtNET').val(CDbl(CNum(amt) * CNum(rate), 4));
             }
             if (type == '1') {
-                $('#txtAMT').val(CDbl(CNum(amt),4));
+                //$('#txtAMT').val(CDbl(CNum(total),4));
+                $('#txtAMT').val(CDbl(CNum(amt) * CNum(rate),4));
             }
             CalVATWHT();
         } else {
