@@ -34,3 +34,4 @@ D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.exe
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.xml
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.pdb
 D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.frmGenCode.resources
+D:\Boat\JobWebDemo\JobWebDemo\GenClassFromDB\obj\Debug\GenClassFromDB.frmHTML.resources

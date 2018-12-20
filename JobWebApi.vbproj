@@ -406,6 +406,8 @@
     <Compile Include="Models\CVoucher.vb" />
     <Compile Include="Models\CVoucherDtl.vb" />
     <Compile Include="Models\CVoucherSub.vb" />
+    <Compile Include="Models\CWHTaxDetail.vb" />
+    <Compile Include="Models\CWHTaxHeader.vb" />
     <Compile Include="Models\cXMLData.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -496,6 +498,8 @@
     <Content Include="Views\Acc\Index.vbhtml" />
     <Content Include="Views\JobOrder\_FormJob.vbhtml" />
     <Content Include="Views\Adv\_FormAdv.vbhtml" />
+    <Content Include="Views\Acc\Voucher.vbhtml" />
+    <Content Include="Views\Acc\WHTax.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

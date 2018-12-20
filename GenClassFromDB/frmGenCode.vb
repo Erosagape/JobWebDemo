@@ -413,4 +413,8 @@ function DeleteData() {
 
         Return strAll
     End Function
+
+    Private Sub HTMLDesignerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HTMLDesignerToolStripMenuItem.Click
+        frmHTML.Show()
+    End Sub
 End Class
