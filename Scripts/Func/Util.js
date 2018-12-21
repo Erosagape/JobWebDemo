@@ -331,6 +331,14 @@ function CallBackQueryUserAuth(p, code,app,menu, ev) {
         }
     });
 }
+function CallBackQueryVoucher(p, branch,code, ev) {
+    $.get(p + 'acc/getvoucher?Branch='+branch+'&Code=' + code).done(function (r) {
+        var dr = r.voucher;
+        if (dr.length > 0) {
+            ev(dr);
+        }
+    });
+}
 function ShowConfigValue(path, Code, Key, ControlID) {
     var strParam = "";
     if (Code != "") {

@@ -421,7 +421,12 @@ End Code
             columns: [ //กำหนด property ของ header column
                 { data: "DocNo", title: "Doc.No" },
                 { data: "DocType", title: "Type " },
-                { data: "DocDate", title: "Date" },
+                {
+                    data: "DocDate", title: "Date",
+                    render: function (data) {
+                        return CDateEN(data);
+                    }
+                },
                 { data: "CmpType", title: "For" },
                 { data: "CmpCode", title: "Customer" },
                 { data: "CmpBranch", title: "Branch" },

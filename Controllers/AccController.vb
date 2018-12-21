@@ -5,7 +5,6 @@ Imports Newtonsoft.Json
 Namespace Controllers
     Public Class AccController
         Inherits CController
-
         ' GET: Acc
         Function Index() As ActionResult
             Return View()
