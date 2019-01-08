@@ -164,14 +164,14 @@
                 </td>
             </tr>
         </table>
-</div>
+    </div>
 <script type="text/javascript">
     var serv = [];
     $(document).ready(function () {
         ShowCompany();
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
-        if (br !== "" && ano !== "") {
+        if (br !== '' && ano !== '') {
             GetAdv(br, ano);
         } else {
             var r = GetDummy();
@@ -179,7 +179,7 @@
         }
     });
     function GetAdv(Branch, Doc) {
-        $.get('advance/getadvance?branchcode=' + Branch + '&advno=' + Doc)
+        $.get('adv/getadvance?branchcode=' + Branch + '&advno=' + Doc)
             .done(function (r) {
                 if (r.adv.header.length > 0) {
                     ShowData(r);
@@ -211,10 +211,10 @@
         //show headers
         var h = data.adv.header[0];
         $('#lblAdvNo').text(h.AdvNo);
-        $('#lblReqDate').text(CDate(GetToday()));
+        $('#lblReqDate').text(CDateTH(GetToday()));
         $('#lblCustCode').text(h.CustCode + '/' + h.CustBranch);
         $('#lblRemark').text(h.TRemark);
-        $('#lblAdvDate').text(CDate(h.AdvDate));
+        $('#lblAdvDate').text(CDateTH(h.AdvDate));
         $('#lblPayTo').text(h.PayChqTo);
 
         ShowCustomer(h.CustCode, h.CustBranch);
@@ -223,9 +223,9 @@
         ShowUser(h.ApproveBy, '#lblAppBy');
         ShowUser(h.PaymentBy, '#lblPayBy');
 
-        $('#lblRequestDate').text(CDate(h.AdvDate));
-        $('#lblAppDate').text(CDate(h.ApproveDate));
-        $('#lblPayDate').text(CDate(h.PaymentDate));
+        $('#lblRequestDate').text(CDateTH(h.AdvDate));
+        $('#lblAppDate').text(CDateTH(h.ApproveDate));
+        $('#lblPayDate').text(CDateTH(h.PaymentDate));
 
         var jt = h.JobType;
         var sb = h.ShipBy;

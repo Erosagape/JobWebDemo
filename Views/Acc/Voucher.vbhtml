@@ -53,6 +53,10 @@ End Code
                             </tr>
                         </thead>
                     </table>
+                    <div>
+                        <button id="btnAddPay" class="btn btn-default" onclick="AddPayment()">Add</button>
+                        <button id="btnDelPay" class="btn btn-danger" onclick="DeletePayment()">Delete</button>
+                    </div>
                 </div>
                 <div id="tabDetail" class="tab-pane fade">
                     <table id="tbDetail" class="table table-bordered">
@@ -69,6 +73,10 @@ End Code
                             </tr>
                         </thead>
                     </table>
+                    <div>
+                        <button id="btnAddDoc" class="btn btn-default" onclick="AddDocument()">Add</button>
+                        <button id="btnDelDoc" class="btn btn-danger" onclick="DeleteDocument()">Delete</button>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -147,7 +155,24 @@ End Code
                         <h4 class="modal-title"><label id="lblHeader">Voucher Info</label></h4>
                     </div>
                     <div class="modal-body">
-                        
+                        PRVoucher :<br /><input type="text" id="txtPRVoucher" class="form-control">
+                        PRType :<br /><input type="text" id="txtPRType" class="form-control">
+                        ChqNo :<br /><input type="text" id="txtChqNo" class="form-control">
+                        ChqDate :<br /><input type="date" id="txtChqDate" class="form-control">
+                        IsLocal :<br /><input type="text" id="txtIsLocal" class="form-control" value="0">
+                        ChqStatus :<br /><input type="text" id="txtChqStatus" class="form-control">
+                        PayChqTo :<br /><input type="text" id="txtPayChqTo" class="form-control">
+                        BookCode :<br /><input type="text" id="txtBookCode" class="form-control">
+                        BankCode :<br /><input type="text" id="txtBankCode" class="form-control">
+                        BankBranch :<br /><input type="text" id="txtBankBranch" class="form-control">
+                        RecvBank :<br /><input type="text" id="txtRecvBank" class="form-control">
+                        RecvBranch :<br /><input type="text" id="txtRecvBranch" class="form-control">
+                        CashAmount :<br /><input type="number" id="txtCashAmount" class="form-control" value="0.00">
+                        ChqAmount :<br /><input type="number" id="txtChqAmount" class="form-control" value="0.00">
+                        CreditAmount :<br /><input type="number" id="txtCreditAmount" class="form-control" value="0.00">
+                        TRemark :<br /><input type="text" id="txtTRemark" class="form-control">
+                        DocNo :<br /><input type="text" id="txtDocNo" class="form-control">
+                        SICode :<br /><input type="text" id="txtSICode" class="form-control">
                     </div>
                     <div class="modal-footer">
                         <button id="btnUpdatePay" class="btn btn-primary" onclick="SavePayment()">Save</button>
@@ -164,7 +189,14 @@ End Code
                         <h4 class="modal-title"><label id="lblHeader">Document Info</label></h4>
                     </div>
                     <div class="modal-body">
-                        
+                        DocType :<br /><input type="text" id="txtDocType" class="form-control">
+                        DocNo :<br /><input type="text" id="txtDocNo" class="form-control">
+                        DocDate :<br /><input type="date" id="txtDocDate" class="form-control">
+                        CmpType :<br /><input type="text" id="txtCmpType" class="form-control">
+                        CmpCode :<br /><input type="text" id="txtCmpCode" class="form-control">
+                        CmpBranch :<br /><input type="text" id="txtCmpBranch" class="form-control">
+                        PaidAmount :<br /><input type="number" id="txtPaidAmount" class="form-control" value="0.00">
+                        TotalAmount :<br /><input type="number" id="txtTotalAmount" class="form-control" value="0.00">
                     </div>
                     <div class="modal-footer">
                         <button id="btnUpdateDoc" class="btn btn-primary" onclick="SaveDocument()">Save</button>
@@ -174,11 +206,13 @@ End Code
             </div>
         </div>
         <div id="dvCommand">
-            <button id="btnAdd" class="btn btn-default" onclick="ClearForm()">Add</button>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
+            <button id="btnAdd" class="btn btn-default" onclick="ClearForm()">Clear Data</button>
+            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save Data</button>
         </div>
     </div>
 </div>
+<div id="dvLOVs"></div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     $(document).ready(function () {
@@ -191,9 +225,14 @@ End Code
             if (event.which == 13) {
                 var code = $('#txtControlNo').val();
                 var branch = $('#txtBranchCode').val();
-                ClearForm();
+                $('#txtBranchCode').val(branch);
                 $('#txtControlNo').val(code);
                 CallBackQueryVoucher(path, branch,code, ReadData);
+            }
+        });
+        $('#txtBranchCode').keydown(function (event) {
+            if (event.which == 13) {
+                ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
     }
@@ -271,6 +310,20 @@ End Code
         ClearPayment();
         ClearDocument();
     }
+    function AddPayment() {
+        ClearPayment();
+        $('#frmPayment').modal('show');
+    }
+    function AddDocument() {
+        ClearDocument();
+        $('#frmDocument').modal('show');
+    }
+    function DeletePayment() {
+
+    }
+    function DeleteDocument() {
+
+    }
     function ReadData(dt) {
         ClearForm();
         if (dt.header.length > 0) {
@@ -326,7 +379,8 @@ End Code
         }
     }
     function SetGridControl() {
-        $.get(path + 'acc/getvouchergrid?branchcode=' + $('#txtBranchCode').val(), function (r) {
+        var code = $('#txtBranchCode').val();
+        $.get(path + 'acc/getvouchergrid?branch=' + code, function (r) {
             if (r.voucher.data.length == 0) {
                 alert('data not found on this branch');
                 return;
@@ -336,23 +390,28 @@ End Code
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
                 columns: [ //กำหนด property ของ header column
-                    { data: "AdvNo", title: "Advance No" },
+                    { data: "ControlNo", title: "Control No" },
                     {
-                        data: "AdvDate", title: "Date",
+                        data: "VoucherDate", title: "Date",
                         render: function (data) {
                             return CDateEN(data);
                         }
                     },
                     { data: "CustCode", title: "Customer" },
-                    { data: "EmpCode", title: "Request By" },
-                    { data: "JobNo", title: "Job Number" },
-                    { data: "CustInvNo", title: "Cust Inv" },
-                    { data: "DocStatus", title: "Status" },
-                    { data: "TotalAdvance", title: "Total" },
-                    { data: "SubCurrency", title: "Currency" },
-                    { data: "Doc50Tavi", title: "W/T No" },
-                    { data: "PaymentNo", title: "A/P No" },
                     { data: "TRemark", title: "Remark" },
+                    { data: "VoucherNo", title: "Voucher" },
+                    { data: "ChqNo", title: "Cheque No" },
+                    {
+                        data: "ChqDate", title: "Chq Date",
+                        render: function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    { data: "ChqAmount", title: "Chq Total" },
+                    { data: "CashAmount", title: "Cash Total" },
+                    { data: "CreditAmount", title: "Credit Total" },
+                    { data: "DocNo", title: "Doc No" },
+                    { data: "PaidAmount", title: "TotalPaid" },
                 ],
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
@@ -379,7 +438,7 @@ End Code
             columns: [ //กำหนด property ของ header column
                 { data: "ChqAmount", title: "Cheque" },
                 { data: "CashAmount", title: "Cash" },
-                { data: "CredAmount", title: "Credit" },
+                { data: "CreditAmount", title: "Credit" },
                 { data: "PRVoucher", title: "Voucher" },
                 { data: "BookCode", title: "Book acc" },
                 { data: "ChqNo", title: "Chq.No" },
@@ -449,25 +508,139 @@ End Code
     }
     function ReadPayment(dr) {
         if (dr !== undefined) {
-
+            $('#txtPRVoucher').val(dr.PRVoucher);
+            $('#txtPRType').val(dr.PRType);
+            $('#txtChqNo').val(dr.ChqNo);
+            $('#txtBookCode').val(dr.BookCode);
+            $('#txtBankCode').val(dr.BankCode);
+            $('#txtBankBranch').val(dr.BankBranch);
+            $('#txtChqDate').val(CDateEN(dr.ChqDate));
+            $('#txtCashAmount').val(dr.CashAmount);
+            $('#txtChqAmount').val(dr.ChqAmount);
+            $('#txtCreditAmount').val(dr.CreditAmount);
+            $('#txtIsLocal').val(dr.IsLocal);
+            $('#txtChqStatus').val(dr.ChqStatus);
+            $('#txtTRemark').val(dr.TRemark);
+            $('#txtPayChqTo').val(dr.PayChqTo);
+            $('#txtDocNo').val(dr.DocNo);
+            $('#txtSICode').val(dr.SICode);
+            $('#txtRecvBank').val(dr.RecvBank);
+            $('#txtRecvBranch').val(dr.RecvBranch);
         }
     }
     function ReadDocument(dr) {
         if (dr !== undefined) {
-
+            $('#txtDocType').val(dr.DocType);
+            $('#txtDocNo').val(dr.DocNo);
+            $('#txtDocDate').val(CDateEN(dr.DocDate));
+            $('#txtCmpType').val(dr.CmpType);
+            $('#txtCmpCode').val(dr.CmpCode);
+            $('#txtCmpBranch').val(dr.CmpBranch);
+            $('#txtPaidAmount').val(dr.PaidAmount);
+            $('#txtTotalAmount').val(dr.TotalAmount);
         }
     }
     function ClearPayment() {
-
+        $('#txtPRVoucher').val('');
+        $('#txtPRType').val('');
+        $('#txtChqNo').val('');
+        $('#txtBookCode').val('');
+        $('#txtBankCode').val('');
+        $('#txtBankBranch').val('');
+        $('#txtChqDate').val('');
+        $('#txtCashAmount').val('0.00');
+        $('#txtChqAmount').val('0.00');
+        $('#txtCreditAmount').val('0.00');
+        $('#txtIsLocal').val('');
+        $('#txtChqStatus').val('');
+        $('#txtTRemark').val('');
     }
     function ClearDocument() {
-
+        $('#txtDocType').val('');
+        $('#txtDocNo').val('');
+        $('#txtDocDate').val('');
+        $('#txtCmpType').val('');
+        $('#txtCmpCode').val('');
+        $('#txtCmpBranch').val('');
+        $('#txtPaidAmount').val('0.00');
+        $('#txtTotalAmount').val('0.00');
     }
     function SavePayment() {
-
+        var obj = {
+            PRVoucher:$('#txtPRVoucher').val(),
+            PRType:$('#txtPRType').val(),
+            ChqNo:$('#txtChqNo').val(),
+            BookCode:$('#txtBookCode').val(),
+            BankCode:$('#txtBankCode').val(),
+            BankBranch:$('#txtBankBranch').val(),
+            ChqDate:CDateTH($('#txtChqDate').val()),
+            CashAmount:CNum($('#txtCashAmount').val()),
+            ChqAmount:CNum($('#txtChqAmount').val()),
+            CreditAmount:CNum($('#txtCreditAmount').val()),
+            IsLocal:$('#txtIsLocal').val(),
+            ChqStatus:$('#txtChqStatus').val(),
+            TRemark:$('#txtTRemark').val(),
+            PayChqTo:$('#txtPayChqTo').val(),
+            DocNo:$('#txtDocNo').val(),
+            SICode:$('#txtSICode').val(),
+            RecvBank:$('#txtRecvBank').val(),
+            RecvBranch:$('#txtRecvBranch').val()
+        };
+        if (obj.PRVoucher != "") {
+            var ask = confirm("Do you need to Save " + obj.PRVoucher + "?");
+            if (ask == false) return;
+            var jsonText = JSON.stringify({ data: obj });
+            //alert(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetVoucherSub", "Master")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    alert(response.result.msg);
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        } else {
+            alert('No data to save');
+        }
     }
     function SaveDocument() {
-
+        var obj = {
+              BranchCode:$('#txtBranchCode').val(),
+              ControlNo:$('#txtControlNo').val(),
+              ItemNo:$('#txtItemNo').val(),
+              DocType:$('#txtDocType').val(),
+              DocNo:$('#txtDocNo').val(),
+              DocDate:CDateTH($('#txtDocDate').val()),
+              CmpType:$('#txtCmpType').val(),
+              CmpCode:$('#txtCmpCode').val(),
+              CmpBranch:$('#txtCmpBranch').val(),
+              PaidAmount:CNum($('#txtPaidAmount').val()),
+              TotalAmount:CNum($('#txtTotalAmount').val()),
+        };
+        if (obj.DocNo!= "") {
+            var ask = confirm("Do you need to Save " + obj.DocNo + "?");
+            if (ask == false) return;
+            var jsonText = JSON.stringify({ data: obj });
+            //alert(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetVoucherDoc", "Master")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    alert(response.result.msg);
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        } else {
+            alert('No data to save');
+        }
     }
     function ReadVender(dt) {
         $('#txtCmpCode').val(dt.VenCode);
