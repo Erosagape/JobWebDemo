@@ -37,10 +37,10 @@ AND d.acType=r.acType
                 End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(tSqlw)
                 Dim oHead As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())
-                Dim json = "{""voucher"":{""data"":" & oHead & ",""msg"":" & tSqlw & "}}"
+                Dim json = "{""voucher"":{""data"":" & oHead & ",""msg"":""Complete!""}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("{""voucher"":{""data"":[],""msg"":" & ex.Message & "}}", jsonContent)
+                Return Content("{""voucher"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function GetVoucher() As ActionResult
@@ -132,6 +132,54 @@ AND d.acType=r.acType
             Catch ex As Exception
                 Dim json = "{""result"":{""data"":null,""msg"":""Error!"",""error"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelVoucherSub() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ControlNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND ControlNo='{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""voucher"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                If IsNothing(Request.QueryString("Item")) Then
+                    Return Content("{""voucher"":{""result"":""Please Select Some Item"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CVoucherSub(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw & String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString))
+                Dim oDataSub = oData.GetData(tSqlw)
+
+                Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataSub) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function DelVoucherDoc() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ControlNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND ControlNo='{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""voucher"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                If IsNothing(Request.QueryString("Item")) Then
+                    Return Content("{""voucher"":{""result"":""Please Select Some Item"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CVoucherDoc(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw & String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString))
+                Dim oDataDoc = oData.GetData(tSqlw)
+
+                Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataDoc) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
             End Try
         End Function
         Function DelVoucher() As ActionResult

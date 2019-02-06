@@ -375,6 +375,7 @@
     <Compile Include="App_Start\WebApiConfig.vb" />
     <Compile Include="Controllers\AccController.vb" />
     <Compile Include="Controllers\AdvController.vb" />
+    <Compile Include="Controllers\ClrController.vb" />
     <Compile Include="Controllers\ConfigController.vb" />
     <Compile Include="Controllers\MasterController.vb" />
     <Compile Include="Controllers\JobOrderController.vb" />
@@ -389,6 +390,8 @@
     <Compile Include="Models\CBank.vb" />
     <Compile Include="Models\CBookAccount.vb" />
     <Compile Include="Models\CBranch.vb" />
+    <Compile Include="Models\CClrDetail.vb" />
+    <Compile Include="Models\CClrHeader.vb" />
     <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
     <Compile Include="Models\CController.vb" />
@@ -501,6 +504,9 @@
     <Content Include="Views\Adv\_FormAdv.vbhtml" />
     <Content Include="Views\Acc\Voucher.vbhtml" />
     <Content Include="Views\Acc\WHTax.vbhtml" />
+    <Content Include="Views\Clr\Index.vbhtml" />
+    <Content Include="Views\Clr\Approve.vbhtml" />
+    <Content Include="Views\Clr\Clear.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

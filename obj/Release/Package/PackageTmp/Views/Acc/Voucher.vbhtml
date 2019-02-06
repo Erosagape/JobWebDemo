@@ -55,7 +55,6 @@ End Code
                     </table>
                     <div>
                         <button id="btnAddPay" class="btn btn-default" onclick="AddPayment()">Add</button>
-                        <button id="btnDelPay" class="btn btn-danger" onclick="DeletePayment()">Delete</button>
                     </div>
                 </div>
                 <div id="tabDetail" class="tab-pane fade">
@@ -75,7 +74,6 @@ End Code
                     </table>
                     <div>
                         <button id="btnAddDoc" class="btn btn-default" onclick="AddDocument()">Add</button>
-                        <button id="btnDelDoc" class="btn btn-danger" onclick="DeleteDocument()">Delete</button>
                     </div>
                 </div>
             </div>
@@ -155,27 +153,30 @@ End Code
                         <h4 class="modal-title"><label id="lblHeader">Voucher Info</label></h4>
                     </div>
                     <div class="modal-body">
+                        ItemNo :<br /><input type="text" id="txtItemNo" class="form-control">
                         PRVoucher :<br /><input type="text" id="txtPRVoucher" class="form-control">
                         PRType :<br /><input type="text" id="txtPRType" class="form-control">
                         ChqNo :<br /><input type="text" id="txtChqNo" class="form-control">
+                        ChqDate :<br /><input type="date" id="txtChqDate" class="form-control">
+                        IsLocal :<br /><input type="text" id="txtIsLocal" class="form-control" value="0">
+                        ChqStatus :<br /><input type="text" id="txtChqStatus" class="form-control">
+                        PayChqTo :<br /><input type="text" id="txtPayChqTo" class="form-control">
                         BookCode :<br /><input type="text" id="txtBookCode" class="form-control">
                         BankCode :<br /><input type="text" id="txtBankCode" class="form-control">
                         BankBranch :<br /><input type="text" id="txtBankBranch" class="form-control">
-                        ChqDate :<br /><input type="date" id="txtChqDate" class="form-control">
+                        RecvBank :<br /><input type="text" id="txtRecvBank" class="form-control">
+                        RecvBranch :<br /><input type="text" id="txtRecvBranch" class="form-control">
                         CashAmount :<br /><input type="number" id="txtCashAmount" class="form-control" value="0.00">
                         ChqAmount :<br /><input type="number" id="txtChqAmount" class="form-control" value="0.00">
                         CreditAmount :<br /><input type="number" id="txtCreditAmount" class="form-control" value="0.00">
-                        IsLocal :<br /><input type="text" id="txtIsLocal" class="form-control" value="0">
-                        ChqStatus :<br /><input type="text" id="txtChqStatus" class="form-control">
                         TRemark :<br /><input type="text" id="txtTRemark" class="form-control">
-                        PayChqTo :<br /><input type="text" id="txtPayChqTo" class="form-control">
                         DocNo :<br /><input type="text" id="txtDocNo" class="form-control">
                         SICode :<br /><input type="text" id="txtSICode" class="form-control">
-                        RecvBank :<br /><input type="text" id="txtRecvBank" class="form-control">
-                        RecvBranch :<br /><input type="text" id="txtRecvBranch" class="form-control">
+                        acType :<br /><input type="text" id="txtacType" class="form-control">
                     </div>
                     <div class="modal-footer">
                         <button id="btnUpdatePay" class="btn btn-primary" onclick="SavePayment()">Save</button>
+                        <button id="btnDelPay" class="btn btn-danger" onclick="DeletePayment()">Delete</button>
                         <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -189,6 +190,7 @@ End Code
                         <h4 class="modal-title"><label id="lblHeader">Document Info</label></h4>
                     </div>
                     <div class="modal-body">
+                        ItemNo :<br /><input type="text" id="txtDocItemNo" class="form-control">
                         DocType :<br /><input type="text" id="txtDocType" class="form-control">
                         DocNo :<br /><input type="text" id="txtDocNo" class="form-control">
                         DocDate :<br /><input type="date" id="txtDocDate" class="form-control">
@@ -197,9 +199,11 @@ End Code
                         CmpBranch :<br /><input type="text" id="txtCmpBranch" class="form-control">
                         PaidAmount :<br /><input type="number" id="txtPaidAmount" class="form-control" value="0.00">
                         TotalAmount :<br /><input type="number" id="txtTotalAmount" class="form-control" value="0.00">
+                        acType :<br /><input type="text" id="txtDocacType" class="form-control">
                     </div>
                     <div class="modal-footer">
                         <button id="btnUpdateDoc" class="btn btn-primary" onclick="SaveDocument()">Save</button>
+                        <button id="btnDelDoc" class="btn btn-danger" onclick="DeleteDocument()">Delete</button>
                         <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -215,6 +219,8 @@ End Code
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
+    var user = '@ViewBag.User';
+    var userRights = '@ViewBag.UserRights';
     $(document).ready(function () {
         SetEvents();
         SetLOVs();
@@ -311,18 +317,42 @@ End Code
         ClearDocument();
     }
     function AddPayment() {
+        if (userRights.indexOf('I') < 0) {
+            alert('you are not authorize to add payment');
+            return;
+        }
         ClearPayment();
         $('#frmPayment').modal('show');
     }
     function AddDocument() {
+        if (userRights.indexOf('I') < 0) {
+            alert('you are not authorize to add document');
+            return;
+        }
         ClearDocument();
         $('#frmDocument').modal('show');
     }
     function DeletePayment() {
-
+        if (userRights.indexOf('D') < 0) {
+            alert('you are not authorize to delete');
+            return;
+        }
+        $.get(path + 'acc/delvouchersub?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val() + '&item=' + $('#txtItemNo').val(), function (r) {
+            SetGridPayment(r.voucher.data);            
+            alert(r.voucher.result);
+            $('#frmPayment').modal('hide');
+        });
     }
     function DeleteDocument() {
-
+        if (userRights.indexOf('D') < 0) {
+            alert('you are not authorize to delete');
+            return;
+        }
+        $.get(path + 'acc/delvoucherdoc?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val() + '&item=' + $('#txtDocItemNo').val(), function (r) {
+            SetGridDocument(r.voucher.data);
+            alert(r.voucher.result);
+            $('#frmDocument').modal('hide');
+        });
     }
     function ReadData(dt) {
         ClearForm();
@@ -379,7 +409,8 @@ End Code
         }
     }
     function SetGridControl() {
-        $.get(path + 'acc/getvouchergrid?branch=' + $('#txtBranchCode').val(), function (r) {
+        var code = $('#txtBranchCode').val();
+        $.get(path + 'acc/getvouchergrid?branch=' + code, function (r) {
             if (r.voucher.data.length == 0) {
                 alert('data not found on this branch');
                 return;
@@ -456,9 +487,12 @@ End Code
         $('#tbHeader tbody').on('click', 'tr', function () {
             $('#tbHeader tbody > tr').removeClass('selected');
             $(this).addClass('selected');
-            var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
-            ReadPayment(data); //callback function from caller 
-            $('#frmPayment').modal('show');
+            if (userRights.indexOf('E') > 0) {
+                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                ReadPayment(data); //callback function from caller 
+                $('#frmPayment').modal('show');
+            }
+            
         });
     }
     function SetGridDocument(list) {
@@ -481,9 +515,11 @@ End Code
         $('#tbDetail tbody').on('click', 'tr', function () {
             $('#tbDetail tbody > tr').removeClass('selected');
             $(this).addClass('selected');
-            var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
-            ReadDocument(data); //callback function from caller 
-            $('#frmDocument').modal('show');
+            if (userRights.indexOf('E') > 0) {
+                var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
+                ReadDocument(data); //callback function from caller 
+                $('#frmDocument').modal('show');
+            }
         });
     }
     function ReadHeader(dr) {
@@ -507,6 +543,7 @@ End Code
     }
     function ReadPayment(dr) {
         if (dr !== undefined) {
+            $('#txtItemNo').val(dr.ItemNo);
             $('#txtPRVoucher').val(dr.PRVoucher);
             $('#txtPRType').val(dr.PRType);
             $('#txtChqNo').val(dr.ChqNo);
@@ -525,11 +562,13 @@ End Code
             $('#txtSICode').val(dr.SICode);
             $('#txtRecvBank').val(dr.RecvBank);
             $('#txtRecvBranch').val(dr.RecvBranch);
+            $('#txtacType').val(dr.acType);
         }
     }
     function ReadDocument(dr) {
         if (dr !== undefined) {
             $('#txtDocType').val(dr.DocType);
+            $('#txtDocItemNo').val(dr.ItemNo);
             $('#txtDocNo').val(dr.DocNo);
             $('#txtDocDate').val(CDateEN(dr.DocDate));
             $('#txtCmpType').val(dr.CmpType);
@@ -537,10 +576,12 @@ End Code
             $('#txtCmpBranch').val(dr.CmpBranch);
             $('#txtPaidAmount').val(dr.PaidAmount);
             $('#txtTotalAmount').val(dr.TotalAmount);
+            $('#txtDocacType').val(dr.acType);
         }
     }
     function ClearPayment() {
         $('#txtPRVoucher').val('');
+        $('#txtItemNo').val('0');
         $('#txtPRType').val('');
         $('#txtChqNo').val('');
         $('#txtBookCode').val('');
@@ -553,19 +594,25 @@ End Code
         $('#txtIsLocal').val('');
         $('#txtChqStatus').val('');
         $('#txtTRemark').val('');
+        $('#txtacType').val('');
     }
     function ClearDocument() {
         $('#txtDocType').val('');
         $('#txtDocNo').val('');
+        $('#txtDocItemNo').val('0');
         $('#txtDocDate').val('');
         $('#txtCmpType').val('');
         $('#txtCmpCode').val('');
         $('#txtCmpBranch').val('');
         $('#txtPaidAmount').val('0.00');
         $('#txtTotalAmount').val('0.00');
+        $('#txtDocacType').val('');
     }
     function SavePayment() {
         var obj = {
+            BranchCode: $('#txtBranchCode').val(),
+            ControlNo: $('#txtControlNo').val(),
+            ItemNo: $('#txtItemNo').val(),
             PRVoucher:$('#txtPRVoucher').val(),
             PRType:$('#txtPRType').val(),
             ChqNo:$('#txtChqNo').val(),
@@ -583,7 +630,8 @@ End Code
             DocNo:$('#txtDocNo').val(),
             SICode:$('#txtSICode').val(),
             RecvBank:$('#txtRecvBank').val(),
-            RecvBranch:$('#txtRecvBranch').val()
+            RecvBranch: $('#txtRecvBranch').val(),
+            acType: $('#txtacType').val()
         };
         if (obj.PRVoucher != "") {
             var ask = confirm("Do you need to Save " + obj.PRVoucher + "?");
@@ -608,17 +656,18 @@ End Code
     }
     function SaveDocument() {
         var obj = {
-              BranchCode:$('#txtBranchCode').val(),
-              ControlNo:$('#txtControlNo').val(),
-              ItemNo:$('#txtItemNo').val(),
-              DocType:$('#txtDocType').val(),
-              DocNo:$('#txtDocNo').val(),
-              DocDate:CDateTH($('#txtDocDate').val()),
-              CmpType:$('#txtCmpType').val(),
-              CmpCode:$('#txtCmpCode').val(),
-              CmpBranch:$('#txtCmpBranch').val(),
-              PaidAmount:CNum($('#txtPaidAmount').val()),
-              TotalAmount:CNum($('#txtTotalAmount').val()),
+            BranchCode:$('#txtBranchCode').val(),
+            ControlNo:$('#txtControlNo').val(),
+            ItemNo:$('#txtDocItemNo').val(),
+            DocType:$('#txtDocType').val(),
+            DocNo:$('#txtDocNo').val(),
+            DocDate:CDateTH($('#txtDocDate').val()),
+            CmpType:$('#txtCmpType').val(),
+            CmpCode:$('#txtCmpCode').val(),
+            CmpBranch:$('#txtCmpBranch').val(),
+            PaidAmount:CNum($('#txtPaidAmount').val()),
+            TotalAmount: CNum($('#txtTotalAmount').val()),
+            acType: $('#txtDocacType').val()
         };
         if (obj.DocNo!= "") {
             var ask = confirm("Do you need to Save " + obj.DocNo + "?");

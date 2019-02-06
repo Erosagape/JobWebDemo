@@ -61,7 +61,11 @@ Public Class frmGenCode
             If strPrivate <> "" Then strPrivate &= vbCrLf
             If strReader <> "" Then strReader &= vbCrLf
             If strWriter <> "" Then strWriter &= vbCrLf
-            Select Case Replace(dc.DataType.FullName, "System.", "")
+            Dim strType As String = Replace(dc.DataType.FullName, "System.", "")
+            If dc.ColumnName.IndexOf("date", StringComparison.InvariantCultureIgnoreCase) = dc.ColumnName.Length - 4 Then
+                strType = "Date"
+            End If
+            Select Case strType
                 Case "String"
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
                     strReader &= "row." & dc.ColumnName & " =rd.GetString(rd.GetOrdinal(""" & dc.ColumnName & """)).ToString()" & vbCrLf
@@ -79,7 +83,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " ="""""
 
-                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
+                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
@@ -103,14 +107,14 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
 
-                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""number"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0.00"">"
+                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""number"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0.00""></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CNum($('#txt" & dc.ColumnName & "').val()),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('0.00');"
 
                     strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
-                Case "DateTime"
+                Case "DateTime", "Date"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Date"
 
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
@@ -127,7 +131,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =DateTime.Minvalue"
 
-                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """>"
+                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(CDateEN(dr." & dc.ColumnName & "));"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CDateTH($('#txt" & dc.ColumnName & "').val()),"
@@ -154,7 +158,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
 
-                    strHtml &= vbCrLf & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0"">"
+                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0""></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
@@ -334,7 +338,9 @@ Public Class frmGenCode
         If CheckBox1.Checked = True Then
             strAll = strAll & vbCrLf & "<!-- HTML BOOTSTRAP CONTROLS -->"
             strAll = strAll & vbCrLf & "<div id=""dvForm"">"
-            strAll = strAll & vbCrLf & strHtml
+            strAll = strAll & vbCrLf & vbTab & "<div class=""row"">"
+            strAll = strAll & vbCrLf & vbTab & strHtml
+            strAll = strAll & vbCrLf & vbTab & "</div>"
             strAll = strAll & vbCrLf & "</div>"
             strAll = strAll & vbCrLf & "<div id=""dvCommand"">"
             strAll = strAll & vbCrLf & "<button id=""btnAdd"" class=""btn btn-default"" onclick=""ClearData()"">Add</button>
@@ -345,43 +351,48 @@ Public Class frmGenCode
         If CheckBox2.Checked = True Then
             strAll = strAll & vbCrLf & "//-----JAVA FUNCTIONS for HTML Scripts-----"
             strAll = strAll & "
-function CallBackQuery" & TextBox4.Text.Substring(1) & "(p, code, ev) {
-    $.get(p + 'master/get" & TextBox4.Text.Substring(1).ToLower & "?Code=' + code).done(function (r) {
-        var dr = r." & TextBox4.Text.Substring(1).ToLower & ".data;
-        if (dr.length > 0) {
-            ev(dr[0]);
-        }
+<script type=""text/javascript"">
+    var path = '@Url.Content(""~"")';
+    $(document).ready(function () {
+        SetEvents();
     });
-}
-function SetEvents(){
-    $('#txt" & TextBox6.Text & "').keydown(function (event) {
-        if (event.which == 13) {
-            var code=$('#txt" & TextBox6.Text & "').val();
-            ClearData();
-            $('#txt" & TextBox6.Text & "').val(code);
-            CallBackQuery" & TextBox4.Text.Substring(1) & "(path, code,ReadData);
-        }
-    });
-}
-//CRUD Functions used in HTML Java Scripts
-function DeleteData() {
-    var code = $('#txt" & TextBox6.Text & "').val();
-    var ask = confirm(""Do you need to Delete "" + code + ""?"");
-    if (ask == false) return;
-        $.get(path + 'master/del" & TextBox4.Text.Substring(1).ToLower & "?code=' + code, function (r) {
-            alert(r." & TextBox4.Text.Substring(1).ToLower & ".result);
-            ClearData();
+    function CallBackQuery" & TextBox4.Text.Substring(1) & "(p, code, ev) {
+        $.get(p + 'master/get" & TextBox4.Text.Substring(1).ToLower & "?Code=' + code).done(function (r) {
+            var dr = r." & TextBox4.Text.Substring(1).ToLower & ".data;
+            if (dr.length > 0) {
+                ev(dr[0]);
+            }
         });
-}"
-            strAll = strAll & vbCrLf & "function ReadData(dr){"
-            strAll = strAll & vbCrLf & strJavaLoad
-            strAll = strAll & vbCrLf & "}"
-            strAll = strAll & vbCrLf & "function SaveData(){"
-            strAll = strAll & vbCrLf & "var obj={"
-            strAll = strAll & vbCrLf & strJavaSave
-            strAll = strAll & vbCrLf & "};"
+    }
+    function SetEvents(){
+        $('#txt" & TextBox6.Text & "').keydown(function (event) {
+            if (event.which == 13) {
+                var code=$('#txt" & TextBox6.Text & "').val();
+                ClearData();
+                $('#txt" & TextBox6.Text & "').val(code);
+                CallBackQuery" & TextBox4.Text.Substring(1) & "(path, code,ReadData);
+            }
+        });
+    }
+    //CRUD Functions used in HTML Java Scripts
+    function DeleteData() {
+        var code = $('#txt" & TextBox6.Text & "').val();
+        var ask = confirm(""Do you need to Delete "" + code + ""?"");
+        if (ask == false) return;
+            $.get(path + 'master/del" & TextBox4.Text.Substring(1).ToLower & "?code=' + code, function (r) {
+                alert(r." & TextBox4.Text.Substring(1).ToLower & ".result);
+                ClearData();
+            });
+    }"
+            strAll = strAll & vbCrLf & vbTab & "function ReadData(dr){"
+            strAll = strAll & vbCrLf & vbTab & vbTab & strJavaLoad
+            strAll = strAll & vbCrLf & vbTab & "}"
+            strAll = strAll & vbCrLf & vbTab & "function SaveData(){"
+            strAll = strAll & vbCrLf & vbTab & vbTab & "var obj={"
+            strAll = strAll & vbCrLf & vbTab & vbTab & vbTab & strJavaSave
+            strAll = strAll & vbCrLf & vbTab & "};"
             strAll = strAll & "
-            if (obj." & TextBox6.Text & " != """") {
+        if (obj." & TextBox6.Text & " != """") {
             var ask = confirm(""Do you need to Save "" + obj." & TextBox6.Text & " + ""?"");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
@@ -405,10 +416,11 @@ function DeleteData() {
         } else {
             alert('No data to save');
         }"
-            strAll = strAll & vbCrLf & "}"
-            strAll = strAll & vbCrLf & "function ClearData(){"
-            strAll = strAll & vbCrLf & strJavaClear
-            strAll = strAll & vbCrLf & "}"
+            strAll = strAll & vbCrLf & vbTab & "}"
+            strAll = strAll & vbCrLf & vbTab & "function ClearData(){"
+            strAll = strAll & vbCrLf & vbTab & vbTab & strJavaClear
+            strAll = strAll & vbCrLf & vbTab & "}"
+            strAll = strAll & vbCrLf & "</script>"
         End If
 
         Return strAll

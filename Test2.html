@@ -16,64 +16,78 @@
     </script>
 </head>
 <body>
-<table>
-	<tr>
-		<td>
-			ItemNo<br/>
-			<input type="text" id="txtItemNo" />
-		</td>
-		<td colspan="2">
-			DocType<br/>
-			<select id="cboDocType">
-				<option value="ADV">Advance</option>
-				<option value="CLR">Clearance</option>
-				<option value="PAY">Payment</option>
-				<option value="INV">Invoice</option>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Source:<br/>
-			<select id="cboCmpType">
-				<option value="C">Customers</option>
-				<option value="V">Venders</option>
-			</select>
-		</td>
-		<td colspan="2">
-			Code:<br/>
-			<input type="text" id="txtCmpCode" />
-			<input type="text" id="txtCmpBranch" />
-			<input type="button" id="btnBrowseCmp" value="..." />
-		</td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			Name:<br/>
-			<input type="text" id="txtCmpName"/>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			DocNo:<br/>
-			<input type="text" id="txtDocNo" />
-			<input type="button" id="btnBrowseDoc" value="..." />									
-		</td>
-		<td>
-			Date:<br/>
-			<input type="date" id="txtDocDate" />
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Total:<br/>
-			<input type="text" id="txtTotalAmount" />
-		</td>
-		<td colspan="2">
-			Paid:<br/>
-			<input type="text" id="txtPaidAmount" />
-		</td>								
-	</tr>
-</table>
+    <div class="row">
+        <div class="col-sm-1">
+            No :<br /><input type="text" id="txtItemNo" class="form-control" disabled>
+        </div>
+        <div class="col-sm-1">
+            P/R :<br /><input type="text" id="txtPRType" class="form-control">
+        </div>
+        <div class="col-sm-3">
+            Voucher No:<br /><input type="text" id="txtPRVoucher" class="form-control">
+        </div>
+        <div class="col-sm-2">
+            Type:<br /><input type="text" id="txtacType" class="form-control">
+        </div>
+        <div class="col-sm-5">
+            Note :<br /><input type="text" id="txtTRemark" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            Cheque No :<br /><input type="text" id="txtChqNo" class="form-control">
+        </div>
+        <div class="col-sm-2">
+            C.Date :<br /><input type="date" id="txtChqDate" class="form-control">
+        </div>
+        <div class="col-sm-1">
+            CLR :<br /><input type="text" id="txtChqStatus" class="form-control">
+        </div>
+        <div class="col-sm-1">
+            Local :<br /><input type="text" id="txtIsLocal" class="form-control" value="0">
+        </div>
+        <div class="col-sm-5">
+            Paid To :<br /><input type="text" id="txtPayChqTo" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            Book a/c :<br /><input type="text" id="txtBookCode" class="form-control">
+        </div>
+        <div class="col-sm-2">
+            BankCode :<br /><input type="text" id="txtBankCode" class="form-control">
+        </div>
+        <div class="col-sm-3">
+            Bank Name :<br /><input type="text" id="txtBankName" class="form-control" disabled>
+        </div>
+        <div class="col-sm-4">
+            Branch :<br /><input type="text" id="txtBankBranch" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            RecvBank :<br /><input type="text" id="txtRecvBank" class="form-control">
+        </div>
+        <div class="col-sm-3">
+            RecvBranch :<br /><input type="text" id="txtRecvBranch" class="form-control">
+        </div>
+        <div class="col-sm-3">
+            Reference No :<br /><input type="text" id="txtDocNo" class="form-control">
+        </div>
+        <div class="col-sm-4">
+            SICode :<br /><input type="text" id="txtSICode" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            CashAmount :<br /><input type="number" id="txtCashAmount" class="form-control" value="0.00">
+        </div>
+        <div class="col-sm-4">
+            ChqAmount :<br /><input type="number" id="txtChqAmount" class="form-control" value="0.00">
+        </div>
+        <div class="col-sm-4">
+            CreditAmount :<br /><input type="number" id="txtCreditAmount" class="form-control" value="0.00">
+        </div>
+    </div>
 </body>
 </html>

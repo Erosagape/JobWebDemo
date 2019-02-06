@@ -1,4 +1,4 @@
-
+db.lock
 App_Data/JobWeb.mdf
 App_Data/JobWeb_log.ldf
 Bin/release/JobWebApi.dll
@@ -263,3 +263,5 @@ My Project/PublishProfiles/Tawanasp.com.pubxml.user
 .vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
 .vs/JobWebApi/v15/Server/sqlite3/storage.ide
 .vs/JobWebApi/v15/.suo
+*.VC.opendb
+*.opendb
