@@ -1221,7 +1221,7 @@ End Code
         return c[0];
     }
     function SetGridAdv() {
-        var w = $('#txtBranchCode').val();
+        var w = '';
         if (job.length > 0) {
             w += '&jobno=' + job;
         }
@@ -1240,7 +1240,7 @@ End Code
         if ($('#txtReqBy').val() !== '') {
             w += '&reqby=' + $('#txtReqBy').val();
         }
-        $.get(path + 'adv/getadvancegrid?branchcode=' +  w, function (r) {
+        $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.adv.data.length == 0) {
                 alert('data not found on this branch');
                 return;

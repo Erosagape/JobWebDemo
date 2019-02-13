@@ -30,7 +30,7 @@
                     <img id="imgLogo" src="~/Resource/@ViewBag.PROFILE_LOGO" width="60%" />
                 </td>
                 <td width="80%">
-                    <div id="divCompany" style="text-align:left;color:darkblue;">
+                    <div id="divCompany" style="text-align:center;color:darkblue;">
                         <b>@ViewBag.PROFILE_COMPANY_NAME</b>
                         <br />@ViewBag.PROFILE_COMPANY_ADDR1
                         <br />@ViewBag.PROFILE_COMPANY_ADDR2

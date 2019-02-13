@@ -16,6 +16,64 @@
     </script>
 </head>
 <body>
-    <img src="https://chart.googleapis.com/chart?cht=qr&chl=http://counterservice.tawanasp.com&chs=160x160&chld=L|0" />
+<table>
+	<tr>
+		<td>
+			ItemNo<br/>
+			<input type="text" id="txtItemNo" />
+		</td>
+		<td colspan="2">
+			DocType<br/>
+			<select id="cboDocType">
+				<option value="ADV">Advance</option>
+				<option value="CLR">Clearance</option>
+				<option value="PAY">Payment</option>
+				<option value="INV">Invoice</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Source:<br/>
+			<select id="cboCmpType">
+				<option value="C">Customers</option>
+				<option value="V">Venders</option>
+			</select>
+		</td>
+		<td colspan="2">
+			Code:<br/>
+			<input type="text" id="txtCmpCode" />
+			<input type="text" id="txtCmpBranch" />
+			<input type="button" id="btnBrowseCmp" value="..." />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			Name:<br/>
+			<input type="text" id="txtCmpName"/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			DocNo:<br/>
+			<input type="text" id="txtDocNo" />
+			<input type="button" id="btnBrowseDoc" value="..." />									
+		</td>
+		<td>
+			Date:<br/>
+			<input type="date" id="txtDocDate" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Total:<br/>
+			<input type="text" id="txtTotalAmount" />
+		</td>
+		<td colspan="2">
+			Paid:<br/>
+			<input type="text" id="txtPaidAmount" />
+		</td>								
+	</tr>
+</table>
 </body>
 </html>

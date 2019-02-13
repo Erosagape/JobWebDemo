@@ -521,7 +521,7 @@ End Code
                 ChqAmount: 0,
                 CreditAmount: 0,
                 IsLocal: 0,
-                ChqStatus: '',
+                ChqStatus: 0,
                 TRemark: $('#txtCashTranDate').val() + '-' + $('#txtCashTranTime').val(),
                 PayChqTo: $('#txtCashPayTo').val(),
                 DocNo: $('#txtRefNoCash').val(),
