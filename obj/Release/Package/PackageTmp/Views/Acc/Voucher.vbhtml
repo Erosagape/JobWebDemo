@@ -55,7 +55,6 @@ End Code
                     </table>
                     <div>
                         <button id="btnAddPay" class="btn btn-default" onclick="AddPayment()">Add</button>
-                        <button id="btnDelPay" class="btn btn-danger" onclick="DeletePayment()">Delete</button>
                     </div>
                 </div>
                 <div id="tabDetail" class="tab-pane fade">
@@ -75,7 +74,6 @@ End Code
                     </table>
                     <div>
                         <button id="btnAddDoc" class="btn btn-default" onclick="AddDocument()">Add</button>
-                        <button id="btnDelDoc" class="btn btn-danger" onclick="DeleteDocument()">Delete</button>
                     </div>
                 </div>
             </div>
@@ -147,59 +145,166 @@ End Code
                 </div>
             </div>
         </div>
-        <div id="frmPayment" class="modal modal-lg fade">
-            <div class="modal-dialog-lg">
+        <div id="frmPayment" class="modal fade">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"></button>
                         <h4 class="modal-title"><label id="lblHeader">Voucher Info</label></h4>
                     </div>
                     <div class="modal-body">
-                        PRVoucher :<br /><input type="text" id="txtPRVoucher" class="form-control">
-                        PRType :<br /><input type="text" id="txtPRType" class="form-control">
-                        ChqNo :<br /><input type="text" id="txtChqNo" class="form-control">
-                        BookCode :<br /><input type="text" id="txtBookCode" class="form-control">
-                        BankCode :<br /><input type="text" id="txtBankCode" class="form-control">
-                        BankBranch :<br /><input type="text" id="txtBankBranch" class="form-control">
-                        ChqDate :<br /><input type="date" id="txtChqDate" class="form-control">
-                        CashAmount :<br /><input type="number" id="txtCashAmount" class="form-control" value="0.00">
-                        ChqAmount :<br /><input type="number" id="txtChqAmount" class="form-control" value="0.00">
-                        CreditAmount :<br /><input type="number" id="txtCreditAmount" class="form-control" value="0.00">
-                        IsLocal :<br /><input type="text" id="txtIsLocal" class="form-control" value="0">
-                        ChqStatus :<br /><input type="text" id="txtChqStatus" class="form-control">
-                        TRemark :<br /><input type="text" id="txtTRemark" class="form-control">
-                        PayChqTo :<br /><input type="text" id="txtPayChqTo" class="form-control">
-                        DocNo :<br /><input type="text" id="txtDocNo" class="form-control">
-                        SICode :<br /><input type="text" id="txtSICode" class="form-control">
-                        RecvBank :<br /><input type="text" id="txtRecvBank" class="form-control">
-                        RecvBranch :<br /><input type="text" id="txtRecvBranch" class="form-control">
+                        <div class="row">
+                            <div class="col-md-2">
+                                No :<br /><input type="text" id="txtItemNo" class="form-control" disabled>
+                            </div>
+                            <div class="col-md-3">
+                                P/R :<br /><input type="hidden" id="txtPRType" class="form-control">
+                                <select id="cboPRType" class="form-control dropdown" onchange="SetPRType()"></select>
+                            </div>
+                            <div class="col-md-3">
+                                Voucher No:<br /><input type="text" id="txtPRVoucher" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                Type:<br /><input type="hidden" id="txtacType" class="form-control">
+                                <select id="cboacType" class="form-control dropdown" onchange="SetACType('cboacType','txtacType')"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a onclick="SearchData('bookacc')">Book A/C</a><br /><input type="text" id="txtBookCode" class="form-control">
+                            </div>
+                            <div class="col-md-9">
+                                Book Name :<br /><input type="text" id="txtBookName" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                Bank :<br /><input type="text" id="txtBankCode" class="form-control" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                Bank Name :<br /><input type="text" id="txtBankName" class="form-control" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                Branch :<br /><input type="text" id="txtBankBranch" class="form-control" disabled>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                Cheque No :<br /><input type="text" id="txtChqNo" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                C.Date :<br /><input type="date" id="txtChqDate" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                CLR :<br /><input type="hidden" id="txtChqStatus" class="form-control">
+                                <select id="cboChqStatus" class="form-control dropdown" onchange="SetChqStatus()"></select>
+                                Local :<input type="hidden" id="txtIsLocal" class="form-control" value="0">
+                                <input type="checkbox" id="chkIsLocal" onclick="SetIsLocal()" />
+                            </div>
+                            <div class="col-md-5">
+                                Paid To :<br /><input type="text" id="txtPayChqTo" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <a onclick="SearchData('bank')">Ref.Bank :</a><br /><input type="text" id="txtRecvBank" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                Ref.Branch :<br /><input type="text" id="txtRecvBranch" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                Ref.No :<br /><input type="text" id="txtDocNo" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <a onclick="SearchData('servicecode')">Exp.Code :</a><br /><input type="text" id="txtSICode" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                CashAmount :<br /><input type="number" id="txtCashAmount" class="form-control" value="0.00">
+                            </div>
+                            <div class="col-md-4">
+                                ChqAmount :<br /><input type="number" id="txtChqAmount" class="form-control" value="0.00">
+                            </div>
+                            <div class="col-md-4">
+                                CreditAmount :<br /><input type="number" id="txtCreditAmount" class="form-control" value="0.00">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                Note :<br /><input type="text" id="txtDTRemark" class="form-control">
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button id="btnUpdatePay" class="btn btn-primary" onclick="SavePayment()">Save</button>
+                        <button id="btnDelPay" class="btn btn-warning" onclick="DeletePayment()">Delete</button>
                         <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="frmDocument" class="modal modal-lg fade">
-            <div class="modal-dialog-lg">
+        <div id="frmDocument" class="modal fade">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"></button>
                         <h4 class="modal-title"><label id="lblHeader">Document Info</label></h4>
                     </div>
                     <div class="modal-body">
-                        DocType :<br /><input type="text" id="txtDocType" class="form-control">
-                        DocNo :<br /><input type="text" id="txtDocNo" class="form-control">
-                        DocDate :<br /><input type="date" id="txtDocDate" class="form-control">
-                        CmpType :<br /><input type="text" id="txtCmpType" class="form-control">
-                        CmpCode :<br /><input type="text" id="txtCmpCode" class="form-control">
-                        CmpBranch :<br /><input type="text" id="txtCmpBranch" class="form-control">
-                        PaidAmount :<br /><input type="number" id="txtPaidAmount" class="form-control" value="0.00">
-                        TotalAmount :<br /><input type="number" id="txtTotalAmount" class="form-control" value="0.00">
+                        <div class="row">
+                            <div class="col-md-1">
+                                No :<br /><input type="text" id="txtDocItemNo" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                Doc.Type :<br /><input type="hidden" id="txtDocType" class="form-control">
+                                                <select id="cboDocType" class="form-control dropdown" onchange="SetDocType()">
+                                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                Doc.No :<br /><input type="text" id="txtDDocNo" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                Doc.Date :<br /><input type="date" id="txtDocDate" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                Type :<br /><input type="hidden" id="txtCmpType" class="form-control">
+                                            <select id="cboCmpType" class="form-control dropdown" onchange="SetCmpType()">
+                                                <option value="">N/A</option>
+                                                <option value="C">Customers</option>
+                                                <option value="V">Venders</option>
+                                            </select>
+                            </div>
+                            <div class="col-md-4">
+                                <a onclick="SearchData(GetCmpType())">Company :</a><br /><input type="text" id="txtCmpCode" class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                Branch :<br /><input type="text" id="txtCmpBranch" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                Name :<br /><input type="text" id="txtCmpName" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                Total :<br /><input type="number" id="txtTotalAmount" class="form-control" value="0.00">
+                            </div>
+                            <div class="col-md-5">
+                                Amount :<br /><input type="number" id="txtPaidAmount" class="form-control" value="0.00">
+                            </div>
+                            <div class="col-md-2">
+                                Pay.Type :<br /><input type="hidden" id="txtDocacType" class="form-control">
+                                              <select id="cboDocacType" class="form-control dropdown" onchange="SetACType('cboDocacType','txtDocacType')">
+                                              </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button id="btnUpdateDoc" class="btn btn-primary" onclick="SaveDocument()">Save</button>
+                        <button id="btnDelDoc" class="btn btn-warning" onclick="DeleteDocument()">Delete</button>
                         <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -215,11 +320,31 @@ End Code
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
+    var user = '@ViewBag.User';
+    var userRights = '@ViewBag.UserRights';
     $(document).ready(function () {
         SetEvents();
         SetLOVs();
         SetEnterToTab();
     });
+    function SetIsLocal() {
+        $('#txtIsLocal').val($('#chkIsLocal').prop('checked') ? '1' : '0');
+    }
+    function SetPRType() {
+        $('#txtPRType').val($('#cboPRType').val());
+    }
+    function SetACType(n,d) {
+        $('#'+d).val($('#' +n).val());
+    }
+    function SetCmpType() {
+        $('#txtCmpType').val($('#cboCmpType').val());
+    }
+    function SetChqStatus() {
+        $('#txtChqStatus').val($('#cboChqStatus').val());
+    }
+    function SetDocType() {
+        $('#txtDocType').val($('#cboDocType').val());
+    }
     function SetEvents() {
         $('#txtControlNo').keydown(function (event) {
             if (event.which == 13) {
@@ -259,18 +384,38 @@ End Code
         });
     }
     function SetLOVs() {
+        var lists = 'PAYMENT_TYPE=#cboDocacType';
+        lists += ',PAYMENT_TYPE=#cboacType';
+        lists += ',DOCUMENT_TYPE=#cboDocType';
+        lists += ',DOCUMENT_ACC=#cboPRType';
+        lists += ',CHQ_STATUS=#cboChqStatus';
+
+        loadCombos(path,lists)
+
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             var dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customer List', response, 3);
             //Venders
-            CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 4);
+            CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 3);
             //Branch
-            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 4);
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            //Bank
+            CreateLOV(dv, '#frmSearchBank', '#tbBank', 'Bank', response, 2);
+            //Service Code
+            CreateLOV(dv, '#frmSearchExp', '#tbExp', 'Expenses Code', response, 2);
+            //BookAccount
+            CreateLOV(dv, '#frmSearchBookAcc', '#tbBookAcc', 'Book Accounts', response, 2);
         });
     }
     function SearchData(type) {
         switch (type) {
+            case 'bookacc':
+                SetGridBookAccount(path, '#tbBookAcc', '#frmSearchBookAcc', ReadBookAccount);
+                break;
+            case 'bank':
+                SetGridBank(path, '#tbBank', '#frmSearchBank', ReadBank);
+                break;
             case 'branch':
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
                 break;
@@ -282,6 +427,9 @@ End Code
                 break;
             case 'vender':
                 SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender);
+                break;
+            case 'servicecode':
+                SetGridSICode(path, '#tbExp','','#frmSearchExp', ReadService);
                 break;
         }
     }
@@ -311,18 +459,42 @@ End Code
         ClearDocument();
     }
     function AddPayment() {
+        if (userRights.indexOf('I') < 0) {
+            alert('you are not authorize to add payment');
+            return;
+        }
         ClearPayment();
         $('#frmPayment').modal('show');
     }
     function AddDocument() {
+        if (userRights.indexOf('I') < 0) {
+            alert('you are not authorize to add document');
+            return;
+        }
         ClearDocument();
         $('#frmDocument').modal('show');
     }
     function DeletePayment() {
-
+        if (userRights.indexOf('D') < 0) {
+            alert('you are not authorize to delete');
+            return;
+        }
+        $.get(path + 'acc/delvouchersub?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val() + '&item=' + $('#txtItemNo').val(), function (r) {
+            SetGridPayment(r.voucher.data);            
+            alert(r.voucher.result);
+            $('#frmPayment').modal('hide');
+        });
     }
     function DeleteDocument() {
-
+        if (userRights.indexOf('D') < 0) {
+            alert('you are not authorize to delete');
+            return;
+        }
+        $.get(path + 'acc/delvoucherdoc?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val() + '&item=' + $('#txtDocItemNo').val(), function (r) {
+            SetGridDocument(r.voucher.data);
+            alert(r.voucher.result);
+            $('#frmDocument').modal('hide');
+        });
     }
     function ReadData(dt) {
         ClearForm();
@@ -379,7 +551,8 @@ End Code
         }
     }
     function SetGridControl() {
-        $.get(path + 'acc/getvouchergrid?branch=' + $('#txtBranchCode').val(), function (r) {
+        var code = $('#txtBranchCode').val();
+        $.get(path + 'acc/getvouchergrid?branch=' + code, function (r) {
             if (r.voucher.data.length == 0) {
                 alert('data not found on this branch');
                 return;
@@ -396,9 +569,9 @@ End Code
                             return CDateEN(data);
                         }
                     },
-                    { data: "CustCode", title: "Customer" },
+                    { data: "CmpCode", title: "Customer" },
                     { data: "TRemark", title: "Remark" },
-                    { data: "VoucherNo", title: "Voucher" },
+                    { data: "PRVoucher", title: "Voucher" },
                     { data: "ChqNo", title: "Cheque No" },
                     {
                         data: "ChqDate", title: "Chq Date",
@@ -456,9 +629,12 @@ End Code
         $('#tbHeader tbody').on('click', 'tr', function () {
             $('#tbHeader tbody > tr').removeClass('selected');
             $(this).addClass('selected');
-            var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
-            ReadPayment(data); //callback function from caller 
-            $('#frmPayment').modal('show');
+            if (userRights.indexOf('E') > 0) {
+                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                ReadPayment(data); //callback function from caller 
+                $('#frmPayment').modal('show');
+            }
+            
         });
     }
     function SetGridDocument(list) {
@@ -481,9 +657,11 @@ End Code
         $('#tbDetail tbody').on('click', 'tr', function () {
             $('#tbDetail tbody > tr').removeClass('selected');
             $(this).addClass('selected');
-            var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
-            ReadDocument(data); //callback function from caller 
-            $('#frmDocument').modal('show');
+            if (userRights.indexOf('E') > 0) {
+                var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
+                ReadDocument(data); //callback function from caller 
+                $('#frmDocument').modal('show');
+            }
         });
     }
     function ReadHeader(dr) {
@@ -507,44 +685,66 @@ End Code
     }
     function ReadPayment(dr) {
         if (dr !== undefined) {
+            $('#txtItemNo').val(dr.ItemNo);
             $('#txtPRVoucher').val(dr.PRVoucher);
             $('#txtPRType').val(dr.PRType);
+            $('#cboPRType').val(dr.PRType);
             $('#txtChqNo').val(dr.ChqNo);
             $('#txtBookCode').val(dr.BookCode);
+            ShowBookAccount(path, dr.BookCode, '#txtBookName');
             $('#txtBankCode').val(dr.BankCode);
+            ShowBank(path, dr.BankCode, '#txtBankName');
             $('#txtBankBranch').val(dr.BankBranch);
             $('#txtChqDate').val(CDateEN(dr.ChqDate));
             $('#txtCashAmount').val(dr.CashAmount);
             $('#txtChqAmount').val(dr.ChqAmount);
             $('#txtCreditAmount').val(dr.CreditAmount);
             $('#txtIsLocal').val(dr.IsLocal);
+            $('#chkIsLocal').prop('checked', dr.IsLocal == 1 ? true : false);
             $('#txtChqStatus').val(dr.ChqStatus);
-            $('#txtTRemark').val(dr.TRemark);
+            $('#cboChqStatus').val(dr.ChqStatus);
+            $('#txtDTRemark').val(dr.TRemark);
             $('#txtPayChqTo').val(dr.PayChqTo);
             $('#txtDocNo').val(dr.DocNo);
             $('#txtSICode').val(dr.SICode);
             $('#txtRecvBank').val(dr.RecvBank);
             $('#txtRecvBranch').val(dr.RecvBranch);
+            $('#txtacType').val(dr.acType);
+            $('#cboacType').val(dr.acType);
         }
     }
     function ReadDocument(dr) {
         if (dr !== undefined) {
             $('#txtDocType').val(dr.DocType);
-            $('#txtDocNo').val(dr.DocNo);
+            $('#cboDocType').val(dr.DocType);
+            $('#txtDocItemNo').val(dr.ItemNo);
+            $('#txtDDocNo').val(dr.DocNo);
             $('#txtDocDate').val(CDateEN(dr.DocDate));
             $('#txtCmpType').val(dr.CmpType);
+            $('#cboCmpType').val(dr.CmpType);
             $('#txtCmpCode').val(dr.CmpCode);
             $('#txtCmpBranch').val(dr.CmpBranch);
+            if (dr.CmpType == "C") {
+                ShowCustomer(path, dr.CmpCode, dr.CmpBranch, '#txtCmpName');
+            }
+            if (dr.cmpType == "V") {
+                ShowVender(path, dr.CmpCode, '#txtCmpName');
+            }
             $('#txtPaidAmount').val(dr.PaidAmount);
             $('#txtTotalAmount').val(dr.TotalAmount);
+            $('#txtDocacType').val(dr.acType);
+            $('#cboDocacType').val(dr.acType);
         }
     }
     function ClearPayment() {
         $('#txtPRVoucher').val('');
+        $('#txtItemNo').val('0');
         $('#txtPRType').val('');
+        $('#cboPRType').val('');
         $('#txtChqNo').val('');
         $('#txtBookCode').val('');
         $('#txtBankCode').val('');
+        $('#txtBankName').val('');
         $('#txtBankBranch').val('');
         $('#txtChqDate').val('');
         $('#txtCashAmount').val('0.00');
@@ -552,20 +752,37 @@ End Code
         $('#txtCreditAmount').val('0.00');
         $('#txtIsLocal').val('');
         $('#txtChqStatus').val('');
-        $('#txtTRemark').val('');
+        $('#cboChqStatus').val('');
+        $('#txtDTRemark').val('');
+        $('#txtPayChqTo').val('');
+        $('#txtRecvBank').val('');
+        $('#txtRecvBranch').val('');
+        $('#txtSICode').val('');
+        $('#txtDocNo').val('');
+        $('#txtacType').val('');
+        $('#cboacType').val('');
     }
     function ClearDocument() {
         $('#txtDocType').val('');
-        $('#txtDocNo').val('');
+        $('#cboDocType').val('');
+        $('#txtDDocNo').val('');
+        $('#txtDocItemNo').val('0');
         $('#txtDocDate').val('');
         $('#txtCmpType').val('');
+        $('#cboCmpType').val('');
         $('#txtCmpCode').val('');
+        $('#txtCmpName').val('');
         $('#txtCmpBranch').val('');
         $('#txtPaidAmount').val('0.00');
         $('#txtTotalAmount').val('0.00');
+        $('#txtDocacType').val('');
+        $('#cboDocacType').val('');
     }
     function SavePayment() {
         var obj = {
+            BranchCode: $('#txtBranchCode').val(),
+            ControlNo: $('#txtControlNo').val(),
+            ItemNo: $('#txtItemNo').val(),
             PRVoucher:$('#txtPRVoucher').val(),
             PRType:$('#txtPRType').val(),
             ChqNo:$('#txtChqNo').val(),
@@ -583,20 +800,24 @@ End Code
             DocNo:$('#txtDocNo').val(),
             SICode:$('#txtSICode').val(),
             RecvBank:$('#txtRecvBank').val(),
-            RecvBranch:$('#txtRecvBranch').val()
+            RecvBranch: $('#txtRecvBranch').val(),
+            acType: $('#txtacType').val()
         };
         if (obj.PRVoucher != "") {
             var ask = confirm("Do you need to Save " + obj.PRVoucher + "?");
             if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
+            var jsonText = JSON.stringify({ data:[ obj ]});
             //alert(jsonText);
             $.ajax({
-                url: "@Url.Action("SetVoucherSub", "Master")",
+                url: "@Url.Action("SetVoucherSub", "Acc")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    alert(response.result.msg);
+                    if (response.result.data !== null) {
+                        SetGridPayment(response.result.data[0]);
+                    }
+                    alert("Save " + response.result.msg +"!");
                 },
                 error: function (e) {
                     alert(e);
@@ -608,29 +829,33 @@ End Code
     }
     function SaveDocument() {
         var obj = {
-              BranchCode:$('#txtBranchCode').val(),
-              ControlNo:$('#txtControlNo').val(),
-              ItemNo:$('#txtItemNo').val(),
-              DocType:$('#txtDocType').val(),
-              DocNo:$('#txtDocNo').val(),
-              DocDate:CDateTH($('#txtDocDate').val()),
-              CmpType:$('#txtCmpType').val(),
-              CmpCode:$('#txtCmpCode').val(),
-              CmpBranch:$('#txtCmpBranch').val(),
-              PaidAmount:CNum($('#txtPaidAmount').val()),
-              TotalAmount:CNum($('#txtTotalAmount').val()),
+            BranchCode:$('#txtBranchCode').val(),
+            ControlNo:$('#txtControlNo').val(),
+            ItemNo:$('#txtDocItemNo').val(),
+            DocType:$('#txtDocType').val(),
+            DocNo:$('#txtDDocNo').val(),
+            DocDate:CDateTH($('#txtDocDate').val()),
+            CmpType:$('#txtCmpType').val(),
+            CmpCode:$('#txtCmpCode').val(),
+            CmpBranch:$('#txtCmpBranch').val(),
+            PaidAmount:CNum($('#txtPaidAmount').val()),
+            TotalAmount: CNum($('#txtTotalAmount').val()),
+            acType: $('#txtDocacType').val()
         };
         if (obj.DocNo!= "") {
             var ask = confirm("Do you need to Save " + obj.DocNo + "?");
             if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
+            var jsonText = JSON.stringify({ data:[ obj ]});
             //alert(jsonText);
             $.ajax({
-                url: "@Url.Action("SetVoucherDoc", "Master")",
+                url: "@Url.Action("SetVoucherDoc", "Acc")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
+                    if (response.result.document !== null) {
+                        SetGridDocument(response.result.document[0]);
+                    }
                     alert(response.result.msg);
                 },
                 error: function (e) {
@@ -643,17 +868,47 @@ End Code
     }
     function ReadVender(dt) {
         $('#txtCmpCode').val(dt.VenCode);
+        $('#txtCmpName').val(dt.TName);
         $('#txtCmpBranch').val('');
         $('#txtCmpCode').focus();
     }
     function ReadCustomer(dt) {
         $('#txtCmpCode').val(dt.CustCode);
         $('#txtCmpBranch').val(dt.Branch);
+        $('#txtCmpName').val(dt.NameThai);
         $('#txtCmpCode').focus();
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
         $('#txtBranchCode').focus();
+    }
+    function ReadBank(dt) {
+        $('#txtRecvBank').val(dt.Code);
+    }
+    function ReadService(dt) {
+        $('#txtSICode').val(dt.SICode);
+    }
+    function ReadBookAccount(dt) {
+        $('#txtBookCode').val(dt.BookCode);
+        $('#txtBookName').val(dt.BookName);
+        $('#txtBankCode').val(dt.BankCode);
+        ShowBank(path, dt.BankCode, '#txtBankName');
+        $('#txtBankBranch').val(dt.BankBranch);
+        $('#chkIsLocal').prop('checked', dt.IsLocal = 1 ? true : false);
+    }
+    function GetCmpType() {
+        var v = '';
+        switch ($('#cboCmpType').val()) {
+            case 'C':
+                v = 'cust';
+                break;
+            case 'V':
+                v = 'vender';
+                break;
+            default:
+                break;
+        }
+        return v;
     }
 </script>

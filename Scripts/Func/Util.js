@@ -50,7 +50,7 @@ function CDateTH(sqlDateString) {
         var month = jsDate.substr(5, 2);
         var day = jsDate.substr(8, 2);
         var year = jsDate.substr(0, 4);
-        if (year < '2000') {
+        if (year < '1901') {
             return '';
         }
         var yy = Number(year);
@@ -70,7 +70,7 @@ function CDateEN(sqldateString) {
         var month = jsDate.substr(5, 2);
         var day = jsDate.substr(8, 2);
         var year = jsDate.substr(0, 4);
-        if (year < '2000') {
+        if (year < '1901') {
             return '';
         }
         var date = year + "-" + month + "-" + day;
@@ -179,7 +179,7 @@ function ShowDate(sqlDateString) {
         var month = jsDate.substr(5, 2);
         var day = jsDate.substr(8, 2);
         var year = jsDate.substr(0, 4);
-        if (year < '2000') {
+        if (year < '1901') {
             return '-';
         }
         var date = day + "/" + month + "/" + year;

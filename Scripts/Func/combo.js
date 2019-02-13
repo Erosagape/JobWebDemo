@@ -204,6 +204,16 @@ function ShowBank(path, Code, ControlID) {
             }
         });
 }
+function ShowBookAccount(path, Code, ControlID) {
+    $(ControlID).val('');
+    $.get(path + 'Master/GetBookAccount?Code=' + Code)
+        .done(function (r) {
+            if (r.bookaccount.data.length > 0) {
+                var b = r.bookaccount.data[0];
+                $(ControlID).val(b.BookName);
+            }
+        });
+}
 function ShowBranch(path, Branch, ControlID) {
     $(ControlID).val('');
     $.get(path + 'Config/GetBranch?Code=' + Branch)

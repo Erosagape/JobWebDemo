@@ -10,8 +10,8 @@ Module Main
     Friend Const jobPrefix As String = "TJOB"
     Friend Const advPrefix As String = "TADV"
     Friend Const clrPrefix As String = "TCLR"
-    Friend jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionString").ConnectionString
-    Friend jobMasConn As String = ConfigurationManager.ConnectionStrings("JobMasConnectionString").ConnectionString
+    Friend jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionStringR").ConnectionString
+    Friend jobMasConn As String = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString
     Friend Function GetDBDate(pDate As Date, Optional pTodayAsDefault As Boolean = False) As Object
         If pDate.Year > 2000 Then
             Return pDate
