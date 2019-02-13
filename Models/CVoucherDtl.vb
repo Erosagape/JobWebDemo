@@ -111,6 +111,15 @@ Public Class CVoucherDoc
             m_TotalAmount = value
         End Set
     End Property
+    Private m_acType As String
+    Public Property acType As String
+        Get
+            Return m_acType
+        End Get
+        Set(value As String)
+            m_acType = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -134,6 +143,7 @@ Public Class CVoucherDoc
                             dr("CmpBranch") = Me.CmpBranch
                             dr("PaidAmount") = Me.PaidAmount
                             dr("TotalAmount") = Me.TotalAmount
+                            dr("acType") = Me.acType
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -191,6 +201,9 @@ Public Class CVoucherDoc
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalAmount"))) = False Then
                         row.TotalAmount = rd.GetDouble(rd.GetOrdinal("TotalAmount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("acType"))) = False Then
+                        row.acType = rd.GetString(rd.GetOrdinal("acType")).ToString()
                     End If
                     lst.Add(row)
                 End While
