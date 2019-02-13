@@ -267,3 +267,4 @@ My Project/PublishProfiles/Tawanasp.com.pubxml.user
 *.opendb
 *.suo
 *.ide
+.vs/
