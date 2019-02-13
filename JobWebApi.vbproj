@@ -138,6 +138,7 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\mas_config.xml" />
     <Content Include="Sample\Advance.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -507,6 +508,7 @@
     <Content Include="Views\Clr\Index.vbhtml" />
     <Content Include="Views\Clr\Approve.vbhtml" />
     <Content Include="Views\Clr\Clear.vbhtml" />
+    <Content Include="Views\Acc\FormVoucher.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -518,7 +520,6 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Resource\uploads\" />
   </ItemGroup>
   <PropertyGroup>

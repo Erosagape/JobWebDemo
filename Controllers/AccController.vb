@@ -11,11 +11,19 @@ Namespace Controllers
         End Function
         '-----Controller-----
         Function Voucher() As ActionResult
-            Return GetView("Voucher")
+            Return GetView("Voucher", "MODULE_ACC")
         End Function
         '-----Controller-----
         Function WHTax() As ActionResult
-            Return GetView("WHTax")
+            Return GetView("WHTax", "MODULE_ACC")
+        End Function
+        Function FormVoucher() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "Voucher")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print voucher", textContent)
+            End If
+            Return GetView("FormVoucher")
         End Function
         Function GetVoucherGrid() As ActionResult
             Try
@@ -89,9 +97,11 @@ AND d.acType=r.acType
                 End If
                 Dim i As Integer = 0
                 Dim str As String = ""
+                Dim branchcode As String = ""
                 Dim docno As String = ""
                 For Each o As CVoucherSub In data
                     i = i + 1
+                    branchcode = o.BranchCode
                     docno = o.ControlNo
                     o.SetConnect(jobWebConn)
                     If o.PRVoucher = "" Then
@@ -100,10 +110,11 @@ AND d.acType=r.acType
                     If str <> "" Then str &= ","
                     str &= o.SaveData(String.Format(" WHERE BranchCode='{0}' AND  ControlNo='{1}' And ItemNo='{2}' ", o.BranchCode, o.ControlNo, o.ItemNo))
                 Next
-                json = "{""result"":{""msg"":""Save " & docno & " Complete!!"",""data"":""" & str & """}}"
+                Dim obj = New CVoucherSub(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' And ControlNo='{1}'", branchcode, docno))
+                json = "{""result"":{""msg"":""" & str & """,""data"":[" & JsonConvert.SerializeObject(obj) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Dim json = "{""result"":{""data"":[],""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
         End Function
@@ -115,9 +126,11 @@ AND d.acType=r.acType
                 End If
                 Dim i As Integer = 0
                 Dim str As String = ""
+                Dim branchcode As String = ""
                 Dim docno As String = ""
                 For Each o As CVoucherDoc In data
                     i = i + 1
+                    branchcode = o.BranchCode
                     docno = o.ControlNo
                     o.SetConnect(jobWebConn)
                     If o.ItemNo = 0 Then
@@ -127,10 +140,11 @@ AND d.acType=r.acType
                     If str <> "" Then str &= ","
                     str &= msg
                 Next
-                json = "{""result"":{""msg"":""Save " & docno & "Complete!!"",""data"":""" & docno & """,""error"":""" & str & """}}"
+                Dim obj = New CVoucherDoc(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' And ControlNo='{1}'", branchcode, docno))
+                json = "{""result"":{""msg"":""" & str & """,""data"":""" & docno & """,""document"":[" & JsonConvert.SerializeObject(obj) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Dim json = "{""result"":{""data"":null,""msg"":""Error!"",""error"":""" & ex.Message & """}}"
+                Dim json = "{""result"":{""data"":null,""msg"":""Error!"",""error"":""" & ex.Message & """,""document"":[]}}"
                 Return Content(json, jsonContent)
             End Try
         End Function
