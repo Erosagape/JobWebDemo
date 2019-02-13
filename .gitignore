@@ -340,3 +340,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+
+.vs/JobWebApi/v15/.suo
+.vs/JobWebApi/v15/Server/sqlite3/db.lock
+.vs/TawanWebAPI/v15/Server/sqlite3/
