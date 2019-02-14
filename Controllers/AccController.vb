@@ -25,6 +25,14 @@ Namespace Controllers
             End If
             Return GetView("FormVoucher")
         End Function
+        Function FormWHTax() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "WHTax")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print wh-tax form", textContent)
+            End If
+            Return GetView("FormWHTax")
+        End Function
         Function GetVoucherGrid() As ActionResult
             Try
                 Dim tSqlw As String = "

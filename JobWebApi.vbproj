@@ -509,6 +509,8 @@
     <Content Include="Views\Clr\Approve.vbhtml" />
     <Content Include="Views\Clr\Clear.vbhtml" />
     <Content Include="Views\Acc\FormVoucher.vbhtml" />
+    <Content Include="Views\Acc\FormWHTax.vbhtml" />
+    <Content Include="Views\Shared\_ReportNoHead.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
