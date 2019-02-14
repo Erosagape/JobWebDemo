@@ -95,6 +95,7 @@ Module Main
         'P=Can Print Data
         Dim auth = New CUserAuth(jobWebConn).GetData(" WHERE UserID='" & uname & "' AND AppID='" & app & "' AND MenuID='" & mnu & "'")
         Dim data = If(auth.Count > 0, "" & auth(0).Author, "*MIREDP")
+        If uname = "" Then data = ""
         Return data
     End Function
     Friend Function DBExecute(conn As String, SQL As String) As String

@@ -28,10 +28,17 @@ Namespace Controllers
         End Function
         Function PaymentAdvance(<FromBody()> ByVal data As String()) As HttpResponseMessage
             Try
-                Dim json As String = ""
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Payment")
+                If AuthorizeStr.IndexOf("I") < 0 Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+
                 If IsNothing(data) Then
                     Return New HttpResponseMessage(HttpStatusCode.BadRequest)
                 End If
+
+                Dim json As String = ""
                 Dim lst As String = ""
                 Dim user As String = ""
                 Dim docno As String = ""
@@ -48,6 +55,7 @@ Namespace Controllers
                         End If
                     End If
                 Next
+
                 If lst <> "" Then
                     Dim tSQL As String = String.Format("UPDATE Job_AdvHeader SET DocStatus=3,PaymentRef='" & docno & "',PaymentBy='" & user & "',PaymentDate='" & DateTime.Now.ToString("yyyy-MM-dd") & "',PaymentTime='" & DateTime.Now.ToString("HH:mm:ss") & "' 
  WHERE DocStatus=2 AND BranchCode+'|'+AdvNo in({0})", lst)
@@ -63,10 +71,17 @@ Namespace Controllers
         End Function
         Function ApproveAdvance(<FromBody()> ByVal data As String()) As HttpResponseMessage
             Try
-                Dim json As String = ""
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Approve")
+                If AuthorizeStr.IndexOf("I") < 0 Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+
                 If IsNothing(data) Then
                     Return New HttpResponseMessage(HttpStatusCode.BadRequest)
                 End If
+
+                Dim json As String = ""
                 Dim lst As String = ""
                 Dim user As String = ""
                 For Each str As String In data
@@ -97,17 +112,19 @@ Namespace Controllers
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)
+
                     If data.AdvNo = "" Then
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
                         End If
                         data.AddNew(advPrefix & "-" & DateTime.Now.ToString("yyMM") & "____")
                     End If
+
                     If AuthorizeStr.IndexOf("E") < 0 Then
                         Return Content("{""result"":{""data"":null,""msg"":""You are not allow to edit advance""}}", jsonContent)
                     End If
+
                     Dim msg As String = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}'", data.BranchCode, data.AdvNo))
-                    'Dim msg = JsonConvert.SerializeObject(data)
                     Dim json = "{""result"":{""data"":""" & data.AdvNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -126,12 +143,13 @@ Namespace Controllers
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)
+
                     If data.ItemNo = 0 Then
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
                         End If
-                        data.AddNew()
                     End If
+
                     If AuthorizeStr.IndexOf("E") < 0 Then
                         Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
                     End If
@@ -154,24 +172,28 @@ Namespace Controllers
                 ViewBag.User = Session("CurrUser").ToString()
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If AuthorizeStr.IndexOf("D") < 0 Then
-                    Return Content("{""adv"":{""result"":""You are not allow to Delete Adv""}}", jsonContent)
+                    Return Content("{""adv"":{""result"":""You are not allow to Delete item In advance""}}", jsonContent)
                 End If
 
-                Dim oADVD As New CAdvDetail(jobWebConn)
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
+
                 Dim tSqlW As String = String.Format(" WHERE BranchCode='{0}'", Branch)
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
                 End If
+
                 Dim ItemNo As String = "0"
                 If Not IsNothing(Request.QueryString("ItemNo")) Then
                     ItemNo = Request.QueryString("ItemNo")
                 End If
                 tSqlW &= " AND ItemNo=" & ItemNo & ""
+
+                Dim oADVD As New CAdvDetail(jobWebConn)
                 Dim msg As String = oADVD.DeleteData(tSqlW)
+
                 Dim json = "{""adv"":{""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
@@ -187,18 +209,21 @@ Namespace Controllers
                     Return Content("{""adv"":{""result"":""you are not allow to delete advance""}}", jsonContent)
                 End If
 
-                Dim oAdvH As New CAdvHeader(jobWebConn)
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
+
                 Dim tSqlW As String = String.Format(" WHERE BranchCode='{0}'", Branch)
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
                 End If
+
+                Dim oAdvH As New CAdvHeader(jobWebConn)
                 Dim msg As String = oAdvH.DeleteData(tSqlW)
                 Dim oAdvD As New CAdvDetail(jobWebConn)
                 Dim msgD As String = oAdvD.DeleteData(tSqlW)
+
                 Dim json = "{""adv"":{""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
@@ -208,20 +233,29 @@ Namespace Controllers
         End Function
         Function GetNewAdvanceHeader() As ActionResult
             Try
-                Dim oAdvH As New CAdvHeader(jobWebConn)
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("I") < 0 Then
+                    Return Content("[]", jsonContent)
+                End If
+
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
+
+                Dim oAdvH As New CAdvHeader(jobWebConn)
                 oAdvH.BranchCode = Branch
                 oAdvH.AdvNo = ""
                 oAdvH.AdvDate = DateTime.Today
                 oAdvH.DocStatus = 1
+
                 Dim oAdvD As New CAdvDetail(jobWebConn) With {
                     .BranchCode = Branch,
                     .AdvNo = "",
                     .ItemNo = 0
                 }
+
                 Dim jsonh As String = JsonConvert.SerializeObject(oAdvH)
                 Dim jsond As String = JsonConvert.SerializeObject(oAdvD)
                 Dim json = "{""adv"":{""header"":" & jsonh & ",""detail"":" & jsond & ",""result"":""OK""}}"
@@ -232,14 +266,22 @@ Namespace Controllers
         End Function
         Function GetNewAdvanceDetail() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("I") < 0 Then
+                    Return Content("[]", jsonContent)
+                End If
+
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
+
                 Dim AdvNo As String = ""
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     AdvNo = Request.QueryString("AdvNo")
                 End If
+
                 Dim oAdvD As New CAdvDetail(jobWebConn) With
                     {
                         .BranchCode = Branch,
@@ -257,11 +299,18 @@ Namespace Controllers
         End Function
         Function GetAdvanceGrid() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""adv"":{""data"":[],""msg"":""You Are not authorize to view data""}}", jsonContent)
+                End If
+
                 Dim Branch As String = ""
                 Dim JobNo As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
+
                 Dim tSqlW As String = String.Format(" WHERE a.BranchCode='{0}'", Branch)
                 If Not IsNothing(Request.QueryString("JobNo")) Then
                     tSqlW &= " AND a.AdvNo IN(SELECT AdvNo FROM Job_AdvDetail WHERE BranchCode='" & Branch & "' And ForJNo='" & Request.QueryString("JobNo") & "')"
@@ -290,6 +339,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Status")) Then
                     tSqlW &= " AND a.DocStatus='" & Request.QueryString("Status") & "' "
                 End If
+
                 Dim sql As String = "
 select a.*,
 (SELECT STUFF((
@@ -316,6 +366,12 @@ FROM Job_AdvHeader as a
         End Function
         Function GetAdvance() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""adv"":{""header"":[],""detail"":[],""msg"":""You Are not authorize to view data""}}", jsonContent)
+                End If
+
                 Dim oAdvH As New CAdvHeader(jobWebConn)
                 Dim oADVD As New CAdvDetail(jobWebConn)
                 Dim Branch As String = ""
@@ -326,8 +382,10 @@ FROM Job_AdvHeader as a
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
                 End If
+
                 Dim oDataH = oAdvH.GetData(tSqlW)
                 Dim oDataD = oADVD.GetData(tSqlW)
+
                 Dim jsonh As String = JsonConvert.SerializeObject(oDataH)
                 Dim jsond As String = JsonConvert.SerializeObject(oDataD)
                 Dim json = "{""adv"":{""header"":" & jsonh & ",""detail"":" & jsond & "}}"
@@ -338,18 +396,27 @@ FROM Job_AdvHeader as a
         End Function
         Function GetAdvanceDetail() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""adv"":{""detail"":[],""msg"":""You Are not authorize to view data""}}", jsonContent)
+                End If
+
                 Dim oADVD As New CAdvDetail(jobWebConn)
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
+
                 Dim tSqlW As String = String.Format(" WHERE BranchCode='{0}'", Branch)
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
                 End If
+
                 Dim oDataD = oADVD.GetData(tSqlW)
                 Dim jsond As String = JsonConvert.SerializeObject(oDataD)
                 Dim json = "{""adv"":{""detail"":" & jsond & "}}"
+
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

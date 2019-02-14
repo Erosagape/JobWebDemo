@@ -134,6 +134,7 @@ Public Class CVoucherDoc
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("ControlNo") = Me.ControlNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("DocType") = Me.DocType
                             dr("DocNo") = Me.DocNo

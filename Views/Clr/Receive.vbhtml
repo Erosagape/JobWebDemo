@@ -8,7 +8,7 @@ End Code
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Clear</title>
+    <title>Receive</title>
 </head>
 <body>
     <div> 

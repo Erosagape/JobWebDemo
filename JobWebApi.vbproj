@@ -507,7 +507,7 @@
     <Content Include="Views\Acc\WHTax.vbhtml" />
     <Content Include="Views\Clr\Index.vbhtml" />
     <Content Include="Views\Clr\Approve.vbhtml" />
-    <Content Include="Views\Clr\Clear.vbhtml" />
+    <Content Include="Views\Clr\Receive.vbhtml" />
     <Content Include="Views\Acc\FormVoucher.vbhtml" />
     <Content Include="Views\Acc\FormWHTax.vbhtml" />
     <Content Include="Views\Shared\_ReportNoHead.vbhtml" />

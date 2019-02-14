@@ -245,6 +245,7 @@ Public Class CAdvDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("AdvNo") = Me.AdvNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("ForJNo") = Me.ForJNo
                             dr("STCode") = Me.STCode
