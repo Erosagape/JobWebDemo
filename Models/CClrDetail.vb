@@ -413,6 +413,7 @@ Public Class CClrDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("ClrNo") = Me.ClrNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("LinkItem") = Me.LinkItem
                             dr("STCode") = Me.STCode
@@ -467,50 +468,8 @@ Public Class CClrDetail
         Return msg
     End Function
     Public Sub AddNew()
-
-        m_BranchCode = ""
-        m_ClrNo = ""
-        m_ItemNo = 0
-        m_LinkItem = 0
-        m_STCode = ""
-        m_SICode = ""
-        m_SDescription = ""
-        m_VenderCode = ""
-        m_Qty = DateTime.MinValue
-        m_UnitCode = ""
-        m_CurrencyCode = ""
-        m_CurRate = 0
-        m_UnitPrice = 0
-        m_FPrice = 0
-        m_BPrice = 0
-        m_QUnitPrice = 0
-        m_QFPrice = 0
-        m_QBPrice = 0
-        m_UnitCost = 0
-        m_FCost = 0
-        m_BCost = 0
-        m_ChargeVAT = 0
-        m_Tax50Tavi = 0
-        m_AdvNO = ""
-        m_AdvAmount = 0
-        m_UsedAmount = 0
-        m_IsQuoItem = 0
-        m_SlipNO = ""
-        m_Remark = ""
-        m_IsDuplicate = 0
-        m_IsLtdAdv50Tavi = 0
-        m_Pay50TaviTo = ""
-        m_NO50Tavi = ""
-        m_Date50Tavi = DateTime.MinValue
-        m_VenderBillingNo = ""
-        m_AirQtyStep = ""
-        m_StepSub = ""
-        m_JobNo = ""
-        m_AdvItemNo = 0
-        m_LinkBillNo = ""
-        m_VATType = 0
-        m_VATRate = 0
-        m_Tax50TaviRate = 0
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_ClearDetail WHERE BranchCode='{0}' And ClrNo ='{1}' ", m_BranchCode, m_ClrNo), "____")
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CClrDetail)
         Dim lst As New List(Of CClrDetail)

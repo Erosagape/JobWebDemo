@@ -344,6 +344,36 @@ Namespace Controllers
             End If
             Return Content(msg, textContent)
         End Function
+        Function UploadJson() As ActionResult
+            Dim msg As String = ""
+            Dim exts As String = ".json"
+
+            Try
+                For Each fileIdx As String In Request.Files
+                    Dim File As HttpPostedFileBase = Request.Files.Item(fileIdx)
+                    Dim filename = System.IO.Path.GetFileName(File.FileName)
+                    If File.ContentLength > 0 Then
+                        If exts.IndexOf(System.IO.Path.GetExtension(filename).ToLower) >= 0 Then
+                            Try
+                                Dim path = System.IO.Path.Combine(Server.MapPath("~/Resource/uploads"), filename)
+                                File.SaveAs(path)
+                                msg = msg + "Upload " + filename + " successfully" + vbCrLf
+                            Catch ex As Exception
+                                msg = msg + "[Error]" + filename + "=>" + ex.Message + vbCrLf
+                            End Try
+                        Else
+                            msg = msg + "[Error]" + filename + " is not allowed to upload" + vbCrLf
+                        End If
+                    Else
+                        msg = msg + "[Error]" + filename + " cannot upload" + vbCrLf
+                    End If
+                Next
+            Catch e As Exception
+                msg = "[Error]" + e.Message
+            End Try
+            If msg = "" Then msg = "No File To Upload"
+            Return Content(msg, textContent)
+        End Function
         Function UploadPicture() As ActionResult
             Dim msg As String = ""
             Dim exts As String = ".jpg,.jpeg,.png,.bmp,.gif,.tiff,.svg"

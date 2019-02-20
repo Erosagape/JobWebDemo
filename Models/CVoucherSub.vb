@@ -224,6 +224,10 @@ Public Class CVoucherSub
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("ControlNo") = Me.ControlNo
+                            If Me.ItemNo = 0 Then
+                                Dim retStr = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_CashControlSub WHERE BranchCode='{0}' And ControlNo ='{1}' ", m_BranchCode, m_ControlNo), "____")
+                                m_ItemNo = Convert.ToInt32("0" & retStr)
+                            End If
                             dr("ItemNo") = Me.ItemNo
                             dr("PRVoucher") = Me.PRVoucher
                             dr("PRType") = Me.PRType
@@ -261,7 +265,7 @@ Public Class CVoucherSub
             m_PRVoucher = ""
         Else
             Dim tSql As String = String.Format("SELECT MAX(PRVoucher) as t FROM Job_CashControlSub WHERE BranchCode='{0}' And PRVoucher Like '%{1}' ", m_BranchCode, pFormatSQL)
-            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, tSql, pFormatSQL)
+            Dim retStr = Main.GetMaxByMask(m_ConnStr, tSql, pFormatSQL)
             m_PRVoucher = retStr
         End If
     End Sub

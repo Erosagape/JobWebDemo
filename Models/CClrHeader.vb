@@ -326,37 +326,13 @@ Public Class CClrHeader
         End Using
         Return msg
     End Function
-    Public Sub AddNew()
-
-        m_BranchCode = ""
-        m_ClrNo = ""
-        m_ClrDate = DateTime.MinValue
-        m_ClearanceDate = DateTime.MinValue
-        m_EmpCode = ""
-        m_AdvRefNo = ""
-        m_AdvTotal = 0
-        m_JobType = 0
-        m_JNo = DateTime.MinValue
-        m_InvNo = ""
-        m_ClearType = 0
-        m_ClearFrom = 0
-        m_DocStatus = 0
-        m_TotalExpense = 0
-        m_TRemark = ""
-        m_ApproveBy = ""
-        m_ApproveDate = DateTime.MinValue
-        m_ApproveTime = DateTime.MinValue
-        m_ReceiveBy = ""
-        m_ReceiveDate = DateTime.MinValue
-        m_ReceiveTime = DateTime.MinValue
-        m_ReceiveRef = ""
-        m_CancelReson = ""
-        m_CancelProve = ""
-        m_CancelDate = DateTime.MinValue
-        m_CancelTime = DateTime.MinValue
-        m_CoPersonCode = ""
-        m_CTN_NO = ""
-        m_ClearTotal = 0
+    Public Sub AddNew(pFormatSQL As String)
+        If pFormatSQL = "" Then
+            m_ClrNo = ""
+        Else
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ClrNo) as t FROM Job_ClearHeader WHERE BranchCode='{0}' And ClrNo Like '%{1}' ", m_BranchCode, pFormatSQL), pFormatSQL)
+            m_ClrNo = retStr
+        End If
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CClrHeader)
         Dim lst As New List(Of CClrHeader)

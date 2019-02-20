@@ -1,17 +1,4 @@
 ﻿//Function for loading combo / drop down selector
-function loadBranch(path) {
-    $('#cboBranch').empty();
-    $.get(path+'Config/getBranch').done(function (r) {
-        var dr = r.branch.data;
-        if (dr.length > 0) {
-            for (var i = 0; i < dr.length; i++) {
-                $('#cboBranch')
-                    .append($('<option>', { value: dr[i].Code })
-                        .text(dr[i].Code + ' / ' + dr[i].BrName));
-            }
-        }
-    });
-}
 function loadCombos(path, params) {
     var arr = params.split(',');
     var qry = '';
@@ -81,6 +68,32 @@ function loadBank(cb, path) {
                     $(e).append($('<option>', { value: dr[i].Code.trim() })
                         .text(dr[i].BName.trim()));
                 }
+            }
+        }
+    });
+}
+function loadBranch(path) {
+    $('#cboBranch').empty();
+    $.get(path + 'Config/getBranch').done(function (r) {
+        var dr = r.branch.data;
+        if (dr.length > 0) {
+            for (var i = 0; i < dr.length; i++) {
+                $('#cboBranch')
+                    .append($('<option>', { value: dr[i].Code })
+                        .text(dr[i].Code + ' / ' + dr[i].BrName));
+            }
+        }
+    });
+}
+function loadServiceGroup(path,e) {
+    $(e).empty();
+    $.get(path + 'Master/GetServiceGroup').done(function (r) {
+        var dr = r.servicegroup.data;
+        if (dr.length > 0) {
+            for (var i = 0; i < dr.length; i++) {
+                $(e)
+                    .append($('<option>', { value: dr[i].GroupCode })
+                        .text(dr[i].GroupCode + ' / ' + dr[i].GroupName));
             }
         }
     });

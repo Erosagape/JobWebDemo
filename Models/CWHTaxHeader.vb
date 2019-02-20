@@ -317,6 +317,15 @@ Public Class CWHTaxHeader
             m_LastUpdate = value
         End Set
     End Property
+    Private m_TeacherAmt As Double
+    Public Property TeacherAmt As Double
+        Get
+            Return m_TeacherAmt
+        End Get
+        Set(value As Double)
+            m_TeacherAmt = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -363,6 +372,7 @@ Public Class CWHTaxHeader
                             dr("CancelReason") = Me.CancelReason
                             dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
                             dr("LastUpdate") = DateTime.Now
+                            dr("TeacherAmt") = Me.TeacherAmt
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -493,6 +503,9 @@ Public Class CWHTaxHeader
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("LastUpdate"))) = False Then
                         row.LastUpdate = rd.GetValue(rd.GetOrdinal("LastUpdate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TeacherAmt"))) = False Then
+                        row.TeacherAmt = rd.GetDouble(rd.GetOrdinal("TeacherAmt"))
                     End If
                     lst.Add(row)
                 End While

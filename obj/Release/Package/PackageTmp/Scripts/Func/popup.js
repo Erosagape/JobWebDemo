@@ -137,6 +137,33 @@ function SetGridSICode(p, g, t, d, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridSICodeByGroup(p, g, t, d, ev) {
+    //popup for search data
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetServiceCode?Group=' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'servicecode.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "SICode", title: "Service Code" },
+            { data: "NameThai", title: "Description" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
 function SetGridCurrency(p, g , d, ev) {
     $(g).DataTable({
         ajax: {
@@ -148,6 +175,32 @@ function SetGridCurrency(p, g , d, ev) {
             { data: null, title: "#" },
             { data: "Code", title: "รหัส" },
             { data: "TName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    var html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridGroupCode(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetServiceGroup', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'servicegroup.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "GroupCode", title: "รหัส" },
+            { data: "GroupName", title: "คำอธิบาย" }
         ],
         "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
             {

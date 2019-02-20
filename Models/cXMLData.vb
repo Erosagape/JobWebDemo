@@ -22,3 +22,7 @@ Public Class CXMLData
         Return oXml
     End Function
 End Class
+Public Class CJsonData
+    Public Property Name As String
+    Public Property Rows As ArrayList
+End Class

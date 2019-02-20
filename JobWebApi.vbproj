@@ -389,6 +389,8 @@
     <Compile Include="Models\CAdvDetail.vb" />
     <Compile Include="Models\CAdvHeader.vb" />
     <Compile Include="Models\CBank.vb" />
+    <Compile Include="Models\CBillDetail.vb" />
+    <Compile Include="Models\CBillHeader.vb" />
     <Compile Include="Models\CBookAccount.vb" />
     <Compile Include="Models\CBranch.vb" />
     <Compile Include="Models\CClrDetail.vb" />
@@ -401,8 +403,13 @@
     <Compile Include="Models\CCustomsPort.vb" />
     <Compile Include="Models\CDeclareType.vb" />
     <Compile Include="Models\CInterPort.vb" />
+    <Compile Include="Models\CInvDetail.vb" />
+    <Compile Include="Models\CInvHeader.vb" />
     <Compile Include="Models\CJobOrder.vb" />
+    <Compile Include="Models\CRcpDetail.vb" />
+    <Compile Include="Models\CRcpHeader.vb" />
     <Compile Include="Models\CServiceCode.vb" />
+    <Compile Include="Models\CServiceGroup.vb" />
     <Compile Include="Models\CServUnit.vb" />
     <Compile Include="Models\CUser.vb" />
     <Compile Include="Models\CUserAuth.vb" />
@@ -507,8 +514,11 @@
     <Content Include="Views\Acc\WHTax.vbhtml" />
     <Content Include="Views\Clr\Index.vbhtml" />
     <Content Include="Views\Clr\Approve.vbhtml" />
-    <Content Include="Views\Clr\Clear.vbhtml" />
+    <Content Include="Views\Clr\Receive.vbhtml" />
     <Content Include="Views\Acc\FormVoucher.vbhtml" />
+    <Content Include="Views\Acc\FormWHTax.vbhtml" />
+    <Content Include="Views\Shared\_ReportNoHead.vbhtml" />
+    <Content Include="Views\Master\ServiceGroup.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

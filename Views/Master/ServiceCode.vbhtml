@@ -6,10 +6,7 @@ End Code
         <div class="form-group row">
             <div class="col-sm-2">
                 Choose Type:
-                <select id="cboType" class="form-control dropdown" onchange="RefreshGrid()">
-                    <option value="SNG">SINGLE</option>
-                    <option value="STP">STEP</option>
-                    <option value="AIR">AIR</option>
+                <select id="cboType" class="form-control dropdown">
                 </select>
             </div>
             <div class="col-sm-2">
@@ -120,6 +117,8 @@ End Code
         });
     }
     function SetLOVs() {
+        //load service group code
+        loadServiceGroup(path, '#cboType');
         //2 Field show in grid 
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key', function (response) {
             var dv = document.getElementById("dvList");
@@ -183,7 +182,7 @@ End Code
     function ShowSearch(ty) {
         switch (ty) {
             case 'sicode':
-                SetGridSICode(path, '#tbGrid', $('#cboType').val(), '#dvSearch' , ShowData);
+                SetGridSICodeByGroup(path, '#tbGrid', $('#cboType').val(), '#dvSearch' , ShowData);
                 break;
             case 'vender':
                 SetGridVender(path, '#tbVend', '#dvVend' , ShowVender);
@@ -219,6 +218,7 @@ End Code
     function LoadData(dt) {
         row = dt;
         $('#txtSICode').val(dt.SICode);
+        $('#cboType').val(dt.GroupCode);
         $('#txtNameThai').val(dt.NameThai);
         $('#txtNameEng').val(dt.NameEng);
         $('#txtStdPrice').val(dt.StdPrice);
@@ -250,6 +250,7 @@ End Code
     }
     function GetDataSave(dt) {
         dt.SICode = $('#txtSICode').val().trim();
+        dt.GroupCode = $('#cboType').val();
         if (dt.SICode == "") dt.SICode = $('#cboType').val() + '-';
         dt.NameThai=$('#txtNameThai').val();
         dt.NameEng=$('#txtNameEng').val();

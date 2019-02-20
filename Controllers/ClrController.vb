@@ -1,4 +1,6 @@
-﻿Imports System.Web.Http
+﻿Imports System.Net
+Imports System.Net.Http
+Imports System.Web.Http
 Imports System.Web.Mvc
 Imports Newtonsoft.Json
 Namespace Controllers
@@ -6,23 +8,39 @@ Namespace Controllers
         Inherits CController
         ' GET: Clr
         Function Index() As ActionResult
-            Return GetView("Index")
+            Return GetView("Index", "MODULE_CLR")
         End Function
         Function Approve() As ActionResult
-            Return GetView("Approve")
+            Return GetView("Approve", "MODULE_CLR")
         End Function
-        Function Clear() As ActionResult
-            Return GetView("Clear")
+        Function Receive() As ActionResult
+            Return GetView("Receive", "MODULE_CLR")
         End Function
         '-----Controller-----
-        Function ApproveClearing() As ActionResult
-            Return View()
+        Function ApproveClearing() As HttpResponseMessage
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Approve")
+            If AuthorizeStr.IndexOf("I") < 0 Then
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End If
+            Return New HttpResponseMessage(HttpStatusCode.OK)
         End Function
-        Function CloseClearing() As ActionResult
-            Return View()
+        Function ReceiveClearing() As HttpResponseMessage
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Receive")
+            If AuthorizeStr.IndexOf("I") < 0 Then
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End If
+            Return New HttpResponseMessage(HttpStatusCode.OK)
         End Function
         Function GetClearing() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""clr"":{""header"":[],""detail"":[],""msg"":""You are not authorize to read""}}", jsonContent)
+                End If
+
                 Dim tSqlw As String = " WHERE ClrNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
@@ -45,11 +63,21 @@ Namespace Controllers
         End Function
         Function SetClrHeader(<FromBody()> data As CClrHeader) As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+                If AuthorizeStr.IndexOf("E") < 0 Then
+                    Return Content("{""result"":{""data"":[],""msg"":""You are not authorize to edit""}}", jsonContent)
+                End If
+
                 If Not IsNothing(data) Then
-                    If "" & data.ClrNo = "" Then
-                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
-                    End If
                     data.SetConnect(jobWebConn)
+                    If "" & data.ClrNo = "" Then
+                        If AuthorizeStr.IndexOf("I") < 0 Then
+                            Return Content("{""result"":{""data"":[],""msg"":""You are not authorize to add""}}", jsonContent)
+                        End If
+                        data.AddNew(clrPrefix & DateTime.Now.ToString("yyMM") & "-_____")
+                    End If
+
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND ClrNo='{1}' ", data.BranchCode, data.ClrNo))
 
                     Dim json = "{""result"":{""data"":""" & data.ClrNo & """,""msg"":""" & msg & """}}"
@@ -65,6 +93,12 @@ Namespace Controllers
         End Function
         Function DelClearing() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+                If AuthorizeStr.IndexOf("D") < 0 Then
+                    Return Content("{""clr"":{""data"":[],""result"":""You are not authorize to delete""}}", jsonContent)
+                End If
+
                 Dim tSqlw As String = " WHERE ClrNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
@@ -92,6 +126,12 @@ Namespace Controllers
         End Function
         Function GetClrDetail() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""clr"":{""detail"":[],""msg"":""You are not authorize to read""}}", jsonContent)
+                End If
+
                 Dim tSqlw As String = " WHERE ClrNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
@@ -99,6 +139,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format("AND ClrNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
+
                 Dim oData = New CClrDetail(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""clr"":{""detail"":" & json & "}}"
@@ -109,14 +150,23 @@ Namespace Controllers
         End Function
         Function SetClrDetail(<FromBody()> data As CClrDetail) As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+                If AuthorizeStr.IndexOf("E") < 0 Then
+                    Return Content("{""result"":{""data"":[],""msg"":""You are not authorize to edit""}}", jsonContent)
+                End If
+
                 If Not IsNothing(data) Then
                     If "" & data.ClrNo = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     End If
-                    data.SetConnect(jobWebConn)
                     If data.ItemNo = 0 Then
-                        data.AddNew()
+                        If AuthorizeStr.IndexOf("I") < 0 Then
+                            Return Content("{""result"":{""data"":[],""msg"":""You are not authorize to add""}}", jsonContent)
+                        End If
                     End If
+
+                    data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND ClrNo='{1}' AND ItemNo={2} ", data.BranchCode, data.ClrNo, data.ItemNo))
                     Dim json = "{""result"":{""data"":""" & data.ClrNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
@@ -131,6 +181,12 @@ Namespace Controllers
         End Function
         Function DelClrDetail() As ActionResult
             Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+                If AuthorizeStr.IndexOf("D") < 0 Then
+                    Return Content("{""clr"":{""data"":[],""result"":""You are not authorize to delete""}}", jsonContent)
+                End If
+
                 Dim tSqlw As String = " WHERE ClrNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)

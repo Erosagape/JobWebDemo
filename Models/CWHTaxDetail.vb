@@ -125,6 +125,7 @@ Public Class CWHTaxDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("DocNo") = Me.DocNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("IncType") = Me.IncType
                             dr("PayDate") = Main.GetDBDate(Me.PayDate)
@@ -147,18 +148,8 @@ Public Class CWHTaxDetail
         Return msg
     End Function
     Public Sub AddNew()
-
-        m_BranchCode = ""
-        m_DocNo = ""
-        m_ItemNo = 0
-        m_IncType = ""
-        m_PayDate = DateTime.MinValue
-        m_PayAmount = 0
-        m_PayTax = 0
-        m_PayTaxDesc = ""
-        m_JNo = ""
-        m_DocRefType = 0
-        m_DocRefNo = ""
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_WHTaxDetail WHERE BranchCode='{0}' And DocNo ='{1}' ", m_BranchCode, m_DocNo), "____")
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CWHTaxDetail)
         Dim lst As New List(Of CWHTaxDetail)

@@ -28,6 +28,15 @@ Public Class CServiceCode
             m_SICode = value
         End Set
     End Property
+    Private m_GroupCode As String
+    Public Property GroupCode As String
+        Get
+            Return m_GroupCode
+        End Get
+        Set(value As String)
+            m_GroupCode = value
+        End Set
+    End Property
     Private m_NameThai As String
     Public Property NameThai As String
         Get
@@ -230,6 +239,7 @@ Public Class CServiceCode
                             Dim dr As DataRow = dt.NewRow
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("SICode") = Me.SICode
+                            dr("GroupCode") = Me.GroupCode
                             dr("NameThai") = Me.NameThai
                             dr("NameEng") = Me.NameEng
                             dr("StdPrice") = Me.StdPrice
@@ -275,6 +285,9 @@ Public Class CServiceCode
                     row = New CServiceCode(m_ConnStr)
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("SICode"))) = False Then
                         row.SICode = rd.GetString(rd.GetOrdinal("SICode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("GroupCode"))) = False Then
+                        row.GroupCode = rd.GetString(rd.GetOrdinal("GroupCode")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("NameThai"))) = False Then
                         row.NameThai = rd.GetString(rd.GetOrdinal("NameThai")).ToString()

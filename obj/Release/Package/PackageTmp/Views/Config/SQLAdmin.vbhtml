@@ -13,6 +13,7 @@ End Code
         <br/>
         <button id="cmdExecute" class="btn btn-success" onclick="SendData()">Execute</button>
         <table id="tbResult" class="table table-responsive"></table>
+        <textarea id="txtJsonResult"></textarea>
     </div>
 </div>
 <script type="text/javascript">
@@ -35,7 +36,6 @@ End Code
             contentType: "application/json",
             data: jsonText,
             success: function (response) {
-                alert(response.result.msg);
                 if (response.result.data != null) {
                     var tb = response.result.data[0].Table;
                     var cols = [];
@@ -52,6 +52,9 @@ End Code
                         }
                     );
                 }
+                var json = JSON.stringify(tb);
+                $('#txtJsonResult').val(json);
+                alert(response.result.msg);
             },
             error: function (e) {
                 alert(e);
