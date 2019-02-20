@@ -181,6 +181,7 @@ End Code
                             <button class="btn btn-default btn-block" onclick="OpenMenu('ServUnit')">หน่วยบริการ</button>
                         </div>
                         <div class="col-sm-6">
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('ServiceGroup')">กลุ่มค่าบริการ</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('Bank')">ธนาคาร</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
@@ -386,6 +387,9 @@ End Code
                     break;
                 case 'ServiceCode':
                     window.location.href = path + 'Master/ServiceCode';
+                    break;
+                case 'ServiceGroup':
+                    window.location.href = path + 'Master/ServiceGroup';
                     break;
                 case 'ServUnit':
                     window.location.href = path + 'Master/ServUnit';

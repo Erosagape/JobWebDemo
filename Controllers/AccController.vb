@@ -599,5 +599,305 @@ AND d.acType=r.acType
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetInvHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND DocNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CInvHeader(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""invheader"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetInvHeader(<FromBody()> data As CInvHeader) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.DocNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE DocNo='{0}' ", data.DocNo))
+                    Dim json = "{""result"":{""data"":""" & data.DocNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelInvHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND DocNo Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""invheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CInvHeader(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""invheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetBillHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BillAcceptNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CBillHeader(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""billheader"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetBillHeader(<FromBody()> data As CBillHeader) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BillAcceptNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BillAcceptNo='{0}' ", data.BillAcceptNo))
+                    Dim json = "{""result"":{""data"":""" & data.BillAcceptNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelBillHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BillAcceptNo Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""billheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CBillHeader(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""billheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetRcpHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ReceiptNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CRcpHeader(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""rcpheader"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetRcpHeader(<FromBody()> data As CRcpHeader) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.ReceiptNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE ReceiptNo='{0}' ", data.ReceiptNo))
+                    Dim json = "{""result"":{""data"":""" & data.ReceiptNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelRcpHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ReceiptNo Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""rcpheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CRcpHeader(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""rcpheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetInvDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND DocNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CInvDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""invdetail"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetInvDetail(<FromBody()> data As CInvDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.DocNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE DocNo='{0}' ", data.DocNo))
+                    Dim json = "{""result"":{""data"":""" & data.DocNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelInvDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND DocNo Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""invdetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CInvDetail(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""invdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetBillDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BillAcceptNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CBillDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""billdetail"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetBillDetail(<FromBody()> data As CBillDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BillAcceptNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BillAcceptNo='{0}' ", data.BillAcceptNo))
+                    Dim json = "{""result"":{""data"":""" & data.BillAcceptNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelBillDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BillAcceptNo Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""billdetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CBillDetail(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""billdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetRcpDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ReceiptNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CRcpDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""rcpdetail"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetRcpDetail(<FromBody()> data As CRcpDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.ReceiptNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE ReceiptNo='{0}' ", data.ReceiptNo))
+                    Dim json = "{""result"":{""data"":""" & data.ReceiptNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelRcpDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ReceiptNo Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""rcpdetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CRcpDetail(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""rcpdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
     End Class
 End Namespace

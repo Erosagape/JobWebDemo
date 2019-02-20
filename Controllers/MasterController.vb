@@ -14,6 +14,9 @@ Namespace Controllers
         Function ServiceCode() As ActionResult
             Return GetView("ServiceCode", "MODULE_MAS")
         End Function
+        Function ServiceGroup() As ActionResult
+            Return GetView("ServiceGroup", "MODULE_MAS")
+        End Function
         Function Customers() As ActionResult
             Return GetView("Customers", "MODULE_MAS")
         End Function
@@ -46,6 +49,56 @@ Namespace Controllers
         End Function
         Function Bank() As ActionResult
             Return GetView("Bank", "MODULE_MAS")
+        End Function
+        Function GetServiceGroup() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE GroupCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND GroupCode ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CServiceGroup(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""servicegroup"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetServiceGroup(<FromBody()> data As CServiceGroup) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.GroupCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE GroupCode='{0}' ", data.GroupCode))
+                    Dim json = "{""result"":{""data"":""" & data.GroupCode & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelServiceGroup() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE GroupCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND GroupCode Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""servicegroup"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CServiceGroup(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""servicegroup"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
         End Function
         Function GetBank() As ActionResult
             Try
@@ -670,7 +723,10 @@ Namespace Controllers
             Try
                 Dim tSqlw As String = " WHERE SICode<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND SICode Like '{0}%'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND SICode Like '{0}%' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Group")) Then
+                    tSqlw &= String.Format("AND GroupCode Like '{0}%'", Request.QueryString("Group").ToString)
                 End If
                 Dim oData = New CServiceCode(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)

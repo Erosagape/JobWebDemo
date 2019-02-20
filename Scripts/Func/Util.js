@@ -339,6 +339,14 @@ function CallBackQueryVoucher(p, branch,code, ev) {
         }
     });
 }
+function CallBackQueryServiceGroup(p, code, ev) {
+    $.get(p + 'master/getservicegroup?Code=' + code).done(function (r) {
+        var dr = r.servicegroup.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function ShowConfigValue(path, Code, Key, ControlID) {
     var strParam = "";
     if (Code != "") {
