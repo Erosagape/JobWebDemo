@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/21/2018 16:26:28</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>02/20/2019 16:50:21</publishTime>
+      <publishTime>02/26/2019 15:17:28</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>02/20/2019 16:50:21</publishTime>
+      <publishTime>02/26/2019 15:17:28</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>02/20/2019 16:50:21</publishTime>
+      <publishTime>02/26/2019 15:17:27</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -620,16 +620,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/21/2018 16:26:28</publishTime>
     </File>
     <File Include="Scripts/Func/combo.js">
-      <publishTime>02/20/2019 16:10:35</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Scripts/Func/popup.js">
-      <publishTime>02/20/2019 16:49:49</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Scripts/Func/reports.js">
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>02/20/2019 15:13:26</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Scripts/i18n/defaults-ar_AR.js">
       <publishTime>02/13/2019 13:38:08</publishTime>
@@ -965,16 +965,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Test.html">
-      <publishTime>02/14/2019 12:35:31</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Test2.html">
-      <publishTime>02/13/2019 13:38:08</publishTime>
+      <publishTime>02/21/2019 17:09:50</publishTime>
     </File>
     <File Include="Views/Acc/FormVoucher.vbhtml">
-      <publishTime>02/13/2019 13:38:08</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Acc/FormWHTax.vbhtml">
-      <publishTime>02/14/2019 15:45:06</publishTime>
+      <publishTime>02/26/2019 15:43:12</publishTime>
+    </File>
+    <File Include="Views/Acc/FormWTax3.vbhtml">
+      <publishTime>02/26/2019 16:51:50</publishTime>
+    </File>
+    <File Include="Views/Acc/FormWTax3D.vbhtml">
+      <publishTime>02/26/2019 16:17:43</publishTime>
     </File>
     <File Include="Views/Acc/Index.vbhtml">
       <publishTime>12/21/2018 01:26:28</publishTime>
@@ -992,7 +998,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
-      <publishTime>02/13/2019 13:38:08</publishTime>
+      <publishTime>02/21/2019 17:05:52</publishTime>
     </File>
     <File Include="Views/Adv/Payment.vbhtml">
       <publishTime>02/13/2019 13:38:08</publishTime>
@@ -1010,19 +1016,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Views/Clr/Index.vbhtml">
-      <publishTime>02/13/2019 13:38:08</publishTime>
+      <publishTime>02/26/2019 15:02:48</publishTime>
     </File>
     <File Include="Views/Clr/Receive.vbhtml">
-      <publishTime>02/14/2019 17:21:14</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Config/FileManager.vbhtml">
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Views/Config/Index.vbhtml">
-      <publishTime>01/02/2019 12:07:03</publishTime>
+      <publishTime>02/01/2019 12:07:03</publishTime>
     </File>
     <File Include="Views/Config/SQLAdmin.vbhtml">
-      <publishTime>02/13/2019 16:07:29</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Config/UserAuth.vbhtml">
       <publishTime>02/13/2019 13:38:08</publishTime>
@@ -1079,10 +1085,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Views/Master/ServiceCode.vbhtml">
-      <publishTime>02/20/2019 16:50:00</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Master/ServiceGroup.vbhtml">
-      <publishTime>02/20/2019 15:49:11</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Master/ServUnit.vbhtml">
       <publishTime>02/13/2019 13:38:08</publishTime>
@@ -1097,7 +1103,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Views/Menu/Index.vbhtml">
-      <publishTime>02/20/2019 15:21:51</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Report/Index.vbhtml">
       <publishTime>02/13/2019 13:38:08</publishTime>
@@ -1109,13 +1115,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/02/2019 12:07:03</publishTime>
     </File>
     <File Include="Views/Shared/_Report.vbhtml">
-      <publishTime>02/13/2019 13:38:08</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Shared/_ReportLandscape.vbhtml">
-      <publishTime>02/13/2019 13:38:08</publishTime>
+      <publishTime>02/20/2019 17:21:51</publishTime>
     </File>
     <File Include="Views/Shared/_ReportNoHead.vbhtml">
-      <publishTime>02/14/2019 12:47:55</publishTime>
+      <publishTime>02/26/2019 15:14:45</publishTime>
+    </File>
+    <File Include="Views/Shared/_ReportNoHeadLandscape.vbhtml">
+      <publishTime>02/26/2019 15:14:45</publishTime>
     </File>
     <File Include="Views/web.config">
       <publishTime>12/21/2018 16:26:28</publishTime>

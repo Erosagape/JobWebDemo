@@ -17,6 +17,12 @@ Namespace Controllers
         Function WHTax() As ActionResult
             Return GetView("WHTax", "MODULE_ACC")
         End Function
+        Function FormWTax3() As ActionResult
+            Return View()
+        End Function
+        Function FormWTax3D() As ActionResult
+            Return View()
+        End Function
         Function FormVoucher() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "Voucher")

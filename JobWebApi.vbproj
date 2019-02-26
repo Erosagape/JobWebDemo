@@ -519,6 +519,9 @@
     <Content Include="Views\Acc\FormWHTax.vbhtml" />
     <Content Include="Views\Shared\_ReportNoHead.vbhtml" />
     <Content Include="Views\Master\ServiceGroup.vbhtml" />
+    <Content Include="Views\Acc\FormWTax3.vbhtml" />
+    <Content Include="Views\Acc\FormWTax3D.vbhtml" />
+    <Content Include="Views\Shared\_ReportNoHeadLandscape.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

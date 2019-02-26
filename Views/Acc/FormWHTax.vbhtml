@@ -5,6 +5,8 @@ End Code
     * {
         font-family: Tahoma;
         font-size: 12px;
+        margin:0;
+        padding:0;
     }
 
     .circle {
@@ -37,7 +39,7 @@ End Code
 <div style="float:right;">
     เลขที่ <label id="txtDocNo">________________</label>
 </div>
-<table border="1" style="border-style:solid;border-width:thin;width:100%;border-collapse:collapse">
+<table border="1" style="border-style:solid;border-width:thin;border-collapse:collapse" width="100%">
     <tr>
         <td colspan="4" style="text-align:center;vertical-align:top">
             <b>หนังสือรับรองการหักภาษี ณ ที่จ่าย</b><br />
@@ -101,17 +103,17 @@ End Code
         </td>
     </tr>
     <tr style="text-align:center;font-weight:bold">
-        <td style="width:55%">
+        <td>
             <label>ประเภทเงินได้ที่จ่าย</label>
         </td>
-        <td style="width:15%">
+        <td>
             <label>วัน เดือน <br />หรือ ปีภาษีที่จ่าย</label>
         </td>
 
-        <td style="width:15%">
+        <td>
             <label>จำนวนเงินที่จ่าย</label>
         </td>
-        <td style="width:15%">
+        <td>
             <label>ภาษีที่หักและนำส่งไว้</label>
         </td>
     </tr>
@@ -272,7 +274,7 @@ End Code
         </td>
     </tr>
 </table>
-<table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;width:100%">
+<table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin" width="100%">
 
     <tr>
         <td>
@@ -295,6 +297,7 @@ End Code
         </td>
     </tr>
 </table>
+
 <div>
     <b>หมายเหตุ</b> ให้สามารถอ้างอิงหรือสอบยันกันได้ระหว่างลำดับที่ตามหนังสือรับรองฯ กับแบบยื่นรายการภาษีหัก ณ ที่จ่าย<br />
     <b>คำเตือน</b> ผู้มีหน้าที่ออกหนังสือรับรองหักภาษี ณ ที่จ่าย ฝ่าฝืนไม่ปฏิบัติตามมาตรา 50 ทวิ แห่งประมวลรัษฏากรต้องรับโทษทางอาญาตามมาตรา 35 แห่งประมวลรัษฏากร
