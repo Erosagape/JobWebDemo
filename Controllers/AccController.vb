@@ -20,7 +20,40 @@ Namespace Controllers
         Function FormWTax3() As ActionResult
             Return View()
         End Function
+        Function FormWTax53() As ActionResult
+            Return View()
+        End Function
         Function FormWTax3D() As ActionResult
+            Return View()
+        End Function
+        Function FormWTax53D() As ActionResult
+            Return View()
+        End Function
+        Function FormInv() As ActionResult
+            Return View()
+        End Function
+        Function FormBill() As ActionResult
+            Return View()
+        End Function
+        Function FormRcp() As ActionResult
+            Return View()
+        End Function
+        Function FormTaxInv() As ActionResult
+            Return View()
+        End Function
+        Function Expenses() As ActionResult
+            Return View()
+        End Function
+        Function Invoice() As ActionResult
+            Return View()
+        End Function
+        Function Billing() As ActionResult
+            Return View()
+        End Function
+        Function Receipt() As ActionResult
+            Return View()
+        End Function
+        Function TaxInvoice() As ActionResult
             Return View()
         End Function
         Function FormVoucher() As ActionResult

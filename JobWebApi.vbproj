@@ -522,6 +522,17 @@
     <Content Include="Views\Acc\FormWTax3.vbhtml" />
     <Content Include="Views\Acc\FormWTax3D.vbhtml" />
     <Content Include="Views\Shared\_ReportNoHeadLandscape.vbhtml" />
+    <Content Include="Views\Acc\FormWTax53.vbhtml" />
+    <Content Include="Views\Acc\FormWTax53D.vbhtml" />
+    <Content Include="Views\Acc\FormInv.vbhtml" />
+    <Content Include="Views\Acc\FormBill.vbhtml" />
+    <Content Include="Views\Acc\FormRcp.vbhtml" />
+    <Content Include="Views\Acc\FormTaxinv.vbhtml" />
+    <Content Include="Views\Acc\Invoice.vbhtml" />
+    <Content Include="Views\Acc\Billing.vbhtml" />
+    <Content Include="Views\Acc\Receipt.vbhtml" />
+    <Content Include="Views\Acc\Taxinvoice.vbhtml" />
+    <Content Include="Views\Acc\Expenses.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
