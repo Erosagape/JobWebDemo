@@ -383,6 +383,7 @@
     <Compile Include="Controllers\Main.vb" />
     <Compile Include="Controllers\MenuController.vb" />
     <Compile Include="Controllers\ReportController.vb" />
+    <Compile Include="Controllers\TrackingController.vb" />
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -532,7 +533,9 @@
     <Content Include="Views\Acc\Billing.vbhtml" />
     <Content Include="Views\Acc\Receipt.vbhtml" />
     <Content Include="Views\Acc\Taxinvoice.vbhtml" />
-    <Content Include="Views\Acc\Expenses.vbhtml" />
+    <Content Include="Views\Acc\Expense.vbhtml" />
+    <Content Include="Views\Tracking\Index.vbhtml" />
+    <Content Include="Views\JobOrder\Quotation.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

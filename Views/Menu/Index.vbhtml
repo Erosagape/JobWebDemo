@@ -100,9 +100,11 @@ End Code
                                         <div class="collapse" id="mnuSubAcc">
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Voucher')">บันทึกรับ/จ่ายเงิน</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('WHTax')">บันทึกหัก ณ ที่จ่าย</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Invoices')">ใบแจ้งหนี้</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Receipts')">ใบเสร็จรับเงิน</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('TaxInvoices')">ใบกำกับภาษี</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Expense')">บิลค่าใช้จ่าย</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Invoice')">ใบแจ้งหนี้</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Billing')">ใบวางบิล</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Receipt')">ใบเสร็จรับเงิน</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('TaxInvoice')">ใบกำกับภาษี</a>
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +134,7 @@ End Code
                                 </div>
                                 <div id="mnuTrack" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Reports')">รายงานต่างๆ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Report')">รายงานต่างๆ</a>
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Tracking')">ตรวจสอบการทำงาน</a>
                                     </div>
                                 </div>
@@ -361,6 +363,15 @@ End Code
                 case 'Branch':
                     window.location.href = path + 'Master/Branch';
                     break;
+                case 'Clearing':
+                    window.location.href = path + 'Clr/Index';
+                    break;
+                case 'AppClearing':
+                    window.location.href = path + 'Clr/Approve';
+                    break;
+                case 'RecvClear':
+                    window.location.href = path + 'Clr/Receive';
+                    break;
                 case 'Constant':
                     window.location.href = path +'Config/Index';
                     break;
@@ -411,6 +422,30 @@ End Code
                     break;
                 case 'WHTax':
                     window.location.href = path + 'Acc/WHTax';
+                    break;
+                case 'Invoice':
+                    window.location.href = path + 'Acc/Invoice';
+                    break;
+                case 'Receipt':
+                    window.location.href = path + 'Acc/Receipt';
+                    break;
+                case 'Billing':
+                    window.location.href = path + 'Acc/Billing';
+                    break;
+                case 'Expense':
+                    window.location.href = path + 'Acc/Expense';
+                    break;
+                case 'TaxInvoice':
+                    window.location.href = path + 'Acc/TaxInvoice';
+                    break;
+                case 'Report':
+                    window.location.href = path + 'Report/Index';
+                    break;
+                case 'Tracking':
+                    window.location.href = path + 'Tracking/Index';
+                    break;
+                case 'Quotation':
+                    window.location.href = path + 'JobOrder/Quotation';
                     break;
                 case 'MasS':
                     $('#dvMasS').modal('show');

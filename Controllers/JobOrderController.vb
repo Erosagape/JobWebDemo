@@ -16,6 +16,9 @@ Namespace Controllers
         Function FormJob() As ActionResult
             Return GetView("FormJob")
         End Function
+        Function Quotation() As ActionResult
+            Return GetView("Quotation")
+        End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function
