@@ -146,6 +146,33 @@ Public Class CWHTaxHeader
             m_IDCard3 = value
         End Set
     End Property
+    Private m_Branch1 As String
+    Public Property Branch1 As String
+        Get
+            Return m_Branch1
+        End Get
+        Set(value As String)
+            m_Branch1 = value
+        End Set
+    End Property
+    Private m_Branch2 As String
+    Public Property Branch2 As String
+        Get
+            Return m_Branch2
+        End Get
+        Set(value As String)
+            m_Branch2 = value
+        End Set
+    End Property
+    Private m_Branch3 As String
+    Public Property Branch3 As String
+        Get
+            Return m_Branch3
+        End Get
+        Set(value As String)
+            m_Branch3 = value
+        End Set
+    End Property
     Private m_SeqInForm As Integer
     Public Property SeqInForm As Integer
         Get
@@ -353,6 +380,9 @@ Public Class CWHTaxHeader
                             dr("IDCard1") = Me.IDCard1
                             dr("IDCard2") = Me.IDCard2
                             dr("IDCard3") = Me.IDCard3
+                            dr("Branch1") = Me.Branch1
+                            dr("Branch2") = Me.Branch2
+                            dr("Branch3") = Me.Branch3
                             dr("SeqInForm") = Me.SeqInForm
                             dr("FormType") = Me.FormType
                             dr("TaxLawNo") = Me.TaxLawNo
@@ -446,6 +476,15 @@ Public Class CWHTaxHeader
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("IDCard3"))) = False Then
                         row.IDCard3 = rd.GetString(rd.GetOrdinal("IDCard3")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("Branch1"))) = False Then
+                        row.Branch1 = rd.GetString(rd.GetOrdinal("Branch1")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("Branch2"))) = False Then
+                        row.Branch2 = rd.GetString(rd.GetOrdinal("Branch2")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("Branch3"))) = False Then
+                        row.Branch3 = rd.GetString(rd.GetOrdinal("Branch3")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("SeqInForm"))) = False Then
                         row.SeqInForm = rd.GetInt32(rd.GetOrdinal("SeqInForm"))
