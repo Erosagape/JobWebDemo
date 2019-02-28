@@ -18,6 +18,15 @@ Namespace Controllers
         Function Payment() As ActionResult
             Return GetView("Payment", "MODULE_ADV")
         End Function
+        Function CreditAdv() As ActionResult
+            Return GetView("CreditAdv", "MODULE_ADV")
+        End Function
+        Function EstimateCost() As ActionResult
+            Return View()
+        End Function
+        Function FormCreditAdv() As ActionResult
+            Return View()
+        End Function
         Function FormAdv() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")

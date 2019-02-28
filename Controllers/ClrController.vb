@@ -16,6 +16,16 @@ Namespace Controllers
         Function Receive() As ActionResult
             Return GetView("Receive", "MODULE_CLR")
         End Function
+        Function Costing() As ActionResult
+            Return View()
+        End Function
+        Function GenerateInv() As ActionResult
+            Return View()
+        End Function
+        Function Earnest() As ActionResult
+            Return View()
+        End Function
+
         '-----Controller-----
         Function ApproveClearing() As HttpResponseMessage
             ViewBag.User = Session("CurrUser").ToString()

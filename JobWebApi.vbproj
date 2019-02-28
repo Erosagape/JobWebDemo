@@ -536,6 +536,19 @@
     <Content Include="Views\Acc\Expense.vbhtml" />
     <Content Include="Views\Tracking\Index.vbhtml" />
     <Content Include="Views\JobOrder\Quotation.vbhtml" />
+    <Content Include="Views\Acc\CreditNote.vbhtml" />
+    <Content Include="Views\JobOrder\Transport.vbhtml" />
+    <Content Include="Views\JobOrder\FormDelivery.vbhtml" />
+    <Content Include="Views\Adv\CreditAdv.vbhtml" />
+    <Content Include="Views\Adv\FormCreditAdv.vbhtml" />
+    <Content Include="Views\Acc\FormCreditNote.vbhtml" />
+    <Content Include="Views\Tracking\Document.vbhtml" />
+    <Content Include="Views\Adv\EstimateCost.vbhtml" />
+    <Content Include="Views\Clr\Costing.vbhtml" />
+    <Content Include="Views\Clr\GenerateInv.vbhtml" />
+    <Content Include="Views\Acc\Cheque.vbhtml" />
+    <Content Include="Views\Clr\Earnest.vbhtml" />
+    <Content Include="Views\Acc\PettyCash.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

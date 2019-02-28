@@ -19,6 +19,12 @@ Namespace Controllers
         Function Quotation() As ActionResult
             Return GetView("Quotation")
         End Function
+        Function FormDelivery() As ActionResult
+            Return GetView("FormDelivery")
+        End Function
+        Function Transport() As ActionResult
+            Return GetView("Transport")
+        End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function

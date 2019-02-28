@@ -202,7 +202,7 @@ End Code
                 <div class="row">
                     <div class="col-md-12">
                         <label for="txtDeliveryDate">Delivery Date :</label><input type="date" style="width:130px" id="txtDeliveryDate" tabindex="42" />
-                        <input type="button" class="btn btn-info" value="Print Delivery Slip" />
+                        <input type="button" class="btn btn-info" value="Print Delivery Slip" onclick="PrintDelivery()" />
                     </div>
                 </div>
             </div>
@@ -416,10 +416,10 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <input type="button" id="btnViewTAdv" class="btn btn-default" value="Credit Advances" />
+                        <input type="button" id="btnViewTAdv" class="btn btn-default" value="Credit Advances" onclick="OpenCreditAdv()" />
                     </div>
                     <div class="col-md-6">
-                        <input type="button" id="btnViewChq" class="btn btn-default" value="Customer Cheques" />
+                        <input type="button" id="btnViewChq" class="btn btn-default" value="Customer Cheques" onclick="OpenCheque()" />
                     </div>
                 </div>
             </div>
@@ -464,14 +464,13 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="button" class="btn btn-primary" id="btnLinkDoc" value="Document Files" />
-                        <input type="button" class="btn btn-primary" id="btnLinkLoad" value="Transport Info" />
-                        <input type="button" class="btn btn-primary" id="btnLinkOption" value="Addition Info" />
-                        <input type="button" class="btn btn-primary" id="btnLinkExp" value="Minimum Expense" />
-                        <input type="button" class="btn btn-primary" id="btnLinkTAdv" value="Credit Advance" />
+                        <input type="button" class="btn btn-primary" id="btnLinkDoc" value="Document Files" onclick="OpenDocument()"/>
+                        <input type="button" class="btn btn-primary" id="btnLinkLoad" value="Transport Info" onclick="OpenTransport()" />
+                        <input type="button" class="btn btn-primary" id="btnLinkExp" value="Estimate Expenses" onclick="OpenExpense()" />
+                        <input type="button" class="btn btn-primary" id="btnLinkTAdv" value="Credit Advance" onclick="OpenCreditAdv()" />
                         <input type="button" class="btn btn-primary" id="btnLinkAdv" value="Advance Request" onclick="OpenAdvance()" />
-                        <input type="button" class="btn btn-primary" id="btnLinkClr" value="Advance Clearing" />
-                        <input type="button" class="btn btn-primary" id="btnLinkCost" value="Cost & Profit" />
+                        <input type="button" class="btn btn-primary" id="btnLinkClr" value="Advance Clearing" onclick="OpenClearing()" />
+                        <input type="button" class="btn btn-primary" id="btnLinkCost" value="Cost & Profit" onclick="OpenCosting()"/>
                     </div>
                 </div>
             </div>
@@ -928,9 +927,35 @@ End Code
     function PrintData() {
         window.open(path + 'JobOrder/FormJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
     }
+    function PrintDelivery() {
+        window.open(path + 'JobOrder/FormDelivery?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
     function OpenAdvance() {
         window.open(path + 'Adv/Index?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
     }
+    function OpenCreditAdv() {
+        window.open(path + 'Adv/CreditAdv?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+
+    function OpenClearing() {
+        window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+    function OpenTransport() {
+        window.open(path + 'JobOrder/Transport?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+    function OpenDocument() {
+        window.open(path + 'Tracking/Document?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+    function OpenExpense() {
+        window.open(path + 'Adv/EstimateCost?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+    function OpenCosting() {
+        window.open(path + 'Clr/Costing?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+    function OpenCheque() {
+        window.open(path + 'Acc/Cheque?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(), '', '');
+    }
+
     function GetDataSave(dr) {
         dr.CustCode = $('#txtCustCode').val();
         dr.CustBranch = $('#txtCustBranch').val();

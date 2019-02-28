@@ -7,6 +7,8 @@ End Code
     * {
         font-family: Tahoma;
         font-size: 12px;
+        margin: 0;
+        padding: 0;
     }
     #circle {
         width: 100px; /* ความกว้าง */
@@ -17,82 +19,55 @@ End Code
         border-radius: 50%;
     }
 
-    .one {
-        border-style: solid;
-        border-width: 1px;
-        width: 500px;
-        margin-right: auto;
-        float: right;
-        padding: 1px;
-    }
-
     p.pd1 {
         margin: 15px;
     }
 
     p.d1 {
         border: 1px solid black;
-        margin: 25px;
         background-color: lightblue;
         border-radius: 8px;
     }
 
     h4.H4 {
         border: 1px solid black;
-        margin-left: 1px;
-        margin-bottom: 1px;
-        margin-right: 1px;
-        margin-top: 25px;
         background-color: lightblue;
         border-radius: 8px;
-        font-size: 23px;
     }
 
     h1.H1 {
         border: 1px solid black;
-        margin-left: -10px;
-        margin-bottom: 1px;
-        margin-right: 1px;
-        margin-top: 40px;
-        font-size: 100px;
         border-radius: 8px;
     }
 
     p.d2 {
         border: 1px solid black;
-        margin: 25px;
         border-radius: 8px;
     }
 
     p.d3 {
         border: 1px solid black;
         border-radius: 5px;
-        margin-left: 80px;
-        margin-bottom: 1px;
-        margin-right: -30px;
-        margin-top: 5px;
     }
 </style>
 
 
 
-<div id="report" class="text-center row">
+<div id="report" class="text-center">
+    <table>
+        <tr>
+            <td>
+                แบบยื่นรายการภาษีเงินได้หัก ณ ที่จ่าย<br />
+                ตามมาตรา 59 แห่งประมวลรัษฎากร<br />
+                สำหรับกานหักภาษี ณ ที่จ่ายตามมาตรา 3 เตรส และมาตรา 50 (3)(4)(5)<br />
+                กรณีการจ่ายเงินได้พึงประเมินตามมาตรา 40 (5)(6)(7)(8) และภาษีตามาตรา 48 ทวิ แห่งประมวลรัษฎากร
+            </td>
 
-    <div class="col-md-7">
-        <h4 class="H4">
-            แบบยื่นรายการภาษีเงินได้หัก ณ ที่จ่าย<br />
-            ตามมาตรา 59 แห่งประมวลรัษฎากร<br />
-            สำหรับกานหักภาษี ณ ที่จ่ายตามมาตรา 3 เตรส และมาตรา 50 (3)(4)(5)<br />
-            กรณีการจ่ายเงินได้พึงประเมินตามมาตรา 40 (5)(6)(7)(8) และภาษีตามาตรา 48 ทวิ แห่งประมวลรัษฎากร
-        </h4>
-
-    </div>
-
-    <div class="col-md-5">
-        <h1 class="H1">
-            ภ.ง.ด.3
-        </h1>
-    </div>
+            <td>
+                ภ.ง.ด.3
+            <td>
+        </tr>
+    </table>
 
 
 

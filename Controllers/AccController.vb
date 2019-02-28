@@ -41,7 +41,10 @@ Namespace Controllers
         Function FormTaxInv() As ActionResult
             Return View()
         End Function
-        Function Expenses() As ActionResult
+        Function FormCreditNote() As ActionResult
+            Return View()
+        End Function
+        Function Expense() As ActionResult
             Return View()
         End Function
         Function Invoice() As ActionResult
@@ -50,10 +53,19 @@ Namespace Controllers
         Function Billing() As ActionResult
             Return View()
         End Function
+        Function PettyCash() As ActionResult
+            Return View()
+        End Function
+        Function Cheque() As ActionResult
+            Return View()
+        End Function
         Function Receipt() As ActionResult
             Return View()
         End Function
         Function TaxInvoice() As ActionResult
+            Return View()
+        End Function
+        Function CreditNote() As ActionResult
             Return View()
         End Function
         Function FormVoucher() As ActionResult

@@ -76,8 +76,9 @@ End Code
                                 </div>
                                 <div id="mnuShp" class="panel-collapse collapse">
                                     <div class="panel-body">
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Transport');">ใบจองรถ</a>
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Advance');">ใบเบิกค่าใช้จ่าย</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="openMenu('Clearing')">ใบปิดค่าใช้จ่าย</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Clearing')">ใบปิดค่าใช้จ่าย</a>
                                     </div>
                                 </div>
                             </div>
@@ -95,14 +96,20 @@ End Code
                                         <div class="collapse" id="mnuSubFin">
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PayAdvance')">จ่ายเงินตามใบเบิก</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvClear')">รับเคลียร์เงินตามใบปิด</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Earnest')">รับเคลียร์เงินมัดจำ</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Cheque')">บันทึกรับ/จ่ายเช็ค</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PettyCash')">บันทึกเงินสดย่อย</a>
                                         </div>
                                         <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
                                         <div class="collapse" id="mnuSubAcc">
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Voucher')">บันทึกรับ/จ่ายเงิน</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Voucher')">บันทึกบัญชีรับ/จ่าย</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('WHTax')">บันทึกหัก ณ ที่จ่าย</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Invoices')">ใบแจ้งหนี้</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Receipts')">ใบเสร็จรับเงิน</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('TaxInvoices')">ใบกำกับภาษี</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Expense')">บิลค่าใช้จ่าย</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Invoice')">ใบแจ้งหนี้</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Billing')">ใบวางบิล</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Receipt')">ใบเสร็จรับเงิน</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('TaxInvoice')">ใบกำกับภาษี</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('CreditNote')">ใบเพิ่มหนี้/ลดหนี้</a>
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +139,7 @@ End Code
                                 </div>
                                 <div id="mnuTrack" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Reports')">รายงานต่างๆ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Report')">รายงานต่างๆ</a>
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuTrack" onclick="OpenMenu('Tracking')">ตรวจสอบการทำงาน</a>
                                     </div>
                                 </div>
@@ -361,6 +368,15 @@ End Code
                 case 'Branch':
                     window.location.href = path + 'Master/Branch';
                     break;
+                case 'Clearing':
+                    window.location.href = path + 'Clr/Index';
+                    break;
+                case 'AppClearing':
+                    window.location.href = path + 'Clr/Approve';
+                    break;
+                case 'RecvClear':
+                    window.location.href = path + 'Clr/Receive';
+                    break;
                 case 'Constant':
                     window.location.href = path +'Config/Index';
                     break;
@@ -411,6 +427,45 @@ End Code
                     break;
                 case 'WHTax':
                     window.location.href = path + 'Acc/WHTax';
+                    break;
+                case 'Invoice':
+                    window.location.href = path + 'Acc/Invoice';
+                    break;
+                case 'Receipt':
+                    window.location.href = path + 'Acc/Receipt';
+                    break;
+                case 'Billing':
+                    window.location.href = path + 'Acc/Billing';
+                    break;
+                case 'Expense':
+                    window.location.href = path + 'Acc/Expense';
+                    break;
+                case 'TaxInvoice':
+                    window.location.href = path + 'Acc/TaxInvoice';
+                    break;
+                case 'CreditNote':
+                    window.location.href = path + 'Acc/CreditNote';
+                    break;
+                case 'Report':
+                    window.location.href = path + 'Report/Index';
+                    break;
+                case 'Tracking':
+                    window.location.href = path + 'Tracking/Index';
+                    break;
+                case 'Transport':
+                    window.location.href = path + 'JobOrder/Transport';
+                    break;
+                case 'Quotation':
+                    window.location.href = path + 'JobOrder/Quotation';
+                    break;
+                case 'Cheque':
+                    window.location.href = path + 'Acc/Cheque';
+                    break;
+                case 'PettyCash':
+                    window.location.href = path + 'Acc/PettyCash';
+                    break;
+                case 'Earnest':
+                    window.location.href = path + 'Clr/Earnest';
                     break;
                 case 'MasS':
                     $('#dvMasS').modal('show');
