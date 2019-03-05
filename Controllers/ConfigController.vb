@@ -20,6 +20,9 @@ Namespace Controllers
         Function FileManager() As ActionResult
             Return GetView("FileManager", "MODULE_ADM")
         End Function
+        Function Role() As ActionResult
+            Return GetView("Role", "MODULE_ADM")
+        End Function
         Function GetSQLResult(<FromBody> data As CResult) As ActionResult
             Dim tSQL As String = data.Source
             Dim tConn As String = ""

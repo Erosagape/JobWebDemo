@@ -111,7 +111,7 @@ End Code
                             Number
                             <input type="text" id="txtSeqInForm" class="form-control" />
                         </div>
-                        <div class="col-sm-7" style="display:flex;flex-direction:column">
+                        <div class="col-sm-10" style="display:flex;flex-direction:column">
                             Type of :
                             <div style="display:flex;flex-direction:row;flex-grow:4">
                                 <label style="display:block;width:20%"><input type="radio" name="FormType" value="1" /> (1) ภ.ง.ด.1ก.</label>
@@ -122,16 +122,6 @@ End Code
                                 <label style="display:block;width:20%"><input type="radio" name="FormType" value="6" /> (6) ภ.ง.ด.3ก.</label>
                                 <label style="display:block;width:20%"><input type="radio" name="FormType" value="7" /> (7) ภ.ง.ด.53.</label>
                             </div>
-                        </div>
-                        <div class="col-sm-3" style="display:flex;flex-direction:column">
-                            Tax Code:
-                            <select class="form-control dropdown" id="txtTaxLawNo">
-                                <option value="1">3 เตรส</option>
-                                <option value="2">65 จัดวา</option>
-                                <option value="3">69 ทวิ</option>
-                                <option value="4">48 ทวิ</option>
-                                <option value="5">50 ทวิ</option>
-                            </select>
                         </div>
                     </div>
                 </p>
@@ -166,6 +156,16 @@ End Code
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-sm-3" style="display:flex;flex-direction:column">
+                            Tax Code:
+                            <select class="form-control dropdown" id="txtTaxLawNo">
+                                <option value="1">3 เตรส</option>
+                                <option value="2">65 จัดวา</option>
+                                <option value="3">69 ทวิ</option>
+                                <option value="4">48 ทวิ</option>
+                                <option value="5">50 ทวิ</option>
+                            </select>
+                        </div>
                         <div class="col-sm-6" style="display:flex;flex-direction:row">
                             <div style="margin-right:5px;flex:50%">
                                 Provident Fund Payer.

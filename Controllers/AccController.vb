@@ -30,13 +30,13 @@ Namespace Controllers
             Return View()
         End Function
         Function FormInv() As ActionResult
-            Return View()
+            Return GetView("FormInv")
         End Function
         Function FormBill() As ActionResult
             Return View()
         End Function
         Function FormRcp() As ActionResult
-            Return View()
+            Return GetView("FormRcp")
         End Function
         Function FormTaxInv() As ActionResult
             Return View()
@@ -62,10 +62,16 @@ Namespace Controllers
         Function Receipt() As ActionResult
             Return View()
         End Function
+        Function RecvInv() As ActionResult
+            Return View()
+        End Function
         Function TaxInvoice() As ActionResult
             Return View()
         End Function
         Function CreditNote() As ActionResult
+            Return View()
+        End Function
+        Function GLNote() As ActionResult
             Return View()
         End Function
         Function FormVoucher() As ActionResult

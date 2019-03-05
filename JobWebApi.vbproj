@@ -549,6 +549,11 @@
     <Content Include="Views\Acc\Cheque.vbhtml" />
     <Content Include="Views\Clr\Earnest.vbhtml" />
     <Content Include="Views\Acc\PettyCash.vbhtml" />
+    <Content Include="Views\Clr\FormClr.vbhtml" />
+    <Content Include="Views\JobOrder\QuoApprove.vbhtml" />
+    <Content Include="Views\Acc\RecvInv.vbhtml" />
+    <Content Include="Views\Acc\GLNote.vbhtml" />
+    <Content Include="Views\Config\Role.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

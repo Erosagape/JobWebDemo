@@ -48,6 +48,7 @@ End Code
                                 <div id="mnuMkt" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMkt" onclick="OpenMenu('Quotation')">จัดการใบเสนอราคา</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMkt" onclick="OpenMenu('AppQuo')">อนุมัติใบเสนอราคา</a>
                                     </div>
                                 </div>
                             </div>
@@ -63,6 +64,8 @@ End Code
                                     <div class="panel-body">
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('CreateJob');">เปิดงานใหม่</a>
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('SearchJob');">ค้นหางาน</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('Transport');">ใบจองรถ</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuCS" onclick="OpenMenu('WHTax')">บันทึกหัก ณ ที่จ่าย</a>
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +79,6 @@ End Code
                                 </div>
                                 <div id="mnuShp" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Transport');">ใบจองรถ</a>
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Advance');">ใบเบิกค่าใช้จ่าย</a>
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuShp" onclick="OpenMenu('Clearing')">ใบปิดค่าใช้จ่าย</a>
                                     </div>
@@ -99,10 +101,12 @@ End Code
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Earnest')">รับเคลียร์เงินมัดจำ</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Cheque')">บันทึกรับ/จ่ายเช็ค</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PettyCash')">บันทึกเงินสดย่อย</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvInv')">รับชำระใบแจ้งหนี้</a>
                                         </div>
                                         <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
                                         <div class="collapse" id="mnuSubAcc">
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Voucher')">บันทึกบัญชีรับ/จ่าย</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('GLNote')">บันทึกสมุดรายวัน</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('WHTax')">บันทึกหัก ณ ที่จ่าย</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Expense')">บิลค่าใช้จ่าย</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Invoice')">ใบแจ้งหนี้</a>
@@ -210,10 +214,18 @@ End Code
                     </div>
                 </div>
                 <div class="modal-body">
-                    <button class="btn btn-default btn-block" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
-                    <button class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
-                    <button class="btn btn-default btn-block" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
-                    <button class="btn btn-default btn-block" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Role')">กลุ่มผู้ใช้งาน</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
+                        </div>
+                    </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -353,6 +365,9 @@ End Code
                 case 'Advance':
                     window.location.href = path+'Adv/Index';
                     break;
+                case 'AppQuo':
+                    window.location.href = path + 'JobOrder/QuoApprove';
+                    break;
                 case 'AppAdvance':
                     window.location.href = path + 'Adv/Approve';
                     break;
@@ -422,6 +437,9 @@ End Code
                 case 'customers':
                     window.location.href = path +'Master/Customers';
                     break;
+                case 'GLNote':
+                    window.location.href = path + 'Acc/GLNote';
+                    break;
                 case 'Voucher':
                     window.location.href = path + 'Acc/Voucher';
                     break;
@@ -461,6 +479,9 @@ End Code
                 case 'Cheque':
                     window.location.href = path + 'Acc/Cheque';
                     break;
+                case 'RecvInv':
+                    window.location.href = path + 'Acc/RecvInv';
+                    break;
                 case 'PettyCash':
                     window.location.href = path + 'Acc/PettyCash';
                     break;
@@ -475,6 +496,9 @@ End Code
                     break;
                 case 'MasA':
                     $('#dvMasA').modal('show');
+                    break;
+                case 'Role':
+                    window.location.href = path + 'Config/Role';
                     break;
                 default:
                     alert('Under Development, Coming soon!');

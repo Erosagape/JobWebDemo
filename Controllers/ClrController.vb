@@ -16,14 +16,22 @@ Namespace Controllers
         Function Receive() As ActionResult
             Return GetView("Receive", "MODULE_CLR")
         End Function
+        Function FormClr() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print clear", textContent)
+            End If
+            Return GetView("FormClr")
+        End Function
         Function Costing() As ActionResult
-            Return View()
+            Return GetView("Costing", "MODULE_ACC")
         End Function
         Function GenerateInv() As ActionResult
-            Return View()
+            Return GetView("GenerateInv", "MODULE_ACC")
         End Function
         Function Earnest() As ActionResult
-            Return View()
+            Return GetView("Earnest", "MODULE_CLR")
         End Function
 
         '-----Controller-----

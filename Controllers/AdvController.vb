@@ -22,10 +22,15 @@ Namespace Controllers
             Return GetView("CreditAdv", "MODULE_ADV")
         End Function
         Function EstimateCost() As ActionResult
-            Return View()
+            Return GetView("EstimateCost", "MODULE_ADV")
         End Function
         Function FormCreditAdv() As ActionResult
-            Return View()
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "CreditAdv")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print credit-advance", textContent)
+            End If
+            Return GetView("FormCreditAdv")
         End Function
         Function FormAdv() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()

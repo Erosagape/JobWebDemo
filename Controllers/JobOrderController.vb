@@ -14,16 +14,24 @@ Namespace Controllers
             Return GetView("ShowJob", "MODULE_CS")
         End Function
         Function FormJob() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CS", "ShowJob")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print job", textContent)
+            End If
             Return GetView("FormJob")
         End Function
         Function Quotation() As ActionResult
-            Return GetView("Quotation")
+            Return GetView("Quotation", "MODULE_SALES")
+        End Function
+        Function QuoApprove() As ActionResult
+            Return GetView("QuoApprove", "MODULE_SALES")
         End Function
         Function FormDelivery() As ActionResult
             Return GetView("FormDelivery")
         End Function
         Function Transport() As ActionResult
-            Return GetView("Transport")
+            Return GetView("Transport", "MODULE_CS")
         End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
