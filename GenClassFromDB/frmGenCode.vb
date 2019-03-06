@@ -83,7 +83,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " ="""""
 
-                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """></div>"
+                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control""></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
@@ -107,7 +107,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
 
-                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""number"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0.00""></div>"
+                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""number"" id=""txt" & dc.ColumnName & """ class=""form-control"" value=""0.00""></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CNum($('#txt" & dc.ColumnName & "').val()),"
@@ -131,7 +131,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =DateTime.Minvalue"
 
-                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """></div>"
+                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control""></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(CDateEN(dr." & dc.ColumnName & "));"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CDateTH($('#txt" & dc.ColumnName & "').val()),"
@@ -158,7 +158,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
 
-                    strHtml &= vbCrLf & "<div class=""col-sm-10"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" tabIndex=""" & idx & """ value=""0""></div>"
+                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" value=""0""></div>"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
@@ -336,9 +336,9 @@ Public Class frmGenCode
             strAll = strAll & vbCrLf & "End Sub"
         End If
         If CheckBox1.Checked = True Then
-            strAll = strAll & vbCrLf & "<!-- HTML BOOTSTRAP CONTROLS -->"
+            strAll = strAll & vbCrLf & "<!-- HTML CONTROLS -->"
             strAll = strAll & vbCrLf & "<div id=""dvForm"">"
-            strAll = strAll & vbCrLf & vbTab & "<div class=""row"">"
+            strAll = strAll & vbCrLf & vbTab & "<div style=""display:flex;flex-wrap:wrap;"">"
             strAll = strAll & vbCrLf & vbTab & strHtml
             strAll = strAll & vbCrLf & vbTab & "</div>"
             strAll = strAll & vbCrLf & "</div>"

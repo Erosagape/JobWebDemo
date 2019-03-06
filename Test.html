@@ -15,24 +15,22 @@
     <script src="Scripts/Func/popup.js"></script>
     <style>
         * {
-            font-family:Tahoma;
-            font-size:10px;
+            font-family: Tahoma;
+            font-size: 10px;
+        }
+
+        td {
+            font-size: 11px;
+        }
+
+        table {
+            border-width: thin;
+            border-collapse: collapse;
         }
     </style>
 </head>
 <body class="document">
     <div class="page" contenteditable="false">
-        <h1 class="text-center" style="margin-bottom:50px">INVOICE</h1>
-        <style>
-            td {
-                font-size: 11px;
-            }
-
-            table {
-                border-width: thin;
-                border-collapse: collapse;
-            }
-        </style>
         <div style="text-align:center;width:100%">
             <h2>INVOICE</h2>
         </div>
@@ -133,14 +131,8 @@
                     <td width="120px">VAT</td>
                     <td width="120px">AMOUNT</td>
                 </tr>
-                <tr>
-                    <td width="100px">&nbsp;<br />&nbsp;<br />&nbsp;&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;</td>
-                    <td width="400px"></td>
-                    <td width="120px"></td>
-                    <td width="120px"></td>
-                    <td width="120px"></td>
-                    <td width="200px"></td>
-                </tr>
+                <tbody id="myDetail">
+                </tbody>
                 <tr>
                     <td colspan="5">
                         <div style="display:flex">
@@ -209,5 +201,14 @@
 
 
         </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            for (var i = 1; i <= 30; i++) {
+                var str='<tr><td>'+i+'</td><td>test</td><td>100</td><td>7</td><td>107</td><td>1000</td></tr>';
+                $('#myDetail').append(str);
+            }            
+        });
+    </script>
 </body>
 </html>
