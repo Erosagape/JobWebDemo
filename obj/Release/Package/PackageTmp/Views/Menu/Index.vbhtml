@@ -218,8 +218,7 @@ End Code
                         <div class="col-sm-6">
                             <button class="btn btn-default btn-block" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('PolicyGroup')">กลุ่มผู้ใช้งาน</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('PolicySetup')">กำหนดสิทธิ์กลุ่มผู้ใช้งาน</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Role')">กลุ่มผู้ใช้งาน</button>
                         </div>
                         <div class="col-sm-6">
                             <button class="btn btn-default btn-block" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
@@ -367,7 +366,7 @@ End Code
                     window.location.href = path+'Adv/Index';
                     break;
                 case 'AppQuo':
-                    window.location.href =path+'JobOrder/AppQuo'
+                    window.location.href = path + 'JobOrder/QuoApprove';
                     break;
                 case 'AppAdvance':
                     window.location.href = path + 'Adv/Approve';
@@ -497,6 +496,9 @@ End Code
                     break;
                 case 'MasA':
                     $('#dvMasA').modal('show');
+                    break;
+                case 'Role':
+                    window.location.href = path + 'Config/Role';
                     break;
                 default:
                     alert('Under Development, Coming soon!');

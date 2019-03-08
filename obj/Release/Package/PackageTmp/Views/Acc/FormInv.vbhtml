@@ -2,7 +2,6 @@
 @Code
     Layout = "~/Views/Shared/_Report.vbhtml"
     ViewBag.Title = "Invoice Slip"
-    ViewBag.ReportName = ""
 End Code
 <style>
     td {
