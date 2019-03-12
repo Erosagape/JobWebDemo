@@ -61,7 +61,7 @@ function SetGridConfigList(p, g, d, ev) {
 function SetGridConfigVal(p, g, t, d, ev) {
     $(g).DataTable({
         ajax: {
-            url: p + 'Config/GetConfig?Code=' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            url: p + 'Config/GetConfig?Prefix=' + t, //web service ที่จะ call ไปดึงข้อมูลมา
             dataSrc: 'config.data'
         },
         selected: true, //ให้สามารถเลือกแถวได้
