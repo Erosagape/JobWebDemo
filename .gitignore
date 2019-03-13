@@ -1,8 +1,10 @@
 db.lock
 App_Data/JobWeb.mdf
 App_Data/JobWeb_log.ldf
-Bin/Debug/JobWebApi.dll
-Bin/Debug/JobWebApi.pdb
+Bin/debug/JobWebApi.dll
+Bin/debug/JobWebApi.pdb
+Bin/release/JobWebApi.dll
+Bin/release/JobWebApi.pdb
 obj/Release/TransformWebConfig/transformed/Web.config
 obj/Release/TransformWebConfig/original/Web.config
 obj/Release/TransformWebConfig/assist/Web.config
