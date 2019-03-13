@@ -2,33 +2,41 @@
 @Code
     Layout = "~/Views/Shared/_Report.vbhtml"
     ViewBag.Title = "Clearing Slip"
+    ViewBag.ReportName = "CLEARING SLIP"
 End Code
+<style>
+    * {
+        font-family: Tahoma;
+        font-size: 11px;
+    }
 
+    td {
+        font-size: 11px;
+    }
+
+    table {
+        border-width: thin;
+        border-collapse: collapse;
+    }
+</style>
         <div style="display:flex">
             <div style="flex:1" class="text-left">
-                <h4>KSA (THAILAND) CO.,LTD</h4>
+                KSA (THAILAND) CO.,LTD
             </div>
 
-            <div style="flex:1" class="text-right">
-                <h4>CS-02 [CLEAR]</h4>
+            <div style="flex:1;text-align:right">
+                CS-02 [CLEAR]
             </div>
         </div>
 
 
         <div style="display:flex">
             <div style="flex:1" class="text-left">
-                <h5>EXPENSE CLEARING &nbsp;&nbsp;&nbsp; 01 / IMPORT</h5>
+                EXPENSE CLEARING &nbsp;&nbsp;&nbsp; 01 / IMPORT
             </div>
 
-            <div style="flex:1" class="text-right">
-                <h5>HEAD OFFICE</h5>
-            </div>
-        </div>
-
-        <div class="text-center" style="display:flex">
-            <div style="flex:1">
-                <h3>________________________________________________</h3>
-
+            <div style="flex:1;text-align:right">
+                HEAD OFFICE
             </div>
         </div>
 
@@ -40,7 +48,7 @@ End Code
                 CLEAR DATE : _________________
             </div>
             <div style="flex:1">
-                DOC NO : ______________________________
+                DOC NO : ____________________
             </div>
         </div>
 
@@ -64,7 +72,7 @@ End Code
             </div>
         </div>
 
-        <table style="" border="2" width="100%">
+        <table  border="1" width="100%">
             <tr class="text-center">
                 <th width="5%">NO.</th>
                 <th width="70%">DESCRIPTION</th>
@@ -103,7 +111,7 @@ End Code
                             <br />
                             CLEARING FROM :  30 / Other
                         </div>
-                        <div style="flex:1 " class="text-right">
+                        <div style="flex:1 ;text-align:right">
                             ADV AMOUNT
                             <br />
                             TOTAL AMOUNT
@@ -118,7 +126,7 @@ End Code
                         </div>
                     </div>
                 </td>
-                <td class="text-right">
+                <td style="text-align:right">
                     <div style="display:flex">
                         <div style="flex:1">
                             10,000.00
@@ -138,7 +146,7 @@ End Code
             </tr>
         </table>
 
-        <table border="2" width="100%" style="margin-top:50px">
+        <table border="1" width="100%" style="margin-top:50px">
             <tr class="text-center">
                 <th>CLEARING BY</th>
                 <th>APPROVED BY</th>
@@ -184,7 +192,3 @@ End Code
                 </td>
             </tr>
         </table>
-        <h5 class="text-right" style="margin-top:30px">
-
-            PRINTED BY : ADMINISTRATOR [05/03/2019 14:52:11]
-        </h5>

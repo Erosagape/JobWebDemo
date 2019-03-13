@@ -555,6 +555,10 @@
     <Content Include="Views\Acc\RecvInv.vbhtml" />
     <Content Include="Views\Acc\GLNote.vbhtml" />
     <Content Include="Views\Config\Role.vbhtml" />
+    <Content Include="Views\JobOrder\FormJobSum.vbhtml" />
+    <Content Include="Views\JobOrder\FormQuotation.vbhtml" />
+    <Content Include="Views\Acc\FormGL.vbhtml" />
+    <Content Include="Views\JobOrder\FormTransport.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

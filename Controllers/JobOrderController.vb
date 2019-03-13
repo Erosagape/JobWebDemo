@@ -21,6 +21,12 @@ Namespace Controllers
             End If
             Return GetView("FormJob")
         End Function
+        Function FormJobSum() As ActionResult
+            Return GetView("FormJobSum")
+        End Function
+        Function FormQuotation() As ActionResult
+            Return GetView("FormQuotation")
+        End Function
         Function Quotation() As ActionResult
             Return GetView("Quotation", "MODULE_SALES")
         End Function
@@ -32,6 +38,9 @@ Namespace Controllers
         End Function
         Function Transport() As ActionResult
             Return GetView("Transport", "MODULE_CS")
+        End Function
+        Function FormTransport() As ActionResult
+            Return GetView("FormTransport")
         End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")

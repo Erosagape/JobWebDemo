@@ -18,31 +18,34 @@ Namespace Controllers
             Return GetView("WHTax", "MODULE_ACC")
         End Function
         Function FormWTax3() As ActionResult
-            Return View()
+            Return GetView("FormWTax3")
         End Function
         Function FormWTax53() As ActionResult
-            Return View()
+            Return GetView("FormWTax53")
         End Function
         Function FormWTax3D() As ActionResult
-            Return View()
+            Return GetView("FormWTax3D")
         End Function
         Function FormWTax53D() As ActionResult
-            Return View()
+            Return GetView("FormWTax53D")
         End Function
         Function FormInv() As ActionResult
             Return GetView("FormInv")
         End Function
         Function FormBill() As ActionResult
-            Return View()
+            Return GetView("FormBill")
         End Function
         Function FormRcp() As ActionResult
             Return GetView("FormRcp")
         End Function
         Function FormTaxInv() As ActionResult
-            Return View()
+            Return GetView("FormTaxInv")
         End Function
         Function FormCreditNote() As ActionResult
-            Return View()
+            Return GetView("FormCreditNote")
+        End Function
+        Function FormGL() As ActionResult
+            Return GetView("FormGL")
         End Function
         Function Expense() As ActionResult
             Return GetView("Expense", "MODULE_ACC")

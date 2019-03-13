@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/21/2018 16:26:28</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>03/13/2019 13:38:31</publishTime>
+      <publishTime>03/13/2019 16:42:31</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>03/13/2019 13:38:31</publishTime>
+      <publishTime>03/13/2019 16:42:31</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>03/13/2019 13:38:29</publishTime>
+      <publishTime>03/13/2019 16:42:29</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -965,7 +965,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Test.html">
-      <publishTime>03/12/2019 10:31:12</publishTime>
+      <publishTime>03/13/2019 16:18:16</publishTime>
     </File>
     <File Include="Test2.html">
       <publishTime>03/12/2019 11:21:41</publishTime>
@@ -983,10 +983,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/28/2019 13:56:10</publishTime>
     </File>
     <File Include="Views/Acc/FormBill.vbhtml">
-      <publishTime>03/12/2019 10:31:12</publishTime>
+      <publishTime>03/13/2019 16:46:28</publishTime>
     </File>
     <File Include="Views/Acc/FormCreditNote.vbhtml">
       <publishTime>02/28/2019 14:31:01</publishTime>
+    </File>
+    <File Include="Views/Acc/FormGL.vbhtml">
+      <publishTime>03/13/2019 16:28:44</publishTime>
     </File>
     <File Include="Views/Acc/FormInv.vbhtml">
       <publishTime>03/12/2019 10:31:12</publishTime>
@@ -1055,7 +1058,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Views/Adv/FormCreditAdv.vbhtml">
-      <publishTime>02/28/2019 14:25:38</publishTime>
+      <publishTime>03/13/2019 15:49:56</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
       <publishTime>02/21/2019 17:05:52</publishTime>
@@ -1082,7 +1085,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/28/2019 14:50:19</publishTime>
     </File>
     <File Include="Views/Clr/FormClr.vbhtml">
-      <publishTime>03/12/2019 10:31:12</publishTime>
+      <publishTime>03/13/2019 16:37:02</publishTime>
     </File>
     <File Include="Views/Clr/GenerateInv.vbhtml">
       <publishTime>02/28/2019 14:39:46</publishTime>
@@ -1097,7 +1100,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2019 13:38:08</publishTime>
     </File>
     <File Include="Views/Config/Index.vbhtml">
-      <publishTime>02/01/2019 12:07:03</publishTime>
+      <publishTime>01/02/2019 12:07:03</publishTime>
     </File>
     <File Include="Views/Config/Role.vbhtml">
       <publishTime>03/13/2019 12:28:38</publishTime>
@@ -1115,10 +1118,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/02/2019 12:07:03</publishTime>
     </File>
     <File Include="Views/JobOrder/FormDelivery.vbhtml">
-      <publishTime>02/28/2019 14:19:23</publishTime>
+      <publishTime>03/13/2019 15:13:52</publishTime>
     </File>
     <File Include="Views/JobOrder/FormJob.vbhtml">
       <publishTime>02/13/2019 13:38:08</publishTime>
+    </File>
+    <File Include="Views/JobOrder/FormJobSum.vbhtml">
+      <publishTime>03/13/2019 16:05:16</publishTime>
+    </File>
+    <File Include="Views/JobOrder/FormQuotation.vbhtml">
+      <publishTime>03/13/2019 16:25:49</publishTime>
+    </File>
+    <File Include="Views/JobOrder/FormTransport.vbhtml">
+      <publishTime>03/13/2019 16:37:59</publishTime>
     </File>
     <File Include="Views/JobOrder/Index.vbhtml">
       <publishTime>02/13/2019 13:38:08</publishTime>
