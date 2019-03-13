@@ -535,14 +535,18 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE roleId='{0}' AND userId='{1}' ", data.RoleID, data.UserID))
-                    Dim json = "{""result"":{""data"":""" & data.UserID & """,""msg"":""" & msg & """}}"
+                    Dim log = ""
+                    If msg.Substring(0, 1) = "S" Then
+                        log = Main.SetAuthorizeFromRole(data.UserID)
+                    End If
+                    Dim json = "{""result"":{""data"":""" & data.UserID & """,""msg"":""" & msg & """,""log"":""" + log + """}}"
                     Return Content(json, jsonContent)
                 Else
-                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save"",""log"":null}}"
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
-                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """,""log"":null}}"
                 Return Content(json, jsonContent)
             End Try
 
@@ -589,9 +593,9 @@ Namespace Controllers
         End Function
         Function DelUserRoleDetail() As ActionResult
             Try
-                Dim tSqlw As String = " WHERE roleId<>'' "
+                Dim tSqlw As String = " WHERE RoleId<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND roleId Like '{0}' ", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND RoleId Like '{0}' ", Request.QueryString("Code").ToString)
                 Else
                     Return Content("{""userrole"":{""result"":""Please Select Some Role"",""data"":[]}}", jsonContent)
                 End If
@@ -602,6 +606,8 @@ Namespace Controllers
                 End If
 
                 Dim oData As New CUserRoleDetail(jobWebConn)
+                oData.RoleID = Request.QueryString("Code").ToString()
+                oData.UserID = Request.QueryString("ID").ToString()
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"

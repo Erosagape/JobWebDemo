@@ -211,8 +211,8 @@ function DummyCompanyData() {
 function CallBackQueryUserRole(p, code, ev) {
     $.get(p + 'config/getuserrole?Code=' + code).done(function (r) {
         var dr = r.userrole;
-        if (dr.length > 0) {
-            ev(dr[0]);
+        if (dr.data.length > 0) {
+            ev(dr);
         }
     });
 }

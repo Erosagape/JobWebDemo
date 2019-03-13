@@ -67,6 +67,7 @@ function SetGridConfigVal(p, g, t, d, ev) {
         selected: true, //ให้สามารถเลือกแถวได้
         columns: [ //กำหนด property ของ header column
             { data: null, title: "#" },
+            { data: "ConfigCode", title: "Code" },
             { data: "ConfigKey", title: "Key" },
             { data: "ConfigValue", title: "Value" }
         ],

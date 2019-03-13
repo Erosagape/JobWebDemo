@@ -154,7 +154,7 @@ Public Class CUserRoleDetail
                     End Using
                 End Using
             Catch ex As Exception
-                msg = ex.Message
+                msg = "[ERROR]:" & ex.Message
             End Try
         End Using
         Return msg
@@ -192,9 +192,13 @@ Public Class CUserRoleDetail
             Try
                 cn.Open()
 
-                Using cm As New SqlCommand("DELETE FROM Mas_UserRoleDetail" + pSQLWhere, cn)
+                Using cm As New SqlCommand("UPDATE a SET a.Author='' FROM Mas_UserAuth a INNER JOIN Mas_UserRoleDetail b ON a.UserID=b.UserID INNER JOIN Mas_UserRolePolicy c ON c.ModuleID= a.AppID +'/'+ a.MenuID WHERE a.UserID='" + Me.UserID + "' AND b.RoleID='" + Me.RoleID + "'", cn)
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
+                    If Me.UserID <> "" And Me.RoleID <> "" Then
+                        cm.ExecuteNonQuery()
+                    End If
+                    cm.CommandText = "DELETE FROM Mas_UserRoleDetail" + pSQLWhere
                     cm.ExecuteNonQuery()
                 End Using
                 cn.Close()

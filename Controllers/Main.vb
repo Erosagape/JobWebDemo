@@ -93,10 +93,48 @@ Module Main
         'E=Can Edit Data
         'D=Can Delete Data
         'P=Can Print Data
-        Dim auth = New CUserAuth(jobWebConn).GetData(" WHERE UserID='" & uname & "' AND AppID='" & app & "' AND MenuID='" & mnu & "'")
-        Dim data = If(auth.Count > 0, "" & auth(0).Author, "*MIREDP")
-        If uname = "" Then data = ""
+        Dim data = ""
+        If uname = "" Then
+            data = ""
+        Else
+            Dim auth = New CUserAuth(jobWebConn).GetData(" WHERE UserID='" & uname & "' AND AppID='" & app & "' AND MenuID='" & mnu & "'")
+            data = If(auth.Count > 0, "" & auth(0).Author, "")
+        End If
         Return data
+    End Function
+    Friend Function SetAuthorizeFromRole(uname As String) As String
+        Dim msg As String = ""
+        Try
+            Dim SQL As String = "
+SELECT a.UserID,SUBSTRING(b.ModuleID,1,CHARINDEX('/',b.ModuleID)-1) as ModuleCode,
+SUBSTRING(b.ModuleID,CHARINDEX('/',b.ModuleID)+1,50) as ModuleFunc,
+(CASE WHEN MAX(CASE WHEN CHARINDEX('M',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'M' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('E',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'E' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('I',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'I' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('R',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'R' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('D',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'D' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('P',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'P' ELSE '' END) 
+ as Authorize
+FROM Mas_UserRolePolicy b,Mas_UserRoleDetail a
+WHERE a.RoleID=b.RoleID
+GROUP BY a.UserID,b.ModuleID
+"
+            Dim dt As DataTable = New CUtil(jobWebConn).GetTableFromSQL(SQL)
+            Dim iRow As Integer = 0
+            For Each dr As DataRow In dt.Rows
+
+                Dim oAuth = New CUserAuth(jobWebConn)
+                oAuth.UserID = dr("UserID").ToString()
+                oAuth.AppID = dr("ModuleCode").ToString()
+                oAuth.MenuID = dr("ModuleFunc").ToString()
+                oAuth.Author = dr("Authorize").ToString()
+                msg += oAuth.SaveData(String.Format(" WHERE UserID='{0}' AND AppID='{1}' AND MenuID='{2}'", oAuth.UserID, oAuth.AppID, oAuth.MenuID)) & "\n"
+                iRow += 1
+            Next
+            Return msg & iRow & " Processed"
+        Catch ex As Exception
+            Return "[ERROR] SetAuthorizeByRole:" + ex.Message
+        End Try
     End Function
     Friend Function DBExecute(conn As String, SQL As String) As String
         Try

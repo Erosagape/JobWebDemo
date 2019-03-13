@@ -31,11 +31,11 @@ End Code
                     </div>
                     <div id="dvDetail" class="col-sm-6" style="display:flex;flex-direction:column;">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#tabUser">Users</a></li>
-                            <li><a data-toggle="tab" href="#tabPolicy">Policy</a></li>
+                            <li class="active"><a data-toggle="tab" href="#tabPolicy">Policy</a></li>
+                            <li><a data-toggle="tab" href="#tabUser">Users</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade in active" id="tabUser">
+                            <div class="tab-pane fade" id="tabUser">
                                 <div style="display:flex;flex-direction:row;">
                                     <div style="flex:2">
                                         <a href="#" onclick="SearchData('user')">UserID :</a><br /><input type="text" id="txtUserID" class="form-control" tabIndex="1" />
@@ -61,7 +61,7 @@ End Code
                                 <button id="btnDelUser" class="btn btn-danger" onclick="DeleteUser()">Delete Role</button>
 
                             </div>
-                            <div class="tab-pane fade" id="tabPolicy">
+                            <div class="tab-pane fade in active" id="tabPolicy">
                                 <div style="display:flex;flex-direction:column">
                                     <label><a onclick="SearchData('module')">Module:</a></label>
                                     <div style="display:flex;">
@@ -113,6 +113,14 @@ End Code
         LoadGrid();
     });
     function SetEvents() {
+        $('#txtRoleID').keydown(function (event) {
+            if (event.which == 13) {
+                $('#txtRoleDesc').val('');
+                CallBackQueryUserRole(path, $('#txtRoleID').val(), ReadRole);
+                LoadUser($('#txtRoleID').val());
+                LoadPolicy($('#txtRoleID').val());
+            }
+        });
         $('#txtUserID').keydown(function (event) {
             if (event.which == 13) {
                 $('#txtUserName').val('');
@@ -252,21 +260,21 @@ End Code
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
-            $.ajax({
+            var result =$.ajax({
                 url: "@Url.Action("SetUserRoleDetail", "Config")",
                 type: "POST",
                 contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {                        
-                        LoadUser($('#txtRoleID').val());
-                        $('#txtUserID').focus();
-                    }
-                    alert(response.result.msg);
-                },
-                error: function (e) {
-                    alert(e);
+                data: jsonText
+            });
+            result.done(function (response) {
+                if (response.result.data != null) {
+                    LoadUser($('#txtRoleID').val());
+                    $('#txtUserID').focus();
                 }
+                alert(response.result.msg);
+            });
+            result.fail(function (err) {
+                alert(err);
             });
         } else {
             alert('No data to save');
@@ -288,6 +296,7 @@ End Code
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
+                async:false,
                 success: function (response) {
                     if (response.result.data != null) {
                         $('#txtRoleID').val(response.result.data);
@@ -315,20 +324,20 @@ End Code
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
-            $.ajax({
+            var result = $.ajax({
                 url: "@Url.Action("SetUserRolePolicy", "Config")",
                 type: "POST",
                 contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {                        
-                        LoadPolicy($('#txtRoleID').val());
-                    }
-                    alert(response.result.msg);
-                },
-                error: function (e) {
-                    alert(e);
+                data: jsonText
+            });
+            result.done(function (response) {
+                if (response.result.data != null) {
+                    LoadPolicy($('#txtRoleID').val());
                 }
+                alert(response.result.msg);
+            });
+            result.fail(function (err) {
+                alert(err);
             });
         } else {
             alert('No data to save');
@@ -363,6 +372,9 @@ End Code
         $('#chkDelete').prop('checked', false);
         $('#chkRead').prop('checked', false);
         $('#chkPrint').prop('checked', false);
+    }
+    function ReadRole(dr) {
+        $('#txtRoleDesc').val(dr.data[0].RoleDesc);
     }
     function ReadUser(dr) {
         $('#txtUserID').val(dr.UserID);
