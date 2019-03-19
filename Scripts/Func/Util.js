@@ -208,6 +208,14 @@ function DummyCompanyData() {
     return o;
 }
 //public query functions
+function CallBackQueryUserRole(p, code, ev) {
+    $.get(p + 'config/getuserrole?Code=' + code).done(function (r) {
+        var dr = r.userrole;
+        if (dr.data.length > 0) {
+            ev(dr);
+        }
+    });
+}
 function CallBackQueryBank(p, code, ev) {
     $.get(p + 'master/getbank?Code=' + code).done(function (r) {
         var dr = r.bank.data;

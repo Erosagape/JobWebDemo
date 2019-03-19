@@ -18,61 +18,64 @@ Namespace Controllers
             Return GetView("WHTax", "MODULE_ACC")
         End Function
         Function FormWTax3() As ActionResult
-            Return View()
+            Return GetView("FormWTax3")
         End Function
         Function FormWTax53() As ActionResult
-            Return View()
+            Return GetView("FormWTax53")
         End Function
         Function FormWTax3D() As ActionResult
-            Return View()
+            Return GetView("FormWTax3D")
         End Function
         Function FormWTax53D() As ActionResult
-            Return View()
+            Return GetView("FormWTax53D")
         End Function
         Function FormInv() As ActionResult
             Return GetView("FormInv")
         End Function
         Function FormBill() As ActionResult
-            Return View()
+            Return GetView("FormBill")
         End Function
         Function FormRcp() As ActionResult
             Return GetView("FormRcp")
         End Function
         Function FormTaxInv() As ActionResult
-            Return View()
+            Return GetView("FormTaxInv")
         End Function
         Function FormCreditNote() As ActionResult
-            Return View()
+            Return GetView("FormCreditNote")
+        End Function
+        Function FormGL() As ActionResult
+            Return GetView("FormGL")
         End Function
         Function Expense() As ActionResult
-            Return View()
+            Return GetView("Expense", "MODULE_ACC")
         End Function
         Function Invoice() As ActionResult
-            Return View()
+            Return GetView("Invoice", "MODULE_ACC")
         End Function
         Function Billing() As ActionResult
-            Return View()
+            Return GetView("Billing", "MODULE_ACC")
         End Function
         Function PettyCash() As ActionResult
-            Return View()
+            Return GetView("PettyCash", "MODULE_ACC")
         End Function
         Function Cheque() As ActionResult
-            Return View()
+            Return GetView("Cheque", "MODULE_ACC")
         End Function
         Function Receipt() As ActionResult
-            Return View()
+            Return GetView("Receipt", "MODULE_ACC")
         End Function
         Function RecvInv() As ActionResult
-            Return View()
+            Return GetView("RecvInv", "MODULE_ACC")
         End Function
         Function TaxInvoice() As ActionResult
-            Return View()
+            Return GetView("TaxInvoice", "MODULE_ACC")
         End Function
         Function CreditNote() As ActionResult
-            Return View()
+            Return GetView("CreditNote", "MODULE_ACC")
         End Function
         Function GLNote() As ActionResult
-            Return View()
+            Return GetView("GLNote", "MODULE_ACC")
         End Function
         Function FormVoucher() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
