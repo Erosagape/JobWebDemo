@@ -2,8 +2,23 @@
 @Code
     Layout = "~/Views/Shared/_Report.vbhtml"
     ViewBag.Title = "Billing Slip"
+    ViewBag.ReportName = "BILLING COVER SHEET"
 End Code
-        <h1 class="text-center" style="margin-bottom:50px">BILLING NOTE</h1>
+<style>
+    * {
+        font-family: Tahoma;
+        font-size: 11px;
+    }
+
+    td {
+        font-size: 11px;
+    }
+
+    table {
+        border-width: thin;
+        border-collapse: collapse;
+    }
+</style>
         <div style="display:flex;">
             <div style="flex:1;" class="text-left">
                 <p>

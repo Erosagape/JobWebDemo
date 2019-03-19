@@ -179,7 +179,7 @@ End Code
                         <input type="text" id="txtApproveTime" style="width:80px" disabled />
                     </div>
                     <div class="col-sm-4" style="border-style:solid;border-width:1px">
-                        <input type="checkbox" id="chkPayment" />
+                        <input type="checkbox" id="chkPayment" disabled />
                         <label for="chkPayment">Payment By</label>
                         <input type="text" id="txtPaymentBy" style="width:250px" disabled />
                         <br />
@@ -528,10 +528,12 @@ End Code
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Approve',(chkmode ? 'I':'D'), SetApprove);
         });
+        /*
         $('#chkPayment').on('click', function () {
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Payment', (chkmode ? 'I' : 'D'), SetPayment);
         });
+        */
         $('#chkCancel').on('click', function () {
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Index', 'D', SetCancel);
@@ -632,6 +634,11 @@ End Code
     }
     function SetApprove(b) {
         if (b == true) {
+            if (chkmode) {
+                if ($('#cboDocStatus').val().substr(0, 2) == '01') {
+                    $('#cboDocStatus').val('02');
+                }
+            }
             $('#txtApproveBy').val(chkmode ? user : '');
             $('#txtApproveDate').val(chkmode ? CDateEN(GetToday()) : '');
             $('#txtApproveTime').val(chkmode ? ShowTime(GetTime()) : '');
@@ -652,6 +659,7 @@ End Code
     }
     function SetCancel(b) {
         if (b == true) {
+            if (chkmode) $('#cboDocStatus').val('99');
             $('#txtCancelProve').val(chkmode ? user : '');
             $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
             $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');

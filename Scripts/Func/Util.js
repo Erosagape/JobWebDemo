@@ -96,6 +96,9 @@ function CDbl(data, dec) {
     }
 }
 function CNum(data) {
+    if (data == undefined || data == NaN) {
+        return 0;
+    }
     if ((''+data).length==0) {
         return 0;
     } else {
