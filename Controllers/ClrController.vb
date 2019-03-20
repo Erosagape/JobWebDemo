@@ -136,7 +136,7 @@ b.CustCode,b.JobNo,b.InvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal
                 tSqlW &= " AND c.JobType=" & Request.QueryString("JType") & ""
             End If
             If Not IsNothing(Request.QueryString("CFrom")) Then
-                tSqlW &= " AND c.AdvBy IN(SELECT DISTINCT UserID FROM Job_UserRoleDetail WHERE RoleID='" & Request.QueryString("CFrom") & "')"
+                tSqlW &= " AND c.AdvBy IN(SELECT DISTINCT UserID FROM Job_UserRoleDetail WHERE RoleID Like '" & Request.QueryString("CFrom") & "%')"
             End If
             If Not IsNothing(Request.QueryString("ReqBy")) Then
                 tSqlW &= " AND c.EmpCode='" & Request.QueryString("ReqBy") & "'"

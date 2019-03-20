@@ -45,6 +45,30 @@ End Code
         <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
         <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
         <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <div style="display:flex">
+            <div style="flex:1">
+                <table id="tbRole" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <table id="tbAuthor" class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        </div>
     </div>
 </div>
 <div id="dvLOVs"></div>
@@ -140,6 +164,28 @@ End Code
             } else {
                 $('#btnDel').attr('disabled', 'disabled');
             }
+
+            $.get(path + 'Config/GetUserRoleDetail?ID=' + dr.UserID, function (r) {
+                $('#tbRole').dataTable({
+                    data: r.userrole.detail,
+                    columns: [
+                        { data: "RoleID", title: "Id" },
+                        { data: "RoleDesc", title: "Description" }
+                    ],
+                    destroy: true
+                });
+            });
+            $.get(path + 'Config/GetUserAuth?Code=' + dr.UserID, function (r) {
+                $('#tbAuthor').dataTable({
+                    data: r.userauth.data,
+                    columns: [
+                        { data: "AppID", title: "Module Id" },
+                        { data: "MenuID", title: "Function" },
+                        { data: "Author", title: "Authorize" }
+                    ],
+                    destroy: true
+                });
+            });
         } else {
             alert('Data Not Found');
             ClearData();

@@ -404,13 +404,13 @@ End Code
                     ItemNo: i + 1,
                     DocType: 'ADV',
                     DocNo: o.AdvNo,
-                    DocDate: CDateEN(o.AdvDate),
+                    DocDate: CDateTH(o.AdvDate),
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvCash, 2),
                     TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
-                    acType='CA'
+                    acType:'CA'
                 };
                 list.push(obj);
             }
@@ -421,13 +421,13 @@ End Code
                     ItemNo: i + 1,
                     DocType: 'ADV',
                     DocNo: o.AdvNo,
-                    DocDate: CDateEN(o.AdvDate),
+                    DocDate: CDateTH(o.AdvDate),
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChqCash, 2),
                     TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
-                    acType='CU'
+                    acType:'CU'
                 };
                 list.push(obj);
             }
@@ -438,13 +438,13 @@ End Code
                     ItemNo: i + 1,
                     DocType: 'ADV',
                     DocNo: o.AdvNo,
-                    DocDate: CDateEN(o.AdvDate),
+                    DocDate: CDateTH(o.AdvDate),
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChq, 2),
                     TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
-                    acType='CH'
+                    acType:'CH'
                 };
                 list.push(obj);
             }
@@ -455,13 +455,13 @@ End Code
                     ItemNo: i + 1,
                     DocType: 'ADV',
                     DocNo: o.AdvNo,
-                    DocDate: CDateEN(o.AdvDate),
+                    DocDate: CDateTH(o.AdvDate),
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvCred, 2),
                     TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
-                    acType='CR'
+                    acType:'CR'
                 };
                 list.push(obj);
             }

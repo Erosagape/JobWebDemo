@@ -179,7 +179,7 @@ End Code
                 <button id="btnPrint" class="btn btn-info" onclick="PrintData()" disabled>Print Data</button>
             </div>
             <div id="tabDetail" class="tab-pane fade">
-                <button id="btnChooseAdv" class="btn btn-warning" onclick="LoadAdvance()">Choose Advance</button>
+                <button id="btnChooseAdv" class="btn btn-success" onclick="LoadAdvance()">Choose Advance</button>
                 <div class="row">
                     <div class="col-sm-12">
                         <table id="tbDetail" class="table table-responsive">
@@ -206,10 +206,12 @@ End Code
                     <div class="col-sm-9">
                         <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
                         <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
-                        Customers Chargable :
-                        <input type="text" id="txtSumCharge" style="width:100px;text-align:right" /><br />
-                        Company Expenses :
-                        <input type="text" id="txtSumCost" style="width:100px;text-align:right" /><br />
+                        <p>
+                            Customers Chargable :
+                            <input type="text" id="txtSumCharge" style="width:100px;text-align:right" /><br />
+                            Company Expenses :
+                            <input type="text" id="txtSumCost" style="width:100px;text-align:right" /><br />
+                        </p>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -235,10 +237,6 @@ End Code
                             <label for="txtItemNo">No :</label>
                             <input type="text" id="txtItemNo" style="width:40px" disabled />
                             <select id="cboSTCode" class="dropdown">
-                                <option value="ADV">N/A</option>
-                                <option value="STD">STD</option>
-                                <option value="INC">INC</option>
-                                <option value="EXP">EXP</option>
                             </select>
                             <input type="checkbox" id="chkDuplicate" />
                             <label for="chkDuplicate">Additional Advance</label>
@@ -466,8 +464,9 @@ End Code
         $('#frmDetail').on('shown.bs.modal', function () {
             $('#txtSICode').focus();
         });
+        /*
         $('#cboSTCode').on('change', function () {
-            if ($('#cboSTCode').val() == 'ADV') {
+            if ($('#cboSTCode').val() == '') {
                 $('#txtSICode').attr('disabled', 'disabled');
                 $('#txtSDescription').attr('disabled', 'disabled');
                 $('#btnBrowseS').attr('disabled', 'disabled');
@@ -477,7 +476,7 @@ End Code
             $('#txtSDescription').removeAttr('disabled');
             $('#btnBrowseS').removeAttr('disabled');
         });
-        
+        */
         $('#chkApprove').on('click', function () {
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_CLR', 'Approve',(chkmode ? 'I':'D'), SetApprove);
@@ -582,7 +581,11 @@ End Code
                 if ($('#cboDocStatus').val().substr(0, 2) == '01') {
                     $('#cboDocStatus').val('02');
                 }
-            }                
+            } else {
+                if ($('#cboDocStatus').val().substr(0, 2) == '02') {
+                    $('#cboDocStatus').val('01');
+                }
+            }
             $('#txtApproveBy').val(chkmode ? user : '');
             $('#txtApproveDate').val(chkmode ? CDateEN(GetToday()) : '');
             $('#txtApproveTime').val(chkmode ? ShowTime(GetTime()) : '');
@@ -621,7 +624,7 @@ End Code
         lists += ',CLR_FROM=#cboClrFrom';
 
         loadCombos(path, lists);
-
+        loadServiceGroup(path, '#cboSTCode',false);
         LoadService();
 
         //3 Fields Show
@@ -951,7 +954,7 @@ End Code
                 { data: "JobNo", title: "Job" },
                 { data: "SICode", title: "Service" },
                 { data: "SDescription", title: "Description" },
-                { data: "AdvNo", title: "Adv.No" },
+                { data: "AdvNO", title: "Adv.No" },
                 { data: "AdvAmount", title: "Advance" },
                 { data: "UsedAmount", title: "Clear" },
                 { data: "ChargeVAT", title: "VAT" },
@@ -1075,7 +1078,7 @@ End Code
         dtl = {};
         $('#txtItemNo').val('0');
         $('#txtSICode').val('');
-        $('#cboSTCode').val('STD');
+        $('#cboSTCode').val('');
         if (isjobmode == false) {
             $('#txtForJNo').val('');
             $('#txtInvNo').val('');
@@ -1196,7 +1199,8 @@ End Code
                 SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
             case 'servicecode':
-                SetGridSICode(path, '#tbServ', $('#cboSTCode').val(), '#frmSearchSICode', ReadService);
+                let q = $('#cboSTCode').val() +GetClrType($('#cboClrType').val());
+                SetGridSICodeByGroup(path, '#tbServ', q, '#frmSearchSICode', ReadService);
                 break;
             case 'job':
                 SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam(), ReadJob);
@@ -1209,6 +1213,37 @@ End Code
                 break;
         }
     }
+    function GetClrType(type) {
+        switch (type) {
+            case "1":
+                return "&type=A";
+            case "2":
+                return "&type=C";
+            case "3":
+                return "&type=S";
+            default:
+                return "";
+        }
+    }
+    function GetClrFrom(type) {
+        switch (type) {
+            case "1":
+                return "&cfrom=MKT";
+            case "2":
+                return "&cfrom=CS";
+            case "3":
+                return "&cfrom=SP";
+            case "4":
+                return "&cfrom=FIN";
+            case "5":
+                return "&cfrom=ACC";
+            case "6":
+                return "&cfrom=IT";
+            default:
+                return "";
+        }
+    }
+
     function GetParam() {
         let strParam = '?';
         strParam += 'Branch=' + $('#txtBranchCode').val();
@@ -1365,7 +1400,8 @@ End Code
         let jtype = $('#cboJobType').val();
         let cfrom = $('#cboClrFrom').val();
         let branch = $('#txtBranchCode').val();
-        $.get(path + 'Clr/GetAdvForClear?branchcode='+branch+'&jtype=' + jtype + '&cfrom=' + cfrom, function (r) {
+        //$.get(path + 'Clr / GetAdvForClear ? branchcode = '+branch+' & jtype=' + jtype + GetClrFrom(cfrom), function (r) {
+        $.get(path + 'Clr/GetAdvForClear?branchcode=' + branch + '&jtype=' + jtype, function (r) {
             let d = r.clr.data;
             $('#tbAdvance').DataTable({
                 data: d,

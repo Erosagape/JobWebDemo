@@ -139,7 +139,7 @@ Public Class CUserRoleDetail
             Try
                 cn.Open()
 
-                Using da As New SqlDataAdapter("SELECT * FROM Mas_UserRoleDetail" & pSQLWhere, cn)
+                Using da As New SqlDataAdapter("SELECT * FROM Mas_UserRoleDetail " & pSQLWhere, cn)
                     Using cb As New SqlCommandBuilder(da)
                         Using dt As New DataTable
                             da.Fill(dt)
@@ -170,7 +170,7 @@ Public Class CUserRoleDetail
             Dim row As CUserRoleDetail
             Try
                 cn.Open()
-                Dim rd As SqlDataReader = New SqlCommand("SELECT * FROM Mas_UserRoleDetail" & pSQLWhere, cn).ExecuteReader()
+                Dim rd As SqlDataReader = New SqlCommand("SELECT * FROM Mas_UserRoleDetail " & pSQLWhere, cn).ExecuteReader()
                 While rd.Read()
                     row = New CUserRoleDetail(m_ConnStr)
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("RoleID"))) = False Then

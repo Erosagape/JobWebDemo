@@ -261,10 +261,6 @@ End Code
                             <label for="txtItemNo">No :</label>
                             <input type="text" id="txtItemNo" style="width:40px" disabled />
                             <select id="cboSTCode" class="dropdown">
-                                <option value="ADV">N/A</option>
-                                <option value="STD">STD</option>
-                                <option value="INC">INC</option>
-                                <option value="EXP">EXP</option>
                             </select>
                             <input type="checkbox" id="chkDuplicate" />
                             <label for="chkDuplicate">Additional Advance</label>
@@ -465,7 +461,7 @@ End Code
             $('#txtSICode').focus();
         });
         $('#cboSTCode').on('change', function () {
-            if ($('#cboSTCode').val() == 'ADV') {
+            if ($('#cboSTCode').val() == '') {
                 $('#txtSICode').attr('disabled', 'disabled');
                 $('#txtSDescription').attr('disabled', 'disabled');
                 $('#btnBrowseS').attr('disabled', 'disabled');
@@ -638,6 +634,10 @@ End Code
                 if ($('#cboDocStatus').val().substr(0, 2) == '01') {
                     $('#cboDocStatus').val('02');
                 }
+            } else {
+                if ($('#cboDocStatus').val().substr(0, 2) == '02') {
+                    $('#cboDocStatus').val('01');
+                }
             }
             $('#txtApproveBy').val(chkmode ? user : '');
             $('#txtApproveDate').val(chkmode ? CDateEN(GetToday()) : '');
@@ -676,7 +676,7 @@ End Code
         lists += ',ADV_TYPE=#cboAdvType';
 
         loadCombos(path, lists);
-
+        loadServiceGroup(path, '#cboSTCode',true);
         LoadService();        
 
         //3 Fields Show
@@ -1179,7 +1179,7 @@ End Code
         dtl = {};
         $('#txtItemNo').val('0');
         $('#txtSICode').val('');
-        $('#cboSTCode').val('STD');
+        $('#cboSTCode').val('');
         if (isjobmode == false) {
             $('#txtForJNo').val('');
             $('#txtInvNo').val('');
@@ -1310,7 +1310,7 @@ End Code
                 SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
             case 'servicecode':
-                SetGridSICode(path, '#tbServ', "", '#frmSearchSICode', ReadService);
+                SetGridSICodeByGroup(path, '#tbServ', $('#cboSTCode').val(), '#frmSearchSICode', ReadService);
                 break;
             case 'job':
                 SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam(), ReadJob);

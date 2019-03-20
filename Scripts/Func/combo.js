@@ -85,8 +85,15 @@ function loadBranch(path) {
         }
     });
 }
-function loadServiceGroup(path,e) {
+function loadServiceGroup(path,e,foradv) {
     $(e).empty();
+    if (foradv !== undefined) {
+        if (foradv == true) {
+            $(e)
+                .append($('<option>', { value: "" })
+                    .text("N/A"));
+        }
+    }
     $.get(path + 'Master/GetServiceGroup').done(function (r) {
         var dr = r.servicegroup.data;
         if (dr.length > 0) {

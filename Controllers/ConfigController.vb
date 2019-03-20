@@ -488,21 +488,36 @@ Namespace Controllers
             Try
                 Dim tSqlw As String = " WHERE UserID<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND RoleID ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND RoleID ='{0}' ", Request.QueryString("Code").ToString)
                 End If
-                Dim oData = New CUserRoleDetail(jobWebConn).GetData(tSqlw)
+                If Not IsNothing(Request.QueryString("ID")) Then
+                    tSqlw &= String.Format("AND UserID ='{0}' ", Request.QueryString("ID").ToString)
+                End If
+                Dim oData = New CUserRoleDetail(jobWebConn).GetData(tSqlw & " ORDER BY RoleID,UserID")
                 Dim jsonD = "["
                 Dim oUser = New CUser(jobWebConn).GetData(" ORDER BY UserID")
+                Dim oRole = New CUserRole(jobWebConn).GetData(" ORDER BY RoleID")
                 For Each oRow As CUserRoleDetail In oData
                     If jsonD <> "[" Then jsonD += ","
-                    Dim userName As String = "" & oUser.Find(Function(t) t.UserID = oRow.UserID).TName
-                    jsonD += "{""RoleID"":""" & oRow.RoleID & """,""UserID"":""" & oRow.UserID & """,""UserName"":""" & userName & """}"
+                    Dim userName As String = "" & oRow.UserID
+                    Dim roleDescr As String = "" & oRow.RoleID
+                    Try
+                        userName = (From user In oUser
+                                    Where user.UserID = oRow.UserID
+                                    Select user.TName).FirstOrDefault()
+                        roleDescr = (From role In oRole
+                                     Where role.RoleID = oRow.RoleID
+                                     Select role.RoleDesc).FirstOrDefault()
+                    Catch ex As Exception
+
+                    End Try
+                    jsonD += "{""RoleID"":""" & oRow.RoleID & """,""UserID"":""" & oRow.UserID & """,""UserName"":""" & userName & """,""RoleDesc"":""" & roleDescr & """}"
                 Next
                 jsonD += "]"
                 Dim json As String = "{""userrole"":{""detail"":" & jsonD & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""userrole"":{""msg"":" & ex.Message & "}}", jsonContent)
             End Try
         End Function
         Function SetUserRole(<FromBody()> data As CUserRole) As ActionResult
