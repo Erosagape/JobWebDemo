@@ -263,7 +263,7 @@ End Code
                             <select id="cboSTCode" class="dropdown">
                             </select>
                             <input type="checkbox" id="chkDuplicate" />
-                            <label for="chkDuplicate">Additional Advance</label>
+                            <label for="chkDuplicate">Can Partial Clear</label>
                             <br />
                             <label for="txtSICode">Code :</label>
                             <input type="text" id="txtSICode" style="width:80px" tabindex="12" />

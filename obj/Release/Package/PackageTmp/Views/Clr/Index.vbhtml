@@ -236,10 +236,9 @@ End Code
                         <div class="modal-body">
                             <label for="txtItemNo">No :</label>
                             <input type="text" id="txtItemNo" style="width:40px" disabled />
-                            <select id="cboSTCode" class="dropdown">
-                            </select>
-                            <input type="checkbox" id="chkDuplicate" />
-                            <label for="chkDuplicate">Additional Advance</label>
+                            <select id="cboSTCode" class="dropdown"></select>
+                            <input type="checkbox" id="chkDuplicate" disabled />
+                            <label for="chkDuplicate">Partial Clear</label>
                             <br />
                             <label for="txtSICode">Code :</label>
                             <input type="text" id="txtSICode" style="width:80px" tabindex="12" />
@@ -254,48 +253,50 @@ End Code
                             <a onclick="SearchData('detcurrency')">Currency :</a>
                             <input type="text" id="txtCurrencyCode" style="width:50px" tabindex="15" />
                             <input type="text" id="txtCurrencyName" style="width:200px" disabled />
-                            <label for="txtExcRate">Rate :</label>
-                            <input type="text" id="txtDetCurrency" style="width:50px" disabled />
-                            <input type="text" id="txtExcRate" style="width:80px;text-align:right" tabindex="16" />
+                            <label for="txtCurRate">Rate :</label>
+                            <input type="text" id="txtCurRate" style="width:80px;text-align:right" tabindex="16" />
                             <br />
                             <label for="txtQty">Qty:</label>
                             <input type="text" id="txtQty" style="width:100px;text-align:right" tabindex="17" />
+                            <label for="txtUnitcode"><a onclick="SearchData('servunit')">Unit:</a></label>
+                            <input type="text" id="txtUnitCode" style="width:50px" tabindex="18" />
                             <label id="lblUnitPrice" for="txtUnitPrice">Price :</label>
-                            <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="18" />
-                            <label id="lblAMTCal" for="txtAMTCal">Amount :</label>
-                            <input type="text" id="txtAMTCal" style="width:100px;text-align:right" disabled />
+                            <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="19" />
                             <br />
                             <label id="lblAmount" for="txtAmount">Amount :</label>
-                            <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="19" />
+                            <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="20" />
                             <label id="lblVATRate" for="txtVATRate">VAT :</label>
-                            <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="20" />
+                            <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="21" />
                             Type :
                             <select id="txtVatType" class="dropdown" disabled>
                                 <option value="0">NO</option>
                                 <option value="1">EX</option>
                                 <option value="2">IN</option>
                             </select>
-                            <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="21" />
+                            <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="22" />
                             <br />
                             <label id="lblWHTRate" for="txtWHTRate">WH-Tax :</label>
-                            <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="22" />
-                            <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="23" />
+                            <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="23" />
+                            <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="24" />
                             <label id="lblNETAmount" for="txtNETAmount">Net Amount :</label>
-                            <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="24" />
+                            <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="25" />
                             <br />
                             Slip No :
-                            <input type="text" id="txtSlipNo" style="width:200px" tabindex="25" />
+                            <input type="text" id="txtSlipNo" style="width:200px" tabindex="26" />
                             <br />
                             WH-Tax No :
-                            <input type="text" id="txt50Tavi" style="width:200px" tabindex="25" />
+                            <input type="text" id="txt50Tavi" style="width:200px" tabindex="27" />
                             <br />
                             Pay To Vender :
-                            <input type="text" id="txtVenCode" style="width:50px" tabindex="26" />
+                            <input type="text" id="txtVenCode" style="width:50px" tabindex="28" />
                             <input type="button" id="btnBrowseVen" onclick="SearchData('vender')" value="..." />
-                            <input type="text" id="txtPayChqTo" style="width:200px" tabindex="27" />
+                            <input type="text" id="txtPayChqTo" style="width:200px" tabindex="29" />
                             <br />
                             Remark :
-                            <textarea id="txtRemark" style="width:100%;height:80px" tabindex="28"></textarea>
+                            <textarea id="txtRemark" style="width:100%;height:80px" tabindex="30"></textarea>
+                            <br />
+                            <input type="checkbox" id="chkIsCost" disabled />
+                            <label for="chkIscost">Is Company Cost (Cannot Charge)</label>
                         </div>
                         <div class="modal-footer">
                             <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
@@ -528,7 +529,7 @@ End Code
                 CalAmount();
             }
         });
-        $('#txtExcRate').keydown(function (event) {
+        $('#txtCurRate').keydown(function (event) {
             if (event.which == 13) {
                 CalAmount();
             }
@@ -566,7 +567,7 @@ End Code
         $('#txtNET').keydown(function (event) {
             if (event.which == 13) {
                 let type = $('#txtVatType').val();
-                if (type == '') type = "1";
+                if (type == ''||type=='0') type = "1";
                 if (type == "2") {
                     CalVATWHT();
                 } else {
@@ -643,7 +644,9 @@ End Code
             //SICode
             CreateLOV(dv, '#frmSearchSICode', '#tbServ', 'Service Code', response,4);
             //Currency
-            CreateLOV(dv, '#frmSearchExpCur', '#tbExpCur', 'Currency Code', response,4);
+            CreateLOV(dv, '#frmSearchExpCur', '#tbExpCur', 'Currency Code', response, 4);
+            //Unit
+            CreateLOV(dv, '#frmSearchUnit', '#tbUnit', 'Unit Code', response, 2);
         });
     }
     function ShowData(branchcode, clrno) {
@@ -659,11 +662,13 @@ End Code
             alert('you are not authorize to view data');
             return;
         }
-        $.get(path + 'clr/getclearing?branch='+branchcode+'&code='+ clrno, function (r) {
-            let h = r.clr.header[0];
-            ReadClrHeader(h);
-            let d = r.clr.detail;
-            ReadClrDetail(d);
+        $.get(path + 'clr/getclearing?branch=' + branchcode + '&code=' + clrno, function (r) {
+            if (r.clr !== undefined) {
+                let h = r.clr.header[0];
+                ReadClrHeader(h);
+                let d = r.clr.detail;
+                ReadClrDetail(d);
+            }
         });
     }
     function PrintData() {
@@ -839,7 +844,7 @@ End Code
                 alert('you are not authorize to delete');
                 return;
             }
-            $.get(path + 'clr/delclrdetail?branchcode=' + $('#txtBranchCode').val() + '&clrno=' + $('#txtClrNo').val() + '&itemno=' + dtl.ItemNo, function (r) {
+            $.get(path + 'clr/delclrdetail?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtClrNo').val() + '&item=' + dtl.ItemNo, function (r) {
                 alert(r.clr.result);
                 ShowData($('#txtBranchCode').val(), $('#txtClrNo').val());
             });
@@ -996,33 +1001,33 @@ End Code
             STCode: $('#cboSTCode').val(),
             SDescription: $('#txtSDescription').val(),
             VenderCode: $('#txtVenCode').val(),
-            Qty: $('#txtAdvQty').val(),
-            UnitCode: dtl.UnitCode,
+            Qty: $('#txtQty').val(),
+            UnitCode: $('#txtUnitCode').val(),
             CurrencyCode: $('#txtCurrencyCode').val(),
-            CurRate: $('#txtExcRate').val(),
-            UnitPrice: $('#txtUnitPrice').val(),
-            FPrice: dtl.FPrice,
-            BPrice: dtl.BPrice,
+            CurRate: $('#txtCurRate').val(),
+            UnitPrice: $('#chkIsCost').prop('checked')==true? 0 : $('#txtUnitPrice').val(),
+            FPrice: $('#chkIsCost').prop('checked') == true ? 0 : CDbl(Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()),4),
+            BPrice: $('#chkIsCost').prop('checked') == true ? 0 : CDbl(Number($('#txtCurRate').val()) * Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),
             QUnitPrice: dtl.QUnitPrice,
-            QFPrice: dtl.QFPrice,
-            QBPrice: dtl.QBPrice,
-            UnitCost: dtl.UnitCost,
-            FCost: dtl.FCost,
-            BCost: dtl.BCost,
+            QFPrice: CDbl(Number(dtl.QUnitPrice) * Number($('#txtQty').val()), 4),
+            QBPrice: CDbl(Number($('#txtCurRate').val())*Number(dtl.QUnitPrice) * Number($('#txtQty').val()), 4),
+            UnitCost: $('#txtUnitPrice').val(),
+            FCost: CDbl(Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),
+            BCost: CDbl(Number($('#txtCurRate').val()) * Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),
             ChargeVAT: $('#txtVAT').val(),
             Tax50Tavi: $('#txtWHT').val(),
-            AdvNo: dtl.AdvNo,
+            AdvNO: dtl.AdvNO,
             AdvItemNo: dtl.AdvItemNo,
             AdvAmount: dtl.AdvAmount,
-            UsedAmount: $('#txtNET').val(),
+            UsedAmount: $('#txtAMT').val(),
             IsQuoItem: dtl.IsQuoItem,
-            SlipNo: dtl.SlipNo,
+            SlipNO: $('#txtSlipNo').val(),
             Remark: $('#txtRemark').val(),
             IsLtdAdv50Tavi: dtl.IsLtdAdv50Tavi,
-            Pay50TaviTo: dtl.Pay50TaviTo,
-            NO50Tavi: dtl.NO50Tavi,
+            Pay50TaviTo: $('#txtPayChqTo').val(),
+            NO50Tavi: $('#txt50Tavi').val(),
             Date50Tavi: dtl.Date50Tavi,
-            VenderBillingNo: $('#VenderBillingNo').val(),
+            VenderBillingNo: dtl.VenderBillingNo,
             AirQtyStep: dtl.AirQtyStep,
             StepSub: dtl.StepSub,
             LinkBillNo : dtl.LinkBillNo,
@@ -1030,7 +1035,8 @@ End Code
             VATType : $('#txtVatType').val(),
             VATRate: $('#txtVATRate').val(),
             Tax50TaviRate : $('#txtWHTRate').val(),
-            IsDuplicate: ($('#chkDuplicate').prop('checked')==true? 1:0)
+            IsDuplicate: ($('#chkDuplicate').prop('checked') == true ? 1 : 0),
+            QNo : dtl.QNo
         };
         return dt;
     }
@@ -1051,23 +1057,26 @@ End Code
                 }
             }
             $('#txtQty').val(dt.Qty);
-            $('#txtExcRate').val(dt.ExcRate);
-            $('#txtUnitPrice').val(dt.UnitPrice);
+            $('#txtCurRate').val(dt.CurRate);
+            $('#txtUnitPrice').val(dt.UnitCost);
+            $('#txtUnitCode').val(dt.UnitCode);
             CalAmount();
             $('#txtRemark').val(dt.Remark);
+            $('#txtSlipNo').val(dt.SlipNO);
             $('#txt50Tavi').val(dt.NO50Tavi);
             $('#txtPayChqTo').val(dt.Pay50TaviTo);
             $('#txtSDescription').val(dt.SDescription);
             $('#txtVatType').val(dt.VATType);
             $('#txtVATRate').val(dt.VATRate);
             $('#txtWHTRate').val(dt.Tax50TaviRate);
-            $('#txtAMT').val(dt.BCost);
+            $('#txtAMT').val(dt.UsedAmount);
             $('#txtVAT').val(dt.ChargeVAT);
             $('#txtWHT').val(dt.Tax50Tavi);
-            $('#txtNET').val(dt.UsedAmount);
+            $('#txtNET').val(dt.BCost);
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
+            $('#chkIsCost').prop('checked', dt.IsExpense > 0 ? true : false);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
@@ -1079,6 +1088,7 @@ End Code
         $('#txtItemNo').val('0');
         $('#txtSICode').val('');
         $('#cboSTCode').val('');
+        $('#txtUnitCode').val('');
         if (isjobmode == false) {
             $('#txtForJNo').val('');
             $('#txtInvNo').val('');
@@ -1094,9 +1104,8 @@ End Code
         $('#txtVAT').val(0);
         $('#txtWHT').val(0);
         $('#txtNET').val(0);
-        $('#txtAMTCal').val(0);
         $('#txtQty').val(1);
-        $('#txtExcRate').val($('#txtExchangeRate').val());
+        $('#txtCurRate').val(1);
         $('#txtUnitPrice').val(0);
         $('#txtCurrencyCode').val($('#txtSubCurrency').val());
         ShowCurrency(path, $('#txtSubCurrency').val(), '#txtCurrencyName');
@@ -1134,9 +1143,11 @@ End Code
         if ($('#cboJobType').val() !== '') {
             w += '&jtype=' + $('#cboJobType').val();
         }
+        /*
         if ($('#cboClrFrom').val() !== '') {
             w += '&cfrom=' + $('#cboClrFrom').val();
         }
+        */
         if ($('#cboClrType').val() !== '') {
             w += '&ctype=' + $('#cboClrType').val();
         }
@@ -1211,6 +1222,9 @@ End Code
             case 'vender':
                 SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender);
                 break;
+            case 'servunit':
+                SetGridServUnit(path, '#tbUnit', '#frmSearchUnit', ReadUnit);
+                break;
         }
     }
     function GetClrType(type) {
@@ -1252,11 +1266,13 @@ End Code
     }
     function ShowCaption() {
         $('#lblUnitPrice').text("Price (" + $('#txtCurrencyCode').val() + "):");
-        $('#lblAMTCal').text("Amount (" + $('#txtCurrencyCode').val() + "):");
-        $('#lblAmount').text("Amount (" + $('#txtMainCurrency').val() + "):");
-        $('#lblVATRate').text("VAT (" + $('#txtMainCurrency').val() + "):");
-        $('#lblWHTRate').text("WHT (" + $('#txtMainCurrency').val() + "):");
-        $('#lblNETAmount').text("Net (" + $('#txtMainCurrency').val() + "):");
+        $('#lblAmount').text("Amount (" + $('#txtCurrencyCode').val() + "):");
+        $('#lblVATRate').text("VAT (" + $('#txtCurrencyCode').val() + "):");
+        $('#lblWHTRate').text("WHT (" + $('#txtCurrencyCode').val() + "):");
+        $('#lblNETAmount').text("Net (" + $('#txtCurrencyCode').val() + "):");
+    }
+    function ReadUnit(dt) {
+        $('#txtUnitCode').val(dt.UnitType);
     }
     function ReadVender(dt) {
         $('#txtVenCode').val(dt.VenCode);
@@ -1266,10 +1282,10 @@ End Code
     function ReadCurrencyD(dt) {
         $('#txtCurrencyCode').val(dt.Code);
         $('#txtCurrencyName').val(dt.TName);
-        $('#txtExcRate').val(0);
+        $('#txtCurRate').val(1);
         CalAmount();
         ShowCaption();
-        $('#txtExcRate').focus();
+        $('#txtCurRate').focus();
     }
     function ReadCurrencyH(dt) {
         $('#txtSubCurrency').val(dt.Code);
@@ -1331,12 +1347,12 @@ End Code
     }
     function CalAmount() {
         let price = CDbl($('#txtUnitPrice').val(),4);
-        let qty = CDbl($('#txtAdvQty').val(),4);
-        let rate = CDbl($('#txtExcRate').val(),4); //rate ของ detail
+        let qty = CDbl($('#txtQty').val(),4);
+        let rate = CDbl($('#txtCurRate').val(),4); //rate ของ detail
         let type = $('#txtVatType').val();
+        if (type == '' || type == '0') type = '1';
         if (qty > 0) {
             let amt = CNum(qty) * CNum(price);
-            $('#txtAMTCal').val(CDbl(CNum(amt), 4));
             //let exc = CDbl($('#txtExchangeRate').val(), 4); //rate ของ header
             //let total = CDbl(CNum(amt) / CNum(exc),4);
             if (type == '2') {
@@ -1362,7 +1378,7 @@ End Code
         let wht = CDbl($('#txtWHT').val(),4);
         let net = CDbl($('#txtNET').val(),4);
         let type = $('#txtVatType').val();
-        if (type == '') type = '1';
+        if (type == ''||type=='0') type = '1';
         if (type == '2') {
             $('#txtAMT').val(CDbl(CNum(net) - CNum(vat) + CNum(wht),4));
             $('#txtNET').val(CDbl(net,4));
@@ -1374,7 +1390,7 @@ End Code
     }
     function CalVATWHT() {
         let type = $('#txtVatType').val();
-        if (type == '') type = '1';
+        if (type == ''||type=='0') type = '1';
         let amt = CDbl($('#txtAMT').val(),4);
         if (type == '2') {
             amt = CDbl($('#txtNET').val(),4);
@@ -1402,30 +1418,45 @@ End Code
         let branch = $('#txtBranchCode').val();
         //$.get(path + 'Clr / GetAdvForClear ? branchcode = '+branch+' & jtype=' + jtype + GetClrFrom(cfrom), function (r) {
         $.get(path + 'Clr/GetAdvForClear?branchcode=' + branch + '&jtype=' + jtype, function (r) {
-            let d = r.clr.data;
+            let d = r.clr.data[0].Table;
             $('#tbAdvance').DataTable({
                 data: d,
                 selected: true, //ให้สามารถเลือกแถวได้
                 columns: [ //กำหนด property ของ header column
-                    { data: "AdvNo", title: "AdvNo" },
+                    { data: "AdvNO", title: "Adv.No" },
                     {
-                        data: "AdvDate", title: "Date",
+                        data: "AdvDate", title: "Adv.Date",
                         render: function (data) {
                             return CDateEN(data);
                         }
                     },
-                    { data: "ItemNo", title: "No." },
+                    { data: "ItemNo", title: "#" },
                     { data: "SICode", title: "Code" },
                     { data: "SDescription", title: "Expense Name" },
                     { data: "JobNo", title: "Job" },
                     { data: "CurrencyCode", title: "Currency" },
-                    { data: "ExcRate", title: "Rate" },
+                    { data: "CurRate", title: "Rate" },
                     { data: "Qty", title: "Qty" },
                     { data: "AdvNO", title: "Unit" },
                     { data: "AdvAmount", title: "Adv Total" },
                     { data: "Tax50Tavi", title: "50Tavi" },
                 ],
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+            });
+            $('#tbAdvance tbody').on('click', 'tr', function () {
+                $('#tbAdvance tbody > tr').removeClass('selected');
+                $(this).addClass('selected');
+
+                let dt = $('#tbAdvance').DataTable().row(this).data(); //read current row selected
+
+                dt.BranchCode = $('#txtBranchCode').val();
+                dt.ClrNo = $('#txtClrNo').val();
+                dtl = dt;
+                $('#frmAdvance').modal('hide');
+
+                LoadDetail(dt);
+                $('#frmDetail').modal('show');
+
             });
             $('#frmAdvance').modal('show');
         });

@@ -11,7 +11,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="Advance.html">
-      <publishTime>04/10/2018 16:45:17</publishTime>
+      <publishTime>10/04/2018 16:45:17</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>03/19/2019 10:51:03</publishTime>
@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>03/20/2019 16:22:10</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>03/20/2019 16:22:10</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>03/20/2019 16:22:09</publishTime>
+      <publishTime>03/21/2019 17:08:59</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -275,13 +275,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Controllers/AdvanceController.vb">
-      <publishTime>09/12/2018 16:29:44</publishTime>
+      <publishTime>12/09/2018 16:29:44</publishTime>
     </File>
     <File Include="Controllers/ConfigController.vb">
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Controllers/JobOrderController.vb">
-      <publishTime>11/09/2018 12:10:10</publishTime>
+      <publishTime>09/11/2018 12:10:10</publishTime>
     </File>
     <File Include="Controllers/Main.vb">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -314,7 +314,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="PrintJob.html">
-      <publishTime>11/12/2018 11:23:01</publishTime>
+      <publishTime>12/11/2018 11:23:01</publishTime>
     </File>
     <File Include="Resource/jobtawan_bg.jpg">
       <publishTime>03/19/2019 10:51:01</publishTime>
@@ -1061,7 +1061,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:54:06</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
-      <publishTime>03/20/2019 16:58:44</publishTime>
+      <publishTime>03/21/2019 16:02:24</publishTime>
     </File>
     <File Include="Views/Adv/Payment.vbhtml">
       <publishTime>03/20/2019 16:03:04</publishTime>
@@ -1070,7 +1070,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/Advance/Index.vbhtml">
-      <publishTime>03/10/2018 17:18:18</publishTime>
+      <publishTime>10/03/2018 17:18:18</publishTime>
     </File>
     <File Include="Views/Clr/Approve.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1091,7 +1091,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:54:06</publishTime>
     </File>
     <File Include="Views/Clr/Index.vbhtml">
-      <publishTime>03/20/2019 17:25:52</publishTime>
+      <publishTime>03/21/2019 17:26:54</publishTime>
     </File>
     <File Include="Views/Clr/Receive.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1136,7 +1136,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/JobOrder/ListJob.vbhtml">
-      <publishTime>11/09/2018 10:43:09</publishTime>
+      <publishTime>09/11/2018 10:43:09</publishTime>
     </File>
     <File Include="Views/JobOrder/QuoApprove.vbhtml">
       <publishTime>03/19/2019 10:54:06</publishTime>

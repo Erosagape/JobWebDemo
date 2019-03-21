@@ -98,13 +98,13 @@ b.CustCode,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal
 FROM Job_ClearHeader as a 
 left join 
 (
-SELECT d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
-d.AdvNO,d.CurrencyCode,
-SUM(d.FCost) as ClrAmt,sum(d.AdvAmount) as AdvTotal
-FROM Job_ClearDetail d
-inner join Job_Order j on d.JobNo=j.JNo and d.BranchCode=j.BranchCode
-GROUP BY d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
-d.AdvNO,d.CurrencyCode
+    SELECT d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
+    d.AdvNO,d.CurrencyCode,
+    SUM(d.UsedAmount) as ClrAmt,sum(d.AdvAmount) as AdvTotal
+    FROM Job_ClearDetail d
+    inner join Job_Order j on d.JobNo=j.JNo and d.BranchCode=j.BranchCode
+    GROUP BY d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
+    d.AdvNO,d.CurrencyCode
 ) b
 on b.BranchCode=a.BranchCode
 and b.ClrNo=a.ClrNo
@@ -128,7 +128,7 @@ b.CustCode,b.JobNo,b.InvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal
                 Branch = Request.QueryString("BranchCode")
             End If
 
-            Dim tSqlW As String = String.Format(" WHERE a.BranchCode='{0}'", Branch)
+            Dim tSqlW As String = String.Format(" AND a.BranchCode='{0}'", Branch)
             If Not IsNothing(Request.QueryString("JobNo")) Then
                 tSqlW &= " AND a.ForJNo='" & Request.QueryString("JobNo") & "' "
             End If
@@ -151,54 +151,74 @@ b.CustCode,b.JobNo,b.InvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal
                 tSqlW &= " AND c.DocStatus='" & Request.QueryString("Status") & "' "
             End If
             Dim sql As String = "
-Select a.BranchCode,
-'' as ClrNo,
-0 as ItemNo,
-0 as LinkItem,
-a.STCode,
-a.SICode,
-a.SDescription,
-a.VenCode as VenderCode,
-a.AdvQty as Qty,
-b.UnitCharge as UnitCode,
-a.CurrencyCode,
-a.ExchangeRate as CurRate,
-a.UnitPrice,
+Select a.BranchCode,'' as ClrNo,0 as ItemNo,0 as LinkItem,a.STCode,a.SICode,a.SDescription,a.VenCode as VenderCode,
+a.AdvQty as Qty,b.UnitCharge as UnitCode,a.CurrencyCode,a.ExchangeRate as CurRate,
+(CASE WHEN b.IsExpense=0 THEN a.UnitPrice ELSE 0 END) as UnitPrice,
 (CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice ELSE 0 END) as FPrice,
 (CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice*a.ExchangeRate ELSE 0 END) as BPrice,
-0 as QUnitPrice,
-0 as QFPrice,
-0 as QBPrice,
-a.UnitPrice as UnitCost,
-a.AdvQty*a.UnitPrice as FCost,
-a.AdvQty*a.UnitPrice*a.ExchangeRate as BCost,
-a.ChargeVAT,
-a.Charge50Tavi as Tax50Tavi,
-a.AdvNo as AdvNO,
-a.AdvNet as AdvAmount,
-a.AdvNet as UsedAmount,
-0 as IsQuoItem,
-'' as SlipNO,
-'' as Remark,
-0 as IsDuplicate,
-b.IsLtdAdv50Tavi,
-a.PayChqTo as Pay50TaviTo,
-a.Doc50Tavi as NO50Tavi,
-NULL as Date50Tavi,
+q.TotalCharge as QUnitPrice,a.AdvQty*q.ChargeAmt as QFPrice,a.AdvQty*q.ChargeAmt*q.CurrencyRate as QBPrice,
+a.UnitPrice as UnitCost,a.AdvQty*a.UnitPrice as FCost,a.AdvQty*a.UnitPrice*a.ExchangeRate as BCost,
+a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,
+a.AdvNo as AdvNO,a.AdvAmount-ISNULL(d.TotalCleared,0) as AdvAmount,a.AdvAmount-ISNULL(d.TotalCleared,0) as UsedAmount,
+(CASE WHEN ISNULL(q.QNo,'')='' THEN 0 ELSE 1 END) as IsQuoItem,
+'' as SlipNO,'' as Remark,a.IsDuplicate,
+b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date50Tavi,
 '' as VenderBillingNo,
-'' as AirQtyStep,
-'' as StepSub,
-a.ForJNo as JobNo,
-a.ItemNo as AdvItemNo,
-a.IsChargeVAT as VATType,
-a.VATRate,
-a.Rate50tavi as Tax50TaviRate
-FROM Job_AdvDetail a 
-INNER JOIN Job_SrvSingle b
-on a.SICode=b.SICode
-INNER JOIN Job_AdvHeader c
-on a.BranchCode=c.BranchCode
-and a.AdvNo=c.AdvNo 
+(SELECT STUFF((
+	SELECT DISTINCT ',' + Convert(varchar,QtyBegin) + '-'+convert(varchar,QtyEnd)+'='+convert(varchar,ChargeAmt)
+	FROM Job_QuotationItem WHERE BranchCode=q.BranchCode
+	AND QNo=q.QNo AND SICode=q.SICode AND VenderCode =q.VenderCode
+	AND UnitCheck=q.UnitCheck AND CalculateType=1
+FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
+)) as AirQtyStep,
+q.CalculateType as StepSub,
+a.ForJNo as JobNo,a.ItemNo as AdvItemNo,a.IsChargeVAT as VATType,a.VATRate,a.Rate50Tavi as Tax50TaviRate,q.QNo
+FROM Job_AdvDetail a LEFT JOIN Job_SrvSingle b on a.SICode=b.SICode
+INNER JOIN Job_AdvHeader c on a.BranchCode=c.BranchCode and a.AdvNo=c.AdvNo 
+left join Job_Order j on a.BranchCode=j.BranchCode and a.ForJNo=j.JNo
+left join 
+(
+	select qh.BranchCode,qh.QNo,
+	qd.JobType,qd.ShipBy,qd.SeqNo,
+	qi.ItemNo,qi.SICode,qi.CalculateType,
+	qi.QtyBegin,qi.QtyEnd,qi.UnitCheck,qi.CurrencyCode,
+	qi.CurrencyRate,qi.ChargeAmt,qi.Isvat,qi.VatRate,
+	qi.VatAmt,qi.IsTax,qi.TaxRate,qi.TaxAmt,
+	qi.TotalAmt,qi.TotalCharge,qi.UnitDiscntPerc,qi.UnitDiscntAmt,
+	qi.VenderCode,qi.VenderCost,qi.BaseProfit,qi.CommissionPerc,qi.CommissionAmt,
+	qi.NetProfit,qi.IsRequired
+	from Job_QuotationHeader qh
+	inner join Job_QuotationDetail qd
+	ON qh.BranchCode=qd.BranchCode
+	and qh.QNo=qd.QNo
+	inner join Job_QuotationItem qi
+	on qd.BranchCode=qi.BranchCode
+	and qd.QNo=qi.QNo
+	and qd.SeqNo=qi.SeqNo
+	where qh.DocStatus=3 
+) q
+on a.BranchCode=q.BranchCode and b.SICode=q.SICode and ISNULL(a.VenCode,b.DefaultVender)=q.VenderCode 
+and b.UnitCharge=q.UnitCheck and a.AdvQty <=q.QtyEnd and a.AdvQty>=q.QtyBegin and q.QNo=j.QNo
+left join 
+(
+	SELECT cd.BranchCode,cd.AdvNO,cd.AdvItemNo,
+    SUM(CASE WHEN ad.IsDuplicate=1 THEN cd.UsedAmount ELSE cd.AdvAmount END) as TotalCleared    
+	FROM Job_ClearDetail cd INNER JOIN Job_ClearHeader ch
+	on cd.BranchCode=ch.BranchCode
+	and cd.ClrNo =ch.ClrNo 
+	and ch.DocStatus<>99
+    INNER JOIN Job_AdvDetail ad 
+    on cd.BranchCode=ad.BranchCode
+    and cd.AdvNO=ad.AdvNo
+    and cd.AdvItemNo=ad.ItemNo
+    INNER JOIN Job_AdvHeader ah
+    on ad.BranchCode=ah.BranchCode
+    and ad.AdvNo=ah.AdvNo
+    WHERE ah.DocStatus<>99
+	GROUP BY cd.BranchCode,cd.AdvNO,cd.AdvItemNo
+) d
+ON a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNO and a.ItemNo=d.AdvItemNo
+WHERE a.AdvAmount-ISNULL(d.TotalCleared,0)>0 AND c.DocStatus<5
 {0}
 "
             Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))

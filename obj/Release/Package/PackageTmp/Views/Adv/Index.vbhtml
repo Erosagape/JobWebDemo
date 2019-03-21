@@ -263,7 +263,7 @@ End Code
                             <select id="cboSTCode" class="dropdown">
                             </select>
                             <input type="checkbox" id="chkDuplicate" />
-                            <label for="chkDuplicate">Additional Advance</label>
+                            <label for="chkDuplicate">Can Partial Clear</label>
                             <br />
                             <label for="txtSICode">Code :</label>
                             <input type="text" id="txtSICode" style="width:80px" tabindex="12" />
@@ -619,7 +619,7 @@ End Code
         $('#txtNET').keydown(function (event) {
             if (event.which == 13) {
                 var type = $('#txtVatType').val();
-                if (type == '') type = "1";
+                if (type == '0'||type=='') type = "1";
                 if (type == "2") {
                     CalVATWHT();
                 } else {
@@ -739,6 +739,12 @@ End Code
             if (userRights.indexOf('E') < 0) {
                 alert('you are not authorize to save');
                 return;
+            }
+            if (Number($('#txtTotalAmount').val()) > 0) {
+                if (SumTotal() == 0) {
+                    alert('please select type of receive advancing money');
+                    return;
+                }
             }
             var jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
@@ -930,6 +936,10 @@ End Code
         $.get(path + 'adv/getnewadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
             var d = r.adv.detail[0];
             LoadDetail(d);
+            $('#txtSICode').attr('disabled', 'disabled');
+            $('#txtSDescription').attr('disabled', 'disabled');
+            $('#btnBrowseS').attr('disabled', 'disabled');
+
             $('#frmDetail').modal('show');
             $('#txtCurrencyCode').val($('#txtSubCurrency').val());
             $('#txtExcRate').val($('#txtExchangeRate').val());
@@ -1441,6 +1451,7 @@ End Code
             $('#txtAMTCal').val(CDbl(CNum(amt), 4));
             //var exc = CDbl($('#txtExchangeRate').val(), 4); //rate ของ header
             //var total = CDbl(CNum(amt) / CNum(exc),4);
+            if (type == '0' || type == '') type = '1';
             if (type == '2') {
                 //$('#txtNET').val(CDbl(CNum(total),4));
                 $('#txtNET').val(CDbl(CNum(amt) * CNum(rate), 4));
@@ -1464,7 +1475,7 @@ End Code
         var wht = CDbl($('#txtWHT').val(),4);
         var net = CDbl($('#txtNET').val(),4);
         var type = $('#txtVatType').val();
-        if (type == '') type = '1';
+        if (type == '0'||type=='') type = '1';
         if (type == '2') {
             $('#txtAMT').val(CDbl(CNum(net) - CNum(vat) + CNum(wht),4));
             $('#txtNET').val(CDbl(net,4));
@@ -1476,7 +1487,7 @@ End Code
     }
     function CalVATWHT() {
         var type = $('#txtVatType').val();
-        if (type == '') type = '1';
+        if (type == ''||type=='0') type = '1';
         var amt = CDbl($('#txtAMT').val(),4);
         if (type == '2') {
             amt = CDbl($('#txtNET').val(),4);
