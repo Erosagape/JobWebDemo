@@ -77,6 +77,15 @@ Namespace Controllers
         Function GLNote() As ActionResult
             Return GetView("GLNote", "MODULE_ACC")
         End Function
+        Function FormExpense() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "Expense")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print expenses", textContent)
+            End If
+
+            Return GetView("FormExpense")
+        End Function
         Function FormVoucher() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "Voucher")
@@ -494,6 +503,37 @@ AND d.acType=r.acType
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetWHTaxGrid()
+            Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "WHTax")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""whtax"":{""data"":null,""msg"":""You are not authorize to read""}}", jsonContent)
+                End If
+
+                Dim tSqlw As String = "
+SELECT h.*,d.ItemNo,d.IncType,d.PayDate,d.PayAmount,d.PayTax,d.PayTaxDesc,d.JNo,d.DocRefType,d.DocRefNo,d.PayRate,
+j.InvNo,j.CustCode,j.CustBranch
+FROM dbo.Job_WHTax h LEFT JOIN dbo.Job_WHTaxDetail d
+ON h.BranchCode=d.BranchCode AND h.DocNo=d.DocNo
+LEFT JOIN dbo.Job_Order j ON d.BranchCode=j.BranchCode
+AND d.JNo=j.JNo 
+"
+                tSqlw &= " WHERE NOT h.CancelProve<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)
+                End If
+
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(tSqlw)
+                Dim oHead As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())
+                Dim json = "{""whtax"":{""data"":" & oHead & ",""msg"":""Complete!""}}"
+
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""whtax"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
+
         Function SetWHTaxHeader(<FromBody()> data As CWHTaxHeader) As ActionResult
             Try
                 ViewBag.User = Session("CurrUser").ToString()

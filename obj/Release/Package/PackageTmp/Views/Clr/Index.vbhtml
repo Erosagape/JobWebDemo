@@ -1083,6 +1083,46 @@ End Code
         }
         ClearDetail();
     }
+    function LoadDetailFromAdv(dt) {
+        if (dt != undefined) {
+            ClearDetail();
+            dtl = dt;
+            $('#txtItemNo').val(dt.ItemNo);
+            $('#txtSICode').val(dt.SICode);
+            $('#cboSTCode').val(dt.STCode);
+            let r = FindService($('#txtSICode').val())
+            ReadService(r);
+            $('#txtForJNo').val(dt.JobNo);
+            $('#txtInvNo').val('');
+            if ($('#txtForJNo').val() != '') {
+                ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+            }
+            $('#txtQty').val(dt.Qty);
+            $('#txtCurRate').val(dt.CurRate);
+            $('#txtUnitPrice').val(dt.UnitCost);
+            $('#txtUnitCode').val(dt.UnitCode);            
+            $('#txtRemark').val(dt.Remark);
+            $('#txtSlipNo').val(dt.SlipNO);
+            $('#txt50Tavi').val(dt.NO50Tavi);
+            $('#txtPayChqTo').val(dt.Pay50TaviTo);
+            $('#txtSDescription').val(dt.SDescription);
+            $('#txtVatType').val(dt.VATType);
+            $('#txtVATRate').val(dt.VATRate);
+            $('#txtWHTRate').val(dt.Tax50TaviRate);
+            $('#txtAMT').val(dt.UsedAmount);
+            $('#txtVAT').val(dt.ChargeVAT);
+            $('#txtWHT').val(dt.Tax50Tavi);
+            $('#txtNET').val(dt.BCost);
+            $('#txtVenCode').val(dt.VenderCode);
+            $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
+            $('#txtCurrencyCode').val(dt.CurrencyCode);
+            $('#chkIsCost').prop('checked', dt.IsExpense > 0 ? true : false);
+            ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
+            ShowCaption();
+            return;
+        }
+        ClearDetail();
+    }
     function ClearDetail() {
         dtl = {};
         $('#txtItemNo').val('0');
@@ -1454,7 +1494,7 @@ End Code
                 dtl = dt;
                 $('#frmAdvance').modal('hide');
 
-                LoadDetail(dt);
+                LoadDetailFromAdv(dt);
                 $('#frmDetail').modal('show');
 
             });

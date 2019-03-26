@@ -211,6 +211,14 @@ function DummyCompanyData() {
     return o;
 }
 //public query functions
+function CallBackQueryWHTax(p, branch,code, ev) {
+    $.get(p + 'acc/getwhtax?branch=' + branch + '&code=' + code).done(function (r) {
+        var dr = r.whtax.header;
+        if (dr.length > 0) {
+            ev(r.whtax.header[0],r.whtax.detail);
+        }
+    });
+}
 function CallBackQueryUserRole(p, code, ev) {
     $.get(p + 'config/getuserrole?Code=' + code).done(function (r) {
         var dr = r.userrole;
