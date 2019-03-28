@@ -476,8 +476,13 @@ Public Class CInvHeader
         End Using
         Return msg
     End Function
-    Public Sub AddNew()
-
+    Public Sub AddNew(pFormatSQL As String)
+        If pFormatSQL = "" Then
+            m_DocNo = ""
+        Else
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(DocNo) as t FROM Job_InvoiceHeader WHERE BranchCode='{0}' And DocNo Like '%{1}' ", m_BranchCode, pFormatSQL), pFormatSQL)
+            m_DocNo = retStr
+        End If
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CInvHeader)
         Dim lst As New List(Of CInvHeader)

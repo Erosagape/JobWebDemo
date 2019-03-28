@@ -260,6 +260,7 @@ Public Class CRcpDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("ReceiptNo") = Me.ReceiptNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("CreditAmount") = Me.CreditAmount
                             dr("CashAmount") = Me.CashAmount
@@ -285,7 +286,9 @@ Public Class CRcpDetail
                             dr("FAmt50Tavi") = Me.FAmt50Tavi
                             dr("FNet") = Me.FNet
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -297,7 +300,8 @@ Public Class CRcpDetail
         Return msg
     End Function
     Public Sub AddNew()
-
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_ReceiptDetail WHERE BranchCode='{0}' And ReceiptNo ='{1}' ", m_BranchCode, m_ReceiptNo), "____")
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CRcpDetail)
         Dim lst As New List(Of CRcpDetail)
@@ -404,6 +408,7 @@ Public Class CRcpDetail
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
+                UpdateTotal(cn)
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception
@@ -412,4 +417,30 @@ Public Class CRcpDetail
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = "
+update h
+set h.TotalCharge=d.TotalCharge,
+h.TotalVAT =d.TotalVAT,
+h.Total50Tavi =d.Total50Tavi,
+h.TotalNet=d.TotalNet
+from Job_ReceiptHeader h
+inner join (
+	select BranchCode,ReceiptNo,
+	sum(Amt) as TotalCharge,
+	sum(AmtVAT) as TotalVAT,
+	sum(Amt50Tavi) as Total50Tavi,
+	sum(Net) as TotalNet
+	from Job_ReceiptDetail 
+	group by BranchCode,ReceiptNo
+) d
+on h.BranchCode=d.BranchCode
+and h.ReceiptNo=d.ReceiptNo
+"
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.ReceiptNo='" + Me.ReceiptNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+    End Sub
 End Class

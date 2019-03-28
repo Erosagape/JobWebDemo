@@ -193,19 +193,23 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
                 End If
-
+                Dim Docno As String = ""
                 Dim tSqlW As String = String.Format(" WHERE BranchCode='{0}'", Branch)
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
-                    tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
+                    tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo").ToString & "'"
+                    Docno = Request.QueryString("AdvNo").ToString
                 End If
 
                 Dim ItemNo As String = "0"
                 If Not IsNothing(Request.QueryString("ItemNo")) Then
-                    ItemNo = Request.QueryString("ItemNo")
+                    ItemNo = Request.QueryString("ItemNo").ToString
                 End If
                 tSqlW &= " AND ItemNo=" & ItemNo & ""
 
                 Dim oADVD As New CAdvDetail(jobWebConn)
+                oADVD.BranchCode = Branch
+                oADVD.AdvNo = Docno
+                oADVD.ItemNo = ItemNo
                 Dim msg As String = oADVD.DeleteData(tSqlW)
 
                 Dim json = "{""adv"":{""result"":""" & msg & """}}"

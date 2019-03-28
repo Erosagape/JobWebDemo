@@ -134,6 +134,7 @@ Public Class CBillDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("BillAcceptNo") = Me.BillAcceptNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("InvNo") = Me.InvNo
                             dr("AmtAdvance") = Me.AmtAdvance
@@ -157,7 +158,8 @@ Public Class CBillDetail
         Return msg
     End Function
     Public Sub AddNew()
-
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_BillAcceptDetail WHERE BranchCode='{0}' And BillAcceptNo ='{1}' ", m_BranchCode, m_BillAcceptNo), "____")
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CBillDetail)
         Dim lst As New List(Of CBillDetail)

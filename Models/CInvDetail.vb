@@ -314,6 +314,7 @@ Public Class CInvDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("DocNo") = Me.DocNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("SICode") = Me.SICode
                             dr("SDescription") = Me.SDescription
@@ -345,7 +346,9 @@ Public Class CInvDetail
                             dr("AmtCredit") = Me.AmtCredit
                             dr("FAmtCredit") = Me.FAmtCredit
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -356,8 +359,41 @@ Public Class CInvDetail
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = "
+update h
+set h.TotalAdvance=d.TotalAdvance,
+h.TotalCharge=d.TotalCharge,
+h.TotalIsTaxCharge=d.TotalIsTaxCharge,
+h.TotalIs50Tavi=d.TotalIs50Tavi,
+h.TotalVAT=d.TotalVAT,
+h.Total50Tavi=d.Total50Tavi,
+h.TotalNet=d.TotalNet
+from Job_InvoiceHeader h
+inner join (
+	select BranchCode,DocNo,
+	sum(AmtCharge*ExchangeRate) as TotalCharge,
+	sum(AmtAdvance*ExchangeRate) as TotalAdvance,
+	sum(case when IsTaxCharge=1 then Amt else 0 end) as TotalIsTaxCharge, 
+	sum(case when Is50Tavi=1 then Amt else 0 end) as TotalIs50Tavi,
+	sum(AmtVat) as TotalVAT,
+	sum(Amt50Tavi) as Total50Tavi,
+	sum(TotalAmt) as TotalNet
+	from Job_InvoiceDetail
+	group by BranchCode,DocNo
+) d
+on h.BranchCode=d.BranchCode
+and h.DocNo=d.DocNo 
+"
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+    End Sub
     Public Sub AddNew()
-
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_InvoiceDetail WHERE BranchCode='{0}' And DocNo ='{1}' ", m_BranchCode, m_DocNo), "____")
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CInvDetail)
         Dim lst As New List(Of CInvDetail)
@@ -482,6 +518,7 @@ Public Class CInvDetail
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
+                UpdateTotal(cn)
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception

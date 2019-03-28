@@ -146,7 +146,9 @@ Public Class CWHTaxDetail
                             dr("DocRefType") = Me.DocRefType
                             dr("DocRefNo") = Me.DocRefNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -232,4 +234,13 @@ Public Class CWHTaxDetail
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = "
+"
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+    End Sub
 End Class

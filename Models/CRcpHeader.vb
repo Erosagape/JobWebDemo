@@ -306,35 +306,13 @@ Public Class CRcpHeader
         End Using
         Return msg
     End Function
-    Public Sub AddNew()
-
-        m_BranchCode = ""
-        m_ReceiptNo = ""
-        m_ReceiptDate = DateTime.MinValue
-        m_ReceiptType = ""
-        m_CustCode = ""
-        m_CustBranch = ""
-        m_BillToCustCode = ""
-        m_BillToCustBranch = ""
-        m_TRemark = ""
-        m_EmpCode = ""
-        m_PrintedBy = ""
-        m_PrintedDate = DateTime.MinValue
-        m_PrintedTime = DateTime.MinValue
-        m_ReceiveBy = ""
-        m_ReceiveDate = DateTime.MinValue
-        m_ReceiveTime = DateTime.MinValue
-        m_ReceiveRef = ""
-        m_CancelReson = ""
-        m_CancelProve = ""
-        m_CancelDate = DateTime.MinValue
-        m_CancelTime = DateTime.MinValue
-        m_CurrencyCode = ""
-        m_ExchangeRate = 0
-        m_TotalCharge = 0
-        m_TotalVAT = 0
-        m_Total50Tavi = 0
-        m_TotalNet = 0
+    Public Sub AddNew(pFormatSQL As String)
+        If pFormatSQL = "" Then
+            m_ReceiptNo = ""
+        Else
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ReceiptNo) as t FROM Job_ReceiptHeader WHERE BranchCode='{0}' And ReceiptNo Like '%{1}' ", m_BranchCode, pFormatSQL), pFormatSQL)
+            m_ReceiptNo = retStr
+        End If
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CRcpHeader)
         Dim lst As New List(Of CRcpHeader)

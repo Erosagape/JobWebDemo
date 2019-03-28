@@ -528,6 +528,9 @@ End Code
             $('#frmHeader').modal('show');
         });
     }
+    function ReadBranch(dr) {
+        $('#txtBranchName').val(dr.BrName);
+    }
     function ReadData(dr,dt) {
         $('#txtBranchCode').val(dr.BranchCode);
         $('#txtDocNo').val(dr.DocNo);

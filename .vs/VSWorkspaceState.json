@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Controllers",
+    "\\Scripts",
+    "\\Scripts\\Func",
+    "\\Views",
+    "\\Views\\Acc"
   ],
   "PreviewInSolutionExplorer": false
 }

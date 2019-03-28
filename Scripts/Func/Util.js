@@ -1,11 +1,11 @@
 ﻿//function for javascripts usage
 function GetSelect(tb, e) {
     //get selected value from LOV
-    var indexRow = $(e).parents('tr');
+    let indexRow = $(e).parents('tr');
     return $(tb).DataTable().row(indexRow).data();
 }
 function GetToday() {
-    var d = new Date(),
+    let d = new Date(),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();
@@ -16,7 +16,7 @@ function GetToday() {
     return [year, month, day].join('-');
 }
 function GetTime() {
-    var d = new Date(),
+    let d = new Date(),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear(),
@@ -26,7 +26,7 @@ function GetTime() {
     if (hour <= 9) hour = '0' + hour;
     if (min <= 9) min = '0' + min;
     if (sec <= 9) sec = '0' + sec;
-    var time = hour + ":" + min + ":" + sec;
+    let time = hour + ":" + min + ":" + sec;
 
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
@@ -37,7 +37,7 @@ function getQueryString(name, url) {
     if (!url) url = window.location.href;
     url = url.toLowerCase();
     name = name.replace(/[\[\]]/g, '\\$&').toLowerCase();
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
         results = regex.exec(url);
     if (!results) return '';
     if (!results[2]) return '';
@@ -46,18 +46,18 @@ function getQueryString(name, url) {
 //convertion utility function
 function CDateTH(sqlDateString) {
     try {
-        var jsDate = sqlDateString.substr(0, 10);
-        var month = jsDate.substr(5, 2);
-        var day = jsDate.substr(8, 2);
-        var year = jsDate.substr(0, 4);
+        let jsDate = sqlDateString.substr(0, 10);
+        let month = jsDate.substr(5, 2);
+        let day = jsDate.substr(8, 2);
+        let year = jsDate.substr(0, 4);
         if (year < '1901') {
             return '';
         }
-        var yy = Number(year);
+        let yy = Number(year);
         if (yy < 2500) {
             yy = Number(year) + 543;
         }
-        var date = yy + "-" + month + "-" + day;
+        let date = yy + "-" + month + "-" + day;
         return date;
     }
     catch (e) {
@@ -66,14 +66,14 @@ function CDateTH(sqlDateString) {
 }
 function CDateEN(sqldateString) {
     try {
-        var jsDate = sqldateString.substr(0, 10);
-        var month = jsDate.substr(5, 2);
-        var day = jsDate.substr(8, 2);
-        var year = jsDate.substr(0, 4);
+        let jsDate = sqldateString.substr(0, 10);
+        let month = jsDate.substr(5, 2);
+        let day = jsDate.substr(8, 2);
+        let year = jsDate.substr(0, 4);
         if (year < '1901') {
             return '';
         }
-        var date = year + "-" + month + "-" + day;
+        let date = year + "-" + month + "-" + day;
         return date;
     }
     catch (e) {
@@ -113,29 +113,29 @@ function CNumEng(s) {
     // used exactly as shown (you can change the numbering system if you wish)
 
     // American Numbering System
-    var th = ['', 'thousand', 'million', 'billion', 'trillion'];
+    let th = ['', 'thousand', 'million', 'billion', 'trillion'];
     // uncomment this line for English Number System
-    // var th = ['','thousand','million', 'milliard','billion'];
+    // let th = ['','thousand','million', 'milliard','billion'];
 
-    var dg = ['zero', 'one', 'two', 'three', 'four',
+    let dg = ['zero', 'one', 'two', 'three', 'four',
         'five', 'six', 'seven', 'eight', 'nine'];
-    var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
+    let tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
         'seventeen', 'eighteen', 'nineteen'];
-    var tw = ['twenty', 'thirty', 'forty', 'fifty',
+    let tw = ['twenty', 'thirty', 'forty', 'fifty',
         'sixty', 'seventy', 'eighty', 'ninety'];
 
     s = s.toString();
     s = s.replace(/[\, ]/g, '');
     if (s != parseFloat(s))
         return 'not a number';
-    var x = s.indexOf('.');
+    let x = s.indexOf('.');
     if (x == -1) x = s.length;
     if (x > 15)
         return 'too big';
-    var n = s.split('');
-    var str = '';
-    var sk = 0;
-    for (var i = 0; i < x; i++) {
+    let n = s.split('');
+    let str = '';
+    let sk = 0;
+    for (let i = 0; i < x; i++) {
         if ((x - i) % 3 == 2) {
             if (n[i] == '1') {
                 str += tn[Number(n[i + 1])] + ' '; i++; sk = 1;
@@ -155,9 +155,9 @@ function CNumEng(s) {
 
     }
     if (x != s.length) {
-        var y = s.length;
-        var strp = 'point ';
-        for (var i = x + 1; i < y; i++) {
+        let y = s.length;
+        let strp = 'point ';
+        for (let i = x + 1; i < y; i++) {
             if (n[i] > 0) {
                 strp += dg[n[i]] + ' ';
             }
@@ -171,21 +171,21 @@ function CCurrency(data) {
     return data.replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
 function CCode(data) {
-    var st = data;
+    let st = data;
 
     if (st < 10) st = "0" + st;
     return st;
 }
 function ShowDate(sqlDateString) {
     try {
-        var jsDate = sqlDateString.substr(0, 10);
-        var month = jsDate.substr(5, 2);
-        var day = jsDate.substr(8, 2);
-        var year = jsDate.substr(0, 4);
+        let jsDate = sqlDateString.substr(0, 10);
+        let month = jsDate.substr(5, 2);
+        let day = jsDate.substr(8, 2);
+        let year = jsDate.substr(0, 4);
         if (year < '1901') {
             return '-';
         }
-        var date = day + "/" + month + "/" + year;
+        let date = day + "/" + month + "/" + year;
         return date;
     }
     catch (e) {
@@ -194,7 +194,7 @@ function ShowDate(sqlDateString) {
 }
 function ShowTime(sqlDateString) {
     try {
-        var jsDate = sqlDateString.substr(11, 8);
+        let jsDate = sqlDateString.substr(11, 8);
         return jsDate;
     }
     catch (e) {
@@ -203,7 +203,7 @@ function ShowTime(sqlDateString) {
 }
 //Dummy Data For Testing
 function DummyCompanyData() {
-    var o = {
+    let o = {
         CompanyName: 'IDEAL CONSOLIDATORS CO.,LTD',
         CompanyAddress1: 'เลขที่ 65/122-123 อาคารชำนาญเพ็ญชาติ บิสเนส เซ็นเตอร์ ชั้น 14 ถนนพระราม 9',
         CompanyAddress2: 'แขวงห้วยขวาง เขตห้วยขวาง กรุงเทพมหานคร 10310'
@@ -213,7 +213,7 @@ function DummyCompanyData() {
 //public query functions
 function CallBackQueryWHTax(p, branch,code, ev) {
     $.get(p + 'acc/getwhtax?branch=' + branch + '&code=' + code).done(function (r) {
-        var dr = r.whtax.header;
+        let dr = r.whtax.header;
         if (dr.length > 0) {
             ev(r.whtax.header[0],r.whtax.detail);
         }
@@ -221,7 +221,7 @@ function CallBackQueryWHTax(p, branch,code, ev) {
 }
 function CallBackQueryUserRole(p, code, ev) {
     $.get(p + 'config/getuserrole?Code=' + code).done(function (r) {
-        var dr = r.userrole;
+        let dr = r.userrole;
         if (dr.data.length > 0) {
             ev(dr);
         }
@@ -229,7 +229,7 @@ function CallBackQueryUserRole(p, code, ev) {
 }
 function CallBackQueryBank(p, code, ev) {
     $.get(p + 'master/getbank?Code=' + code).done(function (r) {
-        var dr = r.bank.data;
+        let dr = r.bank.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -237,7 +237,7 @@ function CallBackQueryBank(p, code, ev) {
 }
 function CallBackQueryBookAccount(p,br, code, ev) {
     $.get(p + 'master/getbookaccount?Branch='+br+'&Code=' + code).done(function (r) {
-        var dr = r.bank.data;
+        let dr = r.bank.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -254,7 +254,7 @@ function CallBackAuthorize(p, app, mnu, chk ,ev) {
 }
 function CallBackQueryInterPort(p, code,key, ev) {
     $.get(p + 'master/getinterport?Code=' + code + '&Key='+key).done(function (r) {
-        var dr = r.interport.data;
+        let dr = r.interport.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -262,7 +262,7 @@ function CallBackQueryInterPort(p, code,key, ev) {
 }
 function CallBackQueryService(p, code, ev) {
     $.get(p + 'master/getservicecode?code=' + code).done(function (r) {
-        var dr = r.servicecode.data;
+        let dr = r.servicecode.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -270,7 +270,7 @@ function CallBackQueryService(p, code, ev) {
 }
 function CallBackQueryCustomer(p, cno, br, ev) {
     $.get(p + 'master/getcompany?Code=' + cno + '&Branch' + br).done(function (r) {
-        var dr = r.company.data;
+        let dr = r.company.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -278,7 +278,7 @@ function CallBackQueryCustomer(p, cno, br, ev) {
 }
 function CallBackQueryCountry(p, code, ev) {
     $.get(p + 'master/getcountry?Code=' + code).done(function (r) {
-        var dr = r.country.data;
+        let dr = r.country.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -286,7 +286,7 @@ function CallBackQueryCountry(p, code, ev) {
 }
 function CallBackQueryCurrency(p, cno, ev) {
     $.get(p + 'master/getcurrency?Code=' + cno).done(function (r) {
-        var dr = r.currency.data;
+        let dr = r.currency.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -294,7 +294,7 @@ function CallBackQueryCurrency(p, cno, ev) {
 }
 function CallBackQueryJob(p, br, jno, ev) {
     $.get(p + 'joborder/getjobsql?Branch=' + br + '&JNo=' + jno).done(function (r) {
-        var dr = r.job.data;
+        let dr = r.job.data;
         if (dr.length > 0) {
             ev(dr);
         }
@@ -304,7 +304,7 @@ function CallBackQueryUser(p, UserID, ev) {
     $.get(p + 'Master/GetUser?Code=' + UserID)
         .done(function (r) {
             if (r.user.data.length > 0) {
-                var b = r.user.data[0];
+                let b = r.user.data[0];
                 ev(b);
             }
         });
@@ -313,14 +313,14 @@ function CallBackQueryVender(p, VenCode, ev) {
     $.get(p + 'Master/GetVender?Code=' + VenCode)
         .done(function (r) {
             if (r.vender.data.length > 0) {
-                var b = r.vender.data[0];
+                let b = r.vender.data[0];
                 ev(b);
             }
         });
 }
 function CallBackQueryServUnit(p, code, ev) {
     $.get(p + 'master/getservunit?Code=' + code).done(function (r) {
-        var dr = r.servunit.data;
+        let dr = r.servunit.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -328,7 +328,7 @@ function CallBackQueryServUnit(p, code, ev) {
 }
 function CallBackQueryDeclareType(p, code, ev) {
     $.get(p + 'master/getdeclaretype?Code=' + code).done(function (r) {
-        var dr = r.RFDCT.data;
+        let dr = r.RFDCT.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -336,7 +336,7 @@ function CallBackQueryDeclareType(p, code, ev) {
 }
 function CallBackQueryCustomsPort(p, code, ev) {
     $.get(p + 'master/getcustomsport?Code=' + code).done(function (r) {
-        var dr = r.RFARS.data;
+        let dr = r.RFARS.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -344,7 +344,7 @@ function CallBackQueryCustomsPort(p, code, ev) {
 }
 function CallBackQueryUserAuth(p, code,app,menu, ev) {
     $.get(p + 'config/getuserauth?Code=' + code+'&App='+app+'&Menu='+menu).done(function (r) {
-        var dr = r.userauth.data;
+        let dr = r.userauth.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
@@ -352,7 +352,7 @@ function CallBackQueryUserAuth(p, code,app,menu, ev) {
 }
 function CallBackQueryVoucher(p, branch,code, ev) {
     $.get(p + 'acc/getvoucher?Branch='+branch+'&Code=' + code).done(function (r) {
-        var dr = r.voucher;
+        let dr = r.voucher;
         if (dr!=null) {
             ev(dr);
         }
@@ -360,14 +360,14 @@ function CallBackQueryVoucher(p, branch,code, ev) {
 }
 function CallBackQueryServiceGroup(p, code, ev) {
     $.get(p + 'master/getservicegroup?Code=' + code).done(function (r) {
-        var dr = r.servicegroup.data;
+        let dr = r.servicegroup.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }
     });
 }
 function ShowConfigValue(path, Code, Key, ControlID) {
-    var strParam = "";
+    let strParam = "";
     if (Code != "") {
         strParam += "Code=" + Code;
     }

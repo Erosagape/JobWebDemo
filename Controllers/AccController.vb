@@ -174,7 +174,7 @@ AND d.acType=r.acType
                 Dim json = "{""voucher"":{""header"":" & oHead & ",""payment"":" & oSub & ",""document"":" & oDoc & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""voucher"":{""header"":null,""payment"":null,""document"":null,""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function SetVoucherHeader(<FromBody()> data As CVoucher) As ActionResult
@@ -391,7 +391,7 @@ AND d.acType=r.acType
                 Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataSub) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""voucher"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function DelVoucherDoc() As ActionResult
@@ -431,7 +431,7 @@ AND d.acType=r.acType
                 Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataDoc) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""voucher"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function DelVoucher() As ActionResult
@@ -471,7 +471,7 @@ AND d.acType=r.acType
 
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""voucher"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetWHTax() As ActionResult
@@ -479,7 +479,7 @@ AND d.acType=r.acType
                 ViewBag.User = Session("CurrUser").ToString()
                 Dim AuthorizeStr = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "WHTax")
                 If AuthorizeStr.IndexOf("R") < 0 Then
-                    Return Content("{""whtax"":{""header"":null,""detail"":null,""result"":""You are not authorize to read""}}", jsonContent)
+                    Return Content("{""whtax"":{""header"":null,""detail"":null,""msg"":""You are not authorize to read""}}", jsonContent)
                 End If
 
                 Dim tSqlw As String = " WHERE DocNo<>'' "
@@ -500,7 +500,7 @@ AND d.acType=r.acType
                 Dim jsonAll = "{""whtax"":{""header"":" & jsonh & ":""detail"":" & jsond & "}}"
                 Return Content(jsonAll, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""whtax"":{""msg"":""" & ex.Message & """,""header"":[],""detail"":[]}}", jsonContent)
             End Try
         End Function
         Function GetWHTaxGrid()
@@ -598,7 +598,7 @@ AND d.JNo=j.JNo
                 Dim json = "{""whtax"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""whtax"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetWHTaxDetail() As ActionResult
@@ -623,7 +623,7 @@ AND d.JNo=j.JNo
                 json = "{""whtax"":{""detail"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""whtax"":{""msg"":""" & ex.Message & """,""detail"":[]}}", jsonContent)
             End Try
         End Function
         Function SetWHTaxDetail(<FromBody()> data As CWHTaxDetail) As ActionResult
@@ -696,31 +696,37 @@ AND d.JNo=j.JNo
                 Dim json = "{""whtax"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""whtax"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetInvHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND DocNo ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND DocNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CInvHeader(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""invheader"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""invheader"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function SetInvHeader(<FromBody()> data As CInvHeader) As ActionResult
             Try
                 If Not IsNothing(data) Then
-                    If "" & data.DocNo = "" Then
-                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE DocNo='{0}' ", data.DocNo))
+                    If "" & data.DocNo = "" Then
+                        data.AddNew("INV-" & Today.ToString("yyMM") & "____")
+                    End If
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' ", data.BranchCode, data.DocNo))
                     Dim json = "{""result"":{""data"":""" & data.DocNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -735,42 +741,61 @@ AND d.JNo=j.JNo
         Function DelInvHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE DocNo<>'' "
+                Dim Branch As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                    Branch = Request.QueryString("Branch").ToString
+                Else
+                    Return Content("{""invheader"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                Dim DocNo As String = ""
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND DocNo Like '{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND DocNo Like '{0}' ", Request.QueryString("Code").ToString)
+                    DocNo = Request.QueryString("Code").ToString
                 Else
                     Return Content("{""invheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
                 Dim oData As New CInvHeader(jobWebConn)
                 Dim msg = oData.DeleteData(tSqlw)
+                Dim oDetail As New CInvDetail(jobWebConn)
+                oDetail.BranchCode = Branch
+                oDetail.DocNo = DocNo
+                oDetail.DeleteData(tSqlw)
 
                 Dim json = "{""invheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""invheader"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetBillHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND BillAcceptNo ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND BillAcceptNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CBillHeader(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""billheader"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""billheader"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function SetBillHeader(<FromBody()> data As CBillHeader) As ActionResult
             Try
                 If Not IsNothing(data) Then
-                    If "" & data.BillAcceptNo = "" Then
-                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE BillAcceptNo='{0}' ", data.BillAcceptNo))
+                    If "" & data.BillAcceptNo = "" Then
+                        data.AddNew("BL-" & Today.ToString("yyMM") & "____")
+                    End If
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BillAcceptNo='{1}' ", data.BranchCode, data.BillAcceptNo))
                     Dim json = "{""result"":{""data"":""" & data.BillAcceptNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -785,42 +810,68 @@ AND d.JNo=j.JNo
         Function DelBillHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""billheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND BillAcceptNo Like '{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND BillAcceptNo Like '{0}' ", Request.QueryString("Code").ToString)
                 Else
                     Return Content("{""billheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
                 Dim oData As New CBillHeader(jobWebConn)
                 Dim msg = oData.DeleteData(tSqlw)
 
+                Dim oDet As New CBillDetail(jobWebConn)
+                oDet.DeleteData(tSqlw)
+
                 Dim json = "{""billheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""billheader"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetRcpHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND ReceiptNo ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND ReceiptNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CRcpHeader(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""rcpheader"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""rcpheader"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function SetRcpHeader(<FromBody()> data As CRcpHeader) As ActionResult
             Try
                 If Not IsNothing(data) Then
-                    If "" & data.ReceiptNo = "" Then
-                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE ReceiptNo='{0}' ", data.ReceiptNo))
+                    If "" & data.ReceiptNo = "" Then
+                        Select Case data.ReceiptType
+                            Case "RCP"
+                                data.AddNew("RC" & Today.ToString("yyMM") & "___")
+                            Case "TAX"
+                                data.AddNew("TX" & Today.ToString("yyMM") & "___")
+                            Case "REC"
+                                data.AddNew("RV" & Today.ToString("yyMM") & "___")
+                            Case "ADV"
+                                data.AddNew("AV" & Today.ToString("yyMM") & "___")
+                            Case Else
+                                Return Content("{""result"":{""data"":null,""msg"":""Please Enter Receipt Type""}}", jsonContent)
+                        End Select
+                    End If
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND ReceiptNo='{1}' ", data.BranchCode, data.ReceiptNo))
                     Dim json = "{""result"":{""data"":""" & data.ReceiptNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -835,42 +886,59 @@ AND d.JNo=j.JNo
         Function DelRcpHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""rcpheader"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format("AND ReceiptNo Like '{0}'", Request.QueryString("Code").ToString)
                 Else
                     Return Content("{""rcpheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
+
                 Dim oData As New CRcpHeader(jobWebConn)
                 Dim msg = oData.DeleteData(tSqlw)
+
+                Dim oDetail As New CRcpDetail(jobWebConn)
+                oDetail.BranchCode = Request.QueryString("Branch").ToString
+                oDetail.ReceiptNo = Request.QueryString("Code").ToString
+                oDetail.DeleteData(tSqlw)
 
                 Dim json = "{""rcpheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""rcpheader"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetInvDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND DocNo ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND DocNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CInvDetail(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""invdetail"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function SetInvDetail(<FromBody()> data As CInvDetail) As ActionResult
             Try
                 If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
                     If "" & data.DocNo = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE DocNo='{0}' ", data.DocNo))
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' AND ItemNo='{2}'", data.BranchCode, data.DocNo, data.ItemNo))
                     Dim json = "{""result"":{""data"":""" & data.DocNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -885,32 +953,49 @@ AND d.JNo=j.JNo
         Function DelInvDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE DocNo<>'' "
+                Dim Branch As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                    Branch = Request.QueryString("Branch").ToString
+                Else
+                    Return Content("{""invdetail"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                Dim DocNo As String = ""
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND DocNo Like '{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND DocNo Like '{0}' ", Request.QueryString("Code").ToString)
+                    DocNo = Request.QueryString("Code").ToString
                 Else
                     Return Content("{""invdetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format("AND ItemNo ='{0}' ", Request.QueryString("Item").ToString)
+                End If
                 Dim oData As New CInvDetail(jobWebConn)
+                oData.BranchCode = Branch
+                oData.DocNo = DocNo
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""invdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""invdetail"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetBillDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND BillAcceptNo ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND BillAcceptNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CBillDetail(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""billdetail"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""billdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function SetBillDetail(<FromBody()> data As CBillDetail) As ActionResult
@@ -920,7 +1005,7 @@ AND d.JNo=j.JNo
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE BillAcceptNo='{0}' ", data.BillAcceptNo))
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BillAcceptNo='{1}' AND ItemNo='{2}' ", data.BranchCode, data.BillAcceptNo, data.ItemNo))
                     Dim json = "{""result"":{""data"":""" & data.BillAcceptNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -935,10 +1020,18 @@ AND d.JNo=j.JNo
         Function DelBillDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode Like '{0}' ", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""billdetail"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND BillAcceptNo Like '{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND BillAcceptNo Like '{0}' ", Request.QueryString("Code").ToString)
                 Else
                     Return Content("{""billdetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format("AND ItemNo ='{0}' ", Request.QueryString("Item").ToString)
                 End If
                 Dim oData As New CBillDetail(jobWebConn)
                 Dim msg = oData.DeleteData(tSqlw)
@@ -946,31 +1039,37 @@ AND d.JNo=j.JNo
                 Dim json = "{""billdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""billdetail"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function GetRcpDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND ReceiptNo ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND ReceiptNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CRcpDetail(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""rcpdetail"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""rcpdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
         Function SetRcpDetail(<FromBody()> data As CRcpDetail) As ActionResult
             Try
                 If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
                     If "" & data.ReceiptNo = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE ReceiptNo='{0}' ", data.ReceiptNo))
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND ReceiptNo='{1}' AND ItemNo='{2}' ", data.BranchCode, data.ReceiptNo, data.ItemNo))
                     Dim json = "{""result"":{""data"":""" & data.ReceiptNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -985,18 +1084,32 @@ AND d.JNo=j.JNo
         Function DelRcpDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                Dim Branch As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                    Branch = Request.QueryString("Branch").ToString
+                Else
+                    Return Content("{""rcpdetail"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                Dim DocNo As String = ""
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND ReceiptNo Like '{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND ReceiptNo Like '{0}' ", Request.QueryString("Code").ToString)
+                    DocNo = Request.QueryString("Code").ToString
                 Else
                     Return Content("{""rcpdetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format("AND ItemNo='{0}' ", Request.QueryString("Item").ToString)
+                End If
                 Dim oData As New CRcpDetail(jobWebConn)
+                oData.BranchCode = Branch
+                oData.ReceiptNo = DocNo
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""rcpdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""rcpdetail"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
     End Class

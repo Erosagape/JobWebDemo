@@ -154,8 +154,8 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    //define variables
-    var path = '@Url.Content("~")';
+    //define letiables
+    const path = '@Url.Content("~")';
     $(document).ready(function () {
         CheckParam();
         SetLOVs();
@@ -167,8 +167,8 @@ End Code
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var idx = (this.tabIndex + 1);
-                    var nextElement = $('[tabindex="' + idx + '"]');
+                    let idx = (this.tabIndex + 1);
+                    let nextElement = $('[tabindex="' + idx + '"]');
                     while (nextElement.length) {
                         if (nextElement.prop('disabled') == false) {
                             $('[tabindex="' + idx + '"]').focus();
@@ -209,17 +209,17 @@ End Code
     }
     function CheckParam() {
         //read query string parameters
-        var br = getQueryString('Branch');
-        var jt = getQueryString('JType');
-        var sb = getQueryString('SBy');
-        if (br != null) {
+        let br = getQueryString('Branch');
+        let jt = getQueryString('JType');
+        let sb = getQueryString('SBy');
+        if (br !== undefined) {
             $('#txtBranchCode').val(br);
             ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
         }
-        if (jt == null) jt = "01";
-        if (sb == null) sb = "01";
+        if (jt == undefined) jt = "01";
+        if (sb == undefined) sb = "01";
         //Combos
-        var lists = 'JOB_TYPE=#cboJobType,SHIP_BY=#cboShipBy';
+        let lists = 'JOB_TYPE=#cboJobType|'+jt+',SHIP_BY=#cboShipBy|' +sb;
         loadCombos(path, lists);
 
         $('#cboJobType').val(jt);
@@ -228,7 +228,7 @@ End Code
     function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var dv = document.getElementById("dvLOVs");
+            let dv = document.getElementById("dvLOVs");
             //Customers            
             CreateLOV(dv,'#frmSearchCust','#tbCust','Customers',response,3);
             //Consignee
@@ -297,7 +297,7 @@ End Code
         }
     }
     function GetParam() {
-        var strParam = '?';
+        let strParam = '?';
         strParam += 'Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
@@ -336,7 +336,7 @@ End Code
             return;
         }
         //if pass every checked
-        var strParam = path + 'JobOrder/GetNewJob?';
+        let strParam = path + 'JobOrder/GetNewJob?';
         strParam += 'Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0,2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
@@ -352,7 +352,7 @@ End Code
                     return;
                 }
                 if (r.job.status == "Y") {
-                    var data = r.job.data;
+                    let data = r.job.data;
 
                     data.CustCode = $('#txtCustCode').val();
                     data.CustBranch = $('#txtCustBranch').val();
@@ -379,7 +379,7 @@ End Code
         window.location.href='ShowJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val();
     }
     function PostData(obj) {
-        var jsonString = JSON.stringify({ data: obj });
+        let jsonString = JSON.stringify({ data: obj });
         //alert(jsonString);
         $.ajax({
             url: "@Url.Action("SaveJobData", "JobOrder")",

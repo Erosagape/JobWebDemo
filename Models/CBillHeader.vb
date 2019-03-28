@@ -166,8 +166,13 @@ Public Class CBillHeader
         End Using
         Return msg
     End Function
-    Public Sub AddNew()
-
+    Public Sub AddNew(pFormatSQL As String)
+        If pFormatSQL = "" Then
+            m_BillAcceptNo = ""
+        Else
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(BillAcceptNo) as t FROM Job_BillAcceptHeader WHERE BranchCode='{0}' And BillAcceptNo Like '%{1}' ", m_BranchCode, pFormatSQL), pFormatSQL)
+            m_BillAcceptNo = retStr
+        End If
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CBillHeader)
         Dim lst As New List(Of CBillHeader)
