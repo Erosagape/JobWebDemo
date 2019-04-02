@@ -51,6 +51,61 @@ Namespace Controllers
             End If
             Return New HttpResponseMessage(HttpStatusCode.OK)
         End Function
+        Function GetClearingReport() As ActionResult
+            Dim branch As String = ""
+            If Not Request.QueryString("Branch") Is Nothing Then
+                branch = Request.QueryString("Branch").ToString
+            End If
+            Dim code As String = ""
+            If Not Request.QueryString("Code") Is Nothing Then
+                code = Request.QueryString("Code").ToString
+            End If
+            Dim sql As String = "
+select h.BranchCode,h.ClrNo,h.ClrDate,h.DocStatus,c1.ClrStatusName,
+h.ClearanceDate,h.JobType,c4.JobTypeName,b.BrName as BranchName,h.CTN_NO,
+h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
+h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
+h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
+h.AdvTotal,h.ClearTotal,h.TotalExpense,
+d.ItemNo,d.AdvNO,d.AdvItemNo,d.SICode,d.SDescription,d.SlipNO,d.JobNo,d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,
+d.FCost,d.BCost,d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,
+d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,
+h.CancelProve,h.CancelReson,h.CancelDate
+from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
+left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
+left join (
+  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,c.NameThai,c.NameEng
+  from Job_Order j inner join Mas_Company c
+  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
+) j
+on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
+left join 
+(SELECT ConfigKey as ClrStatusKey,ConfigValue as ClrStatusName FROM Mas_Config WHERE ConfigCode='CLR_STATUS') c1
+on h.DocStatus=c1.ClrStatusKey
+left join 
+(SELECT ConfigKey as ClrTypeKey,ConfigValue as ClrTypeName FROM Mas_Config WHERE ConfigCode='CLR_TYPE') c2
+on h.ClearType=c2.ClrTypeKey
+left join 
+(SELECT ConfigKey as ClrFromKey,ConfigValue as ClrFromName FROM Mas_Config WHERE ConfigCode='CLR_FROM') c3
+on h.ClearType=c3.ClrFromKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as JobTypeName FROM Mas_Config WHERE ConfigCode='JOB_TYPE') c4
+on h.JobType=c4.JobTypeKey
+left join Mas_User u1 on h.EmpCode=u1.UserID
+left join Mas_User u2 on h.ApproveBy=u2.UserID
+left join Mas_User u3 on h.ReceiveBy=u3.UserID 
+WHERE h.BranchCode='{0}' AND h.ClrNo='{1}' 
+ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo 
+"
+            Try
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, branch, code))
+                Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & "}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""data"":[],""msg"":""" & ex.Message & """}", jsonContent)
+            End Try
+
+        End Function
         Function GetClearingGrid() As ActionResult
             Try
                 ViewBag.User = Session("CurrUser").ToString()
