@@ -36,7 +36,7 @@ End Code
                         <div class="col-sm-7" style="display:flex;flex-direction:row;">
                             <label style="display:block;width:20%">Tax Issuer</label>
                             <input type="text" id="txtTName1" class="form-control" style="width:75%" />
-                            <input type="button" class="btn btn-default" value="..." />
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer')" />
                         </div>
                         <div class="col-sm-5" style="display:flex;flex-direction:row;">
                             <label style="display:block;width:20%">Tax Number</label>
@@ -55,7 +55,7 @@ End Code
                         <div class="col-sm-5" style="display:flex;flex-direction:row;">
                             <label style="display:block;width:20%">Branch</label>
                             <input type="text" id="txtBranch1" class="form-control" style="width:60%" />
-                            <label style="display:block;width:20%"><input type="checkbox" /> Venders</label>
+                            <label style="display:block;width:20%"><input id="chkVender" type="checkbox" /> Venders</label>
                         </div>
                     </div>
                 </p>
@@ -64,7 +64,7 @@ End Code
                         <div class="col-sm-7" style="display:flex;flex-direction:row;">
                             <label style="display:block;width:20%">Tax Agent</label>
                             <input type="text" id="txtTName2" class="form-control" style="width:75%" />
-                            <input type="button" class="btn btn-default" value="..." />
+                            <input type="button" class="btn btn-default" value="..." onclick="GetDefault()" />
                         </div>
                         <div class="col-sm-5" style="display:flex;flex-direction:row;">
                             <label style="display:block;width:20%">Tax Number</label>
@@ -92,7 +92,7 @@ End Code
                         <div class="col-sm-7" style="display:flex;flex-direction:row;">
                             <label style="display:block;width:20%">Tax Payer</label>
                             <input type="text" id="txtTName3" class="form-control" style="width:75%" />
-                            <input type="button" class="btn btn-default" value="..." />
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('vender')" />
                         </div>
                         <div class="col-sm-5" style="display:flex;flex-direction:row;">
                             <label style="display:block;width:20%">Tax Number</label>
@@ -166,6 +166,7 @@ End Code
                 <div id="dvCommand">
                     <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Clear Data</button>
                     <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Data</button>
+                    <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print Data</button>
                 </div>
             </div>
             <div class="tab-pane fade" id="tabDetail">
@@ -282,7 +283,7 @@ End Code
                             </div>
                             <div>
                                 <br />
-                                <input type="button" class="btn btn-default" value="..." />
+                                <input type="button" class="btn btn-default" value="..." onclick="GetDocRef()" />
                             </div>
                         </div>
                         <div style="display:flex;flex-wrap:wrap">
@@ -293,7 +294,7 @@ End Code
                             </div>
                             <div>
                                 <br />
-                                <input type="button" class="btn btn-default" value="..." />
+                                <input type="button" class="btn btn-default" value="..." onclick="GetJobNo()" />
                             </div>
                             <div>
                                 Pay.Date :
@@ -420,6 +421,7 @@ End Code
     </div>
 </div>
 <div id="dvLOVs"></div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     const path = '@Url.Content("~")';
     const user = '@ViewBag.User';
@@ -452,6 +454,10 @@ End Code
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             let dv = document.getElementById("dvLOVs");
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
+            CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 3);
+            CreateLOV(dv, '#frmSearchDoc', '#tbDoc', 'Documents', response, 3);
+            CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job Number', response, 3);
         });
     }
     function SetEnterToTab() {
@@ -480,6 +486,16 @@ End Code
         switch (type) {
             case 'branch':
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
+                break;
+            case 'customer':                
+                if ($('#chkVender').prop('checked') == true) {
+                    SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender1);
+                } else {
+                    SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
+                }
+                break;
+            case 'vender':
+                SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender3);
                 break;
         }
     }
@@ -529,7 +545,68 @@ End Code
         });
     }
     function ReadBranch(dr) {
+        $('#txtBranchCode').val(dr.Code);
         $('#txtBranchName').val(dr.BrName);
+    }
+    function ReadCustomer(dr) {
+        $('#txtTName1').val(dr.NameThai);
+        $('#txtTAddress1').val(dr.TAddress1 + ' ' + dr.TAddress2);
+        $('#txtTaxNumber1').val(dr.TaxNumber);
+        $('#txtBranch1').val(dr.Branch);
+    }
+    function ReadVender1(dr) {
+        $('#txtTName1').val(dr.TName);
+        $('#txtTAddress1').val(dr.TAddress1 + ' ' + dr.TAddress2);
+        $('#txtTaxNumber1').val(dr.TaxNumber);
+        $('#txtBranch1').val(dr.BranchCode);
+    }
+    function ReadVender3(dr) {
+        $('#txtTName3').val(dr.TName);
+        $('#txtTAddress3').val(dr.TAddress1 + ' ' + dr.TAddress2);
+        $('#txtTaxNumber3').val(dr.TaxNumber);
+        $('#txtBranch3').val(dr.BranchCode);
+    }
+    function GetDefault() {
+        $('#txtTName2').val('@ViewBag.PROFILE_COMPANY_NAME');
+        $('#txtTAddress2').val('@ViewBag.PROFILE_COMPANY_ADDR1' + ' ' + '@ViewBag.PROFILE_COMPANY_ADDR2');
+        $('#txtTaxNumber2').val('@ViewBag.PROFILE_COMAPNY_TAXNUMBER');
+        $('#txtBranch2').val('@ViewBag.PROFILE_COMPANY_TAXBRANCH');
+    }
+    function ReadAdv(dr) {
+        $('#txtPayDate').val(CDateEN(dr.PaymentDate));
+        $('#txtPayAmount').val(dr.TotalAdvance);
+        $('#txtPayTax').val(dr.Total50Tavi);
+        $('#txtPayTaxDesc').val(dr.TRemark);
+        $('#txtJNo').val(dr.JobNo);
+        $('#txtDocRefNo').val(dr.AdvNo);
+    }
+    function ReadClr(dr) {
+        $('#txtPayDate').val(CDateEN(dr.ClrDate));
+        $('#txtPayAmount').val(dr.Base50Tavi);
+        $('#txtPayTax').val(dr.Clr50Tavi);
+        $('#txtJNo').val(dr.JobNo);
+        $('#txtDocRefNo').val(dr.ClrNo);
+    }
+    function ReadJob(dr) {
+        $('#txtJNo').val(dr.JNo);
+    }
+    function GetDocRef() {
+        let reftype = $('#txtDocRefType').val();
+        switch (reftype) {
+            case "1": //ADV
+                SetGridAdvance(path, '#tbDoc', '#frmSearchDoc', '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), ReadAdv);
+                break;
+            case "2": //CLR
+                SetGridClearing(path, '#tbDoc', '#frmSearchDoc', '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), ReadClr);
+                break;
+            case "3": //PAY
+                break;
+            case "4": //TAX
+                break;
+        }
+    }
+    function GetJobNo() {
+        SetGridJob(path, '#tbJob', '#frmSearchJob', '?branch=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), ReadJob);
     }
     function ReadData(dr,dt) {
         $('#txtBranchCode').val(dr.BranchCode);
@@ -564,7 +641,7 @@ End Code
         $('#txtSoTaxNo').val(dr.SoTaxNo);
         //$('#txtPayTaxType').val(dr.PayTaxType);
         //$('#txtPayTaxOther').val(dr.PayTaxOther);
-        $('#chkCancel').prop('checked', dr.CancelProve !== '' ? true : false);
+        $('#chkCancel').prop('checked', dr.CancelProve == null || dr.CancelProve == '' ? false : true);
         $('#txtCancelProve').val(dr.CancelProve);
         $('#txtCancelReason').val(dr.CancelReason);
         $('#txtCancelDate').val(CDateEN(dr.CancelDate));
@@ -612,7 +689,7 @@ End Code
         $('#txtPayAmount').val(dr.PayAmount);
         $('#txtPayTax').val(dr.PayTax);
         $('#txtPayTaxDesc').val(dr.PayTaxDesc);
-        $('#txtJNo').val(CDateEN(dr.JNo));
+        $('#txtJNo').val(dr.JNo);
         $('#txtDocRefType').val(dr.DocRefType);
         $('#txtDocRefNo').val(dr.DocRefNo);
         $('#txtPayRate').val(dr.PayRate);
@@ -656,6 +733,8 @@ End Code
         $('#txtBranch1').val('');
         $('#txtBranch2').val('');
         $('#txtBranch3').val('');
+
+        $('#tbDetail').DataTable().clear().draw();
     }
     function GetFormType() {
         return $('input:radio[name=FormType]:checked').val() == undefined ? 1 : $('input:radio[name=FormType]:checked').val();
@@ -747,7 +826,7 @@ End Code
             PayAmount:CNum($('#txtPayAmount').val()),
             PayTax:CNum($('#txtPayTax').val()),
             PayTaxDesc:$('#txtPayTaxDesc').val(),
-            JNo:CDateTH($('#txtJNo').val()),
+            JNo:$('#txtJNo').val(),
             DocRefType:$('#txtDocRefType').val(),
             DocRefNo:$('#txtDocRefNo').val(),
             PayRate:CNum($('#txtPayRate').val())
@@ -767,6 +846,7 @@ End Code
                     $('#txtItemNo').focus();
                 }
                 alert(response.result.msg);
+                RefreshDetail();
             },
             error: function (e) {
                 alert(e);
@@ -807,4 +887,12 @@ End Code
             LoadGridDetail(r.whtax.detail);   
         });
     }
+    function PrintData() {
+        if (userRights.indexOf('P') < 0) {
+            alert('you are not authorize to print');
+            return;
+        }
+        window.open(path + 'Acc/FormWHTax?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val());
+    }
+
 </script>

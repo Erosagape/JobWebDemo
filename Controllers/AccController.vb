@@ -502,9 +502,9 @@ AND d.acType=r.acType
                 Dim jsonh As String = JsonConvert.SerializeObject(oDatah)
 
                 Dim oDatad = New CWHTaxDetail(jobWebConn).GetData(tSqlw)
-                Dim jsond As String = JsonConvert.SerializeObject(oDatah)
+                Dim jsond As String = JsonConvert.SerializeObject(oDatad)
 
-                Dim jsonAll = "{""whtax"":{""header"":" & jsonh & ":""detail"":" & jsond & "}}"
+                Dim jsonAll = "{""whtax"":{""header"":" & jsonh & ",""detail"":" & jsond & "}}"
                 Return Content(jsonAll, jsonContent)
             Catch ex As Exception
                 Return Content("{""whtax"":{""msg"":""" & ex.Message & """,""header"":[],""detail"":[]}}", jsonContent)
@@ -526,7 +526,7 @@ ON h.BranchCode=d.BranchCode AND h.DocNo=d.DocNo
 LEFT JOIN dbo.Job_Order j ON d.BranchCode=j.BranchCode
 AND d.JNo=j.JNo 
 "
-                tSqlw &= " WHERE NOT h.CancelProve<>'' "
+                tSqlw &= " WHERE NOT ISNULL(h.CancelProve,'')<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)
                 End If

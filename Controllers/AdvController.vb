@@ -358,7 +358,9 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Status")) Then
                     tSqlW &= " AND a.DocStatus='" & Request.QueryString("Status") & "' "
                 End If
-
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlW &= " AND b.TaxNumber='" & Request.QueryString("TaxNumber") & "' "
+                End If
                 Dim sql As String = "
 select a.*,
 (SELECT STUFF((
@@ -374,7 +376,9 @@ FROM Job_Order WHERE BranchCode=a.BranchCode AND JNo in(SELECT ForJNo FROM Job_A
 AND AdvNo=a.AdvNo AND ForJNo<>'')
 FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 )) as CustInvNo
-FROM Job_AdvHeader as a
+,b.TaxNumber,b.NameThai,b.NameEng 
+FROM Job_AdvHeader as a LEFT JOIN
+Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
 "
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
                 Dim json = "{""adv"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"

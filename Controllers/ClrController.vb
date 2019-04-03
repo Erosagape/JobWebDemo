@@ -145,17 +145,23 @@ ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo
                 If Not IsNothing(Request.QueryString("Status")) Then
                     tSqlW &= " AND a.DocStatus='" & Request.QueryString("Status") & "' "
                 End If
-
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlW &= " AND b.CustCode IN(Select CustCode from Mas_Company where TaxNumber='" & Request.QueryString("TaxNumber") & "') "
+                End If
                 Dim sql As String = "
 select a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
-a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,
-b.CustCode,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal
+a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,a.ReceiveDate,a.ApproveDate,
+b.CustCode,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
+b.AdvTotal,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi
 FROM Job_ClearHeader as a 
 left join 
 (
     SELECT d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
     d.AdvNO,d.CurrencyCode,
-    SUM(d.UsedAmount) as ClrAmt,sum(d.AdvAmount) as AdvTotal
+    SUM(d.UsedAmount) as ClrAmt,sum(d.AdvAmount) as AdvTotal,
+    SUM(CASE WHEN d.ChargeVAT>0 THEN d.UsedAmount ELSE 0 END) as BaseVat,
+    SUM(CASE WHEN d.Tax50Tavi>0 THEN d.UsedAmount ELSE 0 END) as Base50Tavi,
+    SUM(d.ChargeVAT) as ClrVat,SUM(d.Tax50Tavi) as Clr50Tavi
     FROM Job_ClearDetail d
     inner join Job_Order j on d.JobNo=j.JNo and d.BranchCode=j.BranchCode
     GROUP BY d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
@@ -164,11 +170,12 @@ left join
 on b.BranchCode=a.BranchCode
 and b.ClrNo=a.ClrNo
 {0}
-group by
-a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
-a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,
-b.CustCode,b.JobNo,b.InvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal
 "
+                'group by
+                'a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
+                'a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,
+                'b.CustCode,b.JobNo,b.InvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal,b.ClrVat,b.Clr50Tavi
+                '"
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
                 Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
                 Return Content(json, jsonContent)

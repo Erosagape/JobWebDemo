@@ -676,7 +676,7 @@ End Code
             alert('you are not authorize to print');
             return;
         }
-        window.open(path + 'Clr/FormClr?branch=' + $('#txtBranchCode').val() + '&clrno=' + $('#txtClrNo').val());
+        window.open(path + 'Clr/FormClr?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtClrNo').val());
     }
     function SaveHeader() {
         if (hdr != undefined) {

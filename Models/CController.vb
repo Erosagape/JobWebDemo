@@ -16,6 +16,8 @@ Public Class CController
         ViewBag.PROFILE_COMPANY_ADDR2 = Main.GetValueConfig("PROFILE", "COMPANY_ADDRESS2")
         ViewBag.PROFILE_CURRENCY = Main.GetValueConfig("PROFILE", "CURRENCY")
         ViewBag.PROFILE_VATRATE = Main.GetValueConfig("PROFILE", "VAT_RATE")
+        ViewBag.PROFILE_TAXNUMBER = Main.GetValueConfig("PROFILE", "COMPANY_TAXNUMBER")
+        ViewBag.PROFILE_TAXBRANCH = Main.GetValueConfig("PROFILE", "COMPANY_TAXBRANCH")
     End Sub
     Friend Function GetView(vName As String, Optional modName As String = "") As ActionResult
         LoadCompanyProfile()
