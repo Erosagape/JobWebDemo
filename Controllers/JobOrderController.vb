@@ -28,7 +28,8 @@ Namespace Controllers
             Return GetView("FormQuotation")
         End Function
         Function Quotation() As ActionResult
-            Return GetView("Quotation", "MODULE_SALES")
+            'Return GetView("Quotation", "MODULE_SALES")
+            Return RedirectToAction("FormQuotation")
         End Function
         Function QuoApprove() As ActionResult
             Return GetView("QuoApprove", "MODULE_SALES")
@@ -37,7 +38,8 @@ Namespace Controllers
             Return GetView("FormDelivery")
         End Function
         Function Transport() As ActionResult
-            Return GetView("Transport", "MODULE_CS")
+            'Return GetView("Transport", "MODULE_CS")
+            Return RedirectToAction("FormDelivery")
         End Function
         Function FormTransport() As ActionResult
             Return GetView("FormTransport")

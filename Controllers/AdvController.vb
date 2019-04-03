@@ -19,7 +19,8 @@ Namespace Controllers
             Return GetView("Payment", "MODULE_ADV")
         End Function
         Function CreditAdv() As ActionResult
-            Return GetView("CreditAdv", "MODULE_ADV")
+            'Return GetView("CreditAdv", "MODULE_ADV")
+            Return RedirectToAction("FormCreditAdv")
         End Function
         Function EstimateCost() As ActionResult
             Return GetView("EstimateCost", "MODULE_ADV")
@@ -409,7 +410,7 @@ FROM Job_AdvHeader as a
                 Dim json = "{""adv"":{""header"":" & jsonh & ",""detail"":" & jsond & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""adv"":{""header"":[],""detail"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function GetAdvanceDetail() As ActionResult

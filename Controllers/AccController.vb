@@ -48,13 +48,16 @@ Namespace Controllers
             Return GetView("FormGL")
         End Function
         Function Expense() As ActionResult
-            Return GetView("Expense", "MODULE_ACC")
+            'Return GetView("Expense", "MODULE_ACC")
+            Return RedirectToAction("FormExpense")
         End Function
         Function Invoice() As ActionResult
-            Return GetView("Invoice", "MODULE_ACC")
+            'Return GetView("Invoice", "MODULE_ACC")
+            Return RedirectToAction("FormInv")
         End Function
         Function Billing() As ActionResult
-            Return GetView("Billing", "MODULE_ACC")
+            'Return GetView("Billing", "MODULE_ACC")
+            Return RedirectToAction("FormBill")
         End Function
         Function PettyCash() As ActionResult
             Return GetView("PettyCash", "MODULE_ACC")
@@ -63,19 +66,23 @@ Namespace Controllers
             Return GetView("Cheque", "MODULE_ACC")
         End Function
         Function Receipt() As ActionResult
-            Return GetView("Receipt", "MODULE_ACC")
+            'Return GetView("Receipt", "MODULE_ACC")
+            Return RedirectToAction("FormRcp")
         End Function
         Function RecvInv() As ActionResult
             Return GetView("RecvInv", "MODULE_ACC")
         End Function
         Function TaxInvoice() As ActionResult
-            Return GetView("TaxInvoice", "MODULE_ACC")
+            'Return GetView("TaxInvoice", "MODULE_ACC")
+            Return RedirectToAction("FormTaxInv")
         End Function
         Function CreditNote() As ActionResult
-            Return GetView("CreditNote", "MODULE_ACC")
+            'Return GetView("CreditNote", "MODULE_ACC")
+            Return RedirectToAction("FormCreditNote")
         End Function
         Function GLNote() As ActionResult
-            Return GetView("GLNote", "MODULE_ACC")
+            'Return GetView("GLNote", "MODULE_ACC")
+            Return RedirectToAction("FormGL")
         End Function
         Function FormExpense() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
