@@ -182,10 +182,10 @@ End Code
     </tr>
 </table>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
+    let path = '@Url.Content("~")';
     $(document).ready(function () {
-        var branch = getQueryString('branch');
-        var code = getQueryString('code');
+        let branch = getQueryString('branch');
+        let code = getQueryString('code');
         if (branch != "" && code != "") {
             $.get(path + 'clr/getclearingreport?branch=' + branch + '&code=' + code, function (r) {
                 if (r.data[0].Table !== undefined) {

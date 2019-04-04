@@ -1180,17 +1180,17 @@ End Code
         if (job.length > 0) {
             w += '&jobno=' + job;
         }
+        /*
         if ($('#cboJobType').val() !== '') {
             w += '&jtype=' + $('#cboJobType').val();
         }
-        /*
         if ($('#cboClrFrom').val() !== '') {
             w += '&cfrom=' + $('#cboClrFrom').val();
         }
-        */
         if ($('#cboClrType').val() !== '') {
             w += '&ctype=' + $('#cboClrType').val();
         }
+        */
         $.get(path + 'clr/getclearinggrid?branchcode=' +  w, function (r) {
             if (r.clr.data.length == 0) {
                 alert('data not found on this branch');

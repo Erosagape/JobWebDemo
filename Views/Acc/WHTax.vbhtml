@@ -11,12 +11,12 @@ End Code
                 <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
                 <input type="text" class="form-control" id="txtBranchName" style="width:60%" disabled />
             </div>
-            <div class="col-sm-3" style="display:flex;flex-direction:row;">
+            <div class="col-sm-4" style="display:flex;flex-direction:row;">
                 <label style="display:block;width:20%">Doc No:</label>
                 <input type="text" class="form-control" id="txtDocNo" style="width:75%" />
                 <input type="button" class="btn btn-default" value="..." onclick="SetGridWHTax()"/>
             </div>
-            <div class="col-sm-2" style="display:flex;flex-direction:row;">
+            <div class="col-sm-4" style="display:flex;flex-direction:row;">
                 <label style="display:block;width:20%">Date:</label>
                 <input type="date" class="form-control" id="txtDocDate" style="width:80%" />
             </div>
@@ -44,7 +44,7 @@ End Code
                             <br />
                             <label style="display:block;width:20%">ID Number</label>
                             <input type="text" id="txtIDCard1" class="form-control" style="width:60%" />
-                            <input type="button" class="btn btn-default" value="DN" />
+                            <input type="button" class="btn btn-default" value="DN" onclick="MoveData('1','2')" />
                         </div>
                     </div>
                     <div class="row">
@@ -72,8 +72,8 @@ End Code
                             <br />
                             <label style="display:block;width:20%">ID Number</label>
                             <input type="text" id="txtIDCard2" class="form-control" style="width:60%" />
-                            <input type="button" class="btn btn-default" value="DN" />
-                            <input type="button" class="btn btn-default" value="UP" />
+                            <input type="button" class="btn btn-default" value="DN" onclick="MoveData('2','3')" />
+                            <input type="button" class="btn btn-default" value="UP" onclick="MoveData('2','1')"/>
                         </div>
                     </div>
                     <div class="row">
@@ -100,7 +100,7 @@ End Code
                             <br />
                             <label style="display:block;width:20%">ID Number</label>
                             <input type="text" id="txtIDCard3" class="form-control" style="width:60%" />
-                            <input type="button" class="btn btn-default" value="UP" />
+                            <input type="button" class="btn btn-default" value="UP" onclick="MoveData('3','2')" />
                         </div>
                     </div>
                     <div class="row">
@@ -170,6 +170,7 @@ End Code
                 </div>
             </div>
             <div class="tab-pane fade" id="tabDetail">
+                <button id="btnAddDoc" class="btn btn-default" onclick="ClearDetail()">Add Detail</button>
                 <p>
                     <table id="tbDetail" class="table table-bordered">
                         <thead>
@@ -186,68 +187,71 @@ End Code
                             </tr>
                         </thead>
                     </table>
-                    <div style="display:flex;flex-direction:row">
-                        <button id="btnAddDoc" class="btn btn-default" onclick="ClearDetail()">Add Detail</button>
-                        Total Amount :
-                        <input type="text" id="txtTotalPayAmount" />
-                        Total Tax :
-                        <input type="text" id="txtTotalPayTax" />
-                    </div>
                 </p>
-                <p>
-                    <div class="row">
-                        <div class="col-sm-2" style="display:flex;flex-direction:column">
-                            Tax Condition:
-                            <select class="form-control dropdown" id="txtPayTaxType">
-                                <option value="1">หัก ณ ที่จ่าย</option>
-                                <option value="2">ออกภาษีให้ครั้งเดียว</option>
-                                <option value="3">ออกภาษีให้ตลอดไป</option>
-                                <option value="4">อื่นๆ (ระบุ)</option>
-                            </select>
+                <div style="display:flex;flex-direction:row;">
+                    <div style="flex:4;">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                Tax Condition:
+                                <select class="form-control dropdown" id="txtPayTaxType">
+                                    <option value="1">หัก ณ ที่จ่าย</option>
+                                    <option value="2">ออกภาษีให้ครั้งเดียว</option>
+                                    <option value="3">ออกภาษีให้ตลอดไป</option>
+                                    <option value="4">อื่นๆ (ระบุ)</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                Condition Note:
+                                <input type="text" id="txtPayTaxOther" class="form-control" />
+                            </div>
+                            <div class="col-sm-5">
+                                Control Rate.
+                                <input type="text" id="txtIncRate" class="form-control" />
+                            </div>
                         </div>
-                        <div class="col-sm-3" style="display:flex;flex-direction:column">
-                            Condition Note:
-                            <input type="text" id="txtPayTaxOther" class="form-control" />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                Description
+                                <input type="text" id="txtIncOther" class="form-control" />
+                            </div>
                         </div>
-                        <div class="col-sm-7" style="display:flex;flex-direction:row">
-                            <div style="margin-right:5px;flex:40%;">
+                        <div class="row">
+                            <div class="col-sm-4">
                                 Social Security No.
                                 <input type="text" id="txtSoLicenseNo" class="form-control" />
                             </div>
-                            <div style="margin-right:5px;flex:40%;">
+                            <div class="col-sm-4">
                                 Social Payer No.
                                 <input type="text" id="txtSoTaxNo" class="form-control" />
                             </div>
-                            <div style="margin-right:5px;flex:20%;">
+                            <div class="col-sm-4">
                                 Amount.
                                 <input type="text" id="txtSoLicenseAmount" class="form-control" />
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12" style="display:flex;flex-direction:row">
-                            <div style="margin-right:5px;flex:25%">
+                        <div class="row">
+                            <div class="col-sm-4">
                                 Provident Payer.
                                 <input type="text" id="txtPayeeAccNo" class="form-control" />
                             </div>
-                            <div style="margin-right:5px;flex:25%">
+                            <div class="col-sm-4">
                                 Provident Amount.
                                 <input type="text" id="txtSoAccAmount" class="form-control" />
                             </div>
-                            <div style="margin-right:5px;flex:25%">
+                            <div class="col-sm-4">
                                 Teacher Amt.
                                 <input type="text" id="txtTeacherAmt" class="form-control" />
                             </div>
-                            <div style="margin-right:5px;flex:25%">
-                                Control Rate.
-                                <input type="text" id="txtIncRate" class="form-control" />
-                                <br />Description
-                                <input type="text" id="txtIncOther" class="form-control" />
-                            </div>
-
                         </div>
                     </div>
-                </p>
+                    <div style="flex:1;margin-left:10px">
+                        Total Amount :
+                        <input type="text" id="txtTotalPayAmount" />
+                        <br />
+                        Total Tax :
+                        <input type="text" id="txtTotalPayTax" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal fade" id="frmDetail">
@@ -363,12 +367,12 @@ End Code
                             <div style="flex:1">
                                 Rate :
                                 <br />
-                                <input type="number" id="txtPayRate" class="form-control" value="0.00">
+                                <input type="number" id="txtPayRate" class="form-control" value="0.00" onchange="CalWHT()">
                             </div>
                             <div style="flex:1">
                                 Amount :
                                 <br />
-                                <input type="number" id="txtPayAmount" class="form-control" value="0.00">
+                                <input type="number" id="txtPayAmount" class="form-control" value="0.00"  onchange="CalWHT()">
                             </div>
                             <div style="flex:1">
                                 Tax :
@@ -430,6 +434,7 @@ End Code
         SetEvents();
         SetLOVs();
         SetEnterToTab();
+        ClearData();
     });
     function SetEvents() {
         $('#btnAddDoc').on('click', function () {
@@ -442,6 +447,11 @@ End Code
                 $('#txtBranchCode').val(branch);
                 $('#txtDocNo').val(code);
                 CallBackQueryWHTax(path, branch, code, ReadData);
+            }
+        });
+        $('#txtBranchCode').keydown(function (event) {
+            if (event.which == 13) {
+                ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
         $('#chkCancel').on('click', function () {
@@ -502,7 +512,7 @@ End Code
     function SetGridWHTax() {
         let code = $('#txtBranchCode').val();
         $.get(path + 'acc/getwhtaxgrid?branch=' + code, function (r) {
-            if (r.whtax.data[0].Table.length == 0) {
+            if (r.whtax.data.length == 0) {
                 alert('data not found on this branch');
                 return;
             }
@@ -569,8 +579,8 @@ End Code
     function GetDefault() {
         $('#txtTName2').val('@ViewBag.PROFILE_COMPANY_NAME');
         $('#txtTAddress2').val('@ViewBag.PROFILE_COMPANY_ADDR1' + ' ' + '@ViewBag.PROFILE_COMPANY_ADDR2');
-        $('#txtTaxNumber2').val('@ViewBag.PROFILE_COMAPNY_TAXNUMBER');
-        $('#txtBranch2').val('@ViewBag.PROFILE_COMPANY_TAXBRANCH');
+        $('#txtTaxNumber2').val('@ViewBag.PROFILE_TAXNUMBER');
+        $('#txtBranch2').val('@ViewBag.PROFILE_TAXBRANCH');
     }
     function ReadAdv(dr) {
         $('#txtPayDate').val(CDateEN(dr.PaymentDate));
@@ -594,10 +604,58 @@ End Code
         let reftype = $('#txtDocRefType').val();
         switch (reftype) {
             case "1": //ADV
-                SetGridAdvance(path, '#tbDoc', '#frmSearchDoc', '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), ReadAdv);
+                $.get(path + 'Adv/GetAdvanceGrid' + '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), function (r) {
+                    let d = r.adv.data[0].Table;
+                    $('#tbDoc').DataTable({
+                        data: d,
+                        selected: true, //ให้สามารถเลือกแถวได้
+                        columns: [ //กำหนด property ของ header column
+                            { data: null, title: "#" },
+                            { data: "AdvNo", title: "รหัส" },
+                            { data: "CustInvNo", title: "คำอธิบาย" },
+                            { data: "TotalAdvance", title: "ยอดเงิน" }
+                        ],
+                        columnDefs: [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                            {
+                                targets: 0, //column ที่ 0 เป็นหมายเลขแถว
+                                data: null,
+                                render: function (data, type, full, meta) {
+                                    let html = "<button class='btn btn-warning'>Select</button>";
+                                    return html;
+                                }
+                            }
+                        ],
+                        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                    });
+                    BindEvent('#tbDoc', '#frmSearchDoc', ReadAdv);
+                });
                 break;
             case "2": //CLR
-                SetGridClearing(path, '#tbDoc', '#frmSearchDoc', '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), ReadClr);
+                $.get(path + 'Clr/GetClearingGrid' + '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), function (r) {
+                    let d = r.clr.data[0].Table;
+                    $(g).DataTable({
+                        data: d,
+                        selected: true, //ให้สามารถเลือกแถวได้
+                        columns: [ //กำหนด property ของ header column
+                            { data: null, title: "#" },
+                            { data: "ClrNo", title: "รหัส" },
+                            { data: "AdvNO", title: "ใบเบิก" },
+                            { data: "TotalExpense", title: "ยอดเงิน" }
+                        ],
+                        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                            {
+                                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                                "data": null,
+                                "render": function (data, type, full, meta) {
+                                    let html = "<button class='btn btn-warning'>Select</button>";
+                                    return html;
+                                }
+                            }
+                        ],
+                        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                    });
+                    BindEvent('#tbDoc', '#frmSearchDoc', ReadClr);
+                });
                 break;
             case "3": //PAY
                 break;
@@ -639,8 +697,8 @@ End Code
         $('#txtSoAccAmount').val(dr.SoAccAmount);
         $('#txtPayeeAccNo').val(dr.PayeeAccNo);
         $('#txtSoTaxNo').val(dr.SoTaxNo);
-        //$('#txtPayTaxType').val(dr.PayTaxType);
-        //$('#txtPayTaxOther').val(dr.PayTaxOther);
+        $('#txtPayTaxType').val(dr.PayTaxType);
+        $('#txtPayTaxOther').val(dr.PayTaxOther);
         $('#chkCancel').prop('checked', dr.CancelProve == null || dr.CancelProve == '' ? false : true);
         $('#txtCancelProve').val(dr.CancelProve);
         $('#txtCancelReason').val(dr.CancelReason);
@@ -656,6 +714,7 @@ End Code
         }
     }
     function LoadGridDetail(d) {
+        $('#tbDetail').DataTable().clear().draw();
         $('#tbDetail').DataTable({
             data: d,
             selected: true, //ให้สามารถเลือกแถวได้
@@ -696,7 +755,7 @@ End Code
     }
     function ClearData() {
         $('#txtDocNo').val('');
-        $('#txtDocDate').val('');
+        $('#txtDocDate').val(GetToday());
         $('#txtTaxNumber1').val('');
         $('#txtTName1').val('');
         $('#txtTAddress1').val('');
@@ -770,8 +829,8 @@ End Code
             SoAccAmount: CNum($('#txtSoAccAmount').val()),
             PayeeAccNo: $('#txtPayeeAccNo').val(),
             SoTaxNo: $('#txtSoTaxNo').val(),
-            PayTaxType: 0,
-            PayTaxOther: '',
+            PayTaxType: $('#txtPayTaxType').val(),
+            PayTaxOther: $('#txtPayTaxOther').val(),
             CancelProve: $('#txtCancelProve').val(),
             CancelReason: $('#txtCancelReason').val(),
             CancelDate: CDateTH($('#txtCancelDate').val()),
@@ -783,7 +842,7 @@ End Code
         };
         return obj;
     }
-    function SaveHeader() {
+    function SaveHeader(showalert =true) {
         let obj = GetDataHeader();
         let ask = confirm("Do you need to Save?");
         if (ask == false) return;
@@ -799,7 +858,7 @@ End Code
                     $('#txtDocNo').val(response.result.data);
                     $('#txtDocNo').focus();
                 }
-                alert(response.result.msg);
+                if(showalert) alert(response.result.msg);
             },
             error: function (e) {
                 alert(e);
@@ -817,6 +876,7 @@ End Code
         $('#chkCancel').prop('checked', !chkmode);
     }
     function SaveDetail() {
+        SaveHeader(false);
         let obj={			
             BranchCode:$('#txtBranchCode').val(),
             DocNo:$('#txtDocNo').val(),
@@ -831,8 +891,6 @@ End Code
             DocRefNo:$('#txtDocRefNo').val(),
             PayRate:CNum($('#txtPayRate').val())
 	    };
-        let ask = confirm("Do you need to Save?");
-        if (ask == false) return;
         let jsonText = JSON.stringify({ data: obj });
         //alert(jsonText);
         $.ajax({
@@ -846,7 +904,8 @@ End Code
                     $('#txtItemNo').focus();
                 }
                 alert(response.result.msg);
-                RefreshDetail();
+                                
+                CallBackQueryWHTax(path, $('#txtBranchCode').val(), $('#txtDocNo').val(), ReadData);
             },
             error: function (e) {
                 alert(e);
@@ -876,7 +935,7 @@ End Code
         $('#txtJNo').val('');
         $('#txtDocRefType').val('');
         $('#txtDocRefNo').val('');
-        $('#txtPayRate').val('0.00');
+        $('#txtPayRate').val($('#txtIncRate').val());
 
         $('#frmDetail').modal('show');
     }
@@ -894,5 +953,21 @@ End Code
         }
         window.open(path + 'Acc/FormWHTax?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val());
     }
+    function MoveData(f,t) {
+        $('#txtTName' + t).val($('#txtTName' + f).val());
+        $('#txtTAddress' + t).val($('#txtTAddress' + f).val());
+        $('#txtTaxNumber' + t).val($('#txtTaxNumber' + f).val());
+        $('#txtBranch' + t).val($('#txtBranch' + f).val());
 
+        $('#txtTName' + f).val('');
+        $('#txtTAddress' + f).val('');
+        $('#txtTaxNumber' + f).val('');
+        $('#txtBranch' + f).val('');
+    }
+    function CalWHT() {
+        let rate = CNum($('#txtPayRate').val()) * 0.01;
+        let amt = CNum($('#txtPayAmount').val());
+        let tax = CDbl(amt * rate, 2);
+        $('#txtPayTax').val(tax);
+    }
 </script>

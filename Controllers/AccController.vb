@@ -520,15 +520,21 @@ AND d.acType=r.acType
 
                 Dim tSqlw As String = "
 SELECT h.*,d.ItemNo,d.IncType,d.PayDate,d.PayAmount,d.PayTax,d.PayTaxDesc,d.JNo,d.DocRefType,d.DocRefNo,d.PayRate,
-j.InvNo,j.CustCode,j.CustBranch
+j.InvNo,j.CustCode,j.CustBranch,u.TName as UpdateName 
 FROM dbo.Job_WHTax h LEFT JOIN dbo.Job_WHTaxDetail d
 ON h.BranchCode=d.BranchCode AND h.DocNo=d.DocNo
 LEFT JOIN dbo.Job_Order j ON d.BranchCode=j.BranchCode
 AND d.JNo=j.JNo 
+LEFT JOIN dbo.Mas_User u ON h.UpdateBy=u.UserID
 "
-                tSqlw &= " WHERE NOT ISNULL(h.CancelProve,'')<>'' "
+
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlw &= String.Format(" AND h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)
+                    tSqlw &= String.Format(" WHERE h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)
+                Else
+                    tSqlw &= " WHERE NOT ISNULL(h.CancelProve,'')<>'' "
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND h.DocNo ='{0}'", Request.QueryString("Code").ToString)
                 End If
 
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(tSqlw)

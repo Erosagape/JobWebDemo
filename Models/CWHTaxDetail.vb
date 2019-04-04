@@ -147,7 +147,7 @@ Public Class CWHTaxDetail
                             dr("DocRefNo") = Me.DocRefNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             If da.Update(dt) > 0 Then
-                                'UpdateTotal(cn)
+                                UpdateTotal(cn)
                             End If
                             msg = "Save Complete"
                         End Using
@@ -236,9 +236,19 @@ Public Class CWHTaxDetail
     End Function
     Public Sub UpdateTotal(cn As SqlConnection)
         Dim sql As String = "
+UPDATE h
+SET h.TotalPayAmount=d.TotalAmt,
+h.TotalPayTax=d.TotalTax
+FROM Job_WHTax h INNER JOIN (
+    SELECT BranchCode,DocNo,Sum(PayAmount) as TotalAmt,Sum(PayTax) as TotalTax
+    FROM Job_WHTaxDetail 
+    GROUP BY BranchCode,DocNo
+) d
+ON h.BranchCode=d.BranchCode
+AND h.DocNo=d.DocNo 
 "
         Using cm As New SqlCommand(sql, cn)
-            cm.CommandText = sql + " and BranchCode='" + Me.BranchCode + "' and DocNo='" + Me.DocNo + "'"
+            cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
         End Using

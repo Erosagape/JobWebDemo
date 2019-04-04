@@ -37,7 +37,7 @@ End Code
     <b>ฉบับที่ 2</b><i>(สำหรับผู้ถูกหักภาษี ณ ที่จ่ายเก็บไว้เป็นหลักฐาน)</i>
 </div>
 <div style="float:right;">
-    เลขที่ <label id="txtDocNo">________________</label>
+    เลขที่ <label id="txtDocNo"></label>
 </div>
 <table border="1" style="border-style:solid;border-width:thin;border-collapse:collapse" width="100%">
     <tr>
@@ -49,12 +49,12 @@ End Code
     <tr>
         <td colspan="4" style="vertical-align:top">
             <div style="float:right">
-                เลขประจำตัวผู้เสียภาษี <label id="txtTaxNumber1">___________________________</label>
+                เลขประจำตัวผู้เสียภาษี <label id="txtTaxNumber1"></label>
             </div>
             <b>ผู้มีหน้าที่หักภาษี ณ ที่จ่าย</b>
-            <p>ชื่อ <span><label id="txtTName1">______________________________________________________________________________________________________</label></span></p>
+            <p>ชื่อ <span><label id="txtTName1"></label></span></p>
             <i>(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม หรือคณะบุคคล)</i>
-            <p>ที่อยู่ <span><label id="txtTAddress1">_______________________________________________________________________________________________________</label></span></p>
+            <p>ที่อยู่ <span><label id="txtTAddress1"></label></span></p>
             <i>(ให้ระบุ ชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด และโทรศัพท์)</i>
         </td>
     </tr>
@@ -62,12 +62,12 @@ End Code
     <tr>
         <td colspan="4" style="vertical-align:top">
             <div style="float:right">
-                เลขประจำตัวผู้เสียภาษี <label id="txtTaxNumber2">___________________________</label>
+                เลขประจำตัวผู้เสียภาษี <label id="txtTaxNumber2"></label>
             </div>
             <b>กระทำแทนโดย</b>
-            <p>ชื่อ <span><label id="txtTName2">______________________________________________________________________________________________________</label></span></p>
+            <p>ชื่อ <span><label id="txtTName2"></label></span></p>
             <i>(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม หรือคณะบุคคล)</i>
-            <p>ที่อยู่ <span><label id="txtTAddress2">_______________________________________________________________________________________________________</label></span></p>
+            <p>ที่อยู่ <span><label id="txtTAddress2"></label></span></p>
             <i>(ให้ระบุ ชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด และโทรศัพท์)</i>
         </td>
     </tr>
@@ -75,12 +75,12 @@ End Code
     <tr>
         <td colspan="4" style="vertical-align:top">
             <div style="float:right;">
-                เลขประจำตัวผู้เสียภาษี <label id="txtTaxNumber3">___________________________</label>
+                เลขประจำตัวผู้เสียภาษี <label id="txtTaxNumber3"></label>
             </div>
             <b>ผู้ถูกหักภาษี ณ ที่จ่าย</b>
-            <p>ชื่อ <span><label id="txtTName3">______________________________________________________________________________________________________</label></span></p>
+            <p>ชื่อ <span><label id="txtTName3"></label></span></p>
             <i>(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม หรือคณะบุคคล)</i>
-            <p>ที่อยู่ <span><label id="txtTAddress3">_______________________________________________________________________________________________________</label></span></p>
+            <p>ที่อยู่ <span><label id="txtTAddress3"></label></span></p>
             <i>(ให้ระบุ ชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด และโทรศัพท์)</i>
         </td>
     </tr>
@@ -91,6 +91,7 @@ End Code
             </div>
             <div style="float:left">
                 <div style="text-align:left">
+                    <input type="hidden" id="txtFormType" />
                     <input type="checkbox" id="chkFormType1" name="chkFormType">(1) ภ.ง.ด.1ก.
                     <input type="checkbox" id="chkFormType2" name="chkFormType">(2) ภ.ง.ด.1ก. พิเศษ
                     <input type="checkbox" id="chkFormType3" name="chkFormType">(3) ภ.ง.ด.2
@@ -150,9 +151,9 @@ End Code
         <td>
             4.(ก)ค่าดอกเบี้ย ฯลฯ ตามมาตรา 40(4)(ก)
         </td>
-        <td><input type="text" id="txtPayDate40" /></td>
-        <td><input type="text" id="txtPayAmount40" class="amount" /></td>
-        <td><input type="text" id="txtPayTax40" class="amount" /></td>
+        <td><input type="text" id="txtPayDate4" /></td>
+        <td><input type="text" id="txtPayAmount4" class="amount" /></td>
+        <td><input type="text" id="txtPayTax4" class="amount" /></td>
     </tr>
 
     <tr>
@@ -171,89 +172,89 @@ End Code
             &nbsp;  &nbsp;  &nbsp;  &nbsp;&nbsp;&nbsp;
             <input type="checkbox">(1.1) อัตราร้อยละ 30 ของกำไรสุทธิ
         </td>
-        <td><input type="text" id="txtPayDate411" /></td>
-        <td><input type="text" id="txtPayAmount411" class="amount" /></td>
-        <td><input type="text" id="txtPayTax411" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            &nbsp;  &nbsp;  &nbsp;  &nbsp;&nbsp;&nbsp;
-            <input type="checkbox">(1.2) อัตราร้อยละ 25 ของกำไรสุทธิ
-        </td>
-        <td><input type="text" id="txtPayDate412" /></td>
-        <td><input type="text" id="txtPayAmount412" class="amount" /></td>
-        <td><input type="text" id="txtPayTax412" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            &nbsp;  &nbsp;  &nbsp;  &nbsp;&nbsp;&nbsp;
-            <input type="checkbox">(1.3) อัตราร้อยละ 20 ของกำไรสุทธิ
-        </td>
-        <td><input type="text" id="txtPayDate413" /></td>
-        <td><input type="text" id="txtPayAmount413" class="amount" /></td>
-        <td><input type="text" id="txtPayTax413" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            &nbsp;  &nbsp;  &nbsp;  &nbsp;&nbsp;&nbsp;
-            <input type="checkbox">(1.4) อัตราอื่นๆ (ระบุ)___________ของกำไรสุทธิ
-        </td>
-        <td><input type="text" id="txtPayDate414" /></td>
-        <td><input type="text" id="txtPayAmount414" class="amount" /></td>
-        <td><input type="text" id="txtPayTax414" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            &nbsp;  &nbsp;  &nbsp;
-            (2) กรณีผู้รับเงินปันผลไม่ได้รับเครดิตภาษี เนื่องจากจ่ายจากกำไรสุทธิของกิจการที่ได้รับยกเว้นภาษีเงินได้นิติบุคคล
-        </td>
-        <td><input type="text" id="txtPayDate420" /></td>
-        <td><input type="text" id="txtPayAmount420" class="amount" /></td>
-        <td><input type="text" id="txtPayTax420" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            &nbsp;  &nbsp;  &nbsp;
-            (3) เงินปันผลหรือส่วนแบ่งกำไรที่ได้รับยกเว้นไม่ต้องนำรวมมาคำนวณเป็นรายได้เพื่อคำนวณภาษีเงินได้นิติบุคคล
-        </td>
-        <td><input type="text" id="txtPayDate430" /></td>
-        <td><input type="text" id="txtPayAmount430" class="amount" /></td>
-        <td><input type="text" id="txtPayTax430" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            &nbsp;  &nbsp;  &nbsp;
-            (4) กำไรที่รับรู้ทางบัญชีโดยวิธีส่วนได้เสีย
-        </td>
-        <td><input type="text" id="txtPayDate440" /></td>
-        <td><input type="text" id="txtPayAmount440" class="amount" /></td>
-        <td><input type="text" id="txtPayTax440" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            &nbsp;  &nbsp;  &nbsp;
-            (5) อื่นๆ (ระบุ)_____________________________
-        </td>
-        <td><input type="text" id="txtPayDate450" /></td>
-        <td><input type="text" id="txtPayAmount450" class="amount" /></td>
-        <td><input type="text" id="txtPayTax450" class="amount" /></td>
-    </tr>
-    <tr>
-        <td>
-            5.การจ่ายเงินได้ที่ต้องหักภาษี ณ ที่จ่ายตามคำสั่งกรมสรรพากรที่ออกตาม มาตรา 3 เตรส เช่น รางวัล ส่วนลดหรือประโยชน์ใด เนื่องจากการ ส่งเสริมการขาย รางวัลในการประกวด การแข่งขัน
-            การชิงโชค ค่าแสดง ของนักแสดงสาธารณะ ค่าจ้างทำของ ค่าโฆษณา ค่าเช่า ค่าขนส่ง ค่าบริการ ค่าเบี้ยประกันวินาศภัย ฯลฯ
-        </td>
         <td><input type="text" id="txtPayDate5" /></td>
         <td><input type="text" id="txtPayAmount5" class="amount" /></td>
         <td><input type="text" id="txtPayTax5" class="amount" /></td>
     </tr>
     <tr>
         <td>
-            6.อื่นๆ (ระบุ)_____________________________
+            &nbsp;  &nbsp;  &nbsp;  &nbsp;&nbsp;&nbsp;
+            <input type="checkbox">(1.2) อัตราร้อยละ 25 ของกำไรสุทธิ
         </td>
         <td><input type="text" id="txtPayDate6" /></td>
         <td><input type="text" id="txtPayAmount6" class="amount" /></td>
         <td><input type="text" id="txtPayTax6" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;  &nbsp;  &nbsp;  &nbsp;&nbsp;&nbsp;
+            <input type="checkbox">(1.3) อัตราร้อยละ 20 ของกำไรสุทธิ
+        </td>
+        <td><input type="text" id="txtPayDate7" /></td>
+        <td><input type="text" id="txtPayAmount7" class="amount" /></td>
+        <td><input type="text" id="txtPayTax7" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;  &nbsp;  &nbsp;  &nbsp;&nbsp;&nbsp;
+            <input type="checkbox">(1.4) อัตราอื่นๆ (ระบุ)<label id="txtPayDesc8"></label>ของกำไรสุทธิ
+        </td>
+        <td><input type="text" id="txtPayDate8" /></td>
+        <td><input type="text" id="txtPayAmount8" class="amount" /></td>
+        <td><input type="text" id="txtPayTax8" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;  &nbsp;  &nbsp;
+            (2) กรณีผู้รับเงินปันผลไม่ได้รับเครดิตภาษี เนื่องจากจ่ายจากกำไรสุทธิของกิจการที่ได้รับยกเว้นภาษีเงินได้นิติบุคคล
+        </td>
+        <td><input type="text" id="txtPayDate9" /></td>
+        <td><input type="text" id="txtPayAmount9" class="amount" /></td>
+        <td><input type="text" id="txtPayTax9" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;  &nbsp;  &nbsp;
+            (3) เงินปันผลหรือส่วนแบ่งกำไรที่ได้รับยกเว้นไม่ต้องนำรวมมาคำนวณเป็นรายได้เพื่อคำนวณภาษีเงินได้นิติบุคคล
+        </td>
+        <td><input type="text" id="txtPayDate10" /></td>
+        <td><input type="text" id="txtPayAmount10" class="amount" /></td>
+        <td><input type="text" id="txtPayTax10" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;  &nbsp;  &nbsp;
+            (4) กำไรที่รับรู้ทางบัญชีโดยวิธีส่วนได้เสีย
+        </td>
+        <td><input type="text" id="txtPayDate11" /></td>
+        <td><input type="text" id="txtPayAmount11" class="amount" /></td>
+        <td><input type="text" id="txtPayTax11" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            &nbsp;  &nbsp;  &nbsp;
+            (5) อื่นๆ (ระบุ)<label id="txtPayDesc12"></label>
+        </td>
+        <td><input type="text" id="txtPayDate12" /></td>
+        <td><input type="text" id="txtPayAmount12" class="amount" /></td>
+        <td><input type="text" id="txtPayTax12" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            5.การจ่ายเงินได้ที่ต้องหักภาษี ณ ที่จ่ายตามคำสั่งกรมสรรพากรที่ออกตาม มาตรา 3 เตรส เช่น รางวัล ส่วนลดหรือประโยชน์ใด เนื่องจากการ ส่งเสริมการขาย รางวัลในการประกวด การแข่งขัน
+            การชิงโชค ค่าแสดง ของนักแสดงสาธารณะ ค่าจ้างทำของ ค่าโฆษณา ค่าเช่า ค่าขนส่ง ค่าบริการ ค่าเบี้ยประกันวินาศภัย ฯลฯ
+        </td>
+        <td><input type="text" id="txtPayDate13" /></td>
+        <td><input type="text" id="txtPayAmount13" class="amount" /></td>
+        <td><input type="text" id="txtPayTax13" class="amount" /></td>
+    </tr>
+    <tr>
+        <td>
+            6.อื่นๆ (ระบุ)<label id="txtPayDesc14"></label>
+        </td>
+        <td><input type="text" id="txtPayDate14" /></td>
+        <td><input type="text" id="txtPayAmount14" class="amount" /></td>
+        <td><input type="text" id="txtPayTax14" class="amount" /></td>
     </tr>
     <tr style="text-align:right">
         <td colspan="2"><b>รวมเงินที่จ่ายและภาษีที่หักนำส่ง</b></td>
@@ -270,7 +271,7 @@ End Code
     </tr>
     <tr>
         <td colspan="4">
-            <b>เงินที่จ่ายเข้า  </b>กองทุนสงเคราะห์ครูโรงเรียนเอกชน<input type="text" id="txtTeacherAmt" class="amount" value="_____" />บาท  กองทุนประกันสังคม<input type="text" id="txtSoLicenseAmt" class="amount" value="_____" />บาท กองทุนสำรองเลี้ยงชีพ<input type="text" id="txtSoAccAmount" class="amount" value="_____" />บาท
+            <b>เงินที่จ่ายเข้า  </b>กองทุนสงเคราะห์ครูโรงเรียนเอกชน<input type="text" id="txtTeacherAmt" class="amount" value="" />บาท  กองทุนประกันสังคม<input type="text" id="txtSoLicenseAmt" class="amount" value="" />บาท กองทุนสำรองเลี้ยงชีพ<input type="text" id="txtSoAccAmount" class="amount" value="" />บาท
         </td>
     </tr>
 </table>
@@ -283,13 +284,13 @@ End Code
             <input type="checkbox" id="chkPayTaxType1" name="chkPayTaxType">(1) หักภาษี ณ ที่จ่าย<br>
             <input type="checkbox" id="chkPayTaxType2" name="chkPayTaxType">(2) ออกภาษีให้ตลอดไป<br>
             <input type="checkbox" id="chkPayTaxType3" name="chkPayTaxType">(3) ออกภาษีให้ครั้งเดียว<br>
-            <input type="checkbox" id="chkPayTaxType4" name="chkPayTaxType">(4) อื่นๆ (ระบุ)<input type="text" id="txtPayTaxOther" value="______" /><br>
+            <input type="checkbox" id="chkPayTaxType4" name="chkPayTaxType">(4) อื่นๆ (ระบุ)<input type="text" id="txtPayTaxOther" value="" /><br>
         </td>
 
         <td>
             <p>ขอรับรองว่า ข้อความและตัวเลขดังกล่าวข้างต้นถูกต้องตรงกับความจริงทุกประการ</p><br /><br /><br />
-            (ลงชื่อ)<label id="txtUpdateName">________________</label>  ผู้มีหน้าที่หักภาษี ณ ที่จ่าย<br>
-            <label id="txtDocDate">________________</label> วัน เดือน ปี ที่ออกหนังสือรับรอง
+            (ลงชื่อ)<label id="txtUpdateName"></label>  ผู้มีหน้าที่หักภาษี ณ ที่จ่าย<br>
+            <label id="txtDocDate"></label> วัน เดือน ปี ที่ออกหนังสือรับรอง
         </td>
 
         <td>
@@ -302,3 +303,85 @@ End Code
     <b>หมายเหตุ</b> ให้สามารถอ้างอิงหรือสอบยันกันได้ระหว่างลำดับที่ตามหนังสือรับรองฯ กับแบบยื่นรายการภาษีหัก ณ ที่จ่าย<br />
     <b>คำเตือน</b> ผู้มีหน้าที่ออกหนังสือรับรองหักภาษี ณ ที่จ่าย ฝ่าฝืนไม่ปฏิบัติตามมาตรา 50 ทวิ แห่งประมวลรัษฏากรต้องรับโทษทางอาญาตามมาตรา 35 แห่งประมวลรัษฏากร
 </div>
+<script type="text/javascript">
+    let path = '@Url.Content("~")';
+    $(document).ready(function () {
+        let branch = getQueryString('branch');
+        let code = getQueryString('code');
+        if (branch != "" && code != "") {
+            $.get(path + 'acc/getwhtaxgrid?branch=' + branch + '&code=' + code, function (r) {
+                if (r.data[0].Table !== undefined) {
+                    let h = r.data[0].Table[0];
+                    $('#txtDocNo').text(h.DocNo);
+                    $('#txtTaxNumber1').text(h.IDCard1);
+                    if (h.TaxNumber1 !== null) {
+                        $('#txtTaxNumber1').text(h.TaxNumber1);
+                    }
+                    $('#txtTName1').text(h.TName1);
+                    $('#txtTAddress1').text(h.TAddress1);
+                    $('#txtTaxNumber2').text(h.IDCard2);
+                    if (h.TaxNumber2 !== null) {
+                        $('#txtTaxNumber2').text(h.TaxNumber2);
+                    }
+                    $('#txtTName2').text(h.TName2);
+                    $('#txtTAddress2').text(h.TAddress2);
+                    $('#txtTaxNumber3').text(h.IDCard3);
+                    if (h.TaxNumber3 !== null) {
+                        $('#txtTaxNumber3').text(h.TaxNumber3);
+                    }
+                    $('#txtTName3').text(h.TName3);
+                    $('#txtTAddress3').text(h.TAddress3);
+                    $('#txtSeqInform').val(h.SeqInForm);
+                    $('#txtFormType').val(h.FormType);
+                    $('input:radio[name:chkFormType]:checked').prop('checked', false);
+                    $('#chkFormType' + h.FormType).prop('checked',true);
+                    $('#txtTeacherAmt').val(h.TeacherAmt);
+                    $('#txtSoLicenseAmt').val(h.SoLicenseAmt);
+                    $('#txtSoAccAmount').val(h.SoAccAmount);
+                    $('#txtPayTaxType').val(h.PayTaxType);
+                    $('input:radio[name:chkPayTaxType]:checked').prop('checked', false);
+                    $('#chkPayTaxType' + h.PayTaxType).prop('checked',false);
+                    $('#txtUpdateName').text(h.UpdateName);
+                    $('#txtDocDate').text(CDateTH(h.DocDate));
+
+                    let d = r.data[0].Table;
+                    let totalamt = 0;
+                    let totaltax = 0;
+                    for (let i = 0; i < d.length; i++) {
+                        let incType = CNum(d[i].IncType);
+                        if (incType > 0 && incType <= 14) {
+                            $('#txtPayDate'+incType).val(CDateTH(d[i].PayDate));
+
+                            let amt=Number($('#txtPayAmount'+incType).val());
+                            let tax=Number($('#txtPayTax'+incType).val());
+
+                            amt += Number(d[i].PayAmount);
+                            tax += Number(d[i].PayTax);
+
+                            totalamt += Number(d[i].PayAmount);
+                            totaltax += Number(d[i].PayTax);
+
+                            $('#txtPayAmount' + incType).val(CDbl(amt,2));
+                            $('#txtPayTax' + incType).val(CDbl(tax,2));
+
+                            switch (incType) {
+                                case 8:
+                                case 12:
+                                case 14:
+                                    $('#txtPayDesc' + incType).text(d[0].PayTaxDesc);
+                                    $('#txtPayDesc' + incType).text(d[0].PayTaxDesc);
+                                    $('#txtPayDesc' + incType).text(d[0].PayTaxDesc);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                    $('#txtSumPayAmount').val(totalamt);
+                    $('#txtSumPayTax').val(totaltax);
+                    $('#txtPayTaxMoney').val(CNumEng(totaltax));
+                }
+            });
+        }
+    });
+</script>
