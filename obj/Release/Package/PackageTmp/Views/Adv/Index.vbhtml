@@ -888,14 +888,40 @@ End Code
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
 
             if (dt.DocStatus > 2) {
-                //if document paymented/cancelled/cleared then disable save button
+                //if document is paymented/cancelled/cleared then disable save button
+                $('#chkApprove').attr('disabled', 'disabled');
+                $('#txtApproveDate').attr('disabled', 'disabled');
+                $('#txtApproveBy').attr('disabled', 'disabled');
+                $('#txtApproveTime').attr('disabled', 'disabled');
+
+                $('#chkPayment').attr('disabled', 'disabled');
+                $('#txtPaymentDate').attr('disabled', 'disabled');
+                $('#txtPaymentBy').attr('disabled', 'disabled');
+                $('#txtPaymentTime').attr('disabled', 'disabled');
+                $('#txtPaymentRef').attr('disabled', 'disabled');
+
+                $('#chkCancel').attr('disabled', 'disabled');
+                $('#txtCancelDate').attr('disabled', 'disabled');
+                $('#txtCancelBy').attr('disabled', 'disabled');
+                $('#txtCancelTime').attr('disabled', 'disabled');
+
                 $('#btnSave').attr('disabled', 'disabled');
             } else {
                 //if document approved by this user or not then check authorized to unlock 
                 if (dt.DocStatus == 2 && user == dt.ApproveBy && userRights.indexOf('E') >= 0) {
+                    $('#txtApproveDate').removeAttr('disabled');
+                    $('#txtApproveBy').removeAttr('disabled');
+                    $('#txtApproveTime').removeAttr('disabled');
+                    $('#chkApprove').removeAttr('disabled');
+
                     $('#btnSave').removeAttr('disabled');
                 } else {
                     if (dt.DocStatus == 2) {
+                        $('#chkApprove').attr('disabled', 'disabled');
+                        $('#txtApproveDate').attr('disabled', 'disabled');
+                        $('#txtApproveBy').attr('disabled', 'disabled');
+                        $('#txtApproveTime').attr('disabled', 'disabled');
+
                         $('#btnSave').attr('disabled', 'disabled');
                     }
                 }

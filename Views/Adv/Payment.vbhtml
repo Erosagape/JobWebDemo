@@ -3,6 +3,7 @@
 End Code
 <div class="panel-body">
     <div class="container">
+        <input type="hidden" id="txtControlNo" />
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab1">Select document</a></li>
             <li><a data-toggle="tab" href="#tab2">Payment Info</a></li>
@@ -409,7 +410,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvCash, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvCash, 2),
                     acType:'CA'
                 };
                 list.push(obj);
@@ -426,7 +427,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChqCash, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvChqCash, 2),
                     acType:'CU'
                 };
                 list.push(obj);
@@ -443,7 +444,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChq, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvChq, 2),
                     acType:'CH'
                 };
                 list.push(obj);
@@ -460,7 +461,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvCred, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvCred, 2),
                     acType:'CR'
                 };
                 list.push(obj);
@@ -670,7 +671,9 @@ End Code
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
-                SetGridAdv();
+                if (response) {
+                    PrintVoucher($('#txtBranchCode').val(), $('#txtControlNo').val());
+                }
                 response ? alert(msg) : alert("Cannot Payment");
             },
             error: function (e) {
@@ -710,6 +713,7 @@ End Code
                 if (response.result.data != null) {
                     docno = response.result.data;
                     if (docno != '') {
+                        $('#txtControlNo').val(docno);
                         SavePayment();
                     }
                 }
@@ -762,5 +766,8 @@ End Code
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
         $('#txtCustCode').focus();
+    }
+    function PrintVoucher(br, cno) {
+        window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());
     }
 </script>

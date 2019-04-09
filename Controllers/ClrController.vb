@@ -152,7 +152,7 @@ ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo
 select a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
 a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,a.ReceiveDate,a.ApproveDate,
 b.CustCode,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
-b.AdvTotal,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi
+b.AdvTotal,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
 FROM Job_ClearHeader as a 
 left join 
 (
@@ -161,7 +161,8 @@ left join
     SUM(d.UsedAmount) as ClrAmt,sum(d.AdvAmount) as AdvTotal,
     SUM(CASE WHEN d.ChargeVAT>0 THEN d.UsedAmount ELSE 0 END) as BaseVat,
     SUM(CASE WHEN d.Tax50Tavi>0 THEN d.UsedAmount ELSE 0 END) as Base50Tavi,
-    SUM(d.ChargeVAT) as ClrVat,SUM(d.Tax50Tavi) as Clr50Tavi
+    SUM(d.ChargeVAT) as ClrVat,SUM(d.Tax50Tavi) as Clr50Tavi,
+    MAX(VATRate) as RateVAT,MAX(Tax50TaviRate) as Rate50Tavi
     FROM Job_ClearDetail d
     inner join Job_Order j on d.JobNo=j.JNo and d.BranchCode=j.BranchCode
     GROUP BY d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,

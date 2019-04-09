@@ -139,12 +139,11 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
     </tr>
 </table>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var serv = [];
+    let path = '@Url.Content("~")';
     $(document).ready(function () {
         ShowCompany('#divCompany');
-        var branch = getQueryString('branch');
-        var controlno = getQueryString('advno');
+        let branch = getQueryString('branch');
+        let voucher = getQueryString('controlno');
     });
 
     function ShowData(data) {

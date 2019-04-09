@@ -170,7 +170,9 @@ End Code
                 </div>
             </div>
             <div class="tab-pane fade" id="tabDetail">
-                <button id="btnAddDoc" class="btn btn-default" onclick="ClearDetail()">Add Detail</button>
+                <p>
+                    <button id="btnAddDoc" class="btn btn-default" onclick="ClearDetail()">Add Detail</button>
+                </p>
                 <p>
                     <table id="tbDetail" class="table table-bordered">
                         <thead>
@@ -430,6 +432,7 @@ End Code
     const path = '@Url.Content("~")';
     const user = '@ViewBag.User';
     const userRights = '@ViewBag.UserRights';
+    var docSel = null;
     $(document).ready(function () {
         SetEvents();
         SetLOVs();
@@ -583,11 +586,15 @@ End Code
         $('#txtBranch2').val('@ViewBag.PROFILE_TAXBRANCH');
     }
     function ReadAdv(dr) {
-        $('#txtPayDate').val(CDateEN(dr.PaymentDate));
-        $('#txtPayAmount').val(dr.TotalAdvance);
-        $('#txtPayTax').val(dr.Total50Tavi);
-        $('#txtPayTaxDesc').val(dr.TRemark);
-        $('#txtJNo').val(dr.JobNo);
+        let dh = docSel.header.find(function (chk) {
+            return chk.BranchCode==dr.BranchCode && chk.AdvNo==dr.AdvNo
+        });
+        $('#txtPayDate').val(CDateEN(dh.PaymentDate));
+        $('#txtPayAmount').val(dr.AdvAmount);
+        $('#txtPayRate').val(dr.Rate50Tavi);
+        $('#txtPayTax').val(dr.Charge50Tavi);
+        $('#txtPayTaxDesc').val(dr.SDescription);
+        $('#txtJNo').val(dr.ForJNo);
         $('#txtDocRefNo').val(dr.AdvNo);
     }
     function ReadClr(dr) {
@@ -596,6 +603,7 @@ End Code
         $('#txtPayTax').val(dr.Clr50Tavi);
         $('#txtJNo').val(dr.JobNo);
         $('#txtDocRefNo').val(dr.ClrNo);
+        $('#txtPayRate').val(dr.Rate50Tavi);
     }
     function ReadJob(dr) {
         $('#txtJNo').val(dr.JNo);
@@ -604,16 +612,20 @@ End Code
         let reftype = $('#txtDocRefType').val();
         switch (reftype) {
             case "1": //ADV
-                $.get(path + 'Adv/GetAdvanceGrid' + '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), function (r) {
-                    let d = r.adv.data[0].Table;
+                $.get(path + 'Adv/GetAdvanceDetail' + '?branchcode=' + $('#txtBranchCode').val() + '&taxnumber=' + $('#txtTaxNumber1').val(), function (r) {
+                    docSel = r.adv;
+                    let d = docSel.detail;
+                    let c = d.filter(function (chk) {
+                        return chk.Rate50Tavi >0
+                    });
                     $('#tbDoc').DataTable({
-                        data: d,
+                        data: c,
                         selected: true, //ให้สามารถเลือกแถวได้
                         columns: [ //กำหนด property ของ header column
                             { data: null, title: "#" },
                             { data: "AdvNo", title: "รหัส" },
-                            { data: "CustInvNo", title: "คำอธิบาย" },
-                            { data: "TotalAdvance", title: "ยอดเงิน" }
+                            { data: "SDescription", title: "คำอธิบาย" },
+                            { data: "AdvAmount", title: "ยอดเงิน" }
                         ],
                         columnDefs: [ //กำหนด control เพิ่มเติมในแต่ละแถว
                             {
@@ -627,7 +639,16 @@ End Code
                         ],
                         destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                     });
-                    BindEvent('#tbDoc', '#frmSearchDoc', ReadAdv);
+                    $('#tbDoc tbody').on('click', 'button', function () {
+                        let dt = GetSelect('#tbDoc', this); //read current row selected
+                        ReadAdv(dt); //callback function from caller 
+                        $('#frmSearchDoc').modal('hide');
+                    });
+                    $('#tbDoc tbody').on('click', 'tr', function () {
+                        $('#tbDoc tbody > tr').removeClass('selected'); //ล้างทุก row ที่มีการ select ก่อน
+                        $(this).addClass('selected'); //select row ใหม่
+                    });
+                    $('#frmSearchDoc').modal('show');
                 });
                 break;
             case "2": //CLR
@@ -640,7 +661,7 @@ End Code
                             { data: null, title: "#" },
                             { data: "ClrNo", title: "รหัส" },
                             { data: "AdvNO", title: "ใบเบิก" },
-                            { data: "TotalExpense", title: "ยอดเงิน" }
+                            { data: "Base50Tavi", title: "ยอดเงิน" }
                         ],
                         "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
                             {
@@ -697,8 +718,8 @@ End Code
         $('#txtSoAccAmount').val(dr.SoAccAmount);
         $('#txtPayeeAccNo').val(dr.PayeeAccNo);
         $('#txtSoTaxNo').val(dr.SoTaxNo);
-        //$('#txtPayTaxType').val(dr.PayTaxType);
-        //$('#txtPayTaxOther').val(dr.PayTaxOther);
+        $('#txtPayTaxType').val(dr.PayTaxType);
+        $('#txtPayTaxOther').val(dr.PayTaxOther);
         $('#chkCancel').prop('checked', dr.CancelProve == null || dr.CancelProve == '' ? false : true);
         $('#txtCancelProve').val(dr.CancelProve);
         $('#txtCancelReason').val(dr.CancelReason);
@@ -829,8 +850,8 @@ End Code
             SoAccAmount: CNum($('#txtSoAccAmount').val()),
             PayeeAccNo: $('#txtPayeeAccNo').val(),
             SoTaxNo: $('#txtSoTaxNo').val(),
-            PayTaxType: 0,
-            PayTaxOther: '',
+            PayTaxType: $('#txtPayTaxType').val(),
+            PayTaxOther: $('#txtPayTaxOther').val(),
             CancelProve: $('#txtCancelProve').val(),
             CancelReason: $('#txtCancelReason').val(),
             CancelDate: CDateTH($('#txtCancelDate').val()),

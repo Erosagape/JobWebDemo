@@ -409,7 +409,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvCash, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvCash, 2),
                     acType:'CA'
                 };
                 list.push(obj);
@@ -426,7 +426,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChqCash, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvChqCash, 2),
                     acType:'CU'
                 };
                 list.push(obj);
@@ -443,7 +443,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChq, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvChq, 2),
                     acType:'CH'
                 };
                 list.push(obj);
@@ -460,7 +460,7 @@ End Code
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvCred, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
+                    TotalAmount: CDbl(o.AdvCred, 2),
                     acType:'CR'
                 };
                 list.push(obj);

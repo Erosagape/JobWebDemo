@@ -419,7 +419,7 @@ Public Class CWHTaxHeader
         If pFormatSQL = "" Then
             m_DocNo = ""
         Else
-            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(DocNo) as t FROM Job_WHTax WHERE BranchCode='{0}' And AdvNo Like '%{1}' ", m_BranchCode, pFormatSQL), pFormatSQL)
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(DocNo) as t FROM Job_WHTax WHERE BranchCode='{0}' And DocNo Like '%{1}' ", m_BranchCode, pFormatSQL), pFormatSQL)
             m_DocNo = retStr
         End If
     End Sub

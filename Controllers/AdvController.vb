@@ -376,9 +376,18 @@ FROM Job_Order WHERE BranchCode=a.BranchCode AND JNo in(SELECT ForJNo FROM Job_A
 AND AdvNo=a.AdvNo AND ForJNo<>'')
 FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 )) as CustInvNo
-,b.TaxNumber,b.NameThai,b.NameEng 
+,b.TaxNumber,b.NameThai,b.NameEng
+,c.RateVAT,c.Rate50Tavi,c.BaseVAT,c.Base50Tavi 
 FROM Job_AdvHeader as a LEFT JOIN
 Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
+LEFT JOIN (
+SELECT BranchCode,AdvNo,MAX(VATRate) as RateVAT,MAX(Rate50Tavi) as Rate50Tavi,
+SUM(CASE WHEN Is50Tavi=1 THEN AdvAmount ELSE 0 END) as Base50Tavi,
+SUM(CASE WHEN IsChargeVAT=1 THEN AdvAmount ELSE 0 END) as BaseVAT
+FROM Job_AdvDetail 
+GROUP BY BranchCode,AdvNo
+) c
+ON a.BranchCode=c.BranchCode AND a.AdvNo=c.AdvNo
 "
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
                 Dim json = "{""adv"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
@@ -429,20 +438,28 @@ Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
                 Dim Branch As String = ""
                 If Not IsNothing(Request.QueryString("BranchCode")) Then
                     Branch = Request.QueryString("BranchCode")
+                Else
+                    Return Content("{""adv"":{""detail"":[],""msg"":""Please select Branch""}}", jsonContent)
                 End If
 
                 Dim tSqlW As String = String.Format(" WHERE BranchCode='{0}'", Branch)
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     tSqlW &= " AND AdvNo='" & Request.QueryString("AdvNo") & "'"
                 End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlW &= " AND AdvNo IN(SELECT AdvNo FROM Job_AdvHeader WHERE BranchCode='" & Branch & "' AND CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "'))"
+                End If
 
                 Dim oDataD = oADVD.GetData(tSqlW)
                 Dim jsond As String = JsonConvert.SerializeObject(oDataD)
-                Dim json = "{""adv"":{""detail"":" & jsond & "}}"
+                Dim oDataH = New CAdvHeader(jobWebConn).GetData(tSqlW)
+                Dim jsonh As String = JsonConvert.SerializeObject(oDataH)
+
+                Dim json = "{""adv"":{""detail"":" & jsond & ",""header"":" & jsonh & "}}"
 
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""adv"":{""detail"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
     End Class

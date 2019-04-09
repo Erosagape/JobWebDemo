@@ -310,8 +310,8 @@ End Code
         let code = getQueryString('code');
         if (branch != "" && code != "") {
             $.get(path + 'acc/getwhtaxgrid?branch=' + branch + '&code=' + code, function (r) {
-                if (r.data[0].Table !== undefined) {
-                    let h = r.data[0].Table[0];
+                if (r.whtax.data[0].Table !== undefined) {
+                    let h = r.whtax.data[0].Table[0];
                     $('#txtDocNo').text(h.DocNo);
                     $('#txtTaxNumber1').text(h.IDCard1);
                     if (h.TaxNumber1 !== null) {
@@ -333,18 +333,18 @@ End Code
                     $('#txtTAddress3').text(h.TAddress3);
                     $('#txtSeqInform').val(h.SeqInForm);
                     $('#txtFormType').val(h.FormType);
-                    $('input:radio[name:chkFormType]:checked').prop('checked', false);
+                    $('input:checkbox[name=chkFormType]:checked').prop('checked', false);
                     $('#chkFormType' + h.FormType).prop('checked',true);
                     $('#txtTeacherAmt').val(h.TeacherAmt);
-                    $('#txtSoLicenseAmt').val(h.SoLicenseAmt);
+                    $('#txtSoLicenseAmt').val(h.SoLicenseAmount);
                     $('#txtSoAccAmount').val(h.SoAccAmount);
                     $('#txtPayTaxType').val(h.PayTaxType);
-                    $('input:radio[name:chkPayTaxType]:checked').prop('checked', false);
-                    $('#chkPayTaxType' + h.PayTaxType).prop('checked',false);
+                    $('input:checkbox[name=chkPayTaxType]:checked').prop('checked', false);
+                    $('#chkPayTaxType' + h.PayTaxType).prop('checked',true);
                     $('#txtUpdateName').text(h.UpdateName);
                     $('#txtDocDate').text(CDateTH(h.DocDate));
 
-                    let d = r.data[0].Table;
+                    let d = r.whtax.data[0].Table;
                     let totalamt = 0;
                     let totaltax = 0;
                     for (let i = 0; i < d.length; i++) {
