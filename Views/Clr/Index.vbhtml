@@ -1018,7 +1018,7 @@ End Code
             Tax50Tavi: $('#txtWHT').val(),
             AdvNO: dtl.AdvNO,
             AdvItemNo: dtl.AdvItemNo,
-            AdvAmount: dtl.AdvAmount,
+            AdvAmount: ($('#chkDuplicate').prop('checked') == true ? $('#txtAMT').val() : dtl.AdvAmount),
             UsedAmount: $('#txtAMT').val(),
             IsQuoItem: dtl.IsQuoItem,
             SlipNO: $('#txtSlipNo').val(),
@@ -1213,10 +1213,10 @@ End Code
                     { data: "JobNo", title: "Job Number" },
                     { data: "CustInvNo", title: "Cust Inv" },
                     { data: "DocStatus", title: "Status" },
-                    { data: "TotalExpense", title: "Total" },
+                    { data: "ClrAmt", title: "Clr.Total" },
                     { data: "CurrencyCode", title: "Currency" },
                     { data: "AdvNO", title: "Adv No" },
-                    { data: "AdvTotal", title: "Adv Total" },
+                    { data: "AdvTotal", title: "Adv.Total" },
                     { data: "TRemark", title: "Remark" },
                 ],
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
@@ -1458,47 +1458,51 @@ End Code
         let branch = $('#txtBranchCode').val();
         //$.get(path + 'Clr / GetAdvForClear ? branchcode = '+branch+' & jtype=' + jtype + GetClrFrom(cfrom), function (r) {
         $.get(path + 'Clr/GetAdvForClear?branchcode=' + branch + '&jtype=' + jtype, function (r) {
-            let d = r.clr.data[0].Table;
-            $('#tbAdvance').DataTable({
-                data: d,
-                selected: true, //ให้สามารถเลือกแถวได้
-                columns: [ //กำหนด property ของ header column
-                    { data: "AdvNO", title: "Adv.No" },
-                    {
-                        data: "AdvDate", title: "Adv.Date",
-                        render: function (data) {
-                            return CDateEN(data);
-                        }
-                    },
-                    { data: "ItemNo", title: "#" },
-                    { data: "SICode", title: "Code" },
-                    { data: "SDescription", title: "Expense Name" },
-                    { data: "JobNo", title: "Job" },
-                    { data: "CurrencyCode", title: "Currency" },
-                    { data: "CurRate", title: "Rate" },
-                    { data: "Qty", title: "Qty" },
-                    { data: "AdvNO", title: "Unit" },
-                    { data: "AdvAmount", title: "Adv Total" },
-                    { data: "Tax50Tavi", title: "50Tavi" },
-                ],
-                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-            });
-            $('#tbAdvance tbody').on('click', 'tr', function () {
-                $('#tbAdvance tbody > tr').removeClass('selected');
-                $(this).addClass('selected');
+            if (r.clr.data.length > 0) {
+                let d = r.clr.data[0].Table;
+                $('#tbAdvance').DataTable({
+                    data: d,
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: "AdvNO", title: "Adv.No" },
+                        {
+                            data: "AdvDate", title: "Adv.Date",
+                            render: function (data) {
+                                return CDateEN(data);
+                            }
+                        },
+                        { data: "ItemNo", title: "#" },
+                        { data: "SICode", title: "Code" },
+                        { data: "SDescription", title: "Expense Name" },
+                        { data: "JobNo", title: "Job" },
+                        { data: "CurrencyCode", title: "Currency" },
+                        { data: "CurRate", title: "Rate" },
+                        { data: "Qty", title: "Qty" },
+                        { data: "AdvNO", title: "Unit" },
+                        { data: "AdvAmount", title: "Adv Total" },
+                        { data: "Tax50Tavi", title: "50Tavi" },
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                $('#tbAdvance tbody').on('click', 'tr', function () {
+                    $('#tbAdvance tbody > tr').removeClass('selected');
+                    $(this).addClass('selected');
 
-                let dt = $('#tbAdvance').DataTable().row(this).data(); //read current row selected
+                    let dt = $('#tbAdvance').DataTable().row(this).data(); //read current row selected
 
-                dt.BranchCode = $('#txtBranchCode').val();
-                dt.ClrNo = $('#txtClrNo').val();
-                dtl = dt;
-                $('#frmAdvance').modal('hide');
+                    dt.BranchCode = $('#txtBranchCode').val();
+                    dt.ClrNo = $('#txtClrNo').val();
+                    dtl = dt;
+                    $('#frmAdvance').modal('hide');
 
-                LoadDetailFromAdv(dt);
-                $('#frmDetail').modal('show');
+                    LoadDetailFromAdv(dt);
+                    $('#frmDetail').modal('show');
 
-            });
-            $('#frmAdvance').modal('show');
+                });
+                $('#frmAdvance').modal('show');
+            } else {
+                alert("Not found data for clear");
+            }
         });
     }
 </script>

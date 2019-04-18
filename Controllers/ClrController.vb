@@ -152,7 +152,7 @@ ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo
 select a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
 a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,a.ReceiveDate,a.ApproveDate,
 b.CustCode,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
-b.AdvTotal,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
+b.AdvTotal,b.ClrAmt,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
 FROM Job_ClearHeader as a 
 left join 
 (

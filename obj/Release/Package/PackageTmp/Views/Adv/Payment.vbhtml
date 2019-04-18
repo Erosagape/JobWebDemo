@@ -115,7 +115,9 @@ End Code
                         To Bank:<select id="cboBankCash" class="form-control"></select>
                         To Branch:<input type="text" id="txtBankBranchCash" class="form-control" />
                         Pay To:<input type="text" id="txtCashPayTo" class="form-control" />
-                        <br/>
+                        <br />
+                        <input type="hidden" id="fldBankCodeCash" />
+                        <input type="hidden" id="fldBankBranchCash" />
                     </div>
                     <div class="col-sm-3 table-bordered" id="dvChqCash">
                         <b>Company Chq :</b><input type="text" id="txtAdvChqCash" class="form-control" value="" />
@@ -143,6 +145,8 @@ End Code
                         Chq Branch:<input type="text" id="txtBankBranchChqCash" class="form-control" />
                         Pay To:<input type="text" id="txtChqCashPayTo" class="form-control" />
                         <br />
+                        <input type="hidden" id="fldBankCodeChqCash" />
+                        <input type="hidden" id="fldBankBranchChqCash" />
                     </div>
                     <div class="col-sm-3 table-bordered" id="dvChq">
                         <b>Customer Chq : </b><input type="text" id="txtAdvChq" class="form-control" value="" />
@@ -235,6 +239,20 @@ End Code
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
+        $('#txtBookCash').keydown(function (event) {
+            if (event.which == 13) {
+                $('#fldBankCodeCash').val('');
+                $('#fldBankBranchCash').val('');
+                CallBackQueryBookAccount(path, $('#txtBranchCode').val(), $('#txtBookCash').val(), ReadBookCash);
+            }
+        });
+        $('#txtBookChqCash').keydown(function (event) {
+            if (event.which == 13) {
+                $('#fldBankCodeChqCash').val('');
+                $('#fldBankBranchChqCash').val('');
+                CallBackQueryBookAccount(path, $('#txtBranchCode').val(), $('#txtBookChqCash').val(), ReadBookChq);
+            }
+        });
         $('#txtReqBy').keydown(function (event) {
             if (event.which == 13) {
                 $('#txtReqName').val('');
@@ -253,7 +271,7 @@ End Code
                 ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
         });
-
+        
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             let dv = document.getElementById("dvLOVs");
@@ -568,8 +586,8 @@ End Code
                 PRType: 'P',
                 ChqNo: '',
                 BookCode: $('#txtBookCash').val(),
-                BankCode: '',
-                BankBranch: '',
+                BankCode: $('#fldBankCodeCash').val(),
+                BankBranch: $('#fldBankBranchCash').val(),
                 ChqDate: '',
                 CashAmount: CNum($('#txtAdvCash').val()),
                 ChqAmount: 0,
@@ -604,7 +622,7 @@ End Code
                 PRVoucher: '',
                 PRType: 'P',
                 ChqNo: $('#txtRefNoChqCash').val(),
-                BookCode: $('#txtBookChqCash').val(),
+                BookCode: '',
                 BankCode: '',
                 BankBranch: '',
                 ChqDate: CDateTH($('#txtChqCashTranDate').val()),
@@ -642,8 +660,8 @@ End Code
                 PRType: 'P',
                 ChqNo: $('#txtRefNoChq').val(),
                 BookCode: $('#txtBookChq').val(),
-                BankCode: $('#cboBankChq').val(),
-                BankBranch: $('#txtBankBranchChq').val(),
+                BankCode: $('#fldBankCodeChqCash').val(),
+                BankBranch: $('#fldBankBranchChqCash').val(),
                 ChqDate: CDateTH($('#txtChqTranDate').val()),
                 CashAmount: 0,
                 ChqAmount: CNum($('#txtAdvChq').val()),
@@ -663,8 +681,8 @@ End Code
                 PayChqTo: $('#txtChqPayTo').val(),
                 DocNo: '',
                 SICode: '',
-                RecvBank: '',
-                RecvBranch: '',
+                RecvBank: $('#cboBankChq').val(),
+                RecvBranch: $('#txtBankBranchChq').val(),
                 acType: 'CH'
             });
         }
@@ -678,7 +696,7 @@ End Code
                 PRVoucher: '',
                 PRType: 'P',
                 ChqNo: '',
-                BookCode: $('#txtBookCred').val(),
+                BookCode: '',
                 BankCode: '',
                 BankBranch: '',
                 ChqDate: CDateTH($('#txtCredTranDate').val()),
@@ -845,10 +863,14 @@ End Code
     }
     function ReadBookCash(dt) {
         $('#txtBookCash').val(dt.BookCode);
+        $('#fldBankCodeCash').val(dt.BankCode);
+        $('#fldBankBranchCash').val(dt.BankBranch);
         $('#txtBookCash').focus();
     }
     function ReadBookChq(dt) {
         $('#txtBookChqCash').val(dt.BookCode);
+        $('#fldBankCodeChqCash').val(dt.BankCode);
+        $('#fldBankBranchChqCash').val(dt.BankBranch);
         $('#txtBookChqCash').focus();
     }
     function ReadReqBy(dt) {

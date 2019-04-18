@@ -389,6 +389,7 @@ End Code
         <div id="dvCommand">
             <button id="btnAdd" class="btn btn-default" onclick="ClearForm()">Clear Data</button>
             <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save Data</button>
+            <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print Data</button>
         </div>
     </div>
 </div>
@@ -793,8 +794,8 @@ End Code
                 { data: "ChqAmount", title: "Cheque" },
                 { data: "CashAmount", title: "Cash" },
                 { data: "CreditAmount", title: "Credit" },
+                { data: "CurrencyCode", title: "Currency" },
                 { data: "PRVoucher", title: "Voucher" },
-                { data: "BookCode", title: "Book acc" },
                 { data: "ChqNo", title: "Chq.No" },
                 {
                     data: "ChqDate", title: "Chq.Date",
@@ -1174,4 +1175,12 @@ End Code
         totalamt -= vatinc;
         $('#txtTotalAmt').val(CDbl(totalamt, 4));
     }
+    function PrintData() {
+        if (userRights.indexOf('P') < 0) {
+            alert('you are not authorize to print');
+            return;
+        }
+        window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());
+    }
+
 </script>

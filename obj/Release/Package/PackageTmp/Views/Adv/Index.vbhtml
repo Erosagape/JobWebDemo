@@ -465,11 +465,16 @@ End Code
         });
         $('#cboSTCode').on('change', function () {
             if ($('#cboSTCode').val() == '') {
+                $('#txtSICode').val('');
+                $('#txtSDescription').val('');
+
                 $('#txtSICode').attr('disabled', 'disabled');
                 $('#txtSDescription').attr('disabled', 'disabled');
                 $('#btnBrowseS').attr('disabled', 'disabled');
+                $('#chkDuplicate').prop('checked', true);
                 return;
             }
+            $('#chkDuplicate').prop('checked', false);
             $('#txtSICode').removeAttr('disabled');
             $('#txtSDescription').removeAttr('disabled');
             $('#btnBrowseS').removeAttr('disabled');
@@ -1430,6 +1435,8 @@ End Code
         $('#txtSICode').focus();
         if (dt != undefined) {
             $('#txtSICode').val(dt.SICode);
+            $('#cboSTCode').val(dt.GroupCode);
+
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
             $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");

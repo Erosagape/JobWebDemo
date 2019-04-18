@@ -466,7 +466,9 @@ Public Class CClrDetail
                             dr("Tax50TaviRate") = Me.Tax50TaviRate
                             dr("QNo") = Me.QNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -648,4 +650,23 @@ Public Class CClrDetail
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = "
+UPDATE a
+SET a.AdvTotal=b.AdvTotal,
+a.TotalExpense=b.TotalExpense,
+a.ClearTotal=b.AdvTotal-b.TotalExpense 
+FROM Job_ClearHeader a INNER JOIN (
+  SELECT BranchCode,ClrNo,Sum(AdvAmount) as AdvTotal,Sum(UsedAmount) as TotalExpense 
+  FROM Job_ClearDetail
+  GROUP BY BranchCode,ClrNo
+) b
+ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
+"
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " and a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+    End Sub
 End Class
