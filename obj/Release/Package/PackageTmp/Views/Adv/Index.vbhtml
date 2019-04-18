@@ -217,12 +217,14 @@ End Code
                                     <th>SICode</th>
                                     <th>Description</th>
                                     <th>Job No</th>
+                                    <th>Currency</th>
+                                    <th>Rate</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
                                     <th>Amount</th>
                                     <th>Vat</th>
                                     <th>WH-Tax</th>
                                     <th>Net</th>
-                                    <th>Currency</th>
-                                    <th>Remark</th>
                                 </tr>
                             </thead>
                         </table>
@@ -236,6 +238,7 @@ End Code
                         <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
                         Exchange Rate:
                         <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
+                        <buttom id="btnGetExcRate" class="btn btn-success" onclick="GetExchangeRate()">Get Rate</buttom>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -344,7 +347,7 @@ End Code
                                         <th>Inv No</th>
                                         <th>Status</th>
                                         <th>Amount</th>
-                                        <th>Currency</th>
+                                        <th>WT</th>
                                         <th>WTDoc</th>
                                         <th>APDoc</th>
                                         <th>Remark</th>
@@ -381,11 +384,11 @@ End Code
     });
     function CheckParam() {
         //read query string parameters
-        var br = getQueryString('BranchCode');
+        let br = getQueryString('BranchCode');
         if (br.length > 0) {
             $('#txtBranchCode').val(br);
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-            var ano = getQueryString('AdvNo');
+            let ano = getQueryString('AdvNo');
             if (ano.length > 0) {
                 $('#txtAdvNo').val(ano);
                 ShowData(br, $('#txtAdvNo').val());
@@ -402,7 +405,7 @@ End Code
     }
     function LoadJob(dt) {
         if (dt.length > 0) {
-            var dr = dt[0];
+            let dr = dt[0];
             $('#txtForJNo').val(dr.JNo);
             $('#txtCustCode').val(dr.CustCode);
             $('#txtCustBranch').val(dr.CustBranch);
@@ -432,8 +435,8 @@ End Code
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var idx = (this.tabIndex + 1);
-                    var nextElement = $('[tabindex="' + idx + '"]');
+                    let idx = (this.tabIndex + 1);
+                    let nextElement = $('[tabindex="' + idx + '"]');
                     while (nextElement.length) {
                         if (nextElement.prop('disabled') == false) {
                             $('[tabindex="' + idx + '"]').focus();
@@ -472,14 +475,14 @@ End Code
             $('#btnBrowseS').removeAttr('disabled');
         });
         $('#chkCash,#chkChq,#chkChqCash,#chkCred').on('click', function () {
-            var id = this.id;
-            var chk = this.checked;
+            let id = this.id;
+            let chk = this.checked;
             if (this.checked == false) {
                 $('#txtAdv' + id.substr(3)).val(0);
                 $('#txtAdv' + id.substr(3)).attr('disabled', 'disabled');
                 return;
             }
-            var val = GetTotal();
+            let val = GetTotal();
             if (val <= 0) {
                 alert('Total not Balance,Please check');
                 $('#txtAdv' + id.substr(3)).val(0);
@@ -497,12 +500,12 @@ End Code
                     alert('Total not Balance,Please check');
                     $('#' + this.id).val(0);
                 }
-                var amt = $('#' + this.id).val();
+                let amt = $('#' + this.id).val();
                 $('#chk' + this.id.substr(6)).prop('checked', amt > 0 ? true : false);
             }
         });
         $('#txtAdvCash,#txtAdvChq,#txtAdvChqCash,#txtAdvCred').on('blur', function () {
-            var amt = $('#' + this.id).val();
+            let amt = $('#' + this.id).val();
             if (amt > 0) {
                 if ($('#chk' + this.id.substr(6)).prop('checked') == false) {
                     $('#' + this.id).val(0);
@@ -567,7 +570,7 @@ End Code
         });
         $('#txtSICode').keydown(function (event) {
             if (event.which == 13) {
-                var dt = FindService($('#txtSICode').val())
+                let dt = FindService($('#txtSICode').val())
                 ReadService(dt);
             }
         });
@@ -618,7 +621,7 @@ End Code
         });
         $('#txtNET').keydown(function (event) {
             if (event.which == 13) {
-                var type = $('#txtVatType').val();
+                let type = $('#txtVatType').val();
                 if (type == '0'||type=='') type = "1";
                 if (type == "2") {
                     CalVATWHT();
@@ -670,7 +673,7 @@ End Code
     }
     function SetLOVs() {
         //Combos
-        var lists = 'JOB_TYPE=#cboJobType';
+        let lists = 'JOB_TYPE=#cboJobType';
         lists += ',SHIP_BY=#cboShipBy';
         lists += ',ADV_STATUS=#cboDocStatus';
         lists += ',ADV_TYPE=#cboAdvType';
@@ -681,7 +684,7 @@ End Code
 
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var dv = document.getElementById("dvLOVs");
+            let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
             //Venders
@@ -714,9 +717,9 @@ End Code
             return;
         }
         $.get(path + 'adv/getadvance?branchcode='+branchcode+'&advno='+ advno, function (r) {
-            var h = r.adv.header[0];
+            let h = r.adv.header[0];
             ReadAdvHeader(h);
-            var d = r.adv.detail;
+            let d = r.adv.detail;
             ReadAdvDetail(d);
         });
     }
@@ -729,7 +732,7 @@ End Code
     }
     function SaveHeader() {
         if (hdr != undefined) {
-            var obj = GetDataHeader(hdr);
+            let obj = GetDataHeader(hdr);
             if (obj.AdvNo == '') {
                 if (userRights.indexOf('I') < 0) {
                     alert('you are not authorize to add');
@@ -746,7 +749,7 @@ End Code
                     return;
                 }
             }
-            var jsonString = JSON.stringify({ data: obj });
+            let jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
             $.ajax({
                 url: "@Url.Action("SaveAdvanceHeader", "Adv")",
@@ -769,7 +772,7 @@ End Code
         alert('No data to save');
     }
     function GetDataHeader() {
-        var dt = {
+        let dt = {
             BranchCode : $('#txtBranchCode').val(),
             AdvNo : $('#txtAdvNo').val(),
             AdvDate : CDateTH($('#txtAdvDate').val()),
@@ -937,7 +940,7 @@ End Code
         }
         $('#txtAdvNo').val('');
         $.get(path + 'adv/getnewadvanceheader?branchcode=' + $('#txtBranchCode').val() , function (r) {
-            var h = r.adv.header;
+            let h = r.adv.header;
             ReadAdvHeader(h);
             if (isjobmode == false) {
                 $('#cboJobType').val('');
@@ -952,7 +955,7 @@ End Code
             $('#txtExcRate').val(1);
 
             ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
-            var d = r.adv.detail;
+            let d = r.adv.detail;
             ReadAdvDetail(d);
             ClearDetail();
             $('#txtAdvNo').focus();
@@ -960,7 +963,7 @@ End Code
     }
     function AddDetail() {
         $.get(path + 'adv/getnewadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
-            var d = r.adv.detail[0];
+            let d = r.adv.detail[0];
             LoadDetail(d);
             $('#txtSICode').attr('disabled', 'disabled');
             $('#txtSDescription').attr('disabled', 'disabled');
@@ -1075,7 +1078,7 @@ End Code
             return;
         }
         if (dtl != undefined) {
-            var obj = GetDataDetail();
+            let obj = GetDataDetail();
             if (obj.ItemNo == 0) {
                 if (userRights.indexOf('I') < 0) {
                     alert('you are not authorize to add');
@@ -1086,7 +1089,7 @@ End Code
                 alert('you are not authorize to edit');
                 return;
             }
-            var jsonString = JSON.stringify({ data: obj });
+            let jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
             $.ajax({
                 url: "@Url.Action("SaveAdvanceDetail", "Adv")",
@@ -1112,19 +1115,21 @@ End Code
                 { data: "SICode", title: "Service" },
                 { data: "SDescription", title: "Description" },
                 { data: "ForJNo", title: "Job" },
+                { data: "CurrencyCode", title: "Currency" },
+                { data: "ExchangeRate", title: "Rate" },
+                { data: "AdvQty", title: "Qty" },
+                { data: "UnitPrice", title: "Price" },
                 { data: "AdvAmount", title: "Amount" },
                 { data: "ChargeVAT", title: "VAT" },
                 { data: "Charge50Tavi", title: "WH-Tax" },
-                { data: "AdvNet", title: "Net" },
-                { data: "CurrencyCode", title: "Currency" },
-                { data: "TRemark", title: "Remark" }
+                { data: "AdvNet", title: "Net" }
             ],
             "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
                 {
                     "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                     "data": null,
                     "render": function (data, type, full, meta) {
-                        var html = "<button class='btn btn-warning'>Edit</button>";
+                        let html = "<button class='btn btn-warning'>Edit</button>";
                         return html;
                     }
                 }
@@ -1134,7 +1139,7 @@ End Code
         $('#tbDetail tbody').on('click', 'tr', function () {
             $('#tbDetail tbody > tr').removeClass('selected');
             $(this).addClass('selected');            
-            var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
+            let data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
             LoadDetail(data); //callback function from caller 
         });
         $('#tbDetail tbody').on('click', 'button', function () {
@@ -1143,7 +1148,7 @@ End Code
         });
     }
     function GetDataDetail() {
-        var dt = {
+        let dt = {
             BranchCode : $('#txtBranchCode').val(),
             AdvNo : $('#txtAdvNo').val(),
             ItemNo : $('#txtItemNo').val(),
@@ -1178,7 +1183,7 @@ End Code
             $('#txtItemNo').val(dt.ItemNo);
             $('#txtSICode').val(dt.SICode);
             $('#cboSTCode').val(dt.STCode);
-            var r = FindService($('#txtSICode').val())
+            let r = FindService($('#txtSICode').val())
             ReadService(r);
             if (isjobmode == false) {
                 $('#txtForJNo').val(dt.ForJNo);
@@ -1259,13 +1264,13 @@ End Code
         }
     }
     function FindService(Code) {
-        var c = $.grep(serv, function (data) {
+        let c = $.grep(serv, function (data) {
             return data.SICode === Code;
         });
         return c[0];
     }
     function SetGridAdv() {
-        var w = $('#txtBranchCode').val();
+        let w = $('#txtBranchCode').val();
         if (job.length > 0) {
             w += '&jobno=' + job;
         }
@@ -1289,7 +1294,7 @@ End Code
                 alert('data not found on this branch');
                 return;
             }
-            var h = r.adv.data[0].Table;
+            let h = r.adv.data[0].Table;
             $('#tbHeader').DataTable({
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
@@ -1307,17 +1312,22 @@ End Code
                     { data: "CustInvNo", title: "Cust Inv" },
                     { data: "DocStatus", title: "Status" },
                     { data: "TotalAdvance", title: "Total" },
-                    { data: "SubCurrency", title: "Currency" },
+                    { data: "Total50Tavi", title: "W/T" },
                     { data: "Doc50Tavi", title: "W/T No" },
                     { data: "PaymentNo", title: "A/P No" },
-                    { data: "TRemark", title: "Remark" },
+                    {
+                        data: null, title: "Request Amt",
+                        render: function (data) {
+                            return CDbl(Number(data.AdvCash) + Number(data.AdvChqCash) + Number(data.AdvChq) + Number(data.AdvCred), 2) + '' + data.SubCurrency;
+                        }
+                    },
                 ],
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
                 $('#tbHeader tbody > tr').removeClass('selected');
                 $(this).addClass('selected');
-                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 ShowData(data.BranchCode, data.AdvNo); //callback function from caller 
                 $('#frmHeader').modal('hide');
             });
@@ -1363,7 +1373,7 @@ End Code
         }
     }
     function GetParam() {
-        var strParam = '?';
+        let strParam = '?';
         strParam += 'Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
@@ -1457,26 +1467,26 @@ End Code
         $('#txtForJNo').focus();
     }
     function SumTotal() {
-        var cash = CDbl($('#txtAdvCash').val(),4);
-        var chq = CDbl($('#txtAdvChq').val(),4);
-        var chqcash = CDbl($('#txtAdvChqCash').val(),4);
-        var cred = CDbl($('#txtAdvCred').val(),4);
+        let cash = CDbl($('#txtAdvCash').val(),4);
+        let chq = CDbl($('#txtAdvChq').val(),4);
+        let chqcash = CDbl($('#txtAdvChqCash').val(),4);
+        let cred = CDbl($('#txtAdvCred').val(),4);
         return CDbl(Number(cash) + Number(chq) + Number(chqcash) + Number(cred),4);
     }
     function GetTotal() {
-        var total = SumTotal();
+        let total = SumTotal();
         return CDbl(CNum($('#txtTotalAmount').val()) / CNum($('#txtExchangeRate').val()) - total,4);
     }
     function CalAmount() {
-        var price = CDbl($('#txtUnitPrice').val(),4);
-        var qty = CDbl($('#txtAdvQty').val(),4);
-        var rate = CDbl($('#txtExcRate').val(),4); //rate ของ detail
-        var type = $('#txtVatType').val();
+        let price = CDbl($('#txtUnitPrice').val(),4);
+        let qty = CDbl($('#txtAdvQty').val(),4);
+        let rate = CDbl($('#txtExcRate').val(),4); //rate ของ detail
+        let type = $('#txtVatType').val();
         if (qty > 0) {
-            var amt = CNum(qty) * CNum(price);
+            let amt = CNum(qty) * CNum(price);
             $('#txtAMTCal').val(CDbl(CNum(amt), 4));
-            //var exc = CDbl($('#txtExchangeRate').val(), 4); //rate ของ header
-            //var total = CDbl(CNum(amt) / CNum(exc),4);
+            //let exc = CDbl($('#txtExchangeRate').val(), 4); //rate ของ header
+            //let total = CDbl(CNum(amt) / CNum(exc),4);
             if (type == '0' || type == '') type = '1';
             if (type == '2') {
                 //$('#txtNET').val(CDbl(CNum(total),4));
@@ -1496,11 +1506,11 @@ End Code
         }
     }
     function CalTotal() {
-        var amt = CDbl($('#txtAMT').val(),4);
-        var vat = CDbl($('#txtVAT').val(),4);
-        var wht = CDbl($('#txtWHT').val(),4);
-        var net = CDbl($('#txtNET').val(),4);
-        var type = $('#txtVatType').val();
+        let amt = CDbl($('#txtAMT').val(),4);
+        let vat = CDbl($('#txtVAT').val(),4);
+        let wht = CDbl($('#txtWHT').val(),4);
+        let net = CDbl($('#txtNET').val(),4);
+        let type = $('#txtVatType').val();
         if (type == '0'||type=='') type = '1';
         if (type == '2') {
             $('#txtAMT').val(CDbl(CNum(net) - CNum(vat) + CNum(wht),4));
@@ -1512,18 +1522,18 @@ End Code
         }
     }
     function CalVATWHT() {
-        var type = $('#txtVatType').val();
+        let type = $('#txtVatType').val();
         if (type == ''||type=='0') type = '1';
-        var amt = CDbl($('#txtAMT').val(),4);
+        let amt = CDbl($('#txtAMT').val(),4);
         if (type == '2') {
             amt = CDbl($('#txtNET').val(),4);
         }
-        var vatrate = CDbl($('#txtVATRate').val(),4);
-        var whtrate = CDbl($('#txtWHTRate').val(),4);
-        var vat = 0;
-        var wht = 0;
+        let vatrate = CDbl($('#txtVATRate').val(),4);
+        let whtrate = CDbl($('#txtWHTRate').val(),4);
+        let vat = 0;
+        let wht = 0;
         if (type == "2") {
-            var base = amt * 100 / (100 + (vatrate - whtrate));
+            let base = amt * 100 / (100 + (vatrate - whtrate));
             vat = base * vatrate * 0.01;
             wht = base * whtrate * 0.01;
         }
@@ -1534,5 +1544,11 @@ End Code
         $('#txtVAT').val(CDbl(vat,4));
         $('#txtWHT').val(CDbl(wht,4));
         CalTotal();
+    }
+    function GetExchangeRate() {
+        $.get('https://free.currencyconverterapi.com/api/v6/convert?q=' + $('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val() + '&compact=ultra&apiKey=6210d55b79170a4a7da2', function (r) {
+            let rate = CDbl(r[$('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val()],4);
+            $('#txtExchangeRate').val(rate);
+        });
     }
 </script>

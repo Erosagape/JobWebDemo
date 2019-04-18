@@ -447,8 +447,9 @@ End Code
             if (event.which == 13) {
                 let code = $('#txtDocNo').val();
                 let branch = $('#txtBranchCode').val();
+                ClearData();
                 $('#txtBranchCode').val(branch);
-                $('#txtDocNo').val(code);
+                $('#txtDocNo').val(code);                
                 CallBackQueryWHTax(path, branch, code, ReadData);
             }
         });
@@ -792,10 +793,13 @@ End Code
         $('#txtSeqInForm').val('');
 
         $('input:radio[name=FormType]:checked').prop('checked', false);
+        $('input:radio[name=FormType][value=1]').prop('checked', true);
 
-        $('#txtTaxLawNo').val('');
+        $('#txtTaxLawNo').val('1');
+        $('#txtPayTaxType').val('1');
         $('#txtIncRate').val('0');
         $('#txtIncOther').val('');
+        $('#txtPayTaxOther').val('');
 
         $('#txtSoLicenseNo').val('');
         $('#txtSoLicenseAmount').val('0.00');
@@ -923,10 +927,9 @@ End Code
                 if (response.result.data != null) {
                     $('#txtItemNo').val(response.result.data);
                     $('#txtItemNo').focus();
-                }
-                alert(response.result.msg);
-                                
+                }                                
                 CallBackQueryWHTax(path, $('#txtBranchCode').val(), $('#txtDocNo').val(), ReadData);
+                alert(response.result.msg);
             },
             error: function (e) {
                 alert(e);
@@ -940,10 +943,11 @@ End Code
 
         let ask = confirm("Do you need to Delete " + item + "?");
         if (ask == false) return;
-        $.get(path + 'acc/delwhtaxdetail?branch='+branch+'&code=' + code + '&item='+item, function (r) {
+        $.get(path + 'acc/delwhtaxdetail?branch='+branch+'&code=' + code + '&itemno='+item, function (r) {
+            CallBackQueryWHTax(path, $('#txtBranchCode').val(), $('#txtDocNo').val(), ReadData);
             alert(r.whtax.result);
             $('#frmDetail').modal('hide');
-            RefreshDetail();
+            
         });
     }
     function ClearDetail() {

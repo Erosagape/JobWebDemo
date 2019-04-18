@@ -361,31 +361,43 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("TaxNumber")) Then
                     tSqlW &= " AND b.TaxNumber='" & Request.QueryString("TaxNumber") & "' "
                 End If
+                If Not IsNothing(Request.QueryString("Currency")) Then
+                    tSqlW &= " AND a.SubCurrency='" & Request.QueryString("Currency") & "' "
+                End If
                 Dim sql As String = "
 select a.*,
 (SELECT STUFF((
-SELECT DISTINCT ',' + ForJNo
-FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
-AND AdvNo=a.AdvNo AND ForJNo<>'' 
+    SELECT DISTINCT ',' + ForJNo
+    FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
+    AND AdvNo=a.AdvNo AND ForJNo<>'' 
 FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 )) as JobNo
 ,
 (SELECT STUFF((
-SELECT DISTINCT ',' + InvNo
-FROM Job_Order WHERE BranchCode=a.BranchCode AND JNo in(SELECT ForJNo FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
-AND AdvNo=a.AdvNo AND ForJNo<>'')
+    SELECT DISTINCT ',' + InvNo
+    FROM Job_Order WHERE BranchCode=a.BranchCode AND JNo in(SELECT ForJNo FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
+    AND AdvNo=a.AdvNo AND ForJNo<>'')
 FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 )) as CustInvNo
 ,b.TaxNumber,b.NameThai,b.NameEng
-,c.RateVAT,c.Rate50Tavi,c.BaseVAT,c.Base50Tavi 
+,c.BaseAmount,c.RateVAT,c.Rate50Tavi,c.BaseVATInc,c.Base50TaviInc,c.BaseVATExc,c.Base50TaviExc
+,c.BaseVATInc+c.BaseVATExc as BaseVAT,c.Base50TaviExc+c.Base50TaviInc as Base50Tavi
+,c.VATInc,c.VATExc,c.WHTInc,c.WHTExc,c.TotalNet
 FROM Job_AdvHeader as a LEFT JOIN
 Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
 LEFT JOIN (
-SELECT BranchCode,AdvNo,MAX(VATRate) as RateVAT,MAX(Rate50Tavi) as Rate50Tavi,
-SUM(CASE WHEN Is50Tavi=1 THEN AdvAmount ELSE 0 END) as Base50Tavi,
-SUM(CASE WHEN IsChargeVAT=1 THEN AdvAmount ELSE 0 END) as BaseVAT
-FROM Job_AdvDetail 
-GROUP BY BranchCode,AdvNo
+    SELECT BranchCode,AdvNo,MAX(VATRate) as RateVAT,MAX(Rate50Tavi) as Rate50Tavi,
+    SUM(CASE WHEN Charge50Tavi>0 And IsChargeVAT=1 THEN AdvAmount ELSE 0 END) as Base50TaviExc,
+    SUM(CASE WHEN ChargeVAT>0 And IsChargeVAT=1 THEN AdvAmount ELSE 0 END) as BaseVATExc,
+    SUM(CASE WHEN Charge50Tavi>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as Base50TaviInc,
+    SUM(CASE WHEN ChargeVAT>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as BaseVATInc,
+    SUM(CASE WHEN IsChargeVAT=1 THEN ChargeVAT ELSE 0 END) as VATExc,
+    SUM(CASE WHEN IsChargeVAT=2 THEN ChargeVAT ELSE 0 END) as VATInc,
+    SUM(CASE WHEN IsChargeVAT=1 THEN Charge50Tavi ELSE 0 END) as WHTExc,
+    SUM(CASE WHEN IsChargeVAT=2 THEN Charge50Tavi ELSE 0 END) as WHTInc,
+    SUM(AdvAmount) as BaseAmount,SUM(AdvNet) as TotalNet  
+    FROM Job_AdvDetail 
+    GROUP BY BranchCode,AdvNo
 ) c
 ON a.BranchCode=c.BranchCode AND a.AdvNo=c.AdvNo
 "

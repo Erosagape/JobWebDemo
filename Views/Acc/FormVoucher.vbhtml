@@ -14,7 +14,7 @@ End Code
     <tr>
         <td colspan="3" style="font-size:11px">
             <b>Remark</b>
-            <label id="lblRemark" style="text-decoration-line:underline;"></label>
+            <label id="txtRemark" style="text-decoration-line:underline;"></label>
         </td>
         <td align="right" style="font-size:11px">
             <b>Voucher Date : </b><label id="txtVoucherDate" style="text-decoration-line:underline;"></label>
@@ -28,8 +28,8 @@ End Code
             <th style="border-style:solid;border-width:thin;font-size:11px">
                 <b>Description</b>
             </th>
-            <th style="border-style:solid;border-width:thin;font-size:11px" width="150px"><b>Debit</b></th>
-            <th style="border-style:solid;border-width:thin;font-size:11px" width="150px"><b>Credit</b></th>
+            <th style="border-style:solid;border-width:thin;font-size:11px" width="150px"><b>Amount</b></th>
+            <th style="border-style:solid;border-width:thin;font-size:11px" width="100px"><b>Tax</b></th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -38,10 +38,10 @@ End Code
     <tr>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px">Total</td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="150px">
-            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtSumDebit" />
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtSumAmount" />
         </td>
-        <td style="border-style:solid;border-width:thin" width="150px">
-            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtSumCredit" />
+        <td style="border-style:solid;border-width:thin" width="100px">
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtSumTax" />
         </td>
     </tr>
 </table>
@@ -84,6 +84,7 @@ TOTAL : <input type="text" id="txtTotalText" value="ZERO BAHT ONLY" style="font-
 </table>
 <script type="text/javascript">
     let path = '@Url.Content("~")';
+    let vcType='P';
     $(document).ready(function () {
         ShowCompany('#divCompany');
         let branch = getQueryString('branch');
@@ -96,14 +97,71 @@ TOTAL : <input type="text" id="txtTotalText" value="ZERO BAHT ONLY" style="font-
     });
 
     function ShowData(data) {
-        if (data.header !== null) {
-
-        }
+        let div=$('#tbData tbody');
         if (data.payment !== null) {
+            for(let obj in data.payment) {
+                if(vcType!==obj.PRType){
+                    vcType=obj.PRType;
+                }                
+                let acType=obj.acType;
+                let acTypeName=GetPaymentType(acType);
+                if (data.document !== null) {
+                    let doc=data.document.filter(function(r){
+                        return r.acType==acType;
+                    });
+                    if(doc!==null) {
+                        for(d in doc) {
+                            let desc='';
+                            desc+=acTypeName;
+                            desc += ' ' + d.DocNo;
 
+                            let html = '<tr><td style="border-style:solid;border-width:thin;font-size:11px">';
+                            html += '<b>' + desc + '</b>';
+                            html += '</td>';
+                            html += '<td style="border-style:solid;border-width:thin;font-size:11px" width="150px">' + d.PaidAmount + '</td>';
+                            html += '<td style="border-style:solid;border-width:thin;font-size:11px" width="100px">' + d.TotalAmount + '</td>';
+                            html += '</tr>';
+
+                            div.append(html);
+                        }
+                    }
+                }
+            }
         }
-        if (data.document !== null) {
+        if (data.header !== null) {
+            $('#txtControlNo').text(data.header.ControlNo);
+            $('#txtVoucherType').text(GetVoucherType() + ' VOUCHER');
+            $('#txtVoucherDate').text(ShowDate(CDateTH(data.header.VoucherDate)));
 
         }
     }    
+    function GetPaymentType(p) {
+        switch(p){
+            case 'CA':
+                return 'Cash';
+                break;
+            case 'CH':
+                return 'Cashier Cheque';
+                break;
+            case 'CU':
+                return 'Customer Cheque';
+                break;
+            case 'CR':
+                return 'Credit';
+                break;
+        }
+    }
+    function GetVoucherType() {
+        switch(vcType){
+            case 'P':
+                return 'PAYMENT';
+                break;
+            case 'R':
+                return 'RECEIVE';
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
 </script>

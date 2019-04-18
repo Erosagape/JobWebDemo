@@ -313,7 +313,7 @@ function CallBackQueryBank(p, code, ev) {
 }
 function CallBackQueryBookAccount(p,br, code, ev) {
     $.get(p + 'master/getbookaccount?Branch='+br+'&Code=' + code).done(function (r) {
-        let dr = r.bank.data;
+        let dr = r.bookaccount.data;
         if (dr.length > 0) {
             ev(dr[0]);
         }

@@ -129,6 +129,87 @@ Public Class CVoucherSub
             m_CreditAmount = value
         End Set
     End Property
+    Private m_SumAmount As Double
+    Public Property SumAmount As Double
+        Get
+            Return m_SumAmount
+        End Get
+        Set(value As Double)
+            m_SumAmount = value
+        End Set
+    End Property
+    Private m_CurrencyCode As String
+    Public Property CurrencyCode As String
+        Get
+            Return m_CurrencyCode
+        End Get
+        Set(value As String)
+            m_CurrencyCode = value
+        End Set
+    End Property
+    Private m_ExchangeRate As Double
+    Public Property ExchangeRate As Double
+        Get
+            Return m_ExchangeRate
+        End Get
+        Set(value As Double)
+            m_ExchangeRate = value
+        End Set
+    End Property
+    Private m_TotalAmount As Double
+    Public Property TotalAmount As Double
+        Get
+            Return m_TotalAmount
+        End Get
+        Set(value As Double)
+            m_TotalAmount = value
+        End Set
+    End Property
+    Private m_VatInc As Double
+    Public Property VatInc As Double
+        Get
+            Return m_VatInc
+        End Get
+        Set(value As Double)
+            m_VatInc = value
+        End Set
+    End Property
+    Private m_VatExc As Double
+    Public Property VatExc As Double
+        Get
+            Return m_VatExc
+        End Get
+        Set(value As Double)
+            m_VatExc = value
+        End Set
+    End Property
+    Private m_WhtInc As Double
+    Public Property WhtInc As Double
+        Get
+            Return m_WhtInc
+        End Get
+        Set(value As Double)
+            m_WhtInc = value
+        End Set
+    End Property
+    Private m_WhtExc As Double
+    Public Property WhtExc As Double
+        Get
+            Return m_WhtExc
+        End Get
+        Set(value As Double)
+            m_WhtExc = value
+        End Set
+    End Property
+    Private m_TotalNet As Double
+    Public Property TotalNet As Double
+        Get
+            Return m_TotalNet
+        End Get
+        Set(value As Double)
+            m_TotalNet = value
+        End Set
+    End Property
     Private m_IsLocal As Integer
     Public Property IsLocal As Integer
         Get
@@ -239,6 +320,15 @@ Public Class CVoucherSub
                             dr("CashAmount") = Me.CashAmount
                             dr("ChqAmount") = Me.ChqAmount
                             dr("CreditAmount") = Me.CreditAmount
+                            dr("SumAmount") = Me.SumAmount
+                            dr("CurrencyCode") = Me.CurrencyCode
+                            dr("ExchangeRate") = Me.ExchangeRate
+                            dr("TotalAmount") = Me.TotalAmount
+                            dr("VatInc") = Me.VatInc
+                            dr("WhtInc") = Me.WhtInc
+                            dr("VatExc") = Me.VatExc
+                            dr("WhtExc") = Me.WhtExc
+                            dr("TotalNet") = Me.TotalNet
                             dr("IsLocal") = Me.IsLocal
                             dr("ChqStatus") = Me.ChqStatus
                             dr("TRemark") = Me.TRemark
@@ -316,6 +406,33 @@ Public Class CVoucherSub
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("CreditAmount"))) = False Then
                         row.CreditAmount = rd.GetDouble(rd.GetOrdinal("CreditAmount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("SumAmount"))) = False Then
+                        row.SumAmount = rd.GetDouble(rd.GetOrdinal("SumAmount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("CurrencyCode"))) = False Then
+                        row.CurrencyCode = rd.GetString(rd.GetOrdinal("CurrencyCode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ExchangeRate"))) = False Then
+                        row.ExchangeRate = rd.GetDouble(rd.GetOrdinal("ExchangeRate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalAmount"))) = False Then
+                        row.TotalAmount = rd.GetDouble(rd.GetOrdinal("TotalAmount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("VatInc"))) = False Then
+                        row.VatInc = rd.GetDouble(rd.GetOrdinal("VatInc"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("VatExc"))) = False Then
+                        row.VatExc = rd.GetDouble(rd.GetOrdinal("VatExc"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("WhtInc"))) = False Then
+                        row.WhtInc = rd.GetDouble(rd.GetOrdinal("WhtInc"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("WhtExc"))) = False Then
+                        row.WhtExc = rd.GetDouble(rd.GetOrdinal("WhtExc"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalNet"))) = False Then
+                        row.TotalNet = rd.GetDouble(rd.GetOrdinal("TotalNet"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("IsLocal"))) = False Then
                         row.IsLocal = rd.GetByte(rd.GetOrdinal("IsLocal"))
