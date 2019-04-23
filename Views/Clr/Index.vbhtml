@@ -209,7 +209,7 @@ End Code
                         <p>
                             Customers Chargable :
                             <input type="text" id="txtSumCharge" style="width:100px;text-align:right" /><br />
-                            Company Expenses :
+                            Company Cost :
                             <input type="text" id="txtSumCost" style="width:100px;text-align:right" /><br />
                         </p>
                     </div>
@@ -221,7 +221,7 @@ End Code
                         WHT :
                         <input type="text" id="txtWhtAmount" style="width:100px;text-align:right" /><br />
                         Total :
-                        <input type="text" id="txtTotalAmount" style="width:100px;text-align:right" />
+                        <input type="text" id="txtNetAmount" style="width:100px;text-align:right" />
                     </div>
                 </div>
 
@@ -743,7 +743,12 @@ End Code
             CancelTime: $('#txtCancelTime').val(),
             CoPersonCode: $('#txtCoPersonCode').val(),
             CTN_NO: $('#txtCTN_NO').val(),
-            ClearTotal: CNum($('#txtClearTotal').val())           
+            ClearTotal: CNum($('#txtClearTotal').val()),
+            ClearVat: CNum($('#txtVatAmount').val()),
+            ClearWht: CNum($('#txtWhtAmount').val()),
+            ClearNet: CNum($('#txtNetAmount').val()),
+            ClearBill: CNum($('#txtSumCharge').val()),
+            ClearCost: CNum($('#txtSumCost').val())
         };
 
         return dt;
@@ -780,7 +785,13 @@ End Code
 
             $('#txtCTN_NO').val(dt.CTN_NO);
             $('#txtCoPersonCode').val(dt.CoPersonCode);
-            $('#txtClearTotal').val(CDbl(dt.ClearTotal,4));
+            $('#txtClearTotal').val(CDbl(dt.ClearTotal, 4));
+            $('#txtClrAmount').val(CDbl(dt.TotalExpense, 4));
+            $('#txtVatAmount').val(CDbl(dt.ClearVat, 4));
+            $('#txtWhtAmount').val(CDbl(dt.ClearWht, 4));
+            $('#txtNetAmount').val(CDbl(dt.ClearNet, 4));
+            $('#txtSumCharge').val(CDbl(dt.ClearBill, 4));
+            $('#txtSumCost').val(CDbl(dt.ClearCost,4));
 
             $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
             $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
@@ -791,23 +802,31 @@ End Code
 
             if (dt.DocStatus > 2) {
                 //if document paymented/cancelled/cleared then disable save button
-                $('#btnSave').attr('disabled', 'disabled');
-                $('#btnUpdate').attr('disabled', 'disabled');
+                EnableSave(false);
             } else {
                 //if document approved by this user or not then check authorized to unlock
                 if (dt.DocStatus == 2 && user == dt.ApproveBy && userRights.indexOf('E') >= 0) {
-                    $('#btnSave').removeAttr('disabled');
-                    $('#btnSave').removeAttr('disabled');
+                    EnableSave(true);
                 } else {
                     if (dt.DocStatus == 2) {
-                        $('#btnSave').attr('disabled', 'disabled');
-                        $('#btnUpdate').attr('disabled', 'disabled');
+                        EnableSave(false);
                     }
                 }
             }
             return;
         }
         ClearHeader();
+    }
+    function EnableSave(b) {
+        $('#btnSave').attr('disabled', 'disabled');
+        $('#btnDel').attr('disabled', 'disabled');
+        $('#btnUpdate').attr('disabled', 'disabled');
+        if(b==true) {
+            $('#btnSave').removeAttr('disabled');
+            $('#btnDel').removeAttr('disabled');
+            $('#btnUpdate').removeAttr('disabled');
+            return;
+        }
     }
     function AddHeader() {
         if (userRights.indexOf('I') < 0) {
@@ -884,6 +903,14 @@ End Code
         $('#txtAdvTotal').val('0.00');
         $('#txtTotalExpense').val('0.00');
         $('#txtClearTotal').val('0.00');
+
+        $('#txtClrAmount').val('0.00');
+        $('#txtVatAmount').val('0.00');
+        $('#txtWhtAmount').val('0.00');
+        $('#txtNetAmount').val('0.00');
+
+        $('#txtSumCharge').val('0.00');
+        $('#txtSumCost').val('0.00');
 
         $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
         $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
@@ -968,7 +995,7 @@ End Code
                 { data: "UsedAmount", title: "Clear" },
                 { data: "ChargeVAT", title: "VAT" },
                 { data: "Tax50Tavi", title: "WH-Tax" },
-                { data: "BCost", title: "Net" },
+                { data: "BNet", title: "Net" },
                 { data: "CurrencyCode", title: "Currency" },
                 { data: "SlipNO", title: "Slip No" }
             ],
@@ -1009,7 +1036,7 @@ End Code
             UnitCode: $('#txtUnitCode').val(),
             CurrencyCode: $('#txtCurrencyCode').val(),
             CurRate: $('#txtCurRate').val(),
-            UnitPrice: $('#chkIsCost').prop('checked')==true? 0 : $('#txtUnitPrice').val(),
+            UnitPrice: $('#chkIsCost').prop('checked') == true ? 0 : $('#txtUnitPrice').val(),
             FPrice: $('#chkIsCost').prop('checked') == true ? 0 : CDbl(Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()),4),
             BPrice: $('#chkIsCost').prop('checked') == true ? 0 : CDbl(Number($('#txtCurRate').val()) * Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),
             QUnitPrice: dtl.QUnitPrice,
@@ -1040,7 +1067,9 @@ End Code
             VATRate: $('#txtVATRate').val(),
             Tax50TaviRate : $('#txtWHTRate').val(),
             IsDuplicate: ($('#chkDuplicate').prop('checked') == true ? 1 : 0),
-            QNo : dtl.QNo
+            QNo: dtl.QNo,
+            FNet: Number($('#txtNET').val())/Number($('#txtCurRate').val()),
+            BNet: $('#txtNET').val()
         };
         return dt;
     }
@@ -1076,11 +1105,11 @@ End Code
             $('#txtAMT').val(dt.UsedAmount);
             $('#txtVAT').val(dt.ChargeVAT);
             $('#txtWHT').val(dt.Tax50Tavi);
-            $('#txtNET').val(dt.BCost);
+            $('#txtNET').val(dt.BNet);
             $('#txtVenCode').val(dt.VenderCode);
-            $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
+            $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
-            $('#chkIsCost').prop('checked', dt.IsExpense > 0 ? true : false);
+            $('#chkIsCost').prop('checked', dt.IsExpense==1 ? true : false);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
@@ -1118,9 +1147,9 @@ End Code
             $('#txtWHT').val(dt.Tax50Tavi);
             $('#txtNET').val(dt.BCost);
             $('#txtVenCode').val(dt.VenderCode);
-            $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
+            $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
-            $('#chkIsCost').prop('checked', dt.IsExpense > 0 ? true : false);
+            $('#chkIsCost').prop('checked', dt.IsExpense ==1 ? true : false);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;

@@ -408,6 +408,24 @@ Public Class CClrDetail
             m_QNo = value
         End Set
     End Property
+    Private m_FNet As Double
+    Public Property FNet As Double
+        Get
+            Return m_FNet
+        End Get
+        Set(value As Double)
+            m_FNet = value
+        End Set
+    End Property
+    Private m_BNet As Double
+    Public Property BNet As Double
+        Get
+            Return m_BNet
+        End Get
+        Set(value As Double)
+            m_BNet = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -465,6 +483,8 @@ Public Class CClrDetail
                             dr("VATRate") = Me.VATRate
                             dr("Tax50TaviRate") = Me.Tax50TaviRate
                             dr("QNo") = Me.QNo
+                            dr("FNet") = Me.FNet
+                            dr("BNet") = Me.BNet
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             If da.Update(dt) > 0 Then
                                 UpdateTotal(cn)
@@ -622,7 +642,13 @@ Public Class CClrDetail
                         row.Tax50TaviRate = rd.GetDouble(rd.GetOrdinal("Tax50TaviRate"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("QNo"))) = False Then
-                        row.ClrNo = rd.GetString(rd.GetOrdinal("QNo")).ToString()
+                        row.QNo = rd.GetString(rd.GetOrdinal("QNo")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("FNet"))) = False Then
+                        row.FNet = rd.GetDouble(rd.GetOrdinal("FNet"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("BNet"))) = False Then
+                        row.BNet = rd.GetDouble(rd.GetOrdinal("BNet"))
                     End If
                     lst.Add(row)
                 End While
@@ -653,11 +679,19 @@ Public Class CClrDetail
     Public Sub UpdateTotal(cn As SqlConnection)
         Dim sql As String = "
 UPDATE a
-SET a.AdvTotal=b.AdvTotal,
-a.TotalExpense=b.TotalExpense,
-a.ClearTotal=b.AdvTotal-b.TotalExpense 
-FROM Job_ClearHeader a INNER JOIN (
-  SELECT BranchCode,ClrNo,Sum(AdvAmount) as AdvTotal,Sum(UsedAmount) as TotalExpense 
+SET a.AdvTotal=ISNULL(b.AdvTotal,0)
+,a.TotalExpense=ISNULL(b.TotalExpense,0)
+,a.ClearTotal=ISNULL(b.AdvTotal-b.TotalExpense,0)
+,a.ClearVat=ISNULL(b.TotalVAT,0)
+,a.ClearWht=ISNULL(b.TotalWHT,0)
+,a.ClearNet=ISNULL(b.TotalNET,0)
+,a.ClearBill=ISNULL(b.TotalBill,0)
+,a.ClearCost=ISNULL(b.TotalCost,0)
+FROM Job_ClearHeader a LEFT JOIN (
+  SELECT BranchCode,ClrNo,Sum(AdvAmount) as AdvTotal,Sum(UsedAmount) as TotalExpense,
+  Sum(ChargeVAT) as TotalVAT,Sum(Tax50Tavi) as TotalWHT,Sum(BNet) as TotalNET,
+  Sum(CASE WHEN BPrice >0 THEN BPrice ELSE 0 END) as TotalBill,
+  Sum(CASE WHEN BPrice =0 THEN BCost ELSE 0 END) as TotalCost
   FROM Job_ClearDetail
   GROUP BY BranchCode,ClrNo
 ) b

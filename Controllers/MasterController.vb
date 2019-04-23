@@ -72,7 +72,7 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE GroupCode='{0}' ", data.GroupCode))
-                    If data.IsApplyPolicy = True Then
+                    If data.IsApplyPolicy = 1 Then
                         Dim cmd As New CUtil(jobWebConn)
                         Dim sql As String = "
 UPDATE a

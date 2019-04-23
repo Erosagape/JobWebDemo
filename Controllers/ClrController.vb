@@ -35,13 +35,41 @@ Namespace Controllers
         End Function
 
         '-----Controller-----
-        Function ApproveClearing() As HttpResponseMessage
-            ViewBag.User = Session("CurrUser").ToString()
-            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Approve")
-            If AuthorizeStr.IndexOf("I") < 0 Then
+        Function ApproveClearing(<FromBody()> ByVal data As String()) As HttpResponseMessage
+            Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Approve")
+                If AuthorizeStr.IndexOf("I") < 0 Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+                If IsNothing(data) Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+
+                Dim json As String = ""
+                Dim lst As String = ""
+                Dim user As String = ""
+                For Each str As String In data
+                    If str.IndexOf("|") >= 0 Then
+                        If lst <> "" Then lst &= ","
+                        lst &= "'" & str & "'"
+                    Else
+                        user = str
+                    End If
+                Next
+
+                If lst <> "" Then
+                    Dim tSQL As String = String.Format("UPDATE Job_ClearHeader SET DocStatus=2,ApproveBy='" & user & "',ApproveDate='" & DateTime.Now.ToString("yyyy-MM-dd") & "',ApproveTime='" & DateTime.Now.ToString("HH:mm:ss") & "' 
+ WHERE DocStatus=1 AND BranchCode+'|'+ClrNo in({0})", lst)
+                    Dim result = Main.DBExecute(jobWebConn, tSQL)
+                    If result = "OK" Then
+                        Return New HttpResponseMessage(HttpStatusCode.OK)
+                    End If
+                End If
                 Return New HttpResponseMessage(HttpStatusCode.BadRequest)
-            End If
-            Return New HttpResponseMessage(HttpStatusCode.OK)
+            Catch ex As Exception
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End Try
         End Function
         Function ReceiveClearing() As HttpResponseMessage
             ViewBag.User = Session("CurrUser").ToString()
@@ -66,7 +94,7 @@ h.ClearanceDate,h.JobType,c4.JobTypeName,b.BrName as BranchName,h.CTN_NO,
 h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
 h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
 h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
-h.AdvTotal,h.ClearTotal,h.TotalExpense,
+h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
 d.ItemNo,d.AdvNO,d.AdvItemNo,d.SICode,d.SDescription,d.SlipNO,d.JobNo,d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,
 d.FCost,d.BCost,d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,
 d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,
@@ -150,8 +178,9 @@ ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo
                 End If
                 Dim sql As String = "
 select a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
-a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,a.ReceiveDate,a.ApproveDate,
-b.CustCode,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
+a.JobType,a.DocStatus,a.TotalExpense,a.ClearVat,a.ClearWht,a.ClearNet,a.ClearBill,a.ClearCost,
+a.TRemark,a.ReceiveDate,a.ApproveDate,
+b.CustCode,b.CustBranch,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
 b.AdvTotal,b.ClrAmt,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
 FROM Job_ClearHeader as a 
 left join 

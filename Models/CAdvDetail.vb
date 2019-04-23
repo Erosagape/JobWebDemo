@@ -285,19 +285,22 @@ Public Class CAdvDetail
     Public Sub UpdateTotal(cn As SqlConnection)
         Dim sql As String = "
                                     update b 
-                                    set b.TotalAdvance =a.SumAdvance,b.TotalVAT=a.SumVAT,b.Total50Tavi=a.Sum50Tavi
-                                    from (
+                                    set b.TotalAdvance =ISNULL(a.SumAdvance,0)
+                                    ,b.TotalVAT=ISNULL(a.SumVAT,0)
+                                    ,b.Total50Tavi=ISNULL(a.Sum50Tavi,0)
+                                    from Job_AdvHeader b left join 
+                                    (
 	                                    select BranchCode,AdvNo,Sum(AdvAmount) as SumAdvance,
 	                                    sum(ChargeVAT) as SumVAT,
 	                                    sum(Charge50Tavi) as Sum50Tavi
 	                                    from Job_AdvDetail 
-	                                    group by BranchCode,AdvNo) a 
-                                    inner join Job_AdvHeader b
-                                    on a.BranchCode =b.BranchCode
-                                    and a.AdvNo=b.AdvNo
+	                                    group by BranchCode,AdvNo
+                                    ) a                                     
+                                    on b.BranchCode =a.BranchCode
+                                    and b.AdvNo=a.AdvNo
 "
         Using cm As New SqlCommand(sql, cn)
-            cm.CommandText = sql + " and a.BranchCode='" + Me.BranchCode + "' and a.AdvNo='" + Me.AdvNo + "'"
+            cm.CommandText = sql + " WHERE b.BranchCode='" + Me.BranchCode + "' and b.AdvNo='" + Me.AdvNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
         End Using
