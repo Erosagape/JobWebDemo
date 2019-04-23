@@ -782,10 +782,10 @@ End Code
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
+                response ? alert(msg) : alert("Cannot Payment");
                 if (response) {
                     PrintVoucher($('#txtBranchCode').val(), $('#txtControlNo').val());
-                }
-                response ? alert(msg) : alert("Cannot Payment");
+                }                
             },
             error: function (e) {
                 alert(e);

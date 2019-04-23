@@ -792,13 +792,16 @@ End Code
             if (dt.DocStatus > 2) {
                 //if document paymented/cancelled/cleared then disable save button
                 $('#btnSave').attr('disabled', 'disabled');
+                $('#btnUpdate').attr('disabled', 'disabled');
             } else {
                 //if document approved by this user or not then check authorized to unlock
                 if (dt.DocStatus == 2 && user == dt.ApproveBy && userRights.indexOf('E') >= 0) {
                     $('#btnSave').removeAttr('disabled');
+                    $('#btnSave').removeAttr('disabled');
                 } else {
                     if (dt.DocStatus == 2) {
                         $('#btnSave').attr('disabled', 'disabled');
+                        $('#btnUpdate').attr('disabled', 'disabled');
                     }
                 }
             }
@@ -819,9 +822,10 @@ End Code
                 $('#cboJobType').val('');
             }
             $('#cboDocStatus').val('01');
-            $('#cboClrType').val('');
-            $('#cboClrFrom').val('');
+            $('#cboClrType').val('1');
+            $('#cboClrFrom').val('1');
             $('#txtEmpCode').val(user);
+            $('#txtClrDate').val(GetToday());
 
             ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
             let d = r.clr.detail;
@@ -1009,8 +1013,8 @@ End Code
             FPrice: $('#chkIsCost').prop('checked') == true ? 0 : CDbl(Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()),4),
             BPrice: $('#chkIsCost').prop('checked') == true ? 0 : CDbl(Number($('#txtCurRate').val()) * Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),
             QUnitPrice: dtl.QUnitPrice,
-            QFPrice: CDbl(Number(dtl.QUnitPrice) * Number($('#txtQty').val()), 4),
-            QBPrice: CDbl(Number($('#txtCurRate').val())*Number(dtl.QUnitPrice) * Number($('#txtQty').val()), 4),
+            QFPrice: CDbl(CNum(dtl.QUnitPrice) * CNum($('#txtQty').val()), 4),
+            QBPrice: CDbl(CNum($('#txtCurRate').val())*CNum(dtl.QUnitPrice) * CNum($('#txtQty').val()), 4),
             UnitCost: $('#txtUnitPrice').val(),
             FCost: CDbl(Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),
             BCost: CDbl(Number($('#txtCurRate').val()) * Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),

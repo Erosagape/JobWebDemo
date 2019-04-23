@@ -300,6 +300,15 @@ Public Class CInvDetail
             m_FAmtCredit = value
         End Set
     End Property
+    Private m_VATRate As Double
+    Public Property VATRate As Double
+        Get
+            Return m_VATRate
+        End Get
+        Set(value As Double)
+            m_VATRate = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -341,6 +350,7 @@ Public Class CInvDetail
                             dr("FTotalAmt") = Me.FTotalAmt
                             dr("AmtAdvance") = Me.AmtAdvance
                             dr("AmtCharge") = Me.AmtCharge
+                            dr("VATRate") = Me.VATRate
                             dr("CurrencyCodeCredit") = Me.CurrencyCodeCredit
                             dr("ExchangeRateCredit") = Me.ExchangeRateCredit
                             dr("AmtCredit") = Me.AmtCredit
@@ -499,6 +509,9 @@ and h.DocNo=d.DocNo
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("FAmtCredit"))) = False Then
                         row.FAmtCredit = rd.GetDouble(rd.GetOrdinal("FAmtCredit"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("VATRate"))) = False Then
+                        row.VATRate = rd.GetDouble(rd.GetOrdinal("VATRate"))
                     End If
                     lst.Add(row)
                 End While
