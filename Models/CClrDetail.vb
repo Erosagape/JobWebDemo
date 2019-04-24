@@ -698,7 +698,7 @@ FROM Job_ClearHeader a LEFT JOIN (
 ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
 "
         Using cm As New SqlCommand(sql, cn)
-            cm.CommandText = sql + " and a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
+            cm.CommandText = sql + " WHERE a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
         End Using

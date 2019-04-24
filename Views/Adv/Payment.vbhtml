@@ -59,7 +59,7 @@ End Code
                     </div>
                     <div class="col-sm-2">
                         <br />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv()">Show</button>
+                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
                     </div>
                 </div>
                 <div class="row">
@@ -317,7 +317,7 @@ End Code
         $('#txtSumWHTax').val('');
         $('#txtTRemark').val('');
     }
-    function SetGridAdv() {
+    function SetGridAdv(isAlert) {
         arr = [];
         ClearData();
         ShowSummary();
@@ -350,7 +350,7 @@ End Code
         $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.adv.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                alert('data not found');
+                if(isAlert==true) alert('data not found');
                 return;
             }
             let h = r.adv.data[0].Table;
@@ -786,6 +786,7 @@ End Code
                 if (response) {
                     PrintVoucher($('#txtBranchCode').val(), $('#txtControlNo').val());
                 }                
+                SetGridAdv(false);
             },
             error: function (e) {
                 alert(e);

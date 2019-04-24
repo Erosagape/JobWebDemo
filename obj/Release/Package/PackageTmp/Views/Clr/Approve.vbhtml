@@ -22,10 +22,6 @@ End Code
                 Job Type: <br />
                 <select id="cboJobType" class="form-control dropdown"></select>
             </div>
-            <div class="col-sm-2">
-                Clear From:<br />
-                <select id="cboClrFrom" class="form-control dropdown"></select>
-            </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -34,12 +30,18 @@ End Code
                 <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
                 <input type="text" id="txtClrByName" style="width:300px" disabled />
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-2">
+                Clear From:<br />
+                <select id="cboClrFrom" class="form-control dropdown"></select>
+            </div>
+
+            <div class="col-sm-2">
                 Clear Type:<br />
                 <select id="cboClrType" class="form-control dropdown"></select>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridClr()">Show</button>
+                <br/>
+                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridClr(true)">Show</button>
             </div>
         </div>
         <div class="row">
@@ -110,7 +112,7 @@ End Code
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
         });
     }
-    function SetGridClr() {
+    function SetGridClr(isAlert) {
         arr = [];
         ShowSummary();
 
@@ -138,7 +140,7 @@ End Code
         $.get(path + 'clr/getclearinggrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.clr.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                alert('data not found');
+                if (isAlert==true) alert('data not found');
                 return;
             }
             let h = r.clr.data[0].Table;
@@ -176,7 +178,7 @@ End Code
             });
             $('#tbHeader tbody').on('dblclick', 'tr', function () {
                 let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
-                window.open(path + 'adv/index?BranchCode=' + data.BranchCode + '&AdvNo=' + data.AdvNo,'','');
+                window.open(path + 'clr/index?BranchCode=' + data.BranchCode + '&ClrNo=' + data.ClrNo,'','');
             });
         });
     }
@@ -220,7 +222,7 @@ End Code
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
-                SetGridClr();
+                SetGridClr(false);
                 response ? alert("Approve Completed!") : alert("Cannot Approve");
             },
             error: function (e) {
@@ -235,7 +237,7 @@ End Code
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
                 break;
             case 'reqby':
-                SetGridUser(path, '#tbReq', '#frmSearchReq', ReadReqBy);
+                SetGridUser(path, '#tbEmp', '#frmSearchEmp', ReadReqBy);
                 break;
         }
     }

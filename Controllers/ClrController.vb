@@ -156,10 +156,10 @@ ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo
                     tSqlW &= " AND a.JobType=" & Request.QueryString("JType") & ""
                 End If
                 If Not IsNothing(Request.QueryString("CFrom")) Then
-                    tSqlW &= " AND a.ClrFrom=" & Request.QueryString("CFrom") & ""
+                    tSqlW &= " AND a.ClearFrom=" & Request.QueryString("CFrom") & ""
                 End If
                 If Not IsNothing(Request.QueryString("CType")) Then
-                    tSqlW &= " AND a.ClrType=" & Request.QueryString("CType") & ""
+                    tSqlW &= " AND a.ClearType=" & Request.QueryString("CType") & ""
                 End If
                 If Not IsNothing(Request.QueryString("ClrBy")) Then
                     tSqlW &= " AND a.EmpCode='" & Request.QueryString("ClrBy") & "'"
@@ -228,7 +228,7 @@ and b.ClrNo=a.ClrNo
                 tSqlW &= " AND c.JobType=" & Request.QueryString("JType") & ""
             End If
             If Not IsNothing(Request.QueryString("CFrom")) Then
-                tSqlW &= " AND c.AdvBy IN(SELECT DISTINCT UserID FROM Job_UserRoleDetail WHERE RoleID Like '" & Request.QueryString("CFrom") & "%')"
+                tSqlW &= " AND c.ReqBy IN(SELECT UserID FROM Mas_User WHERE DeptID='" & Request.QueryString("CFrom") & "')"
             End If
             If Not IsNothing(Request.QueryString("ReqBy")) Then
                 tSqlW &= " AND c.EmpCode='" & Request.QueryString("ReqBy") & "'"
@@ -253,7 +253,7 @@ a.UnitPrice as UnitCost,a.AdvQty*a.UnitPrice as FCost,a.AdvQty*a.UnitPrice*a.Exc
 a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,
 a.AdvNo as AdvNO,a.AdvAmount-ISNULL(d.TotalCleared,0) as AdvAmount,a.AdvAmount-ISNULL(d.TotalCleared,0) as UsedAmount,
 (CASE WHEN ISNULL(q.QNo,'')='' THEN 0 ELSE 1 END) as IsQuoItem,
-'' as SlipNO,'' as Remark,a.IsDuplicate,
+'' as SlipNO,'' as Remark,a.IsDuplicate,b.IsExpense,
 b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date50Tavi,
 '' as VenderBillingNo,
 (SELECT STUFF((

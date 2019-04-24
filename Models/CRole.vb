@@ -30,6 +30,15 @@ Public Class CUserRole
             m_RoleDesc = value
         End Set
     End Property
+    Private m_RoleGroup As Integer
+    Public Property RoleGroup As Integer
+        Get
+            Return m_RoleGroup
+        End Get
+        Set(value As Integer)
+            m_RoleGroup = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -44,6 +53,7 @@ Public Class CUserRole
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("RoleID") = Me.RoleID
                             dr("RoleDesc") = Me.RoleDesc
+                            dr("RoleGroup") = Me.RoleGroup
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -60,6 +70,7 @@ Public Class CUserRole
 
         m_RoleID = ""
         m_RoleDesc = ""
+        m_RoleGroup = 0
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CUserRole)
         Dim lst As New List(Of CUserRole)
@@ -75,6 +86,9 @@ Public Class CUserRole
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("RoleDesc"))) = False Then
                         row.RoleDesc = rd.GetString(rd.GetOrdinal("RoleDesc")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("RoleGroup"))) = False Then
+                        row.RoleGroup = rd.GetValue(rd.GetOrdinal("RoleGroup"))
                     End If
                     lst.Add(row)
                 End While

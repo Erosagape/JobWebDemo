@@ -465,105 +465,103 @@ End Code
         $('#frmDetail').on('shown.bs.modal', function () {
             $('#txtSICode').focus();
         });
-        /*
-        $('#cboSTCode').on('change', function () {
-            if ($('#cboSTCode').val() == '') {
-                $('#txtSICode').attr('disabled', 'disabled');
-                $('#txtSDescription').attr('disabled', 'disabled');
-                $('#btnBrowseS').attr('disabled', 'disabled');
-                return;
-            }
-            $('#txtSICode').removeAttr('disabled');
-            $('#txtSDescription').removeAttr('disabled');
-            $('#btnBrowseS').removeAttr('disabled');
-        });
-        */
+
         $('#chkApprove').on('click', function () {
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_CLR', 'Approve',(chkmode ? 'I':'D'), SetApprove);
         });
-        /*
-        $('#chkReceive').on('click', function () {
-            chkmode = this.checked;
-            CallBackAuthorize(path, 'MODULE_CLR', 'Receive', (chkmode ? 'I' : 'D'), SetClear);
-        });
-        */
+
         $('#chkCancel').on('click', function () {
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_CLR', 'Index', 'D', SetCancel);
         });
+
         $('#txtCurrencyCode').keydown(function (event) {
             if (event.which == 13) {
                 ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
                 ShowCaption();
             }
         });
+
         $('#txtBranchCode').keydown(function (event) {
             if (event.which == 13) {
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
+
         $('#txtClrNo').keydown(function (event) {
             if (event.which == 13) {
                 ShowData($('#txtBranchCode').val(),$('#txtClrNo').val());
             }
         });
+
         $('#txtEmpCode').keydown(function (event) {
             if (event.which == 13) {
                 ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
             }
         });
+
         $('#txtSICode').keydown(function (event) {
             if (event.which == 13) {
                 let dt = FindService($('#txtSICode').val())
                 ReadService(dt);
             }
         });
+
         $('#txtQty').keydown(function (event) {
             if (event.which == 13) {
                 CalAmount();
             }
         });
+
         $('#txtUnitPrice').keydown(function (event) {
             if (event.which == 13) {
                 CalAmount();
             }
         });
+
         $('#txtCurRate').keydown(function (event) {
             if (event.which == 13) {
                 CalAmount();
             }
         });
+
         $('#txtAMT').keydown(function (event) {
             if (event.which == 13) {
                 CalVATWHT();
             }
         });
+
         $('#txtVATRate').keydown(function (event) {
             if (event.which == 13) {
                 CalVATWHT();
             }
         });
+
         $('#txtWHTRate').keydown(function (event) {
             if (event.which == 13) {
                 CalVATWHT();
             }
         });
+
         $('#txtVAT').keydown(function (event) {
             if (event.which == 13) {
                 CalTotal();
             }
         });
+
         $('#txtWHT').keydown(function (event) {
             if (event.which == 13) {
                 CalTotal();
             }
         });
+
         $('#txtForJNo').keydown(function (event) {
             if (event.which == 13) {
                 ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
             }
         });
+
         $('#txtNET').keydown(function (event) {
             if (event.which == 13) {
                 let type = $('#txtVatType').val();
@@ -579,9 +577,30 @@ End Code
     function SetApprove(b) {
         if (b == true) {
             if (chkmode) {
-                if ($('#cboDocStatus').val().substr(0, 2) == '01') {
-                    $('#cboDocStatus').val('02');
-                }
+                let dataApp = [];
+                dataApp.push(user);
+                dataApp.push($('#txtBranchCode').val() + '|' + $('#txtClrNo').val());
+                let jsonString = JSON.stringify({ data: dataApp });
+                $.ajax({
+                    url: "@Url.Action("ApproveClearing", "Clr")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonString,
+                    success: function (response) {
+                        if (response) {
+                            ShowData($('#txtBranchCode').val(), $('#txtClrNo').val());
+                            alert("Approve Completed!");
+                        } else {
+                            alert("Cannot Approve");
+                        }
+                        return;
+                    },
+                    error: function (e) {
+                        alert(e);
+                        return;
+                    }
+                });
+                return;
             } else {
                 if ($('#cboDocStatus').val().substr(0, 2) == '02') {
                     $('#cboDocStatus').val('01');
@@ -595,6 +614,7 @@ End Code
         alert('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
         $('#chkApprove').prop('checked', !chkmode);
     }
+
     function SetClear(b) {
         if (b == true) {
             $('#txtReceiveBy').val(chkmode ? user : '');
@@ -605,6 +625,7 @@ End Code
         alert('You are not allow to ' + (b ? 'Clear!' : 'cancel clear!'));
         $('#chkReceive').prop('checked', !chkmode);
     }
+
     function SetCancel(b) {
         if (b == true) {
             if (chkmode) $('#cboDocStatus').val('99');
@@ -616,6 +637,7 @@ End Code
         alert('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
     }
+
     function SetLOVs() {
         //Combos
         let lists = 'JOB_TYPE=#cboJobType';
@@ -662,6 +684,7 @@ End Code
             alert('you are not authorize to view data');
             return;
         }
+        ClearHeader();
         $.get(path + 'clr/getclearing?branch=' + branchcode + '&code=' + clrno, function (r) {
             if (r.clr !== undefined) {
                 let h = r.clr.header[0];
@@ -755,9 +778,8 @@ End Code
     }
     function ReadClrHeader(dt) {
         if (dt != undefined) {
-            ClearHeader();
             hdr = dt;
-            $('#txtBranchCode').val(dt.BranchCode);
+            //$('#txtBranchCode').val(dt.BranchCode);
             $('#txtClrNo').val(dt.ClrNo);
             $('#txtClrDate').val(CDateEN(dt.ClrDate));
             $('#txtClearanceDate').val(CDateEN(dt.ClearanceDate));
@@ -813,19 +835,20 @@ End Code
                     }
                 }
             }
+            $('#cboClrType').attr('disabled', 'disabled');
+            $('#cboClrFrom').attr('disabled', 'disabled');
             return;
         }
-        ClearHeader();
     }
     function EnableSave(b) {
-        $('#btnSave').attr('disabled', 'disabled');
-        $('#btnDel').attr('disabled', 'disabled');
-        $('#btnUpdate').attr('disabled', 'disabled');
-        if(b==true) {
-            $('#btnSave').removeAttr('disabled');
-            $('#btnDel').removeAttr('disabled');
-            $('#btnUpdate').removeAttr('disabled');
-            return;
+        $('#btnSave').removeAttr('disabled');
+        $('#btnDel').removeAttr('disabled');
+        $('#btnUpdate').removeAttr('disabled');
+
+        if (b == false) {
+            $('#btnSave').attr('disabled', 'disabled');
+            $('#btnDel').attr('disabled', 'disabled');
+            $('#btnUpdate').attr('disabled', 'disabled');
         }
     }
     function AddHeader() {
@@ -834,6 +857,8 @@ End Code
             return;
         }
         $('#txtClrNo').val('');
+        ClearHeader();
+        ClearDetail();
         $.get(path + 'clr/getnewclearheader?branchcode=' + $('#txtBranchCode').val() , function (r) {
             let h = r.clr.header;
             ReadClrHeader(h);
@@ -846,14 +871,17 @@ End Code
             $('#txtEmpCode').val(user);
             $('#txtClrDate').val(GetToday());
 
+            $('#cboClrType').removeAttr('disabled');
+            $('#cboClrFrom').removeAttr('disabled');
+
             ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
             let d = r.clr.detail;
             ReadClrDetail(d);
-            ClearDetail();
             $('#txtClrNo').focus();
         });
     }
     function AddDetail() {
+        ClearDetail();
         $.get(path + 'clr/getnewcleardetail?branchcode=' + $('#txtBranchCode').val() + '&clrno=' + $('#txtClrNo').val(), function (r) {
             let d = r.clr.detail[0];
             LoadDetail(d);
@@ -927,12 +955,15 @@ End Code
         $('#btnPrint').attr('disabled', 'disabled');
         $('#btnAdd').attr('disabled', 'disabled');
         $('#btnDel').attr('disabled', 'disabled');
-
+        $('#btnUpdate').attr('disabled', 'disabled');
+                
         if (userRights.indexOf('E') >= 0){
             $('#btnSave').removeAttr('disabled');
+            $('#btnUpdate').removeAttr('disabled');
         }
         if (userRights.indexOf('I') >= 0) {
             $('#btnSave').removeAttr('disabled');
+            $('#btnUpdate').removeAttr('disabled');
             $('#btnAdd').removeAttr('disabled');
         }
         if (userRights.indexOf('D') >= 0) {
@@ -941,6 +972,8 @@ End Code
         if (userRights.indexOf('P') >= 0) {
             $('#btnPrint').removeAttr('disabled');
         }
+        $('#cboClrType').removeAttr('disabled');
+        $('#cboClrFrom').removeAttr('disabled');
     }
     function SaveDetail() {
 
@@ -1015,6 +1048,7 @@ End Code
             $('#tbDetail tbody > tr').removeClass('selected');
             $(this).addClass('selected');
             let data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
+            ClearDetail();
             LoadDetail(data); //callback function from caller
         });
         $('#tbDetail tbody').on('click', 'button', function () {
@@ -1075,7 +1109,6 @@ End Code
     }
     function LoadDetail(dt) {
         if (dt != undefined) {
-            ClearDetail();
             dtl = dt;
             $('#txtItemNo').val(dt.ItemNo);
             $('#txtSICode').val(dt.SICode);
@@ -1107,18 +1140,15 @@ End Code
             $('#txtWHT').val(dt.Tax50Tavi);
             $('#txtNET').val(dt.BNet);
             $('#txtVenCode').val(dt.VenderCode);
-            $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
+            $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
-            $('#chkIsCost').prop('checked', dt.IsExpense > 0 ? true : false);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
         }
-        ClearDetail();
     }
     function LoadDetailFromAdv(dt) {
         if (dt != undefined) {
-            ClearDetail();
             dtl = dt;
             $('#txtItemNo').val(dt.ItemNo);
             $('#txtSICode').val(dt.SICode);
@@ -1147,14 +1177,13 @@ End Code
             $('#txtWHT').val(dt.Tax50Tavi);
             $('#txtNET').val(dt.BCost);
             $('#txtVenCode').val(dt.VenderCode);
-            $('#chkDuplicate').prop('checked', dt.IsDuplicate > 0 ? true : false);
+            $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
-            $('#chkIsCost').prop('checked', dt.IsExpense > 0 ? true : false);
+            $('#chkIsCost').prop('checked', dt.IsExpense ==1 ? true : false);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
         }
-        ClearDetail();
     }
     function ClearDetail() {
         dtl = {};
@@ -1213,17 +1242,7 @@ End Code
         if (job.length > 0) {
             w += '&jobno=' + job;
         }
-        /*
-        if ($('#cboJobType').val() !== '') {
-            w += '&jtype=' + $('#cboJobType').val();
-        }
-        if ($('#cboClrFrom').val() !== '') {
-            w += '&cfrom=' + $('#cboClrFrom').val();
-        }
-        if ($('#cboClrType').val() !== '') {
-            w += '&ctype=' + $('#cboClrType').val();
-        }
-        */
+
         $.get(path + 'clr/getclearinggrid?branchcode=' +  w, function (r) {
             if (r.clr.data.length == 0) {
                 alert('data not found on this branch');
@@ -1283,8 +1302,11 @@ End Code
                 SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
             case 'servicecode':
-                let q = $('#cboSTCode').val() +GetClrType($('#cboClrType').val());
-                SetGridSICodeByGroup(path, '#tbServ', q, '#frmSearchSICode', ReadService);
+                let q = GetClrType($('#cboClrType').val());
+                if ($('#cboSTCode').val() !== '') {
+                    q += '&group=' + $('#cboSTCode').val();
+                }
+                SetGridSICodeFilter(path, '#tbServ', q, '#frmSearchSICode', ReadService);
                 break;
             case 'job':
                 SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam(), ReadJob);
@@ -1303,11 +1325,11 @@ End Code
     function GetClrType(type) {
         switch (type) {
             case "1":
-                return "&type=A";
+                return "?type=A";
             case "2":
-                return "&type=C";
+                return "?type=C";
             case "3":
-                return "&type=S";
+                return "?type=S";
             default:
                 return "";
         }
@@ -1378,6 +1400,7 @@ End Code
         $('#txtSICode').focus();
         if (dt != undefined) {
             $('#txtSICode').val(dt.SICode);
+            $('#cboSTCode').val(dt.GroupCode);
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
             $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
@@ -1395,6 +1418,7 @@ End Code
                 $('#txtVAT').removeAttr('disabled');
                 $('#txtWHT').removeAttr('disabled');
             }
+            $('#chkIsCost').prop('checked', dt.IsExpense == 1 ? true : false);
             CalVATWHT();
             return;
         }
@@ -1527,7 +1551,7 @@ End Code
                     dt.ClrNo = $('#txtClrNo').val();
                     dtl = dt;
                     $('#frmAdvance').modal('hide');
-
+                    ClearDetail();
                     LoadDetailFromAdv(dt);
                     $('#frmDetail').modal('show');
 

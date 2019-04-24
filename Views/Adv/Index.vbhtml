@@ -640,7 +640,30 @@ End Code
         if (b == true) {
             if (chkmode) {
                 if ($('#cboDocStatus').val().substr(0, 2) == '01') {
-                    $('#cboDocStatus').val('02');
+                    let dataApp = [];
+                    dataApp.push(user);
+                    dataApp.push($('#txtBranchCode').val() + '|' + $('#txtAdvNo').val());
+                    let jsonString = JSON.stringify({ data: dataApp });
+                    $.ajax({
+                        url: "@Url.Action("ApproveAdvance", "Adv")",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: jsonString,
+                        success: function (response) {
+                            if (response) {
+                                alert("Approve Completed!");
+                                ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
+                            } else {
+                                alert("Cannot Approve");
+                            }
+                            return;
+                        },
+                        error: function (e) {
+                            alert(e);
+                            return;
+                        }
+                    });
+                    return;
                 }
             } else {
                 if ($('#cboDocStatus').val().substr(0, 2) == '02') {

@@ -138,6 +138,33 @@ function SetGridSICode(p, g, t, d, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridSICodeFilter(p, g, t, d, ev) {
+    //popup for search data
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetServiceCode' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'servicecode.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "SICode", title: "Service Code" },
+            { data: "NameThai", title: "Description" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
 function SetGridSICodeByGroup(p, g, t, d, ev) {
     //popup for search data
     $(g).DataTable({

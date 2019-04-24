@@ -44,7 +44,7 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-2">
-                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv()">Show</button>
+                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
             </div>
             <div class="col-sm-10">
                 Approve Document : <input type="text" id="txtListApprove" class="form-control" value="" disabled/>
@@ -117,7 +117,7 @@ End Code
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
         });
     }
-    function SetGridAdv() {
+    function SetGridAdv(isAlert) {
         arr = [];
         ShowSummary();
 
@@ -147,7 +147,7 @@ End Code
         $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.adv.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                alert('data not found');
+                if (isAlert==true) alert('data not found');
                 return;
             }
             let h = r.adv.data[0].Table;
@@ -228,7 +228,7 @@ End Code
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
-                SetGridAdv();
+                SetGridAdv(false);
                 response ? alert("Approve Completed!") : alert("Cannot Approve");
             },
             error: function (e) {

@@ -8,7 +8,8 @@ End Code
             <div style="flex:1">
                 <div style="display:flex;flex-wrap:wrap;flex-direction:row;">
                     <div style="flex:1">Role ID :<br /><input type="text" id="txtRoleID" class="form-control"></div>
-                    <div style="flex:5">Description :<br /><input type="text" id="txtRoleDesc" class="form-control"></div>
+                    <div style="flex:4">Description :<br /><input type="text" id="txtRoleDesc" class="form-control"></div>
+                    <div style="flex:1">Role Group :<br /><select id="txtRoleGroup" class="form-control dropdown"></select></div>
                 </div>
                 <div id="dvCommand">
                     <button id="btnAdd" class="btn btn-default" onclick="ClearHeader()">Add</button>
@@ -24,6 +25,7 @@ End Code
                                 <tr>
                                     <th>roleID</th>
                                     <th>roleName</th>
+                                    <th>roleGroup</th>
                                 </tr>
                             </thead>
                             <tbody />
@@ -109,6 +111,7 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     $(document).ready(function () {
+        loadConfig('#txtRoleGroup', 'CLR_FROM', path, '');
         SetEvents();
         LoadGrid();
     });
@@ -116,6 +119,7 @@ End Code
         $('#txtRoleID').keydown(function (event) {
             if (event.which == 13) {
                 $('#txtRoleDesc').val('');
+                $('#txtRoleGroup').val('');
                 CallBackQueryUserRole(path, $('#txtRoleID').val(), ReadRole);
                 LoadUser($('#txtRoleID').val());
                 LoadPolicy($('#txtRoleID').val());
@@ -209,7 +213,8 @@ End Code
             data: header,
             columns: [
                 { data: "RoleID", title: "Id" },
-                { data: "RoleDesc", title: "Role Description" }
+                { data: "RoleDesc", title: "Role Description" },
+                { data: "RoleGroup", title: "Group" }
             ],
             destroy:true
         });
@@ -220,6 +225,7 @@ End Code
             var data = $('#tbHeader').DataTable().row(this).data();
             $('#txtRoleID').val(data.RoleID);
             $('#txtRoleDesc').val(data.RoleDesc);
+            $('#txtRoleGroup').val(data.RoleGroup);
 
             ClearUser();
             ClearPolicy();
@@ -284,7 +290,8 @@ End Code
 		var obj={
 			
             RoleID:$('#txtRoleID').val(),
-            RoleDesc:$('#txtRoleDesc').val()
+            RoleDesc: $('#txtRoleDesc').val(),
+            RoleGroup: $('#txtRoleGroup').val()
 	    };
         if (obj.RoleID != "") {
             var ask = confirm("Do you need to Save " + obj.RoleID + "?");
@@ -356,6 +363,7 @@ End Code
 	function ClearHeader(){		
         $('#txtRoleID').val('');
         $('#txtRoleDesc').val('');
+        $('#txtRoleGroup').val('');
         ClearUser();
         ClearPolicy();
     }
@@ -375,6 +383,7 @@ End Code
     }
     function ReadRole(dr) {
         $('#txtRoleDesc').val(dr.data[0].RoleDesc);
+        $('#txtRoleGroup').val(dr.data[0].RoleGroup);
     }
     function ReadUser(dr) {
         $('#txtUserID').val(dr.UserID);

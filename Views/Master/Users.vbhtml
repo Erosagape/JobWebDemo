@@ -10,6 +10,9 @@ End Code
             <div class="col-sm-4">
                 Password :<br /><input type="password" id="txtUPassword" class="form-control" tabIndex="2">
             </div>
+            <div class="col-sm-2">
+                Department :<br /><select id="txtDeptID" class="form-control dropdown"></select>
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -107,7 +110,12 @@ End Code
 
     function SetEvents() {
         loadLang('#txtUsedLanguage');
-        loadConfig('#txtUPosition', 'USER_LEVEL', path, '');
+
+        let lists = 'USER_LEVEL=#txtUPosition';
+        lists += ',CLR_FROM=#txtDeptID';
+
+        loadCombos(path, lists);
+
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             var dv = document.getElementById("dvLOVs");
             //Users
@@ -119,6 +127,7 @@ End Code
                 var code = $('#txtUserID').val();
                 $('#txtUPassword').val('');
                 $('#txtTName').val('');
+                $('#txtDeptID').val('');
                 $('#txtEName').val('');
                 $('#txtTPosition').val('');
                 $('#txtUPosition').val('');
@@ -157,6 +166,7 @@ End Code
             $('#txtMobilePhone').val(dr.MobilePhone);
             $('#txtUserUpline').val(dr.UserUpline);
             $('#txtUsedLanguage').val(dr.UsedLanguage);
+            $('#txtDeptID').val(dr.DeptID);
 
             $('#btnSave').removeAttr('disabled');
             if (dr.UserID != "") {
@@ -227,7 +237,8 @@ End Code
             DMailAccount: row.DMailAccount,
             DMailPassword: row.DMailPassword,
             JobPolicy: row.JobPolicy,
-            AlertPolicy: row.AlertPolicy
+            AlertPolicy: row.AlertPolicy,
+            DeptID: $('#txtDeptID').val()
         };
         return dr;
     }
