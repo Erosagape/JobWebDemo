@@ -250,8 +250,8 @@ a.AdvQty as Qty,b.UnitCharge as UnitCode,a.CurrencyCode,a.ExchangeRate as CurRat
 (CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice*a.ExchangeRate ELSE 0 END) as BPrice,
 q.TotalCharge as QUnitPrice,a.AdvQty*q.ChargeAmt as QFPrice,a.AdvQty*q.ChargeAmt*q.CurrencyRate as QBPrice,
 a.UnitPrice as UnitCost,a.AdvQty*a.UnitPrice as FCost,a.AdvQty*a.UnitPrice*a.ExchangeRate as BCost,
-a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,
-a.AdvNo as AdvNO,a.AdvAmount-ISNULL(d.TotalCleared,0) as AdvAmount,a.AdvAmount-ISNULL(d.TotalCleared,0) as UsedAmount,
+a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,a.AdvNo as AdvNO,a.ItemNo as AdvItemNo,
+a.AdvAmount-ISNULL(d.TotalCleared,0) as AdvAmount,a.AdvAmount-ISNULL(d.TotalCleared,0) as UsedAmount,
 (CASE WHEN ISNULL(q.QNo,'')='' THEN 0 ELSE 1 END) as IsQuoItem,
 '' as SlipNO,'' as Remark,a.IsDuplicate,b.IsExpense,
 b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date50Tavi,
@@ -264,7 +264,7 @@ b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date5
 FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 )) as AirQtyStep,
 q.CalculateType as StepSub,
-a.ForJNo as JobNo,a.ItemNo as AdvItemNo,a.IsChargeVAT as VATType,a.VATRate,a.Rate50Tavi as Tax50TaviRate,q.QNo
+a.ForJNo as JobNo,a.IsChargeVAT as VATType,a.VATRate,a.Rate50Tavi as Tax50TaviRate,q.QNo
 FROM Job_AdvDetail a LEFT JOIN Job_SrvSingle b on a.SICode=b.SICode
 INNER JOIN Job_AdvHeader c on a.BranchCode=c.BranchCode and a.AdvNo=c.AdvNo 
 left join Job_Order j on a.BranchCode=j.BranchCode and a.ForJNo=j.JNo
@@ -310,7 +310,7 @@ left join
 	GROUP BY cd.BranchCode,cd.AdvNO,cd.AdvItemNo
 ) d
 ON a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNO and a.ItemNo=d.AdvItemNo
-WHERE a.AdvAmount-ISNULL(d.TotalCleared,0)>0 AND c.DocStatus<5
+WHERE a.AdvAmount-ISNULL(d.TotalCleared,0)>0 AND c.DocStatus IN('3','4') 
 {0}
 "
             Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))

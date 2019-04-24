@@ -75,7 +75,7 @@ Module Main
                     End If
                     rd.Close()
                 End Using
-                cn.Close()
+
             End Using
         Catch ex As Exception
 
@@ -146,7 +146,7 @@ GROUP BY a.UserID,b.ModuleID
                     cm.CommandText = SQL
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
             End Using
             Return "OK"
         Catch ex As Exception

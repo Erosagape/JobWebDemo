@@ -282,10 +282,9 @@ End Code
                             <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="25" />
                             <br />
                             Slip No :
-                            <input type="text" id="txtSlipNo" style="width:200px" tabindex="26" />
-                            <br />
+                            <input type="text" id="txtSlipNo" style="width:150px" tabindex="26" />
                             WH-Tax No :
-                            <input type="text" id="txt50Tavi" style="width:200px" tabindex="27" />
+                            <input type="text" id="txt50Tavi" style="width:150px" tabindex="27" />
                             <br />
                             Pay To Vender :
                             <input type="text" id="txtVenCode" style="width:50px" tabindex="28" />
@@ -297,6 +296,11 @@ End Code
                             <br />
                             <input type="checkbox" id="chkIsCost" disabled />
                             <label for="chkIscost">Is Company Cost (Cannot Charge)</label>
+                            <br />
+                            <label for="txtAdvItemNo">Clear From Adv Item.No :</label>
+                            <input type="text" id="txtAdvItemNo" style="width:40px" disabled />
+                            <label for="txtAdvNo">Adv.No :</label>
+                            <input type="text" id="txtAdvNo" style="width:150px" disabled />
                         </div>
                         <div class="modal-footer">
                             <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
@@ -1081,8 +1085,8 @@ End Code
             BCost: CDbl(Number($('#txtCurRate').val()) * Number($('#txtUnitPrice').val()) * Number($('#txtQty').val()), 4),
             ChargeVAT: $('#txtVAT').val(),
             Tax50Tavi: $('#txtWHT').val(),
-            AdvNO: dtl.AdvNO,
-            AdvItemNo: dtl.AdvItemNo,
+            AdvNO: $('#txtAdvNo').val(),
+            AdvItemNo: $('#txtAdvItemNo').val(),
             AdvAmount: ($('#chkDuplicate').prop('checked') == true ? $('#txtAMT').val() : dtl.AdvAmount),
             UsedAmount: $('#txtAMT').val(),
             IsQuoItem: dtl.IsQuoItem,
@@ -1142,6 +1146,8 @@ End Code
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
+            $('#txtAdvNo').val(dt.AdvNO);
+            $('#txtAdvItemNo').val(dt.AdvItemNo);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
@@ -1179,7 +1185,9 @@ End Code
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
-            $('#chkIsCost').prop('checked', dt.IsExpense ==1 ? true : false);
+            $('#chkIsCost').prop('checked', dt.IsExpense == 1 ? true : false);
+            $('#txtAdvNo').val(dt.AdvNO);
+            $('#txtAdvItemNo').val(dt.AdvItemNo);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
@@ -1213,6 +1221,8 @@ End Code
         ShowCurrency(path, $('#txtSubCurrency').val(), '#txtCurrencyName');
         ShowCaption();
         $('#txtVenCode').val('');
+        $('#txtAdvNo').val('');
+        $('#txtAdvItemNo').val('0');
 
         $('#chkDuplicate').prop('checked', false);
         $('#txtAMT').removeAttr('disabled');

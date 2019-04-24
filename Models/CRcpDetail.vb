@@ -409,7 +409,7 @@ Public Class CRcpDetail
                     cm.ExecuteNonQuery()
                 End Using
                 UpdateTotal(cn)
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message

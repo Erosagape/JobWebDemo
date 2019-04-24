@@ -31,7 +31,7 @@ Public Class CUtil
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
             Catch ex As Exception
                 Message = "[ERROR]" & ex.Message
             End Try
@@ -47,7 +47,7 @@ Public Class CUtil
                 Using da As New SqlDataAdapter(pSQL, cn)
                     da.Fill(dt)
                 End Using
-                cn.Close()
+
             Catch ex As Exception
                 Message = "[ERROR]" & ex.Message
             End Try

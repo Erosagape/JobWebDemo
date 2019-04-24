@@ -191,7 +191,6 @@ D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.dll
 D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.xml
 D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.pdb
 D:\Boat\JobWebDemo\JobWebDemo\obj\Debug\JobWebApi.vbprojAssemblyReference.cache
-D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.vbprojAssemblyReference.cache
 D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.Resources.resources
 D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.vbproj.GenerateResource.cache
 D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.vbproj.CoreCompileInputs.cache
@@ -229,3 +228,4 @@ D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.vbproj.CopyComplete
 D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.dll
 D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.xml
 D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.pdb
+D:\Source Program\Boat\JobWebDemo\obj\Debug\JobWebApi.vbprojAssemblyReference.cache

@@ -668,7 +668,7 @@ Public Class CClrDetail
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message
@@ -701,6 +701,40 @@ ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
             cm.CommandText = sql + " WHERE a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+
+            If Me.AdvNO <> "" Then
+                sql = "
+update adv
+set adv.DocStatus=src.ClrStatus
+from Job_AdvHeader adv inner join
+(select BranchCode,AdvNo,(CASE WHEN sum(AdvNet)-Sum(ClrNet)<=0 THEN 5 ELSE 4 END) as ClrStatus from
+(
+select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvNet,c.ClrNet
+from Job_AdvHeader h inner join Job_AdvDetail d
+on h.BranchCode=d.BranchCode
+and h.AdvNo=d.AdvNo 
+inner join
+(
+select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.BNet) as ClrNet
+FROM Job_ClearDetail a inner join Job_ClearHeader b
+on a.BranchCode=b.BranchCode
+and a.ClrNo=b.ClrNo
+where b.DocStatus<>99
+group by a.BranchCode,a.AdvNO,a.AdvItemNo 
+) c
+on h.BranchCode=c.BranchCode
+and h.AdvNo=c.AdvNO
+and d.ItemNo=c.AdvItemNo
+) clr
+group by BranchCode,AdvNo
+) src
+on adv.BranchCode=src.BranchCode
+and adv.AdvNo=src.AdvNo
+"
+                cm.CommandText = sql + " WHERE adv.BranchCode='" + Me.BranchCode + "' and adv.AdvNo='" + Me.AdvNO + "'"
+                cm.CommandType = CommandType.Text
+                cm.ExecuteNonQuery()
+            End If
         End Using
     End Sub
 End Class

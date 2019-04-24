@@ -404,7 +404,7 @@ Public Class CAdvDetail
                     cm.ExecuteNonQuery()
                 End Using
                 UpdateTotal(cn)
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = "[exception] " + ex.Message

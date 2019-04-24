@@ -937,6 +937,7 @@ End Code
                 $('#txtCancelTime').attr('disabled', 'disabled');
 
                 $('#btnSave').attr('disabled', 'disabled');
+                $('#btnUpdate').attr('disabled', 'disabled');
                 $('#btnDel').attr('disabled', 'disabled');
             } else {
                 //if document approved by this user or not then check authorized to unlock 

@@ -635,7 +635,7 @@ Public Class CAdvHeader
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = "[exception] " + ex.Message

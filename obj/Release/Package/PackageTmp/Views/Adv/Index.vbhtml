@@ -937,6 +937,8 @@ End Code
                 $('#txtCancelTime').attr('disabled', 'disabled');
 
                 $('#btnSave').attr('disabled', 'disabled');
+                $('#btnUpdate').attr('disabled', 'disabled');
+                $('#btnDel').attr('disabled', 'disabled');
             } else {
                 //if document approved by this user or not then check authorized to unlock 
                 if (dt.DocStatus == 2 && user == dt.ApproveBy && userRights.indexOf('E') >= 0) {
@@ -946,6 +948,8 @@ End Code
                     $('#chkApprove').removeAttr('disabled');
 
                     $('#btnSave').removeAttr('disabled');
+                    $('#btnDel').removeAttr('disabled');
+                    $('#btnUpdate').removeAttr('disabled');
                 } else {
                     if (dt.DocStatus == 2) {
                         $('#chkApprove').attr('disabled', 'disabled');
@@ -954,7 +958,9 @@ End Code
                         $('#txtApproveTime').attr('disabled', 'disabled');
 
                         $('#btnSave').attr('disabled', 'disabled');
-                    }
+                        $('#btnUpdate').attr('disabled', 'disabled');
+                        $('#btnDel').attr('disabled', 'disabled');
+                    } 
                 }
             }                
             return;

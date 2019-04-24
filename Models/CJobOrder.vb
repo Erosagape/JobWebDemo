@@ -1047,7 +1047,7 @@ Public Class CJobOrder
                             msg = "Save " & Me.JNo & " Complete"
                         End Using
                     End Using
-                    cn.Close()
+
                 End Using
             Catch e As Exception
                 msg = "[error" & pass & "]" & e.Message
