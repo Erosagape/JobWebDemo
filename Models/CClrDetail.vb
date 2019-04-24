@@ -667,6 +667,9 @@ Public Class CClrDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    If Me.ClrNo <> "" Then
+                        UpdateTotal(cn)
+                    End If
                 End Using
 
                 msg = "Delete Complete"
@@ -707,26 +710,33 @@ ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
 update adv
 set adv.DocStatus=src.ClrStatus
 from Job_AdvHeader adv inner join
-(select BranchCode,AdvNo,(CASE WHEN sum(AdvNet)-Sum(ClrNet)<=0 THEN 5 ELSE 4 END) as ClrStatus from
 (
-select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvNet,c.ClrNet
-from Job_AdvHeader h inner join Job_AdvDetail d
-on h.BranchCode=d.BranchCode
-and h.AdvNo=d.AdvNo 
-inner join
-(
-select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.BNet) as ClrNet
-FROM Job_ClearDetail a inner join Job_ClearHeader b
-on a.BranchCode=b.BranchCode
-and a.ClrNo=b.ClrNo
-where b.DocStatus<>99
-group by a.BranchCode,a.AdvNO,a.AdvItemNo 
-) c
-on h.BranchCode=c.BranchCode
-and h.AdvNo=c.AdvNO
-and d.ItemNo=c.AdvItemNo
-) clr
-group by BranchCode,AdvNo
+    select BranchCode,AdvNo,
+    (CASE WHEN sum(AdvNet)-Sum(ClrNet)<=0 THEN 5 ELSE 
+         (CASE WHEN Sum(ClrNet) > 0 THEN 4 ELSE AdvStatus END) END) as ClrStatus 
+    from
+    (
+        select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvNet,
+        (CASE WHEN d.IsDuplicate=1 THEN ISNULL(c.ClrNet,0) ELSE d.AdvNet END) as ClrNet,
+        (CASE WHEN h.PaymentRef<>'' THEN 3 ELSE (CASE WHEN h.ApproveBy<>'' THEN 2 ELSE 1 END) END) as AdvStatus
+        from Job_AdvHeader h inner join Job_AdvDetail d
+        on h.BranchCode=d.BranchCode
+        and h.AdvNo=d.AdvNo 
+        left join
+        (
+            select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.BNet) as ClrNet
+            FROM Job_ClearDetail a inner join Job_ClearHeader b
+            on a.BranchCode=b.BranchCode
+            and a.ClrNo=b.ClrNo
+            where b.DocStatus<>99
+            group by a.BranchCode,a.AdvNO,a.AdvItemNo
+        ) c
+        on h.BranchCode=c.BranchCode
+        and h.AdvNo=c.AdvNO
+        and d.ItemNo=c.AdvItemNo
+        where h.DocStatus<>99
+    ) clr
+    group by BranchCode,AdvNo,AdvStatus
 ) src
 on adv.BranchCode=src.BranchCode
 and adv.AdvNo=src.AdvNo

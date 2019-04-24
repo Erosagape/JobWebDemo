@@ -553,6 +553,10 @@ WHERE a.AdvAmount-ISNULL(d.TotalCleared,0)>0 AND c.DocStatus IN('3','4')
                 End If
 
                 Dim oData As New CClrDetail(jobWebConn)
+                Dim oRows = oData.GetData(tSqlw)
+                If oRows.Count > 0 Then
+                    oData = oRows(0)
+                End If
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""clr"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
