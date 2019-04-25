@@ -25,6 +25,11 @@ Namespace Controllers
             Return GetView("FormClr")
         End Function
         Function Costing() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "Costing")
+            If AuthorizeStr.IndexOf("M") < 0 Then
+                Return Content("You are not allow to view costing", textContent)
+            End If
             Return GetView("Costing", "MODULE_ACC")
         End Function
         Function GenerateInv() As ActionResult
@@ -84,10 +89,6 @@ Namespace Controllers
             If Not Request.QueryString("Branch") Is Nothing Then
                 branch = Request.QueryString("Branch").ToString
             End If
-            Dim code As String = ""
-            If Not Request.QueryString("Code") Is Nothing Then
-                code = Request.QueryString("Code").ToString
-            End If
             Dim sql As String = "
 select h.BranchCode,h.ClrNo,h.ClrDate,h.DocStatus,c1.ClrStatusName,
 h.ClearanceDate,h.JobType,c4.JobTypeName,b.BrName as BranchName,h.CTN_NO,
@@ -95,14 +96,17 @@ h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
 h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
 h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
 h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
-d.ItemNo,d.AdvNO,d.AdvItemNo,d.SICode,d.SDescription,d.SlipNO,d.JobNo,d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,
-d.FCost,d.BCost,d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,
-d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,
+d.ItemNo,d.AdvNO,d.AdvItemNo,d.SICode,d.SDescription,d.SlipNO,d.JobNo,
+d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.FPrice,d.BPrice,d.FCost,d.BCost,
+d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
+d.LinkItem,d.LinkBillNo,s.IsExpense,s.IsCredit,s.IsTaxCharge,s.Is50Tavi,s.IsHaveSlip,s.IsLtdAdv50Tavi,
+d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,j.JobStatus,c5.JobStatusName,j.CloseJobDate,
 h.CancelProve,h.CancelReson,h.CancelDate
 from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
 left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
 left join (
-  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,c.NameThai,c.NameEng
+  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,
+  c.NameThai,c.NameEng
   from Job_Order j inner join Mas_Company c
   on j.CustCode=c.CustCode and j.CustBranch=c.Branch
 ) j
@@ -119,14 +123,26 @@ on h.ClearType=c3.ClrFromKey
 left join 
 (SELECT ConfigKey as JobTypeKey,ConfigValue as JobTypeName FROM Mas_Config WHERE ConfigCode='JOB_TYPE') c4
 on h.JobType=c4.JobTypeKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as JobStatusName FROM Mas_Config WHERE ConfigCode='JOB_STATUS') c5
+on j.JobStatus=c5.JobTypeKey
 left join Mas_User u1 on h.EmpCode=u1.UserID
 left join Mas_User u2 on h.ApproveBy=u2.UserID
 left join Mas_User u3 on h.ReceiveBy=u3.UserID 
-WHERE h.BranchCode='{0}' AND h.ClrNo='{1}' 
-ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo 
+left join Job_SrvSingle s on d.SICode=s.SICode
+WHERE h.BranchCode='{0}'
 "
             Try
-                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, branch, code))
+                If Not Request.QueryString("Code") Is Nothing Then
+                    sql &= " AND h.ClrNo='" & Request.QueryString("Code").ToString & "' "
+                End If
+
+                If Not Request.QueryString("Job") Is Nothing Then
+                    sql &= " AND d.JobNo='" & Request.QueryString("Job").ToString & "' AND h.DocStatus<>99 "
+                End If
+                sql &= "ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo "
+
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, branch))
                 Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & "}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
