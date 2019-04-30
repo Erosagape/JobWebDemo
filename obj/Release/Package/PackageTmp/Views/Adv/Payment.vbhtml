@@ -720,7 +720,8 @@ End Code
                 SICode: '',
                 RecvBank: '',
                 RecvBranch: '',
-                acType: 'CR'
+                acType: 'CR',
+                ForJNo: ''
             });
         }
         if (oData.length > 0) {
@@ -812,7 +813,9 @@ End Code
             CancelReson: '',
             CancelProve: '',
             CancelDate: '',
-            CancelTime: ''
+            CancelTime: '',
+            CustCode: $('#txtCustCode').val(),
+            CustBranch: $('#txtCustBranch').val()
         };
         docno = '';
         let jsonString = JSON.stringify({ data: oHeader });

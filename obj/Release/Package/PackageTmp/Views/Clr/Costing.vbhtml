@@ -5,20 +5,18 @@ End Code
 <div class="row">
     <div class="col-sm-3">
         Branch :
+        <br/>
         <input type="text" id="txtBranchCode" style="width:50px" disabled />
         <input type="text" id="txtBranchName" style="width:200px" disabled />
     </div>
     <div class="col-sm-2">
-        <label for="txtJNo">Job No :<input type="text" style="width:130px" id="txtJNo" disabled /></label>
+        <label for="txtJNo">Job No :<input type="text" class="form-control" id="txtJNo" disabled /></label>
     </div>
     <div class="col-sm-3">
-        <label for="txtCloseDate">Close Date :<input type="date" id="txtCloseDate" style="width:130px" disabled /> </label>
+        <label for="txtCloseDate">Close Date :<input type="date" id="txtCloseDate" class="form-control" disabled /> </label>
     </div>
-    <div class="col-sm-3">
-        <label for="txtJobStatus">Job Status :<input type="text" style="width:130px" id="txtJobStatus" disabled /></label>
-    </div>
-    <div class="col-sm-1">
-        <button id="btnRefresh" class="btn btn-default">Refresh</button>
+    <div class="col-sm-4">
+        <label for="txtJobStatus">Job Status :<input type="text" class="form-control" id="txtJobStatus" disabled /></label>
     </div>
 </div>
 <table id="tbDetail" class="table table-responsive">
@@ -80,7 +78,6 @@ End Code
 </div>
 <button id="btnGenerateInv" class="btn btn-success">Generate Invoice</button>
 <button id="btnPrintJobsum" class="btn btn-info">Print Summary</button>
-<button data-toggle="modal" data-target="#dvDetail" class="btn btn-warning">Edit Data</button>
 <div id="dvDetail" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -169,7 +166,9 @@ End Code
             $.get(path + 'clr/getclearingreport?branch=' + branch + '&job=' + code, function (r) {
                 if (r.data[0].Table !== undefined) {
                     let h = r.data[0].Table[0];
+                    $('#txtBranchCode').val(h.BranchCode);
                     $('#txtBranchName').val(h.BranchName);
+                    $('#txtJNo').val(h.JobNo);
                     $('#txtCloseDate').val(CDateEN(h.CloseJobDate));
                     $('#txtJobStatus').val(h.JobStatusName);
 
@@ -195,19 +194,19 @@ End Code
                         let serv = (d[i].IsCredit == 0 && d[i].IsExpense == 0 ? amt : 0);
                         let cost = (d[i].IsExpense == 1 || d[i].IsCredit==1 ? amt : 0);
                         let profit = (d[i].IsExpense == 1 ? amt*-1 : d[i].IsCredit==1 ? 0 : amt);
-                        let slipNo = (d[i].IsHaveSlip == 1 ? ' #' + d[i].SlipNO : '');
+                        let slipNo = (d[i].IsHaveSlip == 1 && d[i].IsCredit==1 ? ' #' + d[i].SlipNO : '');
 
                         if (d[i].IsCredit == 0 && d[i].IsExpense == 0) {
                             if (d[i].IsTaxCharge > 0) {
                                 amtforvat += d[i].UsedAmount;
                                 amtvat += d[i].ChargeVAT;
-                                slipNo &= ',VAT (' + d[i].VATRate + '%)=' + d[i].ChargeVAT;
+                                slipNo += '<br/>VAT ' + d[i].VATRate + '%=' + d[i].ChargeVAT;
                             } else {
                                 amtnonvat += d[i].UsedAmount;
                             }
                             if (d[i].Is50Tavi > 0) {
                                 amtwht += d[i].Tax50Tavi;
-                                slipNo &= ',WH-Tax (' + d[i].Tax50TaviRate + '%)=' + d[i].Tax50Tavi;
+                                slipNo += '<br/>WH-Tax ' + d[i].Tax50TaviRate + '%=' + d[i].Tax50Tavi;
                             }
                         }
                         
@@ -255,6 +254,10 @@ End Code
         alert('you click ' + clearno);
         $('#dvDetail').modal('show');
     });
-
-
+    $('#btnPrintJobsum').on('click', function () {
+        window.open(path + 'JobOrder/FormJobSum?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
+    });
+    $('#btnGenerateInv').on('click', function () {
+        window.open(path + 'Clr/GenerateInv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
+    });
 </script>

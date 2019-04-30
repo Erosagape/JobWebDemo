@@ -291,6 +291,15 @@ Public Class CVoucherSub
             m_acType = value
         End Set
     End Property
+    Private m_ForJNo As String
+    Public Property ForJNo As String
+        Get
+            Return m_ForJNo
+        End Get
+        Set(value As String)
+            m_ForJNo = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -338,6 +347,7 @@ Public Class CVoucherSub
                             dr("RecvBank") = Me.RecvBank
                             dr("RecvBranch") = Me.RecvBranch
                             dr("acType") = Me.acType
+                            dr("ForJNo") = Me.ForJNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = Me.PRVoucher
@@ -460,6 +470,9 @@ Public Class CVoucherSub
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("acType"))) = False Then
                         row.acType = rd.GetString(rd.GetOrdinal("acType")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ForJNo"))) = False Then
+                        row.ForJNo = rd.GetString(rd.GetOrdinal("ForJNo")).ToString()
                     End If
                     lst.Add(row)
                 End While

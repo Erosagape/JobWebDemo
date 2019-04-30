@@ -27,10 +27,19 @@ End Code
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-8">
                     Note<br /><input type="text" id="txtTRemark" class="form-control" tabIndex="4">
                 </div>
+                <div class="col-xs-3">
+                    Customer Code<br />
+                    <input type="text" id="txtCustCode" class="form-control">
+                </div>
+                <div class="col-xs-1">
+                    Branch<br />
+                    <input type="text" id="txtCustBranch" class="form-control">
+                </div>
             </div>
+
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#tabHeader">Payment Info</a></li>
                 <li><a data-toggle="tab" href="#tabDetail">Reference Documents</a></li>
@@ -305,9 +314,13 @@ End Code
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     Note<br /><input type="text" id="txtDTRemark" class="form-control">
                                 </div>
+                                <div class="col-md-4">
+                                    Job No.<br /><input type="text" id="txtForJNo" class="form-control">
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -699,14 +712,16 @@ End Code
             TRemark:$('#txtTRemark').val(),
             RecUser:$('#txtRecUser').val(),
             RecDate:CDateTH($('#txtRecDate').val()),
-            RecTime:CDateTH($('#txtRecTime').val()),
+            RecTime:$('#txtRecTime').val(),
             PostedBy:$('#txtPostedBy').val(),
             PostedDate:CDateTH($('#txtPostedDate').val()),
-            PostedTime:CDateTH($('#txtPostedTime').val()),
+            PostedTime:$('#txtPostedTime').val(),
             CancelReson:$('#txtCancelReson').val(),
             CancelProve:$('#txtCancelProve').val(),
             CancelDate:CDateTH($('#txtCancelDate').val()),
-            CancelTime: CDateTH($('#txtCancelTime').val())
+            CancelTime:$('#txtCancelTime').val(),
+            CustCode: $('#txtCustCode').val(),
+            CustBranch:$('#txtCustBranch').val()
         };
         if (obj.ControlNo != "") {
             var ask = confirm("Do you need to Save " + obj.ControlNo + "?");
@@ -869,14 +884,16 @@ End Code
             $('#txtTRemark').val(dr.TRemark);
             $('#txtRecUser').val(dr.RecUser);
             $('#txtRecDate').val(CDateEN(dr.RecDate));
-            $('#txtRecTime').val(CDateEN(dr.RecTime));
+            $('#txtRecTime').val(ShowTime(dr.RecTime));
             $('#txtPostedBy').val(dr.PostedBy);
             $('#txtPostedDate').val(CDateEN(dr.PostedDate));
-            $('#txtPostedTime').val(CDateEN(dr.PostedTime));
+            $('#txtPostedTime').val(ShowTime(dr.PostedTime));
             $('#txtCancelReson').val(dr.CancelReson);
             $('#txtCancelProve').val(dr.CancelProve);
             $('#txtCancelDate').val(CDateEN(dr.CancelDate));
-            $('#txtCancelTime').val(CDateEN(dr.CancelTime));
+            $('#txtCancelTime').val(ShowTime(dr.CancelTime));
+            $('#txtCustCode').val(dr.CustCode);
+            $('#txtCustBranch').val(dr.CustBranch);
         }
     }
     function ReadPayment(dr) {
@@ -915,6 +932,7 @@ End Code
             $('#txtRecvBank').val(dr.RecvBank);
             $('#txtRecvBranch').val(dr.RecvBranch);
             $('#txtacType').val(dr.acType);
+            $('#txtForJNo').val(dr.ForJNo);
             $('#cboacType').val(dr.acType);
             $('#cboacType').change();
             if (dr.BankCode !== null) {
@@ -953,6 +971,7 @@ End Code
     function ClearPayment() {
         $('#txtPRVoucher').val('');
         $('#txtItemNo').val('0');
+        $('#txtForJNo').val('');
         $('#txtPRType').val('');
         $('#cboPRType').val('');
         $('#txtChqNo').val('');
@@ -1039,7 +1058,8 @@ End Code
             SICode:$('#txtSICode').val(),
             RecvBank:$('#txtRecvBank').val(),
             RecvBranch: $('#txtRecvBranch').val(),
-            acType: $('#txtacType').val()
+            acType: $('#txtacType').val(),
+            ForJNo: $('#txtForJNo').val()
         };
         if (obj.PRVoucher != "") {
             var ask = confirm("Do you need to Save " + obj.PRVoucher + "?");

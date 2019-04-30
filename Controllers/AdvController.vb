@@ -18,8 +18,7 @@ Namespace Controllers
             Return GetView("Payment", "MODULE_ADV")
         End Function
         Function CreditAdv() As ActionResult
-            'Return GetView("CreditAdv", "MODULE_ADV")
-            Return RedirectToAction("FormCreditAdv")
+            Return GetView("CreditAdv", "MODULE_ADV")
         End Function
         Function EstimateCost() As ActionResult
             Return GetView("EstimateCost", "MODULE_ADV")
@@ -126,12 +125,43 @@ Namespace Controllers
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)
-
+                    Dim prefix As String = advPrefix
                     If data.AdvNo = "" Then
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
                         End If
-                        data.AddNew(advPrefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+                        data.AddNew(prefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+                    End If
+
+                    If AuthorizeStr.IndexOf("E") < 0 Then
+                        Return Content("{""result"":{""data"":null,""msg"":""You are not allow to edit advance""}}", jsonContent)
+                    End If
+
+                    Dim msg As String = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}'", data.BranchCode, data.AdvNo))
+                    Dim json = "{""result"":{""data"":""" & data.AdvNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" + ex.Message + """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function SaveCustAdvance(<FromBody()> ByVal data As CAdvHeader) As ActionResult
+            Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    Dim prefix As String = "TACC"
+                    If data.AdvNo = "" Then
+                        If AuthorizeStr.IndexOf("I") < 0 Then
+                            Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
+                        End If
+                        data.AddNew(prefix & "-" & DateTime.Now.ToString("yyMM") & "____")
                     End If
 
                     If AuthorizeStr.IndexOf("E") < 0 Then
@@ -362,6 +392,11 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("Currency")) Then
                     tSqlW &= " AND a.SubCurrency='" & Request.QueryString("Currency") & "' "
+                End If
+                If Not IsNothing(Request.QueryString("AdvType")) Then
+                    tSqlW &= " AND a.AdvType IN(" & Request.QueryString("AdvType") & ") "
+                Else
+                    tSqlW &= " AND a.AdvType IN(1,2,3,4) "
                 End If
                 Dim sql As String = "
 select a.*,

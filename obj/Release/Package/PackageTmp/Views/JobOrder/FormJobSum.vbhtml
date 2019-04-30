@@ -19,58 +19,58 @@ End Code
 </style>
 <div style="display:flex">
     <div style="flex:2">
-        JOB TYPE : 01/IMPORT
+        JOB TYPE : <label id="lblJobTypeName"></label>
     </div>
     <div style="flex:1">
-        JOB DATE : 05/02/2018
+        JOB DATE : <label id="lblJobDate"></label>
     </div>
 </div>
 
 <div style="display:flex">
     <div style="flex:2">
-        CUST NAME : YUSEN
+        CUST NAME : <label id="lblCustName"></label>
     </div>
     <div style="flex:1">
-        SHIP BY : 02/SEA
+        SHIP BY : <label id="lblShipByName"></label>
     </div>
 </div>
 
 <div style="display:flex">
     <div style="flex:1">
-        INVOICE : TEST990505218
+        INVOICE : <label id="lblInvNo"></label>
     </div>
     <div style="flex:1">
-        DECLARE NO : -
+        DECLARE NO : <label id="lblDeclareNo"></label>
     </div>
     <div style="flex:1" ">
-        VESSEL :
+        VESSEL : <label id="lblVesselName"></label>
     </div>
 </div>
 
 <div style="display:flex">
     <div style="flex:2">
-        PRODUCT NAME :
+        PRODUCT NAME : <label id="lblProductName"></label>
     </div>
     <div style="flex:1">
-        WEIGHT : 0.00 KGM
+        WEIGHT : <label id="lblGrossWeight"></label>
     </div>
 </div>
 
 <div style="display:flex">
     <div style="flex:1">
-        CONTAINER :
+        CONTAINER : <label id="lblContainer"></label>
     </div>
     <div style="flex:1">
-        SERVICE BY :
+        SERVICE BY : <label id="lblCSName"></label>
     </div>
     <div style="flex:1">
-        QUANTITY : 0.00
+        QUANTITY : <label id="lblInvQty"></label>
     </div>
 </div>
 
 <div style="display:flex">
     <div style="flex:2">
-        <table width="98%" border="1">
+        <table id="tbAdv" width="98%" border="1">
             <tr class="text-center">
                 <th width="5%">NO.</th>
                 <th width="15%">ADV DATE</th>
@@ -78,13 +78,15 @@ End Code
                 <th width="35%">PRE ADVANCE</th>
                 <th width="15%">AMOUNT</th>
             </tr>
-            <tr>
-                <td class="text-center">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br /></td>
-                <td class="text-center">08/02/2561<br />08/02/2561<br />08/02/2561<br />08/02/2561<br />08/02/2561<br />08/02/2561<br /></td>
-                <td class="text-center">ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br /></td>
-                <td>DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br /></td>
-                <td style="text-align:right">1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br /></td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td class="text-center">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br /></td>
+                    <td class="text-center">08/02/2561<br />08/02/2561<br />08/02/2561<br />08/02/2561<br />08/02/2561<br />08/02/2561<br /></td>
+                    <td class="text-center">ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br />ADV-1802-0014<br /></td>
+                    <td>DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br />DSR-RE-LOCATION<br /></td>
+                    <td style="text-align:right">1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br />1000.00<br /></td>
+                </tr>
+            </tbody>
             <tr>
                 <td colspan="4">
                     <div style="display:flex">
@@ -100,8 +102,8 @@ End Code
 
                         <div style="flex:1">
                             <br />
-                            680.40<br />
-                            22,700.40
+                            <label id="lblTotalADVVAT"></label><br />
+                            <label id="lblTotalADVAfterVAT"></label>
                         </div>
 
                         <div style="flex:1">
@@ -112,33 +114,35 @@ End Code
                     </div>
                 </td>
                 <td style="text-align:right">
-                    22,020.00<br />
-                    0.00<br />
-                    22,700.40
+                    <label id="lblTotalADVAmt"></label><br />
+                    <label id="lblTotalADVWHT"></label><br />
+                    <label id="lblTotalADV"></label>
                 </td>
             </tr>
         </table>
     </div>
 
     <div style="flex:1">
-        <table width="100%" border="1">
+        <table id="tbCustAdv" width="100%" border="1">
             <tr>
                 <th>CUST ADVANCE</th>
                 <th>AMOUNT</th>
             </tr>
-            <tr>
-                <td>
-                    DSR-CARGO PERMIT FEE <br />DSR-CARGO PERMIT FEE <br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;
+            <tbody>
+                <tr>
+                    <td>
+                        DSR-CARGO PERMIT FEE <br />DSR-CARGO PERMIT FEE <br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;
 
-                </td>
-                <td style="text-align:right">
-                    3,000.00<br />
-                    6,000.00
-                </td>
-            </tr>
+                    </td>
+                    <td style="text-align:right">
+                        3,000.00<br />
+                        6,000.00
+                    </td>
+                </tr>
+            </tbody>
             <tr>
                 <th style="text-align:right">TOTAL ADVANCE</th>
-                <td style="text-align:right">9,000.00</td>
+                <td style="text-align:right"><label id="lblTotalCustAdv"></label></td>
             </tr>
         </table>
     </div>
@@ -148,44 +152,46 @@ End Code
 
 <div style="display:flex">
     <div style="flex:1">
-        <table width="100%" border="1">
+        <table id="tbClear" width="100%" border="1">
             <tr class="text-center">
-                <th width="5%">NO.</th>
-                <th width="40%">DESCRIPTION</th>
-                <th width="20%">CHEQUE/CREDIT</th>
-                <th width="10%">TAX</th>
+                <th width="10%">CL.NO</th>
+                <th width="35%">DESCRIPTION</th>
+                <th width="15%">CHARGEABLE</th>
+                <th width="10%">WH-TAX</th>
                 <th width="15%">COST</th>
                 <th width="15%">PROFIT</th>
             </tr>
-            <tr>
-                <td>4<br />5<br />6<br />7<br />8<br />9<br /></td>
-                <td>DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br /></td>
-                <td style="text-align:right">1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
-                <td style="text-align:right">0.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
-                <td style="text-align:right">0.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
-                <td style="text-align:right">1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td>4<br />5<br />6<br />7<br />8<br />9<br /></td>
+                    <td>DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br />DS-BILL OF LADING (B/L) FEE <br /></td>
+                    <td style="text-align:right">1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
+                    <td style="text-align:right">0.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
+                    <td style="text-align:right">0.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
+                    <td style="text-align:right">1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br />1,500.00<br /></td>
+                </tr>
+            </tbody>
             <tr>
                 <td colspan="2" height="50PX">
                     <div style="display:flex">
                         <div style="flex:1">
-                            ADV CHEQUE
+                            TOTAL VAT
                         </div>
 
                         <div style="flex:1">
-                            0.00 BAHT
+                            <label id="lblTotalVAT"></label>
                         </div>
 
                         <div style="flex:1" style="text-align:right">
-                            TOTAL
+                            PRE-INVOICED
                         </div>
 
                     </div>
                 </td>
-                <td style="text-align:right">24,500.40</td>
-                <td style="text-align:right">0.00</td>
-                <td style="text-align:right">26,500.00</td>
-                <td style="text-align:right">-2,500.60</td>
+                <td style="text-align:right"><label id="lblSumCharge"></label></td>
+                <td style="text-align:right"><label id="lblSumTax"></label></td>
+                <td style="text-align:right"><label id="lblSumCost"></label></td>
+                <td style="text-align:right"><label id="lblSumProfit"></label></td>
             </tr>
         </table>
     </div>
@@ -199,18 +205,18 @@ End Code
         <table width="50%" border="1" align="right">
             <tr style="text-align:right">
                 <th width="60%">COMMISSION</th>
-                <td>0.00</td>
+                <td><label id="lblCommRate"></label></td>
             </tr>
             <tr style="text-align:right">
                 <th width="40%">NET PROFIT</th>
-                <td>-2,119.60</td>
+                <td><label id="lblNetProfit"></label></td>
             </tr>
         </table>
     </div>
 </div>
 
 <br />
-<table width="100%" border="1">
+<table id="tbCheque" width="100%" border="1">
     <tr class="text-center">
         <th>CHEQUE NO.</th>
         <th>BANK</th>
@@ -219,12 +225,14 @@ End Code
         <th>USED</th>
         <th>REMARK</th>
     </tr>
-    <tr>
-        <td>&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br /></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br /></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
 </table>

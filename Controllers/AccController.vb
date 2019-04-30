@@ -126,12 +126,12 @@ Namespace Controllers
                 End If
 
                 Dim tSqlw As String = "
-SELECT h.BranchCode,h.ControlNo,h.VoucherDate,h.TRemark,h.RecUser,h.RecDate,h.RecTime,
+SELECT h.BranchCode,h.ControlNo,h.VoucherDate,h.TRemark,h.CustCode,h.CustBranch,h.RecUser,h.RecDate,h.RecTime,
 h.PostedBy,h.PostedDate,h.PostedTime,h.CancelReson,h.CancelProve,h.CancelDate,h.CancelTime,
 d.ItemNo,d.PRVoucher,d.PRType,d.ChqNo,d.BookCode,d.BankCode,d.BankBranch,d.ChqDate,d.CashAmount,d.ChqAmount,d.CreditAmount,
 d.SumAmount,d.CurrencyCode,d.ExchangeRate,d.VatInc+d.VatExc as VatAmount,d.WhtInc+d.WhtExc as WhtAmount,d.TotalAmount,
 d.TotalNet,d.IsLocal,d.ChqStatus,d.TRemark as DRemark,d.PayChqTo,d.DocNo as DRefNo,d.SICode,d.RecvBank,d.RecvBranch,
-d.acType,r.ItemNo as DocItemNo,r.DocType,r.DocNo,r.DocDate,r.CmpType,r.CmpCode,r.CmpBranch,r.PaidAmount as PaidTotal,r.TotalAmount as DocTotal
+d.acType,d.ForJNo,r.ItemNo as DocItemNo,r.DocType,r.DocNo,r.DocDate,r.CmpType,r.CmpCode,r.CmpBranch,r.PaidAmount as PaidTotal,r.TotalAmount as DocTotal
 FROM Job_CashControl h inner join Job_CashControlSub d
 on h.BranchCode=d.BranchCode AND h.ControlNo=d.ControlNo
 left join Job_CashControlDoc r
@@ -142,7 +142,9 @@ AND d.acType=r.acType
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)
                 End If
-
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    tSqlw &= String.Format(" AND d.DocNo Like '{0}%'", Request.QueryString("Type").ToString)
+                End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(tSqlw)
                 Dim oHead As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())
                 Dim json = "{""voucher"":{""data"":" & oHead & ",""msg"":""Complete!""}}"

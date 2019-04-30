@@ -99,8 +99,9 @@ End Code
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PayAdvance')">จ่ายเงินตามใบเบิก</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvClear')">รับเคลียร์เงินตามใบปิด</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Earnest')">รับเคลียร์เงินมัดจำ</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Cheque')">บันทึกรับ/จ่ายเช็ค</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Cheque')">บันทึกรับเช็ค</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PettyCash')">บันทึกเงินสดย่อย</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('CreditAdv')">บันทึกเงินทดรองจ่าย</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvInv')">รับชำระใบแจ้งหนี้</a>
                                         </div>
                                         <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
@@ -463,6 +464,9 @@ End Code
                     break;
                 case 'CreditNote':
                     window.location.href = path + 'Acc/CreditNote';
+                    break;
+                case 'CreditAdv':
+                    window.location.href = path + 'Adv/CreditAdv';
                     break;
                 case 'Report':
                     window.location.href = path + 'Report/Index';
