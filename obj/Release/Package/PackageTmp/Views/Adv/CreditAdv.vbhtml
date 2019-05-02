@@ -291,13 +291,16 @@ End Code
                                 <div class="col-md-4">
                                     <input type="hidden" id="txtJobType">
                                     <input type="hidden" id="txtShipBy">
-                                    <input type="text" id="txtJobTypeName" class="form-control" />
+                                    Job Type<br />
+                                    <input type="text" id="txtJobTypeName" class="form-control" disabled />
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" id="txtShipByName" class="form-control" />
+                                    Ship By<br />
+                                    <input type="text" id="txtShipByName" class="form-control" disabled />
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" id="txtInvNo" class="form-control" />
+                                    Inv.No<br/>
+                                    <input type="text" id="txtInvNo" class="form-control" disabled/>
                                 </div>
                             </div>
                         </div>
@@ -439,10 +442,24 @@ End Code
         });
         $('#txtForJNo').keydown(function (event) {
             if (event.which == 13) {
+                $('#txtJobType').val('');
+                $('#txtShipBy').val('');
+                $('#txtJobType').val('');
+                $('#txtShipBy').val('');
+                $('#txtInvNo').val('');
+
                 CallBackQueryJob(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), ReadJob);
             }
         });
+        $('#chkPosted').on('click', function () {
+            chkmode = this.checked;
+            CallBackAuthorize(path, 'MODULE_ADV', 'CreditAdv',(chkmode ? 'I':'D'), SetApprove);
+        });
 
+        $('#chkCancel').on('click', function () {
+            chkmode = this.checked;
+            CallBackAuthorize(path, 'MODULE_ADV', 'CreditAdv', 'D', SetCancel);
+        });
     }
     function SetEnterToTab() {
         //Set enter to tab
@@ -489,6 +506,26 @@ End Code
             //Currency
             CreateLOV(dv, '#frmSearchCurr', '#tbCurr', 'Currency', response, 2);
         });
+    }
+    function SetApprove(b) {
+        if (b == true) {
+            $('#txtPostedBy').val(chkmode ? user : '');
+            $('#txtPostedDate').val(chkmode ? CDateEN(GetToday()) : '');
+            $('#txtPostedTime').val(chkmode ? ShowTime(GetTime()) : '');
+            return;
+        }
+        alert('You are not allow to ' + (b ? 'Post voucher!' : 'cancel post!'));
+        $('#chkPosted').prop('checked', !chkmode);
+    }
+    function SetCancel(b) {
+        if (b == true) {
+            $('#txtCancelProve').val(chkmode ? user : '');
+            $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
+            $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+            return;
+        }
+        alert('You are not allow to ' + (b ? 'cancel voucher!' : 'do this!'));
+        $('#chkCancel').prop('checked', !chkmode);
     }
     function SearchData(type) {
         switch (type) {
@@ -760,6 +797,7 @@ End Code
             $('#txtRecvBank').val(dr.RecvBank);
             $('#txtRecvBranch').val(dr.RecvBranch);
             $('#txtForJNo').val(dr.ForJNo);
+            CallBackQueryJob(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), ReadJob);
             $('#txtacType').val(dr.acType);
             $('#cboacType').val(dr.acType);
             $('#cboacType').change();
@@ -1059,10 +1097,10 @@ End Code
         $('#txtCurrencyName').val(dt.TName);
     }
     function ReadJob(dt) {
-        $('#txtJobType').val(dt.JobType);
-        $('#txtShipBy').val(dt.ShipBy);
-        $('#txtInvNo').val(dt.InvNo);
-        ShowJobTypeShipBy(path, dt.JobType, dt.ShipBy, '', '#txtJobTypeName', '#txtShipByName', '');
+        $('#txtJobType').val(dt[0].JobType);
+        $('#txtShipBy').val(dt[0].ShipBy);
+        $('#txtInvNo').val(dt[0].InvNo);
+        ShowJobTypeShipBy(path, dt[0].JobType, dt[0].ShipBy, '', '#txtJobTypeName', '#txtShipByName', '');
     }
     function CalculateTotal() {
         let amtbase = Number($('#txtSumAmt').val());
@@ -1089,7 +1127,7 @@ End Code
             alert('you are not authorize to print');
             return;
         }
-        window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());
+        window.open(path + 'Acc/FormCreditAdv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val());
     }
 
 </script>

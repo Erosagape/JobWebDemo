@@ -254,35 +254,6 @@ End Code
             $('#txtRemark').text(data.header[0].TRemark);
         }
     }    
-    function GetPaymentType(p) {
-        switch(p){
-            case 'CA':
-                return 'Cash/Transfer';
-                break;
-            case 'CH':
-                return 'Cashier Cheque';
-                break;
-            case 'CU':
-                return 'Customer Cheque';
-                break;
-            case 'CR':
-                return 'Credit';
-                break;
-        }
-    }
-    function GetVoucherType() {
-        switch(vcType){
-            case 'P':
-                return 'PAYMENT';
-                break;
-            case 'R':
-                return 'RECEIVE';
-                break;
-            default:
-                return '';
-                break;
-        }
-    }
     function appendLine(dv,data,col1,col2) {
         let html = '<tr><td style="border-style:solid;border-width:thin;font-size:11px">';
         html += data;

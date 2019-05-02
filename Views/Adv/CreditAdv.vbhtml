@@ -579,6 +579,14 @@ End Code
 
         $('#tbHeader').empty();
 
+        $('#btnAdd').removeAttr('disabled');
+        $('#btnSave').removeAttr('disabled');
+        if (userRights.indexOf('I') < 0) {
+            $('#btnAdd').attr('disabled', 'disabled');
+        } 
+        if (userRights.indexOf('E') < 0) {
+            $('#btnSave').attr('disabled', 'disabled');
+        }
         ClearPayment();
     }
     function AddPayment() {
@@ -751,6 +759,10 @@ End Code
             $('#txtRecDate').val(CDateEN(dr.RecDate));
             $('#txtRecTime').val(ShowTime(dr.RecTime));
             $('#txtPostedBy').val(dr.PostedBy);
+            if (dr.PostedBy !== null) {
+                $('#chkPosted').prop('checked', true);
+                DisableSave();
+            }
             $('#txtCustCode').val(dr.CustCode);
             $('#txtCustBranch').val(dr.CustBranch);
             ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
@@ -758,6 +770,10 @@ End Code
             $('#txtPostedTime').val(ShowTime(dr.PostedTime));
             $('#txtCancelReson').val(dr.CancelReson);
             $('#txtCancelProve').val(dr.CancelProve);
+            if (dr.CancelProve !== null) {
+                $('#chkCancel').prop('checked', true);
+                DisableSave();
+            }
             $('#txtCancelDate').val(CDateEN(dr.CancelDate));
             $('#txtCancelTime').val(ShowTime(dr.CancelTime));
         }
@@ -811,6 +827,10 @@ End Code
             ShowBank(path, dr.RecvBank, '#txtRecvBankName');
         }
     }
+    function DisableSave() {
+        $('#btnSave').attr('disabled', 'disabled');
+        $('#btnUpdatePay').attr('disabled', 'disabled');
+    }
     function ClearPayment() {
         $('#txtPRVoucher').val('');
         $('#txtItemNo').val('0');
@@ -854,6 +874,13 @@ End Code
         $('#txtacType').val('');
         $('#cboacType').val('');
         $('#cboacType').change();
+
+        $('#btnAddPay').removeAttr('disabled');
+        $('#btnUpdatePay').removeAttr('disabled');
+        if ($('#chkPosted').prop('checked') == true || $('#chkCancel').prop('checked') == true) {
+            $('#btnAddPay').attr('disabled', 'disabled');
+            $('#btnUpdatePay').attr('disabled', 'disabled');
+        }
         ShowInfo();
     }
     function GetDataHeader() {
@@ -899,7 +926,7 @@ End Code
 
             JNo: null,
             InvNo: null,
-            VATRate: @ViewBag.PROFILE_VATRATE,
+            VATRate: @ViewBag.PROFILE_VATRATE*100,
             PayChqTo: null,
             PayChqDate: '',
 
@@ -943,7 +970,7 @@ End Code
             PayChqTo : '',
             SDescription : $('#txtSDescription').val(),
             IsChargeVAT: $('#txtVatInc').val() == 0 ? 2 : 1,
-            VATRate: @ViewBag.PROFILE_VATRATE,
+            VATRate: @ViewBag.PROFILE_VATRATE* 100,
             Is50Tavi: ($('#txtWhtInc').val() == 0 ? 0 : 1),
             Rate50Tavi : 0,
             AdvAmount : $('#txtTotalAmt').val(),
@@ -1127,7 +1154,7 @@ End Code
             alert('you are not authorize to print');
             return;
         }
-        window.open(path + 'Acc/FormCreditAdv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val());
+        window.open(path + 'Adv/FormCreditAdv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val());
     }
 
 </script>

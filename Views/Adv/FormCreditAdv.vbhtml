@@ -43,39 +43,15 @@ End Code
 </div>
 
 <table id="tbData" border="1" width="100%">
-    <tr style="text-align:center;">
-        <td width="5%">No</td>
-        <td colspan="2" class="text-left">Description</td>
-        <td width="25%" class="text-right">Expense Amount</td>
-    </tr>
-    <tbody>
-        <tr class="text-center">
-            <td width="5%">
-                2
-            </td>
-            <td width="10%">
-                SNG-008
-            </td>
-            <td class="text-left" width="60%">
-                DSR - STORAGE FEE
-            </td>
-            <td width="25"  style="text-align:right">
-                6,000.00
-            </td>
+    <thead>
+        <tr style="text-align:center;">
+            <th width="5%">No</th>
+            <th colspan="2" class="text-left">Description</th>
+            <th width="25%" class="text-right">Expense Amount</th>
         </tr>
+    </thead>
+    <tbody>
     </tbody>
-
-    <tr class="text-center">
-
-        <td colspan="3">
-            รวมจำนวนเงินทั้งหมด ( <label id="lblTotalText"></label> )
-        </td>
-
-        <td width="25%" style="text-align:right">
-            <label id="lblTotalNet"></label>
-        </td>
-
-    </tr>
 </table>
 
 <table border="1" width="100%">
@@ -108,26 +84,38 @@ End Code
 </table>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
+    var serv = [];    
     $(document).ready(function () {
         ShowCompany('#divCompany');
         let branch = getQueryString('branch');
         let controlno = getQueryString('code');
         $.get(path + 'acc/getvoucher?branch=' + branch + '&code=' + controlno, function (r) {
-            if (r.voucher.header !== null) {
-                ShowData(r.voucher);
+            if (r.voucher.header !== null) {                
+                LoadData(r.voucher);
             }
         });
     });
+    function LoadData(data) {
+        $.get(path +'Master/GetServiceCode')
+            .done(function (r) {
+                serv = r.servicecode.data;
+                ShowData(data);
+            });
+    }
     function ShowData(data) {
         let div = $('#tbData tbody');
         if (data.payment !== null) {
             let totalnet = 0;
-            for(let obj of data.payment) {
+            let irow = 0;
+            for (let obj of data.payment) {
+                irow += 1;
                 let acType=obj.acType;
-                let acTypeName = GetPaymentType(acType);
                 let payType = '';
                 let desc = '';
                 let desc0 = '';
+                let s = $.grep(serv, function (d) {
+                    return d.SICode === obj.SICode;
+                });
 
                 totalnet += obj.TotalNet;
                 switch (acType) {
@@ -136,6 +124,8 @@ End Code
                         if (obj.RecvBank !== null) {
                             payType = 'เงินฝากธนาคารหมุนเวียน';
                         }
+                        desc0 += 'ตั้งเบิก' + payType;
+                        desc0 += ' สำหรับ ' + obj.SICode + ' ' + s[0].NameThai;
                         desc0 += obj.PayChqTo !== null ? '<br/>ออกให้กับ ' + obj.PayChqTo : '';
                         desc0 += obj.RecvBank != null ? '<br/>โอนไปยังบัญชีธนาคาร ' + obj.RecvBank + ' สาขา ' + obj.RecvBranch + ' เลขที่บัญชี ' + obj.DocNo : '';
                         desc0 += obj.BookCode != null ? '<br/>จากเลขที่บัญชี ' + obj.BookCode : '';
@@ -145,6 +135,8 @@ End Code
                         payType = 'เช็คเงินสด';
                     case 'CU':
                         payType = 'เช็ครับล่วงหน้า';
+                        desc0 += 'ตั้งเบิก' + payType;
+                        desc0 += ' สำหรับ ' + obj.SICode + ' ' + s[0].NameThai;
                         desc0 += obj.ChqNo !== null ? '<br/>เช็คเลขที่ ' + obj.ChqNo + ' ลงวันที่ ' + ShowDate(CDateTH(obj.ChqDate)) : '';
                         desc0 += obj.BankCode != null ? '<br/>เช็คธนาคาร ' + obj.BankCode + ' สาขา ' + obj.BankBranch : '';
                         desc0 += obj.PayChqTo !== null ? '<br/>ออกให้กับ ' + obj.PayChqTo : '';
@@ -153,21 +145,29 @@ End Code
                         break;
                     case 'CR':
                         payType = 'ลูกหนี้';
+                        desc0 += 'ตั้งเบิก' + payType;
+                        desc0 += ' สำหรับ ' + obj.SICode + ' ' + s[0].NameThai;
                         desc0 += obj.DocNo !== null ? '<br/>ตามเอกสารเลขที่ ' + obj.DocNo + ' ลงวันที่ ' + ShowDate(CDateTH(obj.ChqDate)) : '';
                         desc0 += obj.PayChqTo !== null ? '<br/>ออกให้กับ ' + obj.PayChqTo : '';
                         break;
                 }
                 desc = '<tr class="text-center">';
-                desc += '<td width="5%">'+obj.SICode+'</td>';
+                desc += '<td width="5%">'+irow+'</td>';
                 desc += '<td width="10%">'+obj.ForJNo+'</td>';
                 desc += '<td class="text-left" width="60%">'+desc0+'</td>';
                 desc += '<td width="25"  style="text-align:right">'+CCurrency(CDbl(obj.TotalNet,2))+'</td>';
                 desc += '</tr>';
 
-                //summary section    
-                $('#lblTotalNet').text(CCurrency(CDbl(totalnet, 2)));
-                $('#lblTotalText').text(CNumThai(totalnet));
+                div.append(desc);
             }
+            //summary section    
+            desc = '<tr class="text-center">';
+            desc += '<td colspan="3">';
+            desc += 'รวมจำนวนเงินทั้งหมด (' + CNumThai(totalnet) + ')';
+            desc += '</td>';
+            desc += '<td width="25%" style="text-align:right">' + CCurrency(CDbl(totalnet, 2)) + '</td>';
+            desc += '</tr>';
+            div.append(desc);
         }
         if (data.header !== null) {
             $('#lblControlNo').text(data.header[0].ControlNo);
