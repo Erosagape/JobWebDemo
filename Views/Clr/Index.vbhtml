@@ -397,6 +397,7 @@ End Code
         CheckParam();
     });
     function CheckParam() {
+        ClearHeader();
         //read query string parameters
         let br = getQueryString('BranchCode');
         if (br.length > 0) {
@@ -790,7 +791,9 @@ End Code
             
             $('#txtEmpCode').val(dt.EmpCode);
             $('#txtAdvTotal').val(CDbl(dt.AdvTotal, 4));
-            $('#cboJobType').val(CCode(dt.JobType));
+            if (isjobmode == false) {
+                $('#cboJobType').val(CCode(dt.JobType));
+            }
             //Combos
             $('#cboClrType').val(dt.ClearType);
             $('#cboClrFrom').val(dt.ClearFrom);
@@ -909,7 +912,7 @@ End Code
     }
     function ClearHeader() {
         hdr = {};
-        $('#txtClrDate').val('');
+        $('#txtClrDate').val(GetToday());
         $('#txtEmpCode').val(user);
         if (isjobmode == false) {
             $('#cboJobType').val('');
@@ -1140,9 +1143,9 @@ End Code
             $('#txtVATRate').val(dt.VATRate);
             $('#txtWHTRate').val(dt.Tax50TaviRate);
             $('#txtAMT').val(dt.UsedAmount);
-            $('#txtVAT').val(dt.ChargeVAT);
-            $('#txtWHT').val(dt.Tax50Tavi);
-            $('#txtNET').val(dt.BNet);
+            $('#txtVAT').val(0);
+            $('#txtWHT').val(0);
+            $('#txtNET').val(dt.UsedAmount);
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
@@ -1168,7 +1171,7 @@ End Code
             }
             $('#txtQty').val(dt.Qty);
             $('#txtCurRate').val(dt.CurRate);
-            $('#txtUnitPrice').val(dt.UnitCost);
+            $('#txtUnitPrice').val(dt.AdvAmount);
             $('#txtUnitCode').val(dt.UnitCode);            
             $('#txtRemark').val(dt.Remark);
             $('#txtSlipNo').val(dt.SlipNO);
@@ -1181,7 +1184,7 @@ End Code
             $('#txtAMT').val(dt.UsedAmount);
             $('#txtVAT').val(dt.ChargeVAT);
             $('#txtWHT').val(dt.Tax50Tavi);
-            $('#txtNET').val(dt.BCost);
+            $('#txtNET').val(dt.AdvNet);
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);

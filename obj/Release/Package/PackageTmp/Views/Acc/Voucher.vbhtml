@@ -681,6 +681,14 @@ End Code
         $('#tbHeader').empty();
         $('#tbDetail').empty();
 
+        $('#btnAdd').removeAttr('disabled');
+        $('#btnSave').removeAttr('disabled');
+        if (userRights.indexOf('I') < 0) {
+            $('#btnAdd').attr('disabled', 'disabled');
+        } 
+        if (userRights.indexOf('E') < 0) {
+            $('#btnSave').attr('disabled', 'disabled');
+        }
         ClearPayment();
         ClearDocument();
     }
@@ -916,15 +924,30 @@ End Code
             $('#txtRecDate').val(CDateEN(dr.RecDate));
             $('#txtRecTime').val(ShowTime(dr.RecTime));
             $('#txtPostedBy').val(dr.PostedBy);
+            if (dr.PostedBy !== null) {
+                $('#chkPosted').prop('checked', true);
+                DisableSave();
+            }
             $('#txtPostedDate').val(CDateEN(dr.PostedDate));
             $('#txtPostedTime').val(ShowTime(dr.PostedTime));
             $('#txtCancelReson').val(dr.CancelReson);
             $('#txtCancelProve').val(dr.CancelProve);
+            if (dr.CancelProve !== null) {
+                $('#chkCancel').prop('checked', true);
+                DisableSave();
+            }
             $('#txtCancelDate').val(CDateEN(dr.CancelDate));
             $('#txtCancelTime').val(ShowTime(dr.CancelTime));
             $('#txtCustCode').val(dr.CustCode);
             $('#txtCustBranch').val(dr.CustBranch);
         }
+    }
+    function DisableSave() {
+        $('#btnSave').attr('disabled', 'disabled');
+        $('#btnUpdatePay').attr('disabled', 'disabled');
+        $('#btnUpdateDoc').attr('disabled', 'disabled');
+        $('#btnDelPay').attr('disabled', 'disabled');
+        $('#btnDelDoc').attr('disabled', 'disabled');
     }
     function ReadPayment(dr) {
         ClearPayment();
@@ -1037,6 +1060,15 @@ End Code
         $('#txtacType').val('');
         $('#cboacType').val('');
         $('#cboacType').change();
+
+        $('#btnAddPay').removeAttr('disabled');
+        $('#btnDelPay').removeAttr('disabled');
+        $('#btnUpdatePay').removeAttr('disabled');
+        if ($('#chkPosted').prop('checked') == true || $('#chkCancel').prop('checked') == true) {
+            $('#btnAddPay').attr('disabled', 'disabled');
+            $('#btnUpdatePay').attr('disabled', 'disabled');
+            $('#btnDelPay').attr('disabled', 'disabled');
+        }
         ShowInfo();
     }
     function ClearDocument() {
@@ -1055,6 +1087,15 @@ End Code
         $('#txtTotalAmount').val('0.00');
         $('#txtDocacType').val('');
         $('#cboDocacType').val('');
+
+        $('#btnAddDoc').removeAttr('disabled');
+        $('#btnDelDoc').removeAttr('disabled');
+        $('#btnUpdateDoc').removeAttr('disabled');
+        if ($('#chkPosted').prop('checked')==true||$('#chkCancel').prop('checked')==true) {
+            $('#btnAddDoc').attr('disabled', 'disabled');
+            $('#btnUpdateDoc').attr('disabled', 'disabled');
+            $('#btnDelDoc').attr('disabled', 'disabled');
+        }
     }
     function SavePayment() {
         var obj = {

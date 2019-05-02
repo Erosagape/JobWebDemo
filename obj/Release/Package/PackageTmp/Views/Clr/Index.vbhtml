@@ -397,6 +397,7 @@ End Code
         CheckParam();
     });
     function CheckParam() {
+        ClearHeader();
         //read query string parameters
         let br = getQueryString('BranchCode');
         if (br.length > 0) {
@@ -790,7 +791,9 @@ End Code
             
             $('#txtEmpCode').val(dt.EmpCode);
             $('#txtAdvTotal').val(CDbl(dt.AdvTotal, 4));
-            $('#cboJobType').val(CCode(dt.JobType));
+            if (isjobmode == false) {
+                $('#cboJobType').val(CCode(dt.JobType));
+            }
             //Combos
             $('#cboClrType').val(dt.ClearType);
             $('#cboClrFrom').val(dt.ClearFrom);
@@ -909,7 +912,7 @@ End Code
     }
     function ClearHeader() {
         hdr = {};
-        $('#txtClrDate').val('');
+        $('#txtClrDate').val(GetToday());
         $('#txtEmpCode').val(user);
         if (isjobmode == false) {
             $('#cboJobType').val('');

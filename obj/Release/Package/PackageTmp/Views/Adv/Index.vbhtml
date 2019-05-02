@@ -383,6 +383,7 @@ End Code
         CheckParam();
     });
     function CheckParam() {
+        ClearHeader();
         //read query string parameters
         let br = getQueryString('BranchCode');
         if (br.length > 0) {
@@ -1025,7 +1026,7 @@ End Code
     }
     function ClearHeader() {
         hdr = {};
-        $('#txtAdvDate').val('');
+        $('#txtAdvDate').val(GetToday());
         $('#txtAdvBy').val(user);
         $('#txtReqBy').val('');
         if (isjobmode == false) {

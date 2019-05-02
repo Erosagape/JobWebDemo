@@ -197,7 +197,7 @@ End Code
                     $('#txtContainerNo').text(h.CTN_NO);
                     $('#txtDocDate').text(CDateEN(h.ClrDate));
                     $('#txtClrNo').text(h.ClrNo);
-                    $('#txtCopersonCode').text(h.CoPersonCode);
+                    $('#txtCoPersonCode').text(h.CoPersonCode);
                     $('#txtRemark').text(h.TRemark);
                     $('#txtClrType').text(h.ClrTypeName);
                     $('#txtClrFrom').text(h.ClrFromName);
@@ -222,7 +222,8 @@ End Code
                             cust = d[i].CustCode;
                             html += '<tr><td colspan="5">'+d[i].CustCode + ' ' + d[i].NameThai+'</td></tr>';
                         }
-                        html += '<tr><td>' + d[i].SICode + '</td><td>' + d[i].SDescription + '</td><td>' + d[i].JobNo + '</td><td>' + d[i].Tax50Tavi + '</td><td>' + d[i].UsedAmount + '</td></tr>'
+                        let advref = d[i].AdvNO !== null ? ' จากใบเบิก ' + d[i].AdvNO : '';
+                        html += '<tr><td>' + d[i].SICode + '</td><td>' + d[i].SDescription + advref + '</td><td>' + d[i].JobNo + '</td><td>' + d[i].Tax50Tavi + '</td><td>' + d[i].UsedAmount + '</td></tr>'
                         if (d[i].ChargeVAT > 0) {
                             amtforvat += d[i].UsedAmount;
                             amtvat += d[i].ChargeVAT;
