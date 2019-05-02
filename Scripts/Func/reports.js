@@ -92,3 +92,44 @@ function ShowUserSign(path, UserID, ControlID) {
             });
     }
 }
+function GetPaymentType(p) {
+    switch (p) {
+        case 'CA':
+            return 'Cash/Transfer';
+            break;
+        case 'CH':
+            return 'Cashier Cheque';
+            break;
+        case 'CU':
+            return 'Customer Cheque';
+            break;
+        case 'CR':
+            return 'Credit';
+            break;
+    }
+}
+function GetVoucherType() {
+    switch (vcType) {
+        case 'P':
+            return 'PAYMENT';
+            break;
+        case 'R':
+            return 'RECEIVE';
+            break;
+        default:
+            return '';
+            break;
+    }
+}
+function ShowCustomer(path, Code, Branch, ControlID) {
+    $(ControlID).val('');
+    if ((Code + Branch).length > 0) {
+        $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
+            .done(function (r) {
+                if (r.company.data.length > 0) {
+                    let c = r.company.data[0];
+                    $(ControlID).text(c.NameThai);
+                }
+            });
+    }
+}

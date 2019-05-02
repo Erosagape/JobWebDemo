@@ -412,6 +412,7 @@ End Code
     var path = '@Url.Content("~")';
     var user = '@ViewBag.User';
     var userRights = '@ViewBag.UserRights';
+    var chkmode = false;
     $(document).ready(function () {
         SetEvents();
         SetLOVs();
@@ -551,6 +552,15 @@ End Code
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
+        $('#chkPosted').on('click', function () {
+            chkmode = this.checked;
+            CallBackAuthorize(path, 'MODULE_ACC', 'Voucher',(chkmode ? 'I':'D'), SetApprove);
+        });
+
+        $('#chkCancel').on('click', function () {
+            chkmode = this.checked;
+            CallBackAuthorize(path, 'MODULE_ACC', 'Voucher', 'D', SetCancel);
+        });
     }
     function SetEnterToTab() {
         //Set enter to tab
@@ -600,6 +610,26 @@ End Code
             //Currency
             CreateLOV(dv, '#frmSearchCurr', '#tbCurr', 'Currency', response, 2);
         });
+    }
+    function SetApprove(b) {
+        if (b == true) {
+            $('#txtPostedBy').val(chkmode ? user : '');
+            $('#txtPostedDate').val(chkmode ? CDateEN(GetToday()) : '');
+            $('#txtPostedTime').val(chkmode ? ShowTime(GetTime()) : '');
+            return;
+        }
+        alert('You are not allow to ' + (b ? 'Post voucher!' : 'cancel post!'));
+        $('#chkPosted').prop('checked', !chkmode);
+    }
+    function SetCancel(b) {
+        if (b == true) {
+            $('#txtCancelProve').val(chkmode ? user : '');
+            $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
+            $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+            return;
+        }
+        alert('You are not allow to ' + (b ? 'cancel voucher!' : 'do this!'));
+        $('#chkCancel').prop('checked', !chkmode);
     }
     function SearchData(type) {
         switch (type) {
