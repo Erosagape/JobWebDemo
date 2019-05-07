@@ -245,23 +245,14 @@ obj/Release/JobWebApi.vbprojResolveAssemblyReference.cache
 obj/Debug/JobWebApi.dll
 obj/Debug/JobWebApi.pdb
 obj/Release/JobWebApi.vbprojResolveAssemblyReference.cache
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal
 obj/Debug/DesignTimeResolveAssemblyReferences.cache
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal
-obj/Debug/DesignTimeResolveAssemblyReferences.cache
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal
 My Project/PublishProfiles/Tawanasp.com.pubxml.user
 obj/Release/JobWebApi.dll
 obj/Release/JobWebApi.pdb
 .vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
 .vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal
 My Project/PublishProfiles/Tawanasp.com.pubxml.user
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-wal
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide-shm
-.vs/JobWebApi/v15/Server/sqlite3/storage.ide
+.vs/JobWebApi/v15/Server/sqlite3/storage.ide*
 .vs/JobWebApi/v15/.suo
 *.VC.opendb
 *.opendb
