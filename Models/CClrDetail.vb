@@ -712,19 +712,21 @@ set adv.DocStatus=src.ClrStatus
 from Job_AdvHeader adv inner join
 (
     select BranchCode,AdvNo,
-    (CASE WHEN sum(AdvNet)-Sum(ClrNet)<=0 THEN 5 ELSE 
-         (CASE WHEN Sum(ClrNet) > 0 THEN 4 ELSE AdvStatus END) END) as ClrStatus 
+    (CASE WHEN sum(ClrNet)-Sum(AdvNet)>=0 THEN 5 ELSE 
+         (CASE WHEN Sum(ClrNet) > 0 THEN 4 ELSE AdvStatus END) 
+     END) as ClrStatus 
+    ,sum(ClrNet) as ClrNet,Sum(AdvNet) as AdvNet
     from
     (
-        select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvNet,
-        (CASE WHEN d.IsDuplicate=1 THEN ISNULL(c.ClrNet,0) ELSE d.AdvNet END) as ClrNet,
+        select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvAmount as AdvNet,
+        (CASE WHEN d.IsDuplicate=1 THEN ISNULL(c.ClrNet,0) ELSE ISNULL(c.AdvNet,0) END) as ClrNet,
         (CASE WHEN h.PaymentRef<>'' THEN 3 ELSE (CASE WHEN h.ApproveBy<>'' THEN 2 ELSE 1 END) END) as AdvStatus
         from Job_AdvHeader h inner join Job_AdvDetail d
         on h.BranchCode=d.BranchCode
         and h.AdvNo=d.AdvNo 
         left join
         (
-            select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.BNet) as ClrNet
+            select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.UsedAmount) as ClrNet,Sum(a.AdvAmount) as AdvNet 
             FROM Job_ClearDetail a inner join Job_ClearHeader b
             on a.BranchCode=b.BranchCode
             and a.ClrNo=b.ClrNo

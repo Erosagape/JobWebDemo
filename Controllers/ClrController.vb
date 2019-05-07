@@ -309,13 +309,13 @@ on a.BranchCode=q.BranchCode and b.SICode=q.SICode and ISNULL(a.VenCode,b.Defaul
 and b.UnitCharge=q.UnitCheck and a.AdvQty <=q.QtyEnd and a.AdvQty>=q.QtyBegin and q.QNo=j.QNo
 left join 
 (
-	SELECT cd.BranchCode,cd.AdvNO,cd.AdvItemNo,
-    SUM(CASE WHEN ad.IsDuplicate=1 THEN cd.UsedAmount ELSE cd.AdvAmount END) as TotalCleared    
+	SELECT ad.BranchCode,ad.AdvNo,ad.ItemNo,
+    SUM(CASE WHEN ad.IsDuplicate=1 THEN ISNULL(cd.UsedAmount,0) ELSE ISNULL(cd.AdvAmount,0) END) as TotalCleared    
 	FROM Job_ClearDetail cd INNER JOIN Job_ClearHeader ch
 	on cd.BranchCode=ch.BranchCode
 	and cd.ClrNo =ch.ClrNo 
 	and ch.DocStatus<>99
-    INNER JOIN Job_AdvDetail ad 
+    RIGHT JOIN Job_AdvDetail ad 
     on cd.BranchCode=ad.BranchCode
     and cd.AdvNO=ad.AdvNo
     and cd.AdvItemNo=ad.ItemNo
@@ -323,10 +323,10 @@ left join
     on ad.BranchCode=ah.BranchCode
     and ad.AdvNo=ah.AdvNo
     WHERE ah.DocStatus<>99
-	GROUP BY cd.BranchCode,cd.AdvNO,cd.AdvItemNo
+	GROUP BY ad.BranchCode,ad.AdvNo,ad.ItemNo
 ) d
-ON a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNO and a.ItemNo=d.AdvItemNo
-WHERE a.AdvAmount-ISNULL(d.TotalCleared,0)>0 AND c.DocStatus IN('3','4') 
+ON a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNo and a.ItemNo=d.ItemNo
+WHERE (a.AdvAmount-d.TotalCleared)>0 AND c.DocStatus IN('3','4') 
 {0}
 "
             Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
