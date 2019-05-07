@@ -307,6 +307,7 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <button id="btnUpdatePay" class="btn btn-primary" onclick="SaveAdvance()">Save</button>
+                        <button id="btnDelPay" class="btn btn-warning" onclick="DeleteAdvance()">Delete</button>
                         <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -391,11 +392,7 @@ End Code
     function SetEvents() {
         $('#txtControlNo').keydown(function (event) {
             if (event.which == 13) {
-                let code = $('#txtControlNo').val();
-                let branch = $('#txtBranchCode').val();
-                $('#txtBranchCode').val(branch);
-                $('#txtControlNo').val(code);
-                CallBackQueryVoucher(path, branch,code, ReadData);
+                LoadData();
             }
         });
         $('#txtSICode').keydown(function (event) {
@@ -526,6 +523,13 @@ End Code
         }
         alert('You are not allow to ' + (b ? 'cancel voucher!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
+    }
+    function LoadData() {
+        let code = $('#txtControlNo').val();
+        let branch = $('#txtBranchCode').val();
+        $('#txtBranchCode').val(branch);
+        $('#txtControlNo').val(code);
+        CallBackQueryVoucher(path, branch,code, ReadData);
     }
     function SearchData(type) {
         switch (type) {
@@ -830,6 +834,7 @@ End Code
     function DisableSave() {
         $('#btnSave').attr('disabled', 'disabled');
         $('#btnUpdatePay').attr('disabled', 'disabled');
+        $('#btnDelPay').attr('disabled', 'disabled');
     }
     function ClearPayment() {
         $('#txtPRVoucher').val('');
@@ -877,9 +882,11 @@ End Code
 
         $('#btnAddPay').removeAttr('disabled');
         $('#btnUpdatePay').removeAttr('disabled');
+        $('#btnDelPay').removeAttr('disabled');
         if ($('#chkPosted').prop('checked') == true || $('#chkCancel').prop('checked') == true) {
             $('#btnAddPay').attr('disabled', 'disabled');
             $('#btnUpdatePay').attr('disabled', 'disabled');
+            $('#btnDelPay').attr('disabled', 'disabled');
         }
         ShowInfo();
     }
@@ -1092,6 +1099,42 @@ End Code
             alert('No document to save');
         }
     }
+    function DeleteAdvance() {
+        let itemno = $('#txtItemNo').val();
+        let code = $('#txtDocNo').val();
+        let branch = $('#txtBranchCode').val();
+
+        $.get(path + 'adv/deladvancedetail?branchcode=' + branch + '&advno=' + code + '&itemno=' + itemno, function (r) {            
+            if (r.adv.result.substring(0, 1) == "D") {
+                DeletePayment();
+            }
+        });        
+    }
+    function DeletePayment() {
+        let itemno = $('#txtItemNo').val();
+        let code = $('#txtControlNo').val();
+        let branch = $('#txtBranchCode').val();
+
+        $.get(path + 'acc/delvouchersub?branch=' + branch + '&code=' + code + '&item=' + itemno, function (r) {            
+            if (r.voucher.result.substring(0, 1) == "D") {
+                DeleteDocument();
+            }
+        });  
+    }
+    function DeleteDocument() {
+        let itemno = $('#txtItemNo').val();
+        let code = $('#txtControlNo').val();
+        let branch = $('#txtBranchCode').val();
+
+        $.get(path + 'acc/delvoucherdoc?branch=' + branch + '&code=' + code + '&item=' + itemno, function (r) {            
+            if (r.voucher.result.substring(0, 1) == "D") {
+                LoadData();
+                $('#frmPayment').modal('hide');                
+            }
+            alert(r.voucher.result);
+        });  
+    }
+
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);

@@ -1143,9 +1143,9 @@ End Code
             $('#txtVATRate').val(dt.VATRate);
             $('#txtWHTRate').val(dt.Tax50TaviRate);
             $('#txtAMT').val(dt.UsedAmount);
-            $('#txtVAT').val(dt.ChargeVAT);
-            $('#txtWHT').val(dt.Tax50Tavi);
-            $('#txtNET').val(dt.BNet);
+            $('#txtVAT').val(0);
+            $('#txtWHT').val(0);
+            $('#txtNET').val(dt.UsedAmount);
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
@@ -1171,7 +1171,7 @@ End Code
             }
             $('#txtQty').val(dt.Qty);
             $('#txtCurRate').val(dt.CurRate);
-            $('#txtUnitPrice').val(dt.UnitCost);
+            $('#txtUnitPrice').val(dt.AdvAmount);
             $('#txtUnitCode').val(dt.UnitCode);            
             $('#txtRemark').val(dt.Remark);
             $('#txtSlipNo').val(dt.SlipNO);
@@ -1184,7 +1184,7 @@ End Code
             $('#txtAMT').val(dt.UsedAmount);
             $('#txtVAT').val(dt.ChargeVAT);
             $('#txtWHT').val(dt.Tax50Tavi);
-            $('#txtNET').val(dt.BCost);
+            $('#txtNET').val(dt.AdvNet);
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);

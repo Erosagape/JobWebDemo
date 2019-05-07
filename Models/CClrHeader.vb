@@ -366,6 +366,7 @@ Public Class CClrHeader
                             dr("ClearCost") = Me.ClearCost
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            UpdateTotal(cn)
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -507,6 +508,7 @@ Public Class CClrHeader
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
+                UpdateTotal(cn)
 
                 Using cm As New SqlCommand("DELETE FROM Job_ClearHeader" + pSQLWhere, cn)
                     cm.CommandTimeout = 0

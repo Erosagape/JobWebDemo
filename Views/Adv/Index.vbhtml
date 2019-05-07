@@ -679,6 +679,7 @@ End Code
         alert('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
         $('#chkApprove').prop('checked', !chkmode);
     }
+    /*
     function SetPayment(b) {
         if (b == true) {
             $('#txtPaymentBy').val(chkmode ? user : '');
@@ -689,12 +690,26 @@ End Code
         alert('You are not allow to ' + (b ? 'payment Advance!' : 'cancel payment!'));
         $('#chkPayment').prop('checked', !chkmode);
     }
+    */
+    function GetStatus() {
+        let status = 1;
+        if ($('#txtPaymentBy').val() !== '') {
+            status = 3;
+        } else if ($('#txtApproveBy').val() !== '') {
+            status = 2;
+        }
+        return status;
+    }
     function SetCancel(b) {
         if (b == true) {
-            if (chkmode) $('#cboDocStatus').val('99');
-            $('#txtCancelProve').val(chkmode ? user : '');
-            $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
-            $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+            if (confirm("Do you want to " + (chkmode ? 'cancel' : 're-open') + "?") == true) {
+                $('#cboDocStatus').val(chkmode ? '99' : GetStatus());
+                $('#txtCancelProve').val(chkmode ? user : '');
+                $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
+                $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+                return;
+            }
+            $('#chkCancel').prop('checked', !chkmode);
             return;
         }
         alert('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
@@ -980,9 +995,9 @@ End Code
             if (isjobmode == false) {
                 $('#cboJobType').val('');
                 $('#cboShipBy').val('');
-                $('#cboDocStatus').val('01');
-                $('#cboAdvType').val('01');
             }
+            $('#cboDocStatus').val('01');
+            $('#cboAdvType').val('01');
             $('#txtAdvBy').val(user);
             $('#txtMainCurrency').val('@ViewBag.PROFILE_CURRENCY');
             $('#txtSubCurrency').val('@ViewBag.PROFILE_CURRENCY');
@@ -1080,6 +1095,9 @@ End Code
         ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
         ShowUser(path, '', '#txtReqName');
 
+        $('#chkApprove').removeAttr('disabled');
+        $('#chkCancel').removeAttr('disabled');
+
         $('#btnPrint').attr('disabled', 'disabled');
         $('#txtAdvCash').attr('disabled', 'disabled');
         $('#txtAdvChq').attr('disabled', 'disabled');
@@ -1087,12 +1105,16 @@ End Code
         $('#txtAdvCred').attr('disabled', 'disabled');
         $('#btnAdd').attr('disabled', 'disabled');
         $('#btnDel').attr('disabled', 'disabled');
+        $('#btnSave').attr('disabled', 'disabled');
+        $('#btnUpdate').attr('disabled', 'disabled');
 
         if (userRights.indexOf('E') >= 0){
             $('#btnSave').removeAttr('disabled');
+            $('#btnUpdate').removeAttr('disabled');
         }
         if (userRights.indexOf('I') >= 0) {
             $('#btnSave').removeAttr('disabled');
+            $('#btnUpdate').removeAttr('disabled');
             $('#btnAdd').removeAttr('disabled');    
         }
         if (userRights.indexOf('D') >= 0) {
@@ -1308,18 +1330,19 @@ End Code
         let w = $('#txtBranchCode').val();
         if (job.length > 0) {
             w += '&jobno=' + job;
-        }
-        if ($('#txtCustCode').val()!=='') {
-            w += '&custcode=' + $('#txtCustCode').val();
-        }
-        if ($('#txtCustBranch').val() !== '') {
-            w += '&custbranch=' + $('#txtCustBranch').val();
-        }
-        if ($('#cboJobType').val() !== '') {
-            w += '&jtype=' + $('#cboJobType').val();
-        }
-        if ($('#cboShipBy').val() !== '') {
-            w += '&sby=' + $('#cboShipBy').val();
+        } else {
+            if ($('#txtCustCode').val()!=='') {
+                w += '&custcode=' + $('#txtCustCode').val();
+            }
+            if ($('#txtCustBranch').val() !== '') {
+                w += '&custbranch=' + $('#txtCustBranch').val();
+            }
+            if ($('#cboJobType').val() !== '') {
+                w += '&jtype=' + $('#cboJobType').val();
+            }
+            if ($('#cboShipBy').val() !== '') {
+                w += '&sby=' + $('#cboShipBy').val();
+            }
         }
         if ($('#txtReqBy').val() !== '') {
             w += '&reqby=' + $('#txtReqBy').val();

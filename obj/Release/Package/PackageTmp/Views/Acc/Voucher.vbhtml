@@ -1063,9 +1063,13 @@ End Code
 
         $('#btnAddPay').removeAttr('disabled');
         $('#btnDelPay').removeAttr('disabled');
+        $('#chkPosted').removeAttr('disabled');
+        $('#chkCancel').removeAttr('disabled');
         $('#btnUpdatePay').removeAttr('disabled');
         if ($('#chkPosted').prop('checked') == true || $('#chkCancel').prop('checked') == true) {
             $('#btnAddPay').attr('disabled', 'disabled');
+            $('#chkCancel').attr('disabled', 'disabled');
+            $('#chkPosted').attr('disabled', 'disabled');
             $('#btnUpdatePay').attr('disabled', 'disabled');
             $('#btnDelPay').attr('disabled', 'disabled');
         }

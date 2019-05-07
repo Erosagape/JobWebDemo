@@ -87,7 +87,7 @@ End Code
                         <label for="txtCloseDate">Close Date : </label>
                         <input type="date" id="txtCloseDate" style="width:130px" disabled />
                         <br />
-                        <input type="button" id="btnCloseJob" class="btn btn-warning" value="Close/Reopen" onclick="CloseJob()" style="width:130px" />
+                        <input type="button" id="btnCloseJob" class="btn btn-warning" value="Close Job" onclick="CloseJob()" style="width:130px" />
                         <br />
                         <label for="txtCancelBy">Cancel By :</label>
                         <input type="text" id="txtCancelBy" style="width:130px" disabled />
@@ -103,7 +103,7 @@ End Code
                 <div class="row">
                     <div class="col-md-5">
                         <label for="txtCustInvNo">Cust.Invoice No :</label>
-                        <input type="text" id="txtCustInvNo" style="width:200px" tabindex="13" />
+                        <input type="text" id="txtCustInvNo" style="width:200px" tabindex="13" disabled />
                         <br />
                         <label for="txtInvProduct">Products :</label>
                         <input type="text" id="txtInvProduct" style="width:200px" tabindex="14" />
@@ -505,7 +505,6 @@ End Code
                     </div>
                     <div class="modal-footer">
                         Total Container : <input type="text" id="txtTotalCon" disabled />
-                        <button type="button" class="btn btn-info" id="btnApplyCons" onclick="SumService()">Calculate</button>
                         <button type="button" class="btn btn-primary" id="btnSaveCons" onclick="ApplyService()">Update Value</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
@@ -921,6 +920,12 @@ End Code
 
                     CalTotalLtd();
                     CalTotalCust();
+
+                    if (dr.JobStatus >= 3) {
+                        $('#btnSave').attr('disabled', 'disabled');
+                    } else {
+                        $('#btnSave').removeAttr('disabled');
+                    }
                 }
             });
     }
@@ -1051,23 +1056,35 @@ End Code
     }
     //This section is For Save Data function
     function CancelJob() {
-        rec.JobStatus = 99;
-        rec.CancelProve = user;
-        rec.CancelTime = GetTime();
-        ShowUser(path,rec.CancelProve, '#txtCancelBy');
+        if (rec.JobStatus !== 99) {
+            if ($('#txtCancelReason').val() !== '') {
+                rec.JobStatus = 99;
+                rec.CancelProve = user;
+                rec.CancelTime = GetTime();
+                ShowUser(path, rec.CancelProve, '#txtCancelBy');
 
-        $('#txtCancelDate').val(CDateEN(GetToday()));
-        ShowJobTypeShipBy(path,rec.JobType, rec.ShipBy, rec.JobStatus, '#txtJobType', '#txtShipBy', '#txtJobStatus');
-        SaveData();
+                $('#txtCancelDate').val(CDateEN(GetToday()));
+                ShowJobTypeShipBy(path, rec.JobType, rec.ShipBy, rec.JobStatus, '#txtJobType', '#txtShipBy', '#txtJobStatus');
+                SaveData();
+            } else {
+                alert('Please enter reason of canceling');
+            }
+        } else {
+            alert('This job already cancelled');
+        }
     }
     function CloseJob() {
-        rec.JobStatus = 3;
-        rec.CloseJobBy = user;
-        rec.CloseJobTime = GetTime();
-        ShowUser(path,rec.CloseJobBy, '#txtCloseBy');
-        $('#txtCloseDate').val(CDateEN(GetToday()));
-        ShowJobTypeShipBy(path,rec.JobType, rec.ShipBy, rec.JobStatus, '#txtJobType', '#txtShipBy', '#txtJobStatus');
-        SaveData();
+        if (rec.JobStatus < 3) {
+            rec.JobStatus = 3;
+            rec.CloseJobBy = user;
+            rec.CloseJobTime = GetTime();
+            ShowUser(path,rec.CloseJobBy, '#txtCloseBy');
+            $('#txtCloseDate').val(CDateEN(GetToday()));
+            ShowJobTypeShipBy(path,rec.JobType, rec.ShipBy, rec.JobStatus, '#txtJobType', '#txtShipBy', '#txtJobStatus');
+            SaveData();
+            return;
+        }
+        alert('job is already closed');
     }
     function SaveData() {
         if (rec.JNo != undefined) {
@@ -1130,10 +1147,12 @@ End Code
     function SplitData() {
         var dv = document.getElementById("dvSplit")
         dv.innerHTML = '';
-        var str = document.getElementById("txtTotalCTN");
-        var arr = str.value.split(",");
-        for (var i = 0; i < arr.length; i++) {
-            AddNewService(arr[i]);
+        var str = document.getElementById("txtTotalCTN").value;
+        if (str.indexOf(',')>0) {
+            var arr = str.split(",");
+            for (var i = 0; i < arr.length; i++) {
+                AddNewService(arr[i]);
+            }
         }
         $('#frmSearchSUnt').hide();
 

@@ -222,8 +222,17 @@ AND d.acType=r.acType
                         End If
                         data.AddNew(DateTime.Now.ToString("yyMM") & "-___")
                     End If
-
-                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND  ControlNo='{1}' ", data.BranchCode, data.ControlNo))
+                    Dim tSql As String = String.Format(" WHERE BranchCode='{0}' AND  ControlNo='{1}' ", data.BranchCode, data.ControlNo)
+                    If data.CancelProve <> "" Then
+                        'if status is cancel then cancel relate documents
+                        Dim oDoc = New CVoucherDoc(jobWebConn).GetData(tSql)
+                        If oDoc.Count > 0 Then
+                            For Each o As CVoucherDoc In oDoc
+                                o.CancelData()
+                            Next
+                        End If
+                    End If
+                    Dim msg = data.SaveData(tSql)
                     Dim json = "{""result"":{""data"":""" & data.ControlNo & """,""msg"":""" & msg & """}}"
 
                     Return Content(json, jsonContent)
@@ -434,11 +443,11 @@ AND d.acType=r.acType
                 End If
 
                 Dim oData As New CVoucherDoc(jobWebConn)
-
-                Dim msg = oData.DeleteData(tSqlw & String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString))
+                tSqlw &= String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString)
                 Dim oDataDoc = oData.GetData(tSqlw)
+                Dim msg = oDataDoc(0).DeleteData()
 
-                Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataDoc) & "]}}"
+                Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataDoc(0)) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("{""voucher"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
@@ -473,8 +482,15 @@ AND d.acType=r.acType
 
                 Dim msg = oData.DeleteData(tSqlw)
                 If msg.Substring(0, 1) = "D" Then
-                    msg = New CVoucherSub(jobWebConn).DeleteData(tSqlw)
-                    msg = New CVoucherDoc(jobWebConn).DeleteData(tSqlw)
+                    Dim oSub = New CVoucherSub(jobWebConn).GetData(tSqlw)
+                    For Each o As CVoucherSub In oSub
+                        o.DeleteData()
+                    Next
+
+                    Dim oDoc = New CVoucherDoc(jobWebConn).GetData(tSqlw)
+                    For Each o As CVoucherDoc In oDoc
+                        o.DeleteData()
+                    Next
                 End If
 
                 Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"

@@ -186,25 +186,17 @@ End Code
         $('#txtBranchCode').focus();
     }
     function SetEvents() {
-        $('#txtBranchCode').keydown(function (event) {
-            if (event.which == 13) {
-                ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
-            }
+        $('#txtBranchCode').focusout(function () {
+            ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
         });
-        $('#txtCSCode').keydown(function (event) {
-            if (event.which == 13) {
-                ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
-            }
+        $('#txtCSCode').focusout(function () {
+            ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
         });
-        $('#txtCustBranch').keydown(function (event) {
-            if (event.which == 13) {
-                ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
-            }
+        $('#txtCustBranch').focusout(function () {
+            ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
         });
-        $('#txtConsignee').keydown(function (event) {
-            if (event.which == 13) {
-                ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
-            }
+        $('#txtConsignee').focusout(function () {
+            ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
         });
     }
     function CheckParam() {
@@ -305,7 +297,7 @@ End Code
         return strParam;
     }
     function CreateJob() {
-        if ($('#txtBranchCode').val() === '') {
+        if ($('#txtBranchName').val() === '') {
             alert('Please select branch before create job');
             $('#txtBranchCode').focus();
             return;
@@ -320,12 +312,12 @@ End Code
             $('#cboShipBy').focus();
             return;
         }
-        if ($('#txtCSCode').val() === '') {
+        if ($('#txtCSName').val() === '') {
             alert('Please select CS before create job');
             $('#txtCSCode').focus();
             return;
         }
-        if ($('#txtCustCode').val() === '') {
+        if ($('#txtCustName').val() === '') {
             alert('Please select customer before create job');
             $('#txtCustCode').focus();
             return;

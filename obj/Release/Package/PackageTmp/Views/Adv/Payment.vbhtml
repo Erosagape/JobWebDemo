@@ -231,42 +231,45 @@ End Code
 
         let cbos = ['#cboBankCash', '#cboBankChqCash', '#cboBankChq'];
         loadBank(cbos, path);
+        //default values
+        $('#txtCurrencyCode').val('THB');
+        ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
 
         //Events
-        $('#txtBranchCode').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtBranchCode').focusout(function (event) {
+            if (true) {
                 $('#txtBranchName').val('');
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
-        $('#txtBookCash').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtBookCash').focusout(function (event) {
+            if (true) {
                 $('#fldBankCodeCash').val('');
                 $('#fldBankBranchCash').val('');
                 CallBackQueryBookAccount(path, $('#txtBranchCode').val(), $('#txtBookCash').val(), ReadBookCash);
             }
         });
-        $('#txtBookChqCash').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtBookChqCash').focusout(function (event) {
+            if (true) {
                 $('#fldBankCodeChqCash').val('');
                 $('#fldBankBranchChqCash').val('');
                 CallBackQueryBookAccount(path, $('#txtBranchCode').val(), $('#txtBookChqCash').val(), ReadBookChq);
             }
         });
-        $('#txtReqBy').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtReqBy').focusout(function (event) {
+            if (true) {
                 $('#txtReqName').val('');
                 ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
             }
         });
-        $('#txtCurrencyCode').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtCurrencyCode').focusout(function (event) {
+            if (true) {
                 $('#txtCurrencyName').val('');
                 ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             }
         });
-        $('#txtCustBranch').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtCustBranch').focusout(function (event) {
+            if (true) {
                 $('#txtCustName').val('');
                 ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
@@ -869,29 +872,24 @@ End Code
         $('#txtBookCash').val(dt.BookCode);
         $('#fldBankCodeCash').val(dt.BankCode);
         $('#fldBankBranchCash').val(dt.BankBranch);
-        $('#txtBookCash').focus();
     }
     function ReadBookChq(dt) {
         $('#txtBookChqCash').val(dt.BookCode);
         $('#fldBankCodeChqCash').val(dt.BankCode);
         $('#fldBankBranchChqCash').val(dt.BankBranch);
-        $('#txtBookChqCash').focus();
     }
     function ReadReqBy(dt) {
         $('#txtReqBy').val(dt.UserID);
         $('#txtReqName').val(dt.TName);
-        $('#txtReqBy').focus();
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
-        $('#txtBranchCode').focus();
     }
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
-        $('#txtCustCode').focus();
     }
     function PrintVoucher(br, cno) {
         window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());

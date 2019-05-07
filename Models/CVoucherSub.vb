@@ -481,12 +481,16 @@ Public Class CVoucherSub
         End Using
         Return lst
     End Function
-    Public Function DeleteData(pSQLWhere As String) As String
+    Public Function DeleteData(Optional pSQLWhere As String = "") As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
-
+                If pSQLWhere = "" Then
+                    pSQLWhere &= String.Format(" WHERE BranchCode='{0}'", Me.BranchCode)
+                    pSQLWhere &= String.Format(" AND ControlNo='{0}'", Me.ControlNo)
+                    pSQLWhere &= String.Format(" AND ItemNo='{0}'", Me.ItemNo)
+                End If
                 Using cm As New SqlCommand("DELETE FROM Job_CashControlSub" + pSQLWhere, cn)
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text

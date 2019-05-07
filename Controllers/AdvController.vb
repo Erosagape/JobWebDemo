@@ -421,13 +421,13 @@ FROM Job_AdvHeader as a LEFT JOIN
 Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
 LEFT JOIN (
     SELECT BranchCode,AdvNo,MAX(VATRate) as RateVAT,MAX(Rate50Tavi) as Rate50Tavi,
-    SUM(CASE WHEN Charge50Tavi>0 And IsChargeVAT=1 THEN AdvAmount ELSE 0 END) as Base50TaviExc,
-    SUM(CASE WHEN ChargeVAT>0 And IsChargeVAT=1 THEN AdvAmount ELSE 0 END) as BaseVATExc,
+    SUM(CASE WHEN Charge50Tavi>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as Base50TaviExc,
+    SUM(CASE WHEN ChargeVAT>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as BaseVATExc,
     SUM(CASE WHEN Charge50Tavi>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as Base50TaviInc,
     SUM(CASE WHEN ChargeVAT>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as BaseVATInc,
-    SUM(CASE WHEN IsChargeVAT=1 THEN ChargeVAT ELSE 0 END) as VATExc,
+    SUM(CASE WHEN IsChargeVAT<>2 THEN ChargeVAT ELSE 0 END) as VATExc,
     SUM(CASE WHEN IsChargeVAT=2 THEN ChargeVAT ELSE 0 END) as VATInc,
-    SUM(CASE WHEN IsChargeVAT=1 THEN Charge50Tavi ELSE 0 END) as WHTExc,
+    SUM(CASE WHEN IsChargeVAT<>2 THEN Charge50Tavi ELSE 0 END) as WHTExc,
     SUM(CASE WHEN IsChargeVAT=2 THEN Charge50Tavi ELSE 0 END) as WHTInc,
     SUM(AdvAmount) as BaseAmount,SUM(AdvNet) as TotalNet  
     FROM Job_AdvDetail 
