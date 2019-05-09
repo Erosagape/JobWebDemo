@@ -112,7 +112,7 @@ End Code
                 let acType=obj.acType;
                 let payType = '';
                 let desc = '';
-                let desc0 = '';
+                let desc0 = 'เอกสารเลขที่ ' + obj.DocNo + '<br/>';
                 let s = $.grep(serv, function (d) {
                     return d.SICode === obj.SICode;
                 });

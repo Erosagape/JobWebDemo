@@ -459,6 +459,8 @@ End Code
         });
     }
     function SetEnterToTab() {
+        $('#txtVoucherDate').val(GetToday());
+
         //Set enter to tab
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
@@ -560,17 +562,17 @@ End Code
         }
     }
     function ClearForm() {
-        $('#txtBranchCode').val('');
-        $('#txtBranchName').val('');
+        //$('#txtBranchCode').val('');
+        //$('#txtBranchName').val('');
         $('#txtControlNo').val('');
-        $('#txtVoucherDate').val('');
+        $('#txtVoucherDate').val(GetToday());
         $('#txtTRemark').val('');
         $('#txtCustCode').val('');
         $('#txtCustBranch').val('');
         $('#txtCustName').val('');
-        $('#txtRecUser').val('');
-        $('#txtRecDate').val('');
-        $('#txtRecTime').val('');
+        $('#txtRecUser').val(user);
+        $('#txtRecDate').val(GetToday());
+        $('#txtRecTime').val(GetTime());
         $('#chkPosted').prop('checked',false);
         $('#txtPostedBy').val('');
         $('#txtPostedDate').val('');

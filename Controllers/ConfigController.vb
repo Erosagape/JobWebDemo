@@ -312,6 +312,7 @@ Namespace Controllers
                 Dim oData = New CUser(jobWebConn).GetData(tSqlw)
                 If chk = 2 And oData.Count > 0 Then
                     ViewBag.User = oData(0).UserID
+                    Session.Timeout = 30
                     Session("CurrUser") = ViewBag.User
                     Session("UserProfiles") = oData(0)
                 Else

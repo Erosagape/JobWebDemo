@@ -65,9 +65,10 @@ End Code
 <table id="tbDetail" border="1" width="100%">
     <thead>
         <tr class="text-center">
-            <th width="10%">CODE.</th>
+            <th width="8%">CODE.</th>
             <th width="50%">DESCRIPTION</th>
-            <th width="20%">JOBNO</th>
+            <th width="12%">JOBNO</th>
+            <th width="10%">VAT</th>
             <th width="10%">WHTAK</th>
             <th width="10%">PAID</th>
         </tr>
@@ -101,7 +102,7 @@ End Code
                     <br />
                     WITH-HOLDING TAX
                     <br />
-                    CLEARING TOTAL
+                    CLEARING NET
                 </div>
             </div>
         </td>
@@ -216,14 +217,24 @@ End Code
                     let amtwht = 0;
                     let amtforwht = 0;
                     let amttotal = 0;
+                    let advtotal = 0;
+                    let clrtotal = 0;
+
                     let d = r.data[0].Table;
                     for (let i= 0; i < d.length; i++){
                         if (d[i].CustCode !== cust) {
                             cust = d[i].CustCode;
-                            html += '<tr><td colspan="5">'+d[i].CustCode + ' ' + d[i].NameThai+'</td></tr>';
+                            html += '<tr><td colspan="6">'+d[i].CustCode + ' ' + d[i].NameThai+'</td></tr>';
                         }
-                        let advref = d[i].AdvNO !== null ? ' จากใบเบิก ' + d[i].AdvNO : '';
-                        html += '<tr><td>' + d[i].SICode + '</td><td>' + d[i].SDescription + advref + '</td><td>' + d[i].JobNo + '</td><td>' + d[i].Tax50Tavi + '</td><td>' + d[i].UsedAmount + '</td></tr>'
+
+                        let advref = (d[i].SlipNO !== null ? ' เลขที่#' + d[i].SlipNO : '');
+                        advref = advref + (d[i].AdvNO !== null ? '<br/>จากใบเบิก ' + d[i].AdvNO : '');
+                        advref = advref + (d[i].AdvAmount > 0 ? ' ยอดเบิก=' + CCurrency(CDbl(d[i].AdvAmount,2)) : '');
+
+                        html += '<tr><td>' + d[i].SICode + '</td><td>' + d[i].SDescription +''+ advref + '</td><td>' + d[i].JobNo + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].ChargeVAT,2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].Tax50Tavi,2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].UsedAmount,2)) + '</td></tr>'
+                        advtotal += d[i].AdvAmount;
+                        clrtotal += d[i].UsedAmount + d[i].ChargeVAT;
+
                         if (d[i].ChargeVAT > 0) {
                             amtforvat += d[i].UsedAmount;
                             amtvat += d[i].ChargeVAT;
@@ -238,16 +249,16 @@ End Code
                     }
                     $('#tbDetail tbody').html(html);
 
-                    $('#txtAmtVat').text(CDbl(amtforvat,2));
-                    $('#txtAmtNonVat').text(CDbl(amtnonvat,2));
-                    $('#txtVat').text(CDbl(amtvat,2));
-                    $('#txtAmtWht').text(CDbl(amtforwht,2));
-                    $('#txtWht').text(CDbl(amtwht,2));
-                    $('#txtTotal').text(CDbl(amttotal,2));
+                    $('#txtAmtVat').text(CCurrency(CDbl(amtforvat,2)));
+                    $('#txtAmtNonVat').text(CCurrency(CDbl(amtnonvat,2)));
+                    $('#txtVat').text(CCurrency(CDbl(amtvat,2)));
+                    $('#txtAmtWht').text(CCurrency(CDbl(amtforwht,2)));
+                    $('#txtWht').text(CCurrency(CDbl(amtwht,2)));
+                    $('#txtTotal').text(CCurrency(CDbl(amttotal,2)));
 
-                    $('#txtTotalAdv').text(CDbl(h.AdvTotal,2));
-                    $('#txtTotalClear').text(CDbl(h.TotalExpense,2));
-                    $('#txtTotalReturn').text(CDbl(h.ClearTotal,2));
+                    $('#txtTotalAdv').text(CCurrency(CDbl(advtotal,2)));
+                    $('#txtTotalClear').text(CCurrency(CDbl(clrtotal,2)));
+                    $('#txtTotalReturn').text(CCurrency(CDbl(advtotal-clrtotal,2)));
                 }
             });
         }

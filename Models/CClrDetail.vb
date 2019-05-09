@@ -691,12 +691,13 @@ SET a.AdvTotal=ISNULL(b.AdvTotal,0)
 ,a.ClearBill=ISNULL(b.TotalBill,0)
 ,a.ClearCost=ISNULL(b.TotalCost,0)
 FROM Job_ClearHeader a LEFT JOIN (
-  SELECT BranchCode,ClrNo,Sum(AdvAmount) as AdvTotal,Sum(UsedAmount) as TotalExpense,
-  Sum(ChargeVAT) as TotalVAT,Sum(Tax50Tavi) as TotalWHT,Sum(BNet) as TotalNET,
-  Sum(CASE WHEN BPrice >0 THEN BPrice ELSE 0 END) as TotalBill,
-  Sum(CASE WHEN BPrice =0 THEN BCost ELSE 0 END) as TotalCost
-  FROM Job_ClearDetail
-  GROUP BY BranchCode,ClrNo
+  SELECT d.BranchCode,d.ClrNo,Sum(ISNULL(h.AdvAmount,0)+ISNULL(h.ChargeVAT,0)) as AdvTotal,Sum(d.UsedAmount+d.ChargeVAT) as TotalExpense,
+  Sum(d.ChargeVAT) as TotalVAT,Sum(d.Tax50Tavi) as TotalWHT,Sum(d.BNet) as TotalNET,
+  Sum(CASE WHEN d.BPrice >0 THEN d.BPrice+d.ChargeVAT ELSE 0 END) as TotalBill,
+  Sum(CASE WHEN d.BPrice =0 THEN d.BCost+d.ChargeVAT ELSE 0 END) as TotalCost
+  FROM Job_ClearDetail d LEFT JOIN Job_AdvDetail h
+  ON d.BranchCode=h.BranchCode and d.AdvNO=h.AdvNo and d.AdvItemNo=h.ItemNo
+  GROUP BY d.BranchCode,d.ClrNo
 ) b
 ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
 "

@@ -257,7 +257,7 @@ Public Class CVoucherDoc
 
                         row.SaveData(sql)
                     Else
-                        msg = "Cannot Cancel Document Status=" + row.DocStatus
+                        msg = "Cannot Cancel Document Status=" & row.DocStatus
                     End If
                 End If
             Case "CLR" 'Clearing Receival

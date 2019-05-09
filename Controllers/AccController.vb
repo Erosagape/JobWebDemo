@@ -443,11 +443,11 @@ AND d.acType=r.acType
                 End If
 
                 Dim oData As New CVoucherDoc(jobWebConn)
-                tSqlw &= String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString)
-                Dim oDataDoc = oData.GetData(tSqlw)
+                Dim oDataDoc = oData.GetData(tSqlw & String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString))
                 Dim msg = oDataDoc(0).DeleteData()
+                oDataDoc = oData.GetData(tSqlw)
 
-                Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataDoc(0)) & "]}}"
+                Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataDoc) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("{""voucher"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)

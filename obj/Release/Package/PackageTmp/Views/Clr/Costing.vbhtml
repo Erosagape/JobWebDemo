@@ -187,7 +187,9 @@ End Code
                     let amtbill = 0;
                     let amtrcv = 0;
 
-                    let d = r.data[0].Table;
+                    let d = r.data[0].Table.filter(function (data) {
+                        return data.BNet !== 0;
+                    });
                     for (let i = 0; i < d.length; i++){
                         let amt = d[i].UsedAmount + d[i].ChargeVAT - (d[i].IsCredit == 1 ? d[i].Tax50Tavi : 0);
                         let adv = (d[i].IsCredit == 1 ? amt : 0);

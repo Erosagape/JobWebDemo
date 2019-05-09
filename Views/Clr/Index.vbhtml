@@ -646,9 +646,8 @@ End Code
     function SetLOVs() {
         //Combos
         let lists = 'JOB_TYPE=#cboJobType';
-        lists += ',SHIP_BY=#cboShipBy';
-        lists += ',CLR_STATUS=#cboDocStatus';
-        lists += ',CLR_TYPE=#cboClrType';
+        lists += ',CLR_STATUS=#cboDocStatus|01';
+        lists += ',CLR_TYPE=#cboClrType|1';
         lists += ',CLR_FROM=#cboClrFrom';
 
         loadCombos(path, lists);
@@ -708,16 +707,36 @@ End Code
     }
     function SaveHeader() {
         if (hdr != undefined) {
+            if ($('#txtBranchName').val() == '') {
+                alert('please select branch code');
+                $('#txtBranchCode').focus();
+                return;
+            }
+            if ($('#cboJobType').val() == 0) {
+                alert('please select job type');
+                $('#cboJobType').focus();
+                return;
+            }
+            if ($('#cboClrType').val() == 0) {
+                alert('please select clear type');
+                $('#cboClrType').focus();
+                return;
+            }
+            if ($('#cboClrFrom').val() == 0) {
+                alert('please select clear from');
+                $('#cboClrFrom').focus();
+                return;
+            }
+            if (userRights.indexOf('E') < 0) {
+                alert('you are not authorize to save');
+                return;
+            }
             let obj = GetDataHeader();
             if (obj.ClrNo == '') {
                 if (userRights.indexOf('I') < 0) {
                     alert('you are not authorize to add');
                     return;
                 }
-            }
-            if (userRights.indexOf('E') < 0) {
-                alert('you are not authorize to save');
-                return;
             }
             let jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
@@ -815,7 +834,7 @@ End Code
             $('#txtCTN_NO').val(dt.CTN_NO);
             $('#txtCoPersonCode').val(dt.CoPersonCode);
             $('#txtClearTotal').val(CDbl(dt.ClearTotal, 4));
-            $('#txtClrAmount').val(CDbl(dt.TotalExpense, 4));
+            $('#txtClrAmount').val(CDbl(dt.ClearNet+dt.ClearWht-dt.ClearVat, 4));
             $('#txtVatAmount').val(CDbl(dt.ClearVat, 4));
             $('#txtWhtAmount').val(CDbl(dt.ClearWht, 4));
             $('#txtNetAmount').val(CDbl(dt.ClearNet, 4));
@@ -892,6 +911,7 @@ End Code
         $.get(path + 'clr/getnewcleardetail?branchcode=' + $('#txtBranchCode').val() + '&clrno=' + $('#txtClrNo').val(), function (r) {
             let d = r.clr.detail[0];
             LoadDetail(d);
+
             $('#frmDetail').modal('show');
             $('#txtSICode').focus();
         });
@@ -1143,9 +1163,9 @@ End Code
             $('#txtVATRate').val(dt.VATRate);
             $('#txtWHTRate').val(dt.Tax50TaviRate);
             $('#txtAMT').val(dt.UsedAmount);
-            $('#txtVAT').val(0);
-            $('#txtWHT').val(0);
-            $('#txtNET').val(dt.UsedAmount);
+            $('#txtVAT').val(dt.ChargeVAT);
+            $('#txtWHT').val(dt.Tax50Tavi);
+            $('#txtNET').val(dt.BNet);
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
@@ -1171,7 +1191,7 @@ End Code
             }
             $('#txtQty').val(dt.Qty);
             $('#txtCurRate').val(dt.CurRate);
-            $('#txtUnitPrice').val(dt.AdvAmount);
+            $('#txtUnitPrice').val(dt.UnitCost);
             $('#txtUnitCode').val(dt.UnitCode);            
             $('#txtRemark').val(dt.Remark);
             $('#txtSlipNo').val(dt.SlipNO);
@@ -1181,10 +1201,10 @@ End Code
             $('#txtVatType').val(dt.VATType);
             $('#txtVATRate').val(dt.VATRate);
             $('#txtWHTRate').val(dt.Tax50TaviRate);
-            $('#txtAMT').val(dt.UsedAmount);
-            $('#txtVAT').val(dt.ChargeVAT);
-            $('#txtWHT').val(dt.Tax50Tavi);
-            $('#txtNET').val(dt.AdvNet);
+            $('#txtAMT').val(dt.AdvBalance);
+            $('#txtVAT').val(dt.AdvBalance*(dt.VATRate*0.01));
+            $('#txtWHT').val(dt.AdvBalance*(dt.Tax50TaviRate*0.01));
+            $('#txtNET').val(dt.AdvBalance + (dt.AdvBalance * (dt.VATRate * 0.01)) - (dt.AdvBalance * (dt.Tax50TaviRate * 0.01)));
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
@@ -1549,8 +1569,8 @@ End Code
                         { data: "CurRate", title: "Rate" },
                         { data: "Qty", title: "Qty" },
                         { data: "AdvNO", title: "Unit" },
-                        { data: "AdvAmount", title: "Adv Total" },
-                        { data: "Tax50Tavi", title: "50Tavi" },
+                        { data: "AdvBalance", title: "Balance" },
+                        { data: "UsedAmount", title: "Used" },
                     ],
                     destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                 });

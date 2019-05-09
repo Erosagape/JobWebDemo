@@ -438,7 +438,17 @@ End Code
         SetLOVs();
         SetEnterToTab();
         ClearData();
+        CheckParams();
     });
+    function CheckParams() {
+        let branch = getQueryString('Branch');
+        let code = getQueryString('Code');
+        if (branch !== '' && code !== '') {
+            $('#txtBranchCode').val(branch);
+            $('#txtDocNo').val(code);                
+            CallBackQueryWHTax(path, branch, code, ReadData);
+        }
+    }
     function SetEvents() {
         $('#btnAddDoc').on('click', function () {
             $('#frmDetail').modal('show');

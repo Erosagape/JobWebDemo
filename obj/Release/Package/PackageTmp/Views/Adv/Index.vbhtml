@@ -21,7 +21,7 @@ End Code
                         <td>
                             <b><a onclick="SearchData('advance')">Advance No:</a></b>
                             <br />
-                            <input type="text" id="txtAdvNo" style="font-style:bold;font-size:20px;text-align:center" tabindex="0" />
+                            <input type="text" id="txtAdvNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
                         </td>
                     </tr>
                 </table>
@@ -71,7 +71,7 @@ End Code
                         <table>
                             <tr>
                                 <td>
-                                    WH-Tax No:
+                                    <a href="#" onclick="AutoGenWHTax()">WH-Tax No:</a>
                                 </td>
                                 <td>
                                     <input type="text" id="txtDoc50Tavi" style="width:200px" tabindex="6" />
@@ -543,90 +543,90 @@ End Code
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Index', 'D', SetCancel);
         });
-        $('#txtCurrencyCode').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtCurrencyCode').focusout(function (event) {
+            if (true) {
                 ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');  
                 ShowCaption();
             }
         });
-        $('#txtBranchCode').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtBranchCode').focusout(function (event) {
+            if (true) {
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
-        $('#txtAdvNo').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAdvNo').focusout(function (event) {
+            if (true) {
                 ShowData($('#txtBranchCode').val(),$('#txtAdvNo').val());
             }
         });
-        $('#txtAdvBy').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAdvBy').focusout(function (event) {
+            if (true) {
                 ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
             }
         });
-        $('#txtReqBy').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtReqBy').focusout(function (event) {
+            if (true) {
                 ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
             }
         });
-        $('#txtCustBranch').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtCustBranch').focusout(function (event) {
+            if (true) {
                 ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
         });
-        $('#txtSICode').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtSICode').focusout(function (event) {
+            if (true) {
                 let dt = FindService($('#txtSICode').val())
                 ReadService(dt);
             }
         });
-        $('#txtAdvQty').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAdvQty').focusout(function (event) {
+            if (true) {
                 CalAmount();
             }
         });
-        $('#txtUnitPrice').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtUnitPrice').focusout(function (event) {
+            if (true) {
                 CalAmount();
             }
         });
-        $('#txtExcRate').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtExcRate').focusout(function (event) {
+            if (true) {
                 CalAmount();
             }
         });
-        $('#txtAMT').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAMT').focusout(function (event) {
+            if (true) {
                 CalVATWHT();
             }
         });
-        $('#txtVATRate').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtVATRate').focusout(function (event) {
+            if (true) {
                 CalVATWHT();
             }
         });
-        $('#txtWHTRate').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtWHTRate').focusout(function (event) {
+            if (true) {
                 CalVATWHT();
             }
         });
-        $('#txtVAT').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtVAT').focusout(function (event) {
+            if (true) {
                 CalTotal();
             }
         });
-        $('#txtWHT').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtWHT').focusout(function (event) {
+            if (true) {
                 CalTotal();
             }
         });
-        $('#txtForJNo').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtForJNo').focusout(function (event) {
+            if (true) {
                 ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
             }
         });
-        $('#txtNET').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtNET').focusout(function (event) {
+            if (true) {
                 let type = $('#txtVatType').val();
                 if (type == '0'||type=='') type = "1";
                 if (type == "2") {
@@ -749,11 +749,11 @@ End Code
     }
     function ShowData(branchcode, advno) {
         if (branchcode == '') {
-            alert('Please select branch');
+            //alert('Please select branch');
             return;
         }
         if (advno == '') {
-            alert('Please enter advance no');
+            //alert('Please enter advance no');
             return;
         }
         if (userRights.indexOf('R') < 0) {
@@ -792,6 +792,21 @@ End Code
                     alert('please select type of receive advancing money');
                     return;
                 }
+            }
+            if ($('#cboJobType').val() == 0) {
+                alert('please select job type');
+                $('#cboJobType').focus();
+                return;
+            }
+            if ($('#cboShipBy').val() == 0) {
+                alert('please select ship by');
+                $('#cboShipBy').focus();
+                return;
+            }
+            if ($('#cboAdvType').val() == 0) {
+                alert('please select advance type');
+                $('#cboAdvType').focus();
+                return;
             }
             let jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
@@ -1012,6 +1027,10 @@ End Code
         });
     }
     function AddDetail() {
+        if ($('#txtAdvNo').val() == '') {
+            alert('Please save document before add detail');
+            return;
+        }
         $.get(path + 'adv/getnewadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
             let d = r.adv.detail[0];
             LoadDetail(d);
@@ -1303,7 +1322,7 @@ End Code
         $('#txtDetCurrency').val($('#txtMainCurrency').val());
         $('#txtVenCode').val('');
 
-        $('#chkDuplicate').prop('checked', false);
+        $('#chkDuplicate').prop('checked', true);
         $('#txtAMT').removeAttr('disabled');
         $('#txtVATRate').removeAttr('disabled');
         $('#txtWHTRate').removeAttr('disabled');
@@ -1466,26 +1485,21 @@ End Code
     function ReadAdvBy(dt) {
         $('#txtAdvBy').val(dt.UserID);
         $('#txtAdvName').val(dt.TName);
-        $('#txtAdvBy').focus();
     }
     function ReadReqBy(dt) {
         $('#txtReqBy').val(dt.UserID);
         $('#txtReqName').val(dt.TName);
-        $('#txtReqBy').focus();
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
-        $('#txtBranchCode').focus();
     }
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
-        $('#txtCustCode').focus();
     }
     function ReadService(dt) {
-        $('#txtSICode').focus();
         if (dt != undefined) {
             $('#txtSICode').val(dt.SICode);
             $('#cboSTCode').val(dt.GroupCode);
@@ -1494,6 +1508,7 @@ End Code
             $('#txtVatType').val(dt.IsTaxCharge);
             $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
             $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
+            $('#txtUnitPrice').val(dt.StdPrice);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
                 $('#txtVATRate').attr('disabled', 'disabled');
@@ -1524,7 +1539,6 @@ End Code
     function ReadJob(dt) {
         $('#txtForJNo').val(dt.JNo);
         $('#txtInvNo').val(dt.InvNo);
-        $('#txtForJNo').focus();
     }
     function SumTotal() {
         let cash = CDbl($('#txtAdvCash').val(),4);
@@ -1535,7 +1549,8 @@ End Code
     }
     function GetTotal() {
         let total = SumTotal();
-        return CDbl(CNum($('#txtTotalAmount').val()) / CNum($('#txtExchangeRate').val()) - total,4);
+        let sum = CNum($('#txtAdvAmount').val()) + CNum($('#txtVatAmount').val());
+        return CDbl(sum / CNum($('#txtExchangeRate').val()) - total,4);
     }
     function CalAmount() {
         let price = CDbl($('#txtUnitPrice').val(),4);
@@ -1604,11 +1619,139 @@ End Code
         $('#txtVAT').val(CDbl(vat,4));
         $('#txtWHT').val(CDbl(wht,4));
         CalTotal();
-    }
+    } 
+
     function GetExchangeRate() {
         $.get('https://free.currencyconverterapi.com/api/v6/convert?q=' + $('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val() + '&compact=ultra&apiKey=6210d55b79170a4a7da2', function (r) {
-            let rate = CDbl(r[$('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val()],4);
+            let rate = CDbl(r[$('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val()], 4);
             $('#txtExchangeRate').val(rate);
         });
+    }
+
+    function AutoGenWHTax() {
+        if ($('#txtDoc50Tavi').val() !== '') {
+            window.open(path + 'Acc/WHTax?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDoc50Tavi').val());
+            return;
+        }
+        $.get(path + 'master/getcompany?Code=' + $('#txtCustCode').val() + '&Branch' + $('#txtCustBranch').val()).done(function (r) {
+            let dr = r.company.data;
+            if (dr.length > 0) {
+                SaveWHTax(dr[0]);
+            }
+        });
+    }
+    function SaveWHTax(dt) {
+        let obj = GetWHTaxHeader(dt);
+        let jsonText = JSON.stringify({ data: obj });
+        //alert(jsonText);
+        $.ajax({
+            url: "@Url.Action("SetWHTaxHeader", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data != null) {
+                    SetWHTaxDetail(response.result.data);
+                    alert(response.result.msg);
+                    $('#txtDoc50Tavi').val(response.result.data);
+                    $('#txtDoc50Tavi').focus();
+                    return;
+                }
+                alert(response.result.msg);
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    }
+    function SetWHTaxDetail(docno) {
+        $.get(path + 'adv/getadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
+            let dt = r.adv.detail.filter(function (data) {
+                return data.Charge50Tavi > 0;
+            });
+            let i = 0;
+            let j = 0;
+            for (let d of dt) {
+                i += 1;
+                let obj={			
+                    BranchCode:$('#txtBranchCode').val(),
+                    DocNo:docno,
+                    ItemNo:i,
+                    IncType:14,
+                    PayDate:CDateTH($('#txtAdvDate').val()),
+                    PayAmount:d.AdvAmount,
+                    PayTax:d.Charge50Tavi,
+                    PayTaxDesc:d.SDescription,
+                    JNo:d.ForJNo,
+                    DocRefType:1,
+                    DocRefNo:$('#txtAdvNo').val(),
+                    PayRate:d.Rate50Tavi
+                };
+
+                SaveWHTaxDetail(obj);
+            }
+        });
+    }
+    function SaveWHTaxDetail(obj) {
+        let jsonText = JSON.stringify({ data: obj });
+        //alert(jsonText);
+        $.ajax({
+            url: "@Url.Action("SetWHTaxDetail", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data != null) {
+                    j = response.result.data;
+                    return;
+                }                                
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    }
+    function GetWHTaxHeader(dt) {
+        let obj = {
+            BranchCode: $('#txtBranchCode').val(),
+            DocNo: '',
+            DocDate: CDateTH($('#txtAdvDate').val()),
+            TaxNumber1: dt.TaxNumber,
+            TName1: dt.NameThai,
+            TAddress1: dt.TAddress1 + ' ' +dt.TAddress2,
+            TaxNumber2: '@ViewBag.PROFILE_TAXNUMBER',
+            TName2: '@ViewBag.PROFILE_COMPANY_NAME',
+            TAddress2: '@ViewBag.PROFILE_COMPANY_ADDR1' + '' + '@ViewBag.PROFILE_COMPANY_ADDR2',
+            TaxNumber3: '',
+            TName3: '',
+            TAddress3: '',
+            IDCard1: '',
+            IDCard2: '',
+            IDCard3: '',
+            SeqInForm: 0,
+            FormType: 7,
+            TaxLawNo: 5,
+            IncRate: 3,
+            IncOther: '',
+            UpdateBy: user,
+            TotalPayAmount: 0,
+            TotalPayTax: 0,
+            SoLicenseNo: '',
+            SoLicenseAmount: 0,
+            SoAccAmount: 0,
+            PayeeAccNo: '',
+            SoTaxNo: '',
+            PayTaxType: '',
+            PayTaxOther: '',
+            CancelProve: '',
+            CancelReason: '',
+            CancelDate: null,
+            LastUpdate: CDateTH(GetToday()),
+            TeacherAmt: 0,
+            Branch1: '',
+            Branch2: '',
+            Branch3: ''
+        };
+        return obj;
     }
 </script>

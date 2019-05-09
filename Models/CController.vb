@@ -20,29 +20,33 @@ Public Class CController
         ViewBag.PROFILE_TAXBRANCH = Main.GetValueConfig("PROFILE", "COMPANY_TAXBRANCH")
     End Sub
     Friend Function GetView(vName As String, Optional modName As String = "") As ActionResult
-        LoadCompanyProfile()
-        If CheckSession("CurrUser") Then
-            Session("CurrUser") = ""
-        End If
-        ViewBag.User = Session("CurrUser").ToString
-        If ViewBag.User = "" Then
-            Return Redirect("~/index.html")
-        End If
-        If CheckSession("CurrForm") Then
-            Session("CurrForm") = ""
-        End If
-        If CheckSession("CurrRights") Then
-            Session("CurrRights") = "*MIREDP"
-        End If
-        If modName <> "" Then
-            Session("CurrForm") = modName & "/" & vName
-            Session("CurrRights") = Main.GetAuthorize(ViewBag.User, modName, vName)
-            If Session("CurrRights").ToString().IndexOf("M") < 0 Then
-                Return RedirectToAction("AuthError", "Menu")
+        Try
+            LoadCompanyProfile()
+            If CheckSession("CurrUser") Then
+                Session("CurrUser") = ""
             End If
-        End If
-        ViewBag.Module = Session("CurrForm").ToString()
-        ViewBag.UserRights = Session("CurrRights").ToString()
-        Return View(vName)
+            ViewBag.User = Session("CurrUser").ToString
+            If ViewBag.User = "" Then
+                Return Redirect("~/index.html")
+            End If
+            If CheckSession("CurrForm") Then
+                Session("CurrForm") = ""
+            End If
+            If CheckSession("CurrRights") Then
+                Session("CurrRights") = "*MIREDP"
+            End If
+            If modName <> "" Then
+                Session("CurrForm") = modName & "/" & vName
+                Session("CurrRights") = Main.GetAuthorize(ViewBag.User, modName, vName)
+                If Session("CurrRights").ToString().IndexOf("M") < 0 Then
+                    Return RedirectToAction("AuthError", "Menu")
+                End If
+            End If
+            ViewBag.Module = Session("CurrForm").ToString()
+            ViewBag.UserRights = Session("CurrRights").ToString()
+            Return View(vName)
+        Catch ex As Exception
+            Return Redirect("~/index.html")
+        End Try
     End Function
 End Class

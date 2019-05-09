@@ -20,7 +20,7 @@ End Code
                             <td>
                                 <b><a onclick="SearchData('controlno')">Reference No:</a></b>
                                 <br />
-                                <input type="text" id="txtControlNo" style="font-style:bold;font-size:20px;text-align:center" tabindex="1" />
+                                <input type="text" id="txtControlNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="1" />
                             </td>
                         </tr>
                     </table>
@@ -46,8 +46,28 @@ End Code
             </ul>
             <div class="tab-content">
                 <div id="tabHeader" class="tab-pane fade in active">
-                    <div>
+                    <div style="display:flex;width:100%">
                         <button id="btnAddPay" class="btn btn-warning" onclick="AddPayment()">Add</button>
+                        <div style="text-align:right;margin-right:4px;">
+                            Payment <br/>Cash : <input type="text" id="txtPayCash" disabled /><br />
+                            Cheque : <input type="text" id="txtPayChq" disabled /><br />
+                            Credit : <input type="text" id="txtPayCred" disabled />
+                        </div>
+                        <div style="text-align:right;margin-right:4px;">
+                            Receive <br />Cash : <input type="text" id="txtRcvCash" disabled /><br />
+                            Cheque : <input type="text" id="txtRcvChq" disabled /><br />
+                            Credit : <input type="text" id="txtRcvCred" disabled />
+                        </div>
+                        <div style="text-align:right;margin-right:4px;">
+                            Sum<br/>
+                            Payment : <input type="text" id="txtPaySum" disabled /><br />
+                            Receive : <input type="text" id="txtRcvSum" disabled />
+                        </div>
+                        <div style="text-align:right">
+                            Total<br/>
+                            Voucher: <input type="text" id="txtPRSum" disabled /><br />
+                            Document : <input type="text" id="txtDocSum" disabled />
+                        </div>
                     </div>
 
                     <table id="tbHeader" class="table table-bordered">
@@ -497,8 +517,8 @@ End Code
     function SetEvents() {
         $('#txtControlNo').keydown(function (event) {
             if (event.which == 13) {
-                var code = $('#txtControlNo').val();
-                var branch = $('#txtBranchCode').val();
+                let code = $('#txtControlNo').val();
+                let branch = $('#txtBranchCode').val();
                 $('#txtBranchCode').val(branch);
                 $('#txtControlNo').val(code);
                 CallBackQueryVoucher(path, branch,code, ReadData);
@@ -567,8 +587,8 @@ End Code
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var idx = (this.tabIndex + 1);
-                    var nextElement = $('[tabindex="' + idx + '"]');
+                    let idx = (this.tabIndex + 1);
+                    let nextElement = $('[tabindex="' + idx + '"]');
                     while (nextElement.length) {
                         if (nextElement.prop('disabled') == false) {
                             $('[tabindex="' + idx + '"]').focus();
@@ -585,7 +605,7 @@ End Code
         });
     }
     function SetLOVs() {
-        var lists = 'PAYMENT_TYPE=#cboDocacType';
+        let lists = 'PAYMENT_TYPE=#cboDocacType';
         lists += ',PAYMENT_TYPE=#cboacType';
         lists += ',DOCUMENT_TYPE=#cboDocType';
         lists += ',DOCUMENT_ACC=#cboPRType';
@@ -594,7 +614,7 @@ End Code
         loadCombos(path,lists)
 
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var dv = document.getElementById("dvLOVs");
+            let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customer List', response, 3);
             //Venders
@@ -678,6 +698,19 @@ End Code
         $('#txtCancelDate').val('');
         $('#txtCancelTime').val('');
 
+        $('#txtPayCash').val('0.00');
+        $('#txtPayChq').val('0.00');
+        $('#txtPayCred').val('0.00');
+        $('#txtPaySum').val('0.00');
+
+        $('#txtRcvCash').val('0.00');
+        $('#txtRcvChq').val('0.00');
+        $('#txtRcvCred').val('0.00');
+        $('#txtRcvSum').val('0.00');
+
+        $('#txtPRSum').val('0.00');
+        $('#txtDocSum').val('0.00');
+
         $('#tbHeader').empty();
         $('#tbDetail').empty();
 
@@ -724,8 +757,16 @@ End Code
             alert('you are not authorize to delete');
             return;
         }
+        let sumDoc = Number($('#txtDocSum').val().replace(/[^0-9.-]+/g,""));
+        let thisAmt = Number($('#txtPaidAmount').val().replace(/[^0-9.-]+/g,""));
+        let sumVoucher = Number($('#txtPRSum').val().replace(/[^0-9.-]+/g,""));
+        if ((sumDoc - thisAmt) < sumVoucher) {
+            alert('Total voucher cannot less than document\nPlease adjust payment information before');
+            return;
+        }
         $.get(path + 'acc/delvoucherdoc?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val() + '&item=' + $('#txtDocItemNo').val(), function (r) {
-            SetGridDocument(r.voucher.data);
+            SetGridDocument(r.voucher.data[0]);
+            ShowSumDocument(r.voucher.data[0]);
             alert(r.voucher.result);
             $('#frmDocument').modal('hide');
         });
@@ -737,13 +778,57 @@ End Code
         }
         if (dt.payment.length > 0) {
             SetGridPayment(dt.payment);
+            ShowSumPayment(dt.payment);
         }
         if (dt.document.length > 0) {
             SetGridDocument(dt.document);
+            ShowSumDocument(dt.document);
         }
     }
+    function ShowSumDocument(dt) {
+        let sumDoc = 0;
+        for (let o of dt) {
+            sumDoc += Number(o.PaidAmount);
+        }
+        $('#txtDocSum').val(CCurrency(CDbl(sumDoc,2)));
+    }
+    function ShowSumPayment(dt) {
+        let sumPCash = 0;
+        let sumPChq = 0;
+        let sumPCred = 0;
+        let sumRCash = 0;
+        let sumRChq = 0;
+        let sumRCred = 0;
+        let sumPR = 0;
+
+        for (let o of dt) {
+            if (o.PRType == 'P') {
+                sumPCash += Number(o.CashAmount);
+                sumPChq += Number(o.ChqAmount);
+                sumPCred += Number(o.CreditAmount);
+            }
+            if (o.PRType == 'R') {
+                sumRCash += Number(o.CashAmount);
+                sumRChq += Number(o.ChqAmount);
+                sumRCred += Number(o.CreditAmount);
+            }
+            sumPR += Number(o.CashAmount) + Number(o.ChqAmount) + Number(o.CreditAmount);
+        }
+
+        $('#txtPayCash').val(CCurrency(CDbl(sumPCash,2)));
+        $('#txtPayChq').val(CCurrency(CDbl(sumPChq,2)));
+        $('#txtPayCred').val(CCurrency(CDbl(sumPCred,2)));
+        $('#txtPaySum').val(CCurrency(CDbl(sumPCash + sumPChq + sumPCred,2)));
+
+        $('#txtRcvCash').val(CCurrency(CDbl(sumRCash,2)));
+        $('#txtRcvChq').val(CCurrency(CDbl(sumRChq,2)));
+        $('#txtRcvCred').val(CCurrency(CDbl(sumRCred,2)));
+        $('#txtRcvSum').val(CCurrency(CDbl(sumRCash + sumRChq + sumRCred, 2)));
+
+        $('#txtPRSum').val(CCurrency(CDbl(sumPR,2)));
+    }
     function SaveData() {
-        var obj = {
+        let obj = {
             BranchCode:$('#txtBranchCode').val(),
             ControlNo:$('#txtControlNo').val(),
             VoucherDate:CDateTH($('#txtVoucherDate').val()),
@@ -762,9 +847,9 @@ End Code
             CustBranch:$('#txtCustBranch').val()
         };
         if (obj.ControlNo != "") {
-            var ask = confirm("Do you need to Save " + obj.ControlNo + "?");
+            let ask = confirm("Do you need to Save " + obj.ControlNo + "?");
             if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
+            let jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
                 url: "@Url.Action("SetVoucherHeader", "Acc")",
@@ -787,13 +872,13 @@ End Code
         }
     }
     function SetGridControl() {
-        var code = $('#txtBranchCode').val();
+        let code = $('#txtBranchCode').val();
         $.get(path + 'acc/getvouchergrid?branch=' + code, function (r) {
             if (r.voucher.data.length == 0) {
                 alert('data not found on this branch');
                 return;
             }
-            var h = r.voucher.data[0].Table;
+            let h = r.voucher.data[0].Table;
             $('#tbControl').DataTable({
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
@@ -826,7 +911,7 @@ End Code
             $('#tbControl tbody').on('click', 'tr', function () {
                 $('#tbControl tbody > tr').removeClass('selected');
                 $(this).addClass('selected');
-                var data = $('#tbControl').DataTable().row(this).data(); //read current row selected
+                let data = $('#tbControl').DataTable().row(this).data(); //read current row selected
 
                 CallBackQueryVoucher(path, data.BranchCode, data.ControlNo, ReadData); //callback function from caller 
 
@@ -866,7 +951,7 @@ End Code
             $('#tbHeader tbody > tr').removeClass('selected');
             $(this).addClass('selected');
             if (userRights.indexOf('E') > 0) {
-                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 ReadPayment(data); //callback function from caller 
                 $('#frmPayment').modal('show');
             }
@@ -907,7 +992,7 @@ End Code
             $('#tbDetail tbody > tr').removeClass('selected');
             $(this).addClass('selected');
             if (userRights.indexOf('E') > 0) {
-                var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
+                let data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
                 ReadDocument(data); //callback function from caller 
                 $('#frmDocument').modal('show');
             }
@@ -1102,7 +1187,7 @@ End Code
         }
     }
     function SavePayment() {
-        var obj = {
+        let obj = {
             BranchCode: $('#txtBranchCode').val(),
             ControlNo: $('#txtControlNo').val(),
             ItemNo: $('#txtItemNo').val(),
@@ -1137,9 +1222,9 @@ End Code
             ForJNo: $('#txtForJNo').val()
         };
         if (obj.PRVoucher != "") {
-            var ask = confirm("Do you need to Save " + obj.PRVoucher + "?");
+            let ask = confirm("Do you need to Save " + obj.PRVoucher + "?");
             if (ask == false) return;
-            var jsonText = JSON.stringify({ data:[ obj ]});
+            let jsonText = JSON.stringify({ data:[ obj ]});
             //alert(jsonText);
             $.ajax({
                 url: "@Url.Action("SetVoucherSub", "Acc")",
@@ -1149,6 +1234,7 @@ End Code
                 success: function (response) {
                     if (response.result.data !== null) {
                         SetGridPayment(response.result.data[0]);
+                        ShowSumPayment(response.result.data[0]);
                     }
                     alert("Save " + response.result.msg +"!");
                 },
@@ -1161,7 +1247,7 @@ End Code
         }
     }
     function SaveDocument() {
-        var obj = {
+        let obj = {
             BranchCode:$('#txtBranchCode').val(),
             ControlNo:$('#txtControlNo').val(),
             ItemNo:$('#txtDocItemNo').val(),
@@ -1176,9 +1262,9 @@ End Code
             acType: $('#txtDocacType').val()
         };
         if (obj.DocNo!= "") {
-            var ask = confirm("Do you need to Save " + obj.DocNo + "?");
+            let ask = confirm("Do you need to Save " + obj.DocNo + "?");
             if (ask == false) return;
-            var jsonText = JSON.stringify({ data:[ obj ]});
+            let jsonText = JSON.stringify({ data:[ obj ]});
             //alert(jsonText);
             $.ajax({
                 url: "@Url.Action("SetVoucherDoc", "Acc")",
@@ -1237,7 +1323,7 @@ End Code
         $('#txtCurrencyName').val(dt.TName);
     }
     function GetCmpType() {
-        var v = '';
+        let v = '';
         switch ($('#cboCmpType').val()) {
             case 'C':
                 v = 'cust';

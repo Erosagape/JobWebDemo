@@ -96,7 +96,7 @@ h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
 h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
 h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
 h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
-d.ItemNo,d.AdvNO,d.AdvItemNo,d.SICode,d.SDescription,d.SlipNO,d.JobNo,
+d.ItemNo,d.AdvNO,d.AdvItemNo,a.AdvAmount+a.ChargeVAT as AdvAmount,d.SICode,d.SDescription,d.SlipNO,d.JobNo,
 d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.FPrice,d.BPrice,d.FCost,d.BCost,
 d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
 d.LinkItem,d.LinkBillNo,s.IsExpense,s.IsCredit,s.IsTaxCharge,s.Is50Tavi,s.IsHaveSlip,s.IsLtdAdv50Tavi,
@@ -104,6 +104,12 @@ d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,j.JobStatus,c5.Job
 h.CancelProve,h.CancelReson,h.CancelDate
 from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
 left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
+left join (
+  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.EmpCode,ah.AdvDate,ad.AdvAmount,ad.ChargeVAT
+  from Job_AdvHeader ah inner join Job_AdvDetail ad
+  on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
+) a 
+on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
 left join (
   select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,
   c.NameThai,c.NameEng
@@ -130,7 +136,7 @@ left join Mas_User u1 on h.EmpCode=u1.UserID
 left join Mas_User u2 on h.ApproveBy=u2.UserID
 left join Mas_User u3 on h.ReceiveBy=u3.UserID 
 left join Job_SrvSingle s on d.SICode=s.SICode
-WHERE h.BranchCode='{0}'
+WHERE h.BranchCode='{0}' 
 "
             Try
                 If Not Request.QueryString("Code") Is Nothing Then
@@ -180,6 +186,12 @@ WHERE h.BranchCode='{0}'
                 If Not IsNothing(Request.QueryString("ClrBy")) Then
                     tSqlW &= " AND a.EmpCode='" & Request.QueryString("ClrBy") & "'"
                 End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    tSqlW &= " AND b.CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustBranch")) Then
+                    tSqlW &= " AND b.CustBranch='" & Request.QueryString("CustBranch") & "'"
+                End If
                 If Not IsNothing(Request.QueryString("DateFrom")) Then
                     tSqlW &= " AND a.ClrDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
                 End If
@@ -194,7 +206,8 @@ WHERE h.BranchCode='{0}'
                 End If
                 Dim sql As String = "
 select a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
-a.JobType,a.DocStatus,a.TotalExpense,a.ClearVat,a.ClearWht,a.ClearNet,a.ClearBill,a.ClearCost,
+a.JobType,a.DocStatus,a.TotalExpense,a.ClearTotal,
+a.ClearVat,a.ClearWht,a.ClearNet,a.ClearBill,a.ClearCost,
 a.TRemark,a.ReceiveDate,a.ApproveDate,
 b.CustCode,b.CustBranch,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
 b.AdvTotal,b.ClrAmt,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
@@ -259,19 +272,20 @@ and b.ClrNo=a.ClrNo
                 tSqlW &= " AND c.DocStatus='" & Request.QueryString("Status") & "' "
             End If
             Dim sql As String = "
-Select a.BranchCode,'' as ClrNo,0 as ItemNo,0 as LinkItem,a.STCode,a.SICode,a.SDescription,a.VenCode as VenderCode,
+Select a.BranchCode,'' as ClrNo,0 as ItemNo,0 as LinkItem
+,a.STCode,a.SICode,a.SDescription,a.VenCode as VenderCode,
 a.AdvQty as Qty,b.UnitCharge as UnitCode,a.CurrencyCode,a.ExchangeRate as CurRate,
 (CASE WHEN b.IsExpense=0 THEN a.UnitPrice ELSE 0 END) as UnitPrice,
 (CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice ELSE 0 END) as FPrice,
 (CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice*a.ExchangeRate ELSE 0 END) as BPrice,
 q.TotalCharge as QUnitPrice,a.AdvQty*q.ChargeAmt as QFPrice,a.AdvQty*q.ChargeAmt*q.CurrencyRate as QBPrice,
 a.UnitPrice as UnitCost,a.AdvQty*a.UnitPrice as FCost,a.AdvQty*a.UnitPrice*a.ExchangeRate as BCost,
-a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,a.AdvNo as AdvNO,a.ItemNo as AdvItemNo,
-a.AdvAmount-ISNULL(d.TotalCleared,0) as AdvAmount,a.AdvAmount-ISNULL(d.TotalCleared,0) as UsedAmount,
+a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,a.AdvNo as AdvNO,a.ItemNo as AdvItemNo,a.AdvAmount,
+a.AdvAmount-ISNULL(d.TotalCleared,0) as AdvBalance,ISNULL(d.TotalCleared,0) as UsedAmount,
 (CASE WHEN ISNULL(q.QNo,'')='' THEN 0 ELSE 1 END) as IsQuoItem,
-'' as SlipNO,'' as Remark,a.IsDuplicate,b.IsExpense,
+a.IsDuplicate,b.IsExpense,
 b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date50Tavi,
-'' as VenderBillingNo,
+'' as VenderBillingNo,'' as SlipNO,'' as Remark,
 (SELECT STUFF((
 	SELECT DISTINCT ',' + Convert(varchar,QtyBegin) + '-'+convert(varchar,QtyEnd)+'='+convert(varchar,ChargeAmt)
 	FROM Job_QuotationItem WHERE BranchCode=q.BranchCode

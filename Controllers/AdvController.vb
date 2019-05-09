@@ -334,7 +334,8 @@ Namespace Controllers
                     {
                         .BranchCode = Branch,
                         .AdvNo = AdvNo,
-                        .ItemNo = 0
+                        .ItemNo = 0,
+                        .IsDuplicate = 1
                     }
 
                 'Dim msg As String = oAdvD.SaveData(String.Format(" WHERE BranchCode='{0}' And AdvNo='{1}' And ItemNo={2}", oAdvD.BranchCode, oAdvD.AdvNo, oAdvD.ItemNo))
