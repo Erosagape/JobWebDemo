@@ -23,7 +23,7 @@ End Code
                         <select id="cboJobType" class="form-control dropdown"></select>
                     </div>
                     <div class="col-sm-6">
-                        Clear By :<br />
+                        Entry By :<br />
                         <input type="text" id="txtReqBy" style="width:100px" />
                         <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
                         <input type="text" id="txtReqName" style="width:300px" disabled />
@@ -31,27 +31,30 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        Advance For :<br />
+                        Customer :<br />
                         <input type="text" id="txtCustCode" style="width:120px" />
                         <input type="text" id="txtCustBranch" style="width:50px" />
                         <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
                         <input type="text" id="txtCustName" style="width:300px" disabled />
                     </div>
                     <div class="col-sm-2">
-                        Request Date From:<br />
+                        Payment Date From:<br />
                         <input type="date" id="txtAdvDateF" />
                     </div>
                     <div class="col-sm-2">
-                        Request Date To:<br />
+                        Payment Date To:<br />
                         <input type="date" id="txtAdvDateT" />
                     </div>
                     <div class="col-sm-2">
                         <br />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <input type="checkbox" id="chkFromClr" class="checkbox" />No ADV
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
+                        Clearing No:<input type="text" id="txtClrNo" />
+                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <br/>
                         <table id="tbHeader" class="table table-responsive">
                             <thead>
                                 <tr>
@@ -80,7 +83,8 @@ End Code
             <div id="tab2" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-3 table-bordered" id="dvCash">
-                        <b>Cash/Transfer :</b><input type="text" id="txtAdvCash" class="form-control" value="" />
+                        <label><input type="radio" name="optACType" id="chkCash" value="CA"><b>Cash/Transfer :</b></label>
+                        <input type="text" id="txtAdvCash" class="form-control" value="" />
                         <br />
                         <table>
                             <tr>
@@ -107,7 +111,7 @@ End Code
                         <input type="hidden" id="fldBankBranchCash" />
                     </div>
                     <div class="col-sm-3 table-bordered" id="dvChqCash">
-                        <b>Company Chq :</b><input type="text" id="txtAdvChqCash" class="form-control" value="" />
+                        <label><input type="radio" name="optACType" id="chkChqCash" value="CU"><b>Customer Cheque :</b></label><input type="text" id="txtAdvChqCash" class="form-control" value="" />
                         <br />
                         <table>
                             <tr>
@@ -136,7 +140,7 @@ End Code
                         <input type="hidden" id="fldBankBranchChqCash" />
                     </div>
                     <div class="col-sm-3 table-bordered" id="dvChq">
-                        <b>Customer Chq : </b><input type="text" id="txtAdvChq" class="form-control" value="" />
+                        <label><input type="radio" name="optACType" id="chkChq" value="CH"><b>Company Cheque :</b></label><input type="text" id="txtAdvChq" class="form-control" value="" />
                         <br />
                         Chq No:<input type="text" id="txtRefNoChq" class="form-control" value="" />
                         <br />
@@ -151,7 +155,7 @@ End Code
                         <br />
                     </div>
                     <div class="col-sm-3 table-bordered" id="dvCred">
-                        <b>Credit : </b><input type="text" id="txtAdvCred" class="form-control" value="" />
+                        <label><input type="radio" name="optACType" id="optCred" value="CR"><b>Credit :</b></label><input type="text" id="txtAdvCred" class="form-control" value="" />
                         <br />
                         Ref No:<input type="text" id="txtRefNoCred" class="form-control" value="" />
                         <br />
@@ -305,6 +309,10 @@ End Code
         $('#txtSumApprove').val('');
         $('#txtSumWHTax').val('');
         $('#txtTRemark').val('');
+        $('#chkCash').prop('checked', true);
+        $('#chkChq').prop('checked', false);
+        $('#chkChqCash').prop('checked', false);
+        $('#chkCred').prop('checked', false);
     }
     function SetGridAdv(isAlert) {
         arr = [];
@@ -313,8 +321,11 @@ End Code
         docno = '';
 
         let w = '';
+        if ($('#txtClrNo').val() !== "") {
+            w = w + '&clrno=' + $('#txtClrNo').val();
+        }
         if ($('#txtReqBy').val() !== "") {
-            w = w + '&clrby=' + $('#txtReqBy').val();
+            w = w + '&advby=' + $('#txtReqBy').val();
         }
         if ($('#txtCustCode').val() !== "") {
             w = w + '&custcode=' + $('#txtCustCode').val();
@@ -331,36 +342,39 @@ End Code
         if ($('#txtAdvDateT').val() !== "") {
             w = w + '&DateTo=' + CDateEN($('#txtAdvDateT').val());
         }
-        w = w + '&Status=2';
-        $.get(path + 'adv/getclearinggrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
-            if (r.adv.data.length == 0) {
+        w = w + '&Show=BAL';
+        if ($('#chkFromClr').prop('checked') == true) {
+            w = w + '&Data=CLR';
+        }
+        $.get(path + 'clr/getclearingsum?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
+            if (r.clr.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
                 if(isAlert==true) alert('data not found');
                 return;
             }
-            let h = r.adv.data[0].Table;
+            let h = r.clr.data[0].Table;
             $('#tbHeader').DataTable().destroy();
             $('#tbHeader').empty();
             $('#tbHeader').DataTable({
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
                 columns: [ //กำหนด property ของ header column
-                    { data: "ClrNo", title: "Clearing No" },
+                    { data:($('#chkFromClr').prop('checked') ? "ClrNo" : "AdvNo"), title: "Adv No" },
                     {
-                        data: "ClrDate", title: "Request date ",
+                        data: ($('#chkFromClr').prop('checked') ? "ClrDate" : "PaymentDate"), title: "Payment date",
                         render: function (data) {
                             return CDateEN(data);
                         }
                     },
-                    { data: "JobNo", title: "Job Number" },
-                    { data: "CustInvNo", title: "InvNo" },
                     { data: "CustCode", title: "Customer" },
-                    { data: "AdvNO", title: "Advance No" },
+                    { data: "ItemNo", title: "No" },
+                    { data: "SICode", title: "Adv.Code" },
+                    { data: "SDescription", title: "Adv.Expenses" },
                     { data: "AdvTotal", title: "Adv Total" },
-                    { data: "ClrAmt", title: "Clear" },
+                    { data: "ClrTotal", title: "Clear" },
                     { data: "ClrVat", title: "VAT" },
                     { data: "Clr50Tavi", title: "WT" },
-                    { data: "EmpCode", title: "Request By" }
+                    { data: "ClrBal", title: "Balance" }
                 ]
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -373,10 +387,6 @@ End Code
                 $(this).addClass('selected');
                 let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 AddData(data); //callback function from caller
-            });
-            $('#tbHeader tbody').on('dblclick', 'tr', function () {
-                let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
-                window.open(path + 'clr/index?BranchCode=' + data.BranchCode + '&ClrNo=' + data.ClrNo,'','');
             });
         });
     }
@@ -393,6 +403,9 @@ End Code
         }
     }
     function AddData(o) {
+        let acType = $('input:radio[name=optACType]:checked').val();
+        o.acType = acType;
+
         arr.push(o);
         ShowSummary();
     }
@@ -406,92 +419,47 @@ End Code
     }
     function ShowSummary() {
         let tot = 0;
-        let cash = 0;
-        let chq = 0;
-        let chqcust = 0;
-        let cred = 0;
         let wtax = 0;
         let doc = '';
+        let sum_ca = 0;
+        let sum_ch = 0;
+        let sum_cu = 0;
+        let sum_cr = 0;
+
         list = [];
 
         for (let i = 0; i < arr.length; i++) {
 
             let o = arr[i];
-            wtax += (o.Clr50Tavi > 0 ? o.Clr50Tavi : 0);
-            tot += (o.ClrNet > 0 ? o.ClrNet+o.Clr50Tavi : 0);
-            cash += (o.AdvCash > 0 ? o.AdvCash : 0);
-            chq += (o.AdvChqCash > 0 ? o.AdvChqCash : 0);
-            chqcust += (o.AdvChq > 0 ? o.AdvChq : 0);
-            cred += (o.AdvCred > 0 ? o.AdvCred : 0);
-            doc += (doc != '' ? ',' : '') + o.AdvNo;
-            if (o.AdvCash > 0) {
-                let obj = {
-                    BranchCode: $('#txtBranchCode').val(),
-                    ControlNo: null,
-                    ItemNo: i + 1,
-                    DocType: 'ADV',
-                    DocNo: o.AdvNo,
-                    DocDate: CDateTH(o.AdvDate),
-                    CmpType: 'C',
-                    CmpCode: o.CustCode,
-                    CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvCash, 2),
-                    TotalAmount: CDbl((o.TotalAdvance+o.TotalVAT), 2),
-                    acType:'CA'
-                };
-                list.push(obj);
+            wtax += Number(o.Clr50Tavi);
+            tot += Number(o.ClrBal);
+            
+            let obj = {
+                BranchCode: $('#txtBranchCode').val(),
+                ControlNo: null,
+                ItemNo: i + 1,
+                DocType: 'CLR',
+                CmpType: 'C',
+                CmpCode: o.CustCode,
+                CmpBranch: o.CustBranch,
+                PaidAmount: CDbl(o.ClrBal, 2),
+                TotalAmount: CDbl((o.ClrBal), 2),
+                acType:o.acType
+            };
+            if ($('#chkFromClr').prop('checked') == true) {
+                obj.DocNo = o.ClrNo + '#'+ o.ItemNo;
+                obj.DocDate = CDateTH(o.ClrDate);
+            } else {
+                obj.DocNo = o.AdvNo + '#'+ o.ItemNo;
+                obj.DocDate = CDateTH(o.PaymentDate);
             }
-            if (o.AdvChqCash > 0) {
-                let obj = {
-                    BranchCode: $('#txtBranchCode').val(),
-                    ControlNo: null,
-                    ItemNo: i + 1,
-                    DocType: 'ADV',
-                    DocNo: o.AdvNo,
-                    DocDate: CDateTH(o.AdvDate),
-                    CmpType: 'C',
-                    CmpCode: o.CustCode,
-                    CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvChqCash, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
-                    acType:'CU'
-                };
-                list.push(obj);
-            }
-            if (o.AdvChq > 0) {
-                let obj = {
-                    BranchCode: $('#txtBranchCode').val(),
-                    ControlNo: null,
-                    ItemNo: i + 1,
-                    DocType: 'ADV',
-                    DocNo: o.AdvNo,
-                    DocDate: CDateTH(o.AdvDate),
-                    CmpType: 'C',
-                    CmpCode: o.CustCode,
-                    CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvChq, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
-                    acType:'CH'
-                };
-                list.push(obj);
-            }
-            if (o.AdvCred > 0) {
-                let obj = {
-                    BranchCode: $('#txtBranchCode').val(),
-                    ControlNo: null,
-                    ItemNo: i + 1,
-                    DocType: 'ADV',
-                    DocNo: o.AdvNo,
-                    DocDate: CDateTH(o.AdvDate),
-                    CmpType: 'C',
-                    CmpCode: o.CustCode,
-                    CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvCred, 2),
-                    TotalAmount: CDbl((o.TotalAdvance + o.TotalVAT), 2),
-                    acType:'CR'
-                };
-                list.push(obj);
-            }
+            if (o.acType == 'CA') sum_ca += Number(o.ClrBal);
+            if (o.acType == 'CH') sum_ch += Number(o.ClrBal);
+            if (o.acType == 'CU') sum_cu += Number(o.ClrBal);
+            if (o.acType == 'CR') sum_cr += Number(o.ClrBal);
+
+            list.push(obj);
+
         }
         //show selected details
         $('#tbDetail').DataTable({
@@ -514,77 +482,60 @@ End Code
             ],
             destroy:true
         });
-
-        SetStatusInput('#dvCash', (cash > 0 ? true : false),'#txtAdvCash');
-        SetStatusInput('#dvChqCash', (chq > 0 ? true : false), '#txtAdvChqCash');
-        SetStatusInput('#dvChq', (chqcust > 0 ? true : false), '#txtAdvChq');
-        SetStatusInput('#dvCred', (cred > 0 ? true : false), '#txtAdvCred');
+        $('#txtAdvCash').val(CDbl(sum_ca, 2));
+        $('#txtAdvChq').val(CDbl(sum_ch, 2));
+        $('#txtAdvChqCash').val(CDbl(sum_cu, 2));
+        $('#txtAdvCred').val(CDbl(sum_cr, 2));
 
         $('#txtSumApprove').val(CDbl(tot, 2));
         $('#txtSumWHTax').val(CDbl(wtax, 2));
-        $('#txtAdvCash').val(CDbl(cash, 2));
-        $('#txtAdvChqCash').val(CDbl(chq, 2));
-        $('#txtAdvChq').val(CDbl(chqcust, 2));
-        $('#txtAdvCred').val(CDbl(cred, 2));
         $('#txtListApprove').val(doc);
+
     }
     function GetSumPayment(type) {
         let filter_data = arr.filter(function (data) {
-            return data[type] > 0
+            return data.acType == type;
         });
         let filter_sum = {
             sumamount: 0,
-            currencycode: '',
-            exchangerate: 1,
-            totalamount: 0,
-            vatinc: 0,
-            vatexc: 0,
-            whtinc: 0,
-            whtexc: 0,
-            totalnet: 0
+            currencycode : '@ViewBag.PROFILE_CURRENCY',
+            exchangerate : 1
         };
         for (let i = 0; i < filter_data.length; i++) {
-            filter_sum.currencycode = filter_data[i].SubCurrency;
-            filter_sum.exchangerate = filter_data[i].ExchangeRate;
-            filter_sum.sumamount += Number(filter_data[i][type]);
-            filter_sum.totalamount += Number(filter_data[i].BaseAmount);
-            filter_sum.totalnet += Number(filter_data[i].TotalNet);
-            filter_sum.vatinc += Number(filter_data[i].VATInc);
-            filter_sum.vatexc += Number(filter_data[i].VATExc);
-            filter_sum.whtinc += Number(filter_data[i].WHTInc);
-            filter_sum.whtexc += Number(filter_data[i].WHTExc);
+
+            filter_sum.sumamount += Number(filter_data[i].ClrBal);
         }
         return filter_sum;
     }
     function SavePayment() {
         let oData = [];
         let i = 0;
-        if ($('#txtAdvCash').val() > 0) {
+        let sum_cash = GetSumPayment('CA');
+        if (sum_cash.sumamount !== 0) {
             i = i + 1;
-            let sum_cash = GetSumPayment('AdvCash');
             oData.push({
                 BranchCode: $('#txtBranchCode').val(),
                 ControlNo: docno,
                 ItemNo: i,
                 PRVoucher: '',
-                PRType: 'P',
+                PRType: sum_cash.sumamount > 0 ? 'R' : 'P',
                 ChqNo: '',
                 BookCode: $('#txtBookCash').val(),
                 BankCode: $('#fldBankCodeCash').val(),
                 BankBranch: $('#fldBankBranchCash').val(),
                 ChqDate: '',
-                CashAmount: CNum($('#txtAdvCash').val()),
+                CashAmount: Math.abs(sum_cash.sumamount),
                 ChqAmount: 0,
                 CreditAmount: 0,
                 SumAmount: sum_cash.sumamount,
                 CurrencyCode: sum_cash.currencycode,
                 ExchangeRate: sum_cash.exchangerate,
-                TotalAmount: sum_cash.totalamount,
-                VatInc: sum_cash.vatinc,
-                VatExc: sum_cash.vatexc,
-                WhtInc: sum_cash.whtinc,
-                WhtExc: sum_cash.whtexc,
-                TotalNet: sum_cash.totalnet,
+                TotalAmount: Math.abs(sum_cash.sumamount),
+                VatInc: 0,
+                VatExc: 0,
+                WhtInc: 0,
+                WhtExc: 0,
+                TotalNet: Math.abs(sum_cash.sumamount),
                 IsLocal: 0,
                 ChqStatus: '',
                 TRemark: $('#txtCashTranDate').val() + '-' + $('#txtCashTranTime').val(),
@@ -596,32 +547,32 @@ End Code
                 acType : 'CA'
             });
         }
-        if ($('#txtAdvChqCash').val() > 0) {
+        let sum_chqcash = GetSumPayment('CU');
+        if (sum_chqcash.sumamount !== 0) {
             i = i + 1;
-            let sum_chqcash = GetSumPayment('AdvChqCash');
             oData.push({
                 BranchCode: $('#txtBranchCode').val(),
                 ControlNo: docno,
                 ItemNo: i,
                 PRVoucher: '',
-                PRType: 'P',
+                PRType:sum_chqcash.sumamount > 0 ? 'R' : 'P',
                 ChqNo: $('#txtRefNoChqCash').val(),
                 BookCode: '',
                 BankCode: '',
                 BankBranch: '',
                 ChqDate: CDateTH($('#txtChqCashTranDate').val()),
                 CashAmount: 0,
-                ChqAmount: CNum($('#txtAdvChqCash').val()),
+                ChqAmount: Math.abs(sum_chqcash.sumamount),
                 CreditAmount: 0,
-                SumAmount: sum_chqcash.sumamount,
+                SumAmount:  Math.abs(sum_chqcash.sumamount),
                 CurrencyCode: sum_chqcash.currencycode,
                 ExchangeRate: sum_chqcash.exchangerate,
-                TotalAmount: sum_chqcash.totalamount,
-                VatInc: sum_chqcash.vatinc,
-                VatExc: sum_chqcash.vatexc,
-                WhtInc: sum_chqcash.whtinc,
-                WhtExc: sum_chqcash.whtexc,
-                TotalNet: sum_chqcash.totalnet,
+                TotalAmount:  Math.abs(sum_chqcash.sumamount),
+                VatInc: 0,
+                VatExc: 0,
+                WhtInc: 0,
+                WhtExc: 0,
+                TotalNet: Math.abs(sum_chqcash.sumamount),
                 IsLocal: 0,
                 ChqStatus: $('#chkStatusChq').prop('checked')==true? 'P':'',
                 TRemark: '',
@@ -633,32 +584,32 @@ End Code
                 acType: 'CU'
             });
         }
-        if ($('#txtAdvChq').val() > 0) {
+        let sum_chq = GetSumPayment('CH');
+        if (sum_chq.sumamount !== 0) {
             i = i + 1;
-            let sum_chq = GetSumPayment('AdvChq');
             oData.push({
                 BranchCode: $('#txtBranchCode').val(),
                 ControlNo: docno,
                 ItemNo: i,
                 PRVoucher: '',
-                PRType: 'P',
+                PRType:sum_chq.sumamount> 0 ? 'R' : 'P',
                 ChqNo: $('#txtRefNoChq').val(),
                 BookCode: $('#txtBookChq').val(),
                 BankCode: $('#fldBankCodeChqCash').val(),
                 BankBranch: $('#fldBankBranchChqCash').val(),
                 ChqDate: CDateTH($('#txtChqTranDate').val()),
                 CashAmount: 0,
-                ChqAmount: CNum($('#txtAdvChq').val()),
+                ChqAmount: Math.abs(sum_chq.sumamount),
                 CreditAmount: 0,
-                SumAmount: sum_chq.sumamount,
+                SumAmount: Math.abs(sum_chq.sumamount),
                 CurrencyCode: sum_chq.currencycode,
                 ExchangeRate: sum_chq.exchangerate,
-                TotalAmount: sum_chq.totalamount,
-                VatInc: sum_chq.vatinc,
-                VatExc: sum_chq.vatexc,
-                WhtInc: sum_chq.whtinc,
-                WhtExc: sum_chq.whtexc,
-                TotalNet: sum_chq.totalnet,
+                TotalAmount: Math.abs(sum_chq.sumamount),
+                VatInc: 0,
+                VatExc: 0,
+                WhtInc: 0,
+                WhtExc: 0,
+                TotalNet: Math.abs(sum_chq.sumamount),
                 IsLocal: $('#chkIsLocal').prop('checked') == true ? 'P' : '',
                 ChqStatus: '',
                 TRemark: '',
@@ -670,15 +621,15 @@ End Code
                 acType: 'CH'
             });
         }
-        if ($('#txtAdvCred').val() > 0) {
+        let sum_cr = GetSumPayment('CR');
+        if (sum_cr.sumamount!== 0) {
             i = i + 1;
-            let sum_cr = GetSumPayment('AdvCred');
             oData.push({
                 BranchCode: $('#txtBranchCode').val(),
                 ControlNo: docno,
                 ItemNo: i,
                 PRVoucher: '',
-                PRType: 'P',
+                PRType: sum_cr.sumamount > 0 ? 'R' : 'P',
                 ChqNo: '',
                 BookCode: '',
                 BankCode: '',
@@ -686,16 +637,16 @@ End Code
                 ChqDate: CDateTH($('#txtCredTranDate').val()),
                 CashAmount: 0,
                 ChqAmount: 0,
-                CreditAmount: CNum($('#txtAdvCred').val()),
-                SumAmount: sum_cr.sumamount,
+                CreditAmount: Math.abs(sum_cr.sumamount),
+                SumAmount:Math.abs(sum_cr.sumamount),
                 CurrencyCode: sum_cr.currencycode,
                 ExchangeRate: sum_cr.exchangerate,
-                TotalAmount: sum_cr.totalamount,
-                VatInc: sum_cr.vatinc,
-                VatExc: sum_cr.vatexc,
-                WhtInc: sum_cr.whtinc,
-                WhtExc: sum_cr.whtexc,
-                TotalNet: sum_cr.totalnet,
+                TotalAmount: Math.abs(sum_cr.sumamount),
+                VatInc: 0,
+                VatExc: 0,
+                WhtInc: 0,
+                WhtExc: 0,
+                TotalNet: Math.abs(sum_cr.sumamount),
                 IsLocal: 0,
                 ChqStatus: '',
                 TRemark: '',
@@ -742,7 +693,12 @@ End Code
                 data: jsonString,
                 success: function (response) {
                     if (response.result.data != null) {
-                        ReceiveClearing(response.result.data);
+                        if ($('#txtClrNo').val() !== '') {
+                            ReceiveClearing(response.result.data);
+                        }
+                        SetGridAdv(false);
+                        alert(response.result.msg);
+                        PrintVoucher($('#txtBranchCode').val(), $('#txtControlNo').val());
                     }
                 },
                 error: function (e) {
@@ -756,9 +712,7 @@ End Code
 
         let dataApp = [];
         dataApp.push(user + '|' + cno);
-        for (let i = 0; i < list.length; i++) {
-            dataApp.push(list[i].BranchCode + '|' + list[i].DocNo);
-        }
+        dataApp.push($('#txtBranchCode').val() + '|' + $('#txtClrNo').val());
 
         let jsonString = JSON.stringify({ data: dataApp });
         $.ajax({
@@ -768,10 +722,6 @@ End Code
             data: jsonString,
             success: function (response) {
                 response ? alert(msg) : alert("Cannot Clear Document");
-                if (response) {
-                    PrintVoucher($('#txtBranchCode').val(), $('#txtControlNo').val());
-                }
-                SetGridAdv(false);
             },
             error: function (e) {
                 alert(e);

@@ -76,11 +76,40 @@ Namespace Controllers
                 Return New HttpResponseMessage(HttpStatusCode.BadRequest)
             End Try
         End Function
-        Function ReceiveClearing() As HttpResponseMessage
+        Function ReceiveClearing(<FromBody()> data As String()) As HttpResponseMessage
             ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Receive")
             If AuthorizeStr.IndexOf("I") < 0 Then
                 Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End If
+            If IsNothing(data) Then
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End If
+
+            Dim json As String = ""
+            Dim lst As String = ""
+            Dim user As String = ""
+            Dim docno As String = ""
+            Dim i As Integer = 0
+            For Each str As String In data
+                i = i + 1
+                If i = 1 Then
+                    user = str.Split("|")(0)
+                    docno = str.Split("|")(1)
+                Else
+                    If str.IndexOf("|") >= 0 Then
+                        If lst <> "" Then lst &= ","
+                        lst &= "'" & str & "'"
+                    End If
+                End If
+            Next
+
+            If lst <> "" Then
+                Dim tSQL As String = String.Format("UPDATE Job_ClearHeader SET DocStatus=3 WHERE DocStatus<3 AND BranchCode+'|'+ClrNo in({0})", lst)
+                Dim result = Main.DBExecute(jobWebConn, tSQL)
+                If result = "OK" Then
+                    Return New HttpResponseMessage(HttpStatusCode.OK)
+                End If
             End If
             Return New HttpResponseMessage(HttpStatusCode.OK)
         End Function
@@ -96,8 +125,10 @@ h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
 h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
 h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
 h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
-d.ItemNo,d.AdvNO,d.AdvItemNo,a.AdvAmount+a.ChargeVAT as AdvAmount,d.SICode,d.SDescription,d.SlipNO,d.JobNo,
-d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.FPrice,d.BPrice,d.FCost,d.BCost,
+d.ItemNo,d.AdvNO,d.AdvItemNo,a.AdvAmount+a.ChargeVAT as AdvAmount,
+d.SICode,d.SDescription,d.SlipNO,d.JobNo,
+d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.UsedAmount+d.ChargeVAT as ClrAmount,
+d.FPrice,d.BPrice,d.FCost,d.BCost,
 d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
 d.LinkItem,d.LinkBillNo,s.IsExpense,s.IsCredit,s.IsTaxCharge,s.Is50Tavi,s.IsHaveSlip,s.IsLtdAdv50Tavi,
 d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,j.JobStatus,c5.JobStatusName,j.CloseJobDate,
@@ -156,6 +187,112 @@ WHERE h.BranchCode='{0}'
             End Try
 
         End Function
+        Function GetClearingSum() As ActionResult
+            Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Index")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""clr"":{""data"":[],""msg"":""You Are not authorize to view data""}}", jsonContent)
+                End If
+
+                Dim Branch As String = ""
+                Dim JobNo As String = ""
+                If Not IsNothing(Request.QueryString("BranchCode")) Then
+                    Branch = Request.QueryString("BranchCode")
+                End If
+
+                Dim tSqlW As String = String.Format(" WHERE h.BranchCode='{0}'", Branch)
+
+                Dim sqlSelect As String = "
+a.PaymentDate,a.PaymentRef,a.AdvNo,a.ItemNo,a.AdvAmount,a.ChargeVAT,
+a.SICode,a.SDescription,a.CustCode,a.CustBranch
+"
+                Dim tbPrefix = "a"
+                If Not IsNothing(Request.QueryString("Data")) Then
+                    If Request.QueryString("Data").ToString = "CLR" Then
+                        sqlSelect = "
+h.ClrDate,h.ReceiveRef,h.ClrNo,d.ItemNo,a.AdvAmount,a.ChargeVAT,
+d.SICode,d.SDescription,j.CustCode,j.CustBranch
+"
+                        tbPrefix = "h"
+                    End If
+                    tSqlW &= " And h.DocStatus<3"
+                End If
+                Dim bClrDoc As Boolean = False
+                If Not IsNothing(Request.QueryString("ClrNo")) Then
+                    tSqlW &= " AND h.ClrNo='" & Request.QueryString("ClrNo") & "'"
+                    bClrDoc = True
+                End If
+                If Not IsNothing(Request.QueryString("AdvNo")) Then
+                    tSqlW &= " AND a.AdvNo='" & Request.QueryString("AdvNo") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND " & tbPrefix & ".JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("AdvBy")) Then
+                    tSqlW &= " AND " & tbPrefix & ".EmpCode='" & Request.QueryString("AdvBy") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    tSqlW &= " AND " & Replace(tbPrefix, "h", "j") & ".CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustBranch")) Then
+                    tSqlW &= " AND " & Replace(tbPrefix, "h", "j") & ".CustBranch='" & Request.QueryString("CustBranch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlW &= " AND " & IIf(tbPrefix = "a", "a.PaymentDate", "h.ClrDate") & ">='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlW &= " AND " & IIf(tbPrefix = "a", "a.PaymentDate", "h.ClrDate") & "<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If bClrDoc = False Then
+                    If tbPrefix = "a" Then
+                        tSqlW &= " AND a.AdvNo IS NOT NULL"
+                        tSqlW &= " AND a.AdvNo+'#'+Convert(varchar,a.ItemNo) NOT IN(SELECT c1.DocNo FROM Job_CashControlDoc c1 inner join Job_CashControl c2 on c1.BranchCode=c2.BranchCode and c1.ControlNo=c2.ControlNo where ISNULL(c2.CancelProve,'')='')"
+                    Else
+                        tSqlW &= " AND a.AdvNo IS NULL"
+                        tSqlW &= " AND h.ClrNo+'#'+Convert(varchar,d.ItemNo) NOT IN(SELECT c1.DocNo FROM Job_CashControlDoc c1 inner join Job_CashControl c2 on c1.BranchCode=c2.BranchCode and c1.ControlNo=c2.ControlNo where ISNULL(c2.CancelProve,'')='')"
+
+                    End If
+                End If
+
+                Dim sql As String = "
+select " + sqlSelect + ",a.AdvAmount+a.ChargeVAT as AdvTotal,sum(d.UsedAmount+d.ChargeVAT) as ClrTotal,
+(ISNULL(a.AdvAmount,0)+ISNULL(a.ChargeVAT,0))-sum(d.UsedAmount+d.ChargeVAT) as ClrBal,
+sum(d.UsedAmount) as ClrAmount,
+SUM(d.Tax50Tavi) as Clr50Tavi,SUM(d.ChargeVAT) as ClrVat,
+SUM(d.BNet) as ClrNet
+from Job_ClearHeader h
+left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
+left join (
+  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.PaymentRef,ah.JobType,
+  ah.EmpCode,ah.AdvDate,ad.SICode,ad.SDescription,ad.AdvAmount,ad.ChargeVAT,
+  ah.CustCode,ah.CustBranch
+  from Job_AdvHeader ah inner join Job_AdvDetail ad
+  on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
+) a 
+on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
+left join (
+  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,
+  c.NameThai,c.NameEng
+  from Job_Order j inner join Mas_Company c
+  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
+) j
+on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
+{0} 
+group by 
+" & sqlSelect
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString = "BAL" Then
+                        sql &= " having (ISNULL(a.AdvAmount,0)+ISNULL(a.ChargeVAT,0))-sum(d.UsedAmount+d.ChargeVAT)<>0"
+                    End If
+                End If
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
+                Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""clr"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
         Function GetClearingGrid() As ActionResult
             Try
                 ViewBag.User = Session("CurrUser").ToString()
@@ -204,13 +341,20 @@ WHERE h.BranchCode='{0}'
                 If Not IsNothing(Request.QueryString("TaxNumber")) Then
                     tSqlW &= " AND b.CustCode IN(Select CustCode from Mas_Company where TaxNumber='" & Request.QueryString("TaxNumber") & "') "
                 End If
+                If Not IsNothing(Request.QueryString("Condition")) Then
+                    Select Case Request.QueryString("Condition").ToString()
+                        Case "ALL"
+                    End Select
+                Else
+                    tSqlW &= " "
+                End If
                 Dim sql As String = "
 select a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
 a.JobType,a.DocStatus,a.TotalExpense,a.ClearTotal,
 a.ClearVat,a.ClearWht,a.ClearNet,a.ClearBill,a.ClearCost,
 a.TRemark,a.ReceiveDate,a.ApproveDate,
 b.CustCode,b.CustBranch,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
-b.AdvTotal,b.ClrAmt,b.ClrVat,b.Clr50Tavi,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
+b.AdvTotal,b.ClrAmt,b.ClrVat,b.Clr50Tavi,b.ClrNet,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
 FROM Job_ClearHeader as a 
 left join 
 (
@@ -220,7 +364,8 @@ left join
     SUM(CASE WHEN d.ChargeVAT>0 THEN d.UsedAmount ELSE 0 END) as BaseVat,
     SUM(CASE WHEN d.Tax50Tavi>0 THEN d.UsedAmount ELSE 0 END) as Base50Tavi,
     SUM(d.ChargeVAT) as ClrVat,SUM(d.Tax50Tavi) as Clr50Tavi,
-    MAX(VATRate) as RateVAT,MAX(Tax50TaviRate) as Rate50Tavi
+    MAX(VATRate) as RateVAT,MAX(Tax50TaviRate) as Rate50Tavi,
+    SUM(d.BNet) as ClrNet
     FROM Job_ClearDetail d
     inner join Job_Order j on d.JobNo=j.JNo and d.BranchCode=j.BranchCode
     GROUP BY d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
