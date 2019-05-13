@@ -57,7 +57,7 @@ Namespace Controllers
                 Dim docno As String = ""
                 Dim i As Integer = 0
                 For Each str As String In data
-                    i = i + 1
+                    i += 1
                     If i = 1 Then
                         user = str.Split("|")(0)
                         docno = str.Split("|")(1)
@@ -236,10 +236,11 @@ Namespace Controllers
                 End If
                 tSqlW &= " AND ItemNo=" & ItemNo & ""
 
-                Dim oADVD As New CAdvDetail(jobWebConn)
-                oADVD.BranchCode = Branch
-                oADVD.AdvNo = Docno
-                oADVD.ItemNo = ItemNo
+                Dim oADVD As New CAdvDetail(jobWebConn) With {
+                    .BranchCode = Branch,
+                    .AdvNo = Docno,
+                    .ItemNo = ItemNo
+                }
                 Dim msg As String = oADVD.DeleteData(tSqlW)
 
                 Dim json = "{""adv"":{""result"":""" & msg & """}}"
@@ -292,11 +293,12 @@ Namespace Controllers
                     Branch = Request.QueryString("BranchCode")
                 End If
 
-                Dim oAdvH As New CAdvHeader(jobWebConn)
-                oAdvH.BranchCode = Branch
-                oAdvH.AdvNo = ""
-                oAdvH.AdvDate = DateTime.Today
-                oAdvH.DocStatus = 1
+                Dim oAdvH As New CAdvHeader(jobWebConn) With {
+                    .BranchCode = Branch,
+                    .AdvNo = "",
+                    .AdvDate = DateTime.Today,
+                    .DocStatus = 1
+                }
 
                 Dim oAdvD As New CAdvDetail(jobWebConn) With {
                     .BranchCode = Branch,
@@ -344,6 +346,93 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetAdvanceReport() As ActionResult
+            Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("R") < 0 Then
+                    Return Content("{""adv"":{""data"":[],""msg"":""You Are not authorize to view data""}}", jsonContent)
+                End If
+
+                Dim Branch As String = ""
+                Dim JobNo As String = ""
+                If Not IsNothing(Request.QueryString("BranchCode")) Then
+                    Branch = Request.QueryString("BranchCode")
+                End If
+
+                Dim tSqlW As String = String.Format(" WHERE a.BranchCode='{0}'", Branch)
+                If Not IsNothing(Request.QueryString("JobNo")) Then
+                    tSqlW &= " AND d.ForJNo='" & Request.QueryString("JobNo") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND a.JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlW &= " AND a.ShipBy=" & Request.QueryString("SBy") & ""
+                End If
+                If Not IsNothing(Request.QueryString("ReqBy")) Then
+                    tSqlW &= " AND a.Empcode='" & Request.QueryString("ReqBy") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    tSqlW &= " AND a.CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustBranch")) Then
+                    tSqlW &= " AND a.CustBranch='" & Request.QueryString("CustBranch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlW &= " AND a.Advdate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlW &= " AND a.Advdate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlW &= " AND a.DocStatus='" & Request.QueryString("Status") & "' "
+                End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlW &= " AND b.TaxNumber='" & Request.QueryString("TaxNumber") & "' "
+                End If
+                If Not IsNothing(Request.QueryString("Currency")) Then
+                    tSqlW &= " AND a.SubCurrency='" & Request.QueryString("Currency") & "' "
+                End If
+                If Not IsNothing(Request.QueryString("AdvType")) Then
+                    tSqlW &= " AND a.AdvType IN(" & Request.QueryString("AdvType") & ") "
+                Else
+                    tSqlW &= " AND a.AdvType IN(1,2,3,4) "
+                End If
+                Dim sql As String = "
+select a.*,d.ForJNo,d.ItemNo,d.SICode,d.SDescription,d.RateVAT,d.Rate50Tavi
+,d.Base50TaviExc,d.Base50TaviInc,d.BaseAmount,d.ChargeVAT,d.Charge50Tavi
+,d.AdvNet,d.AdvPayAmount,
+,d.BaseVATExc,d.BaseVATInc,d.VATExc,d.WHTExc,d.VATInc,d.WHTInc,
+,b.TaxNumber,b.NameThai,b.NameEng
+,c.BaseAmount,c.RateVAT,c.Rate50Tavi,c.BaseVATInc,c.Base50TaviInc,c.BaseVATExc,c.Base50TaviExc
+,c.BaseVATInc+c.BaseVATExc as BaseVAT,c.Base50TaviExc+c.Base50TaviInc as Base50Tavi
+,c.VATInc,c.VATExc,c.WHTInc,c.WHTExc,c.TotalNet
+FROM Job_AdvHeader as a LEFT JOIN
+Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
+LEFT JOIN (
+    SELECT BranchCode,AdvNo,ItemNo,SICode,SDescription,
+    VATRate as RateVAT,Rate50Tavi,AdvAmount+ChargeVAT as AdvPayAmount,ChargeVAT,Charge50Tavi,
+    (CASE WHEN Charge50Tavi>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as Base50TaviExc,
+    (CASE WHEN ChargeVAT>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as BaseVATExc,
+    (CASE WHEN Charge50Tavi>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as Base50TaviInc,
+    (CASE WHEN ChargeVAT>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as BaseVATInc,
+    (CASE WHEN IsChargeVAT<>2 THEN ChargeVAT ELSE 0 END) as VATExc,
+    (CASE WHEN IsChargeVAT=2 THEN ChargeVAT ELSE 0 END) as VATInc,
+    (CASE WHEN IsChargeVAT<>2 THEN Charge50Tavi ELSE 0 END) as WHTExc,
+    (CASE WHEN IsChargeVAT=2 THEN Charge50Tavi ELSE 0 END) as WHTInc,
+    AdvAmount as BaseAmount,AdvNet
+    FROM Job_AdvDetail 
+) d
+ON a.BranchCode=c.BranchCode AND a.AdvNo=d.AdvNo
+"
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
+                Dim json = "{""adv"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""adv"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function GetAdvanceGrid() As ActionResult

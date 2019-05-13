@@ -86,16 +86,13 @@ Namespace Controllers
                 Return New HttpResponseMessage(HttpStatusCode.BadRequest)
             End If
 
-            Dim json As String = ""
             Dim lst As String = ""
-            Dim user As String = ""
-            Dim docno As String = ""
             Dim i As Integer = 0
             For Each str As String In data
-                i = i + 1
+                i += 1
                 If i = 1 Then
-                    user = str.Split("|")(0)
-                    docno = str.Split("|")(1)
+                    Dim user As String = str.Split("|")(0)
+                    Dim docno As String = str.Split("|")(1)
                 Else
                     If str.IndexOf("|") >= 0 Then
                         If lst <> "" Then lst &= ","
@@ -120,7 +117,8 @@ Namespace Controllers
             End If
             Dim sql As String = "
 select h.BranchCode,h.ClrNo,h.ClrDate,h.DocStatus,c1.ClrStatusName,
-h.ClearanceDate,h.JobType,c4.JobTypeName,b.BrName as BranchName,h.CTN_NO,
+h.ClearanceDate,h.JobType,c4.JobTypeName,j.ShipBy,c6.ShipByName,
+b.BrName as BranchName,h.CTN_NO,
 h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
 h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
 h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
@@ -131,7 +129,8 @@ d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.UsedAmount+d.ChargeVAT as ClrAmount,
 d.FPrice,d.BPrice,d.FCost,d.BCost,
 d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
 d.LinkItem,d.LinkBillNo,s.IsExpense,s.IsCredit,s.IsTaxCharge,s.Is50Tavi,s.IsHaveSlip,s.IsLtdAdv50Tavi,
-d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,j.JobStatus,c5.JobStatusName,j.CloseJobDate,
+d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,j.TotalContainer,j.VesselName,j.Commission,
+j.JobDate,j.JobStatus,c5.JobStatusName,j.CloseJobDate,j.DeclareNumber,j.InvProduct,j.TotalGW,j.InvProductQty,
 h.CancelProve,h.CancelReson,h.CancelDate
 from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
 left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
@@ -142,8 +141,9 @@ left join (
 ) a 
 on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
 left join (
-  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,
-  c.NameThai,c.NameEng
+  select j.BranchCode,j.JNo,j.DocDate as JobDate,j.DeclareNumber,j.VesselName,j.InvProduct,j.TotalGW,
+  j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,j.TotalContainer,j.InvProductQty,
+  c.NameThai,c.NameEng,j.ShipBy,j.Commission 
   from Job_Order j inner join Mas_Company c
   on j.CustCode=c.CustCode and j.CustBranch=c.Branch
 ) j
@@ -163,6 +163,9 @@ on h.JobType=c4.JobTypeKey
 left join 
 (SELECT ConfigKey as JobTypeKey,ConfigValue as JobStatusName FROM Mas_Config WHERE ConfigCode='JOB_STATUS') c5
 on j.JobStatus=c5.JobTypeKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as ShipByName FROM Mas_Config WHERE ConfigCode='SHIP_BY') c6
+on j.ShipBy=c6.JobTypeKey
 left join Mas_User u1 on h.EmpCode=u1.UserID
 left join Mas_User u2 on h.ApproveBy=u2.UserID
 left join Mas_User u3 on h.ReceiveBy=u3.UserID 
@@ -389,7 +392,7 @@ and b.ClrNo=a.ClrNo
         End Function
         Function GetAdvForClear() As ActionResult
             Dim Branch As String = ""
-            Dim JobNo As String = ""
+
             If Not IsNothing(Request.QueryString("BranchCode")) Then
                 Branch = Request.QueryString("BranchCode")
             End If
@@ -503,13 +506,15 @@ WHERE (a.AdvAmount-d.TotalCleared)>0 AND c.DocStatus IN('3','4')
             If Not IsNothing(Request.QueryString("BranchCode")) Then
                 Branch = Request.QueryString("BranchCode")
             End If
-            Dim oHead As New CClrHeader(jobWebConn)
-            oHead.BranchCode = Branch
-            oHead.ClrNo = ""
-            oHead.ClrDate = DateTime.Today
-            oHead.ClearFrom = 1
-            oHead.ClearType = 1
-            oHead.DocStatus = 1
+
+            Dim oHead As New CClrHeader(jobWebConn) With {
+                .BranchCode = Branch,
+                .ClrNo = "",
+                .ClrDate = DateTime.Today,
+                .ClearFrom = 1,
+                .ClearType = 1,
+                .DocStatus = 1
+            }
 
             Dim oDetail As New CClrDetail(jobWebConn) With {
                 .BranchCode = Branch,

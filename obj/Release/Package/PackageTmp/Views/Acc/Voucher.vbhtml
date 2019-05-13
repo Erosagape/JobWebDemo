@@ -477,13 +477,13 @@ End Code
                 $('#dvChqInfo').hide();
                 $('#dvBookInfo').show();
                 break;
-            case 'CU':
+            case 'CH':
                 $('#txt' + cashfld).val(0);
                 $('#txt' + credfld).val(0);
                 $('#txt' + chqfld).val(sumval);
                 $('#txt' + chqfld).removeAttr('disabled');
                 break;
-            case 'CH':
+            case 'CU':
                 $('#txt' + cashfld).val(0);
                 $('#txt' + credfld).val(0);
                 $('#txt' + chqfld).val(sumval);
@@ -517,11 +517,7 @@ End Code
     function SetEvents() {
         $('#txtControlNo').keydown(function (event) {
             if (event.which == 13) {
-                let code = $('#txtControlNo').val();
-                let branch = $('#txtBranchCode').val();
-                $('#txtBranchCode').val(branch);
-                $('#txtControlNo').val(code);
-                CallBackQueryVoucher(path, branch,code, ReadData);
+                LoadData();
             }
         });
         $('#txtSICode').keydown(function (event) {
@@ -581,6 +577,19 @@ End Code
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ACC', 'Voucher', 'D', SetCancel);
         });
+        $('#txtChqAmount').focusout(function (event) {
+            $('#txtSumAmt').val($('#txtChqAmount').val());
+            CalculateTotal();
+        });
+        $('#txtCashAmount').focusout(function (event) {
+            $('#txtSumAmt').val($('#txtCashAmount').val());
+            CalculateTotal();
+        });
+        $('#txtCreditAmount').focusout(function (event) {
+            $('#txtSumAmt').val($('#txtCreditAmount').val());
+            CalculateTotal();
+        });
+
     }
     function SetEnterToTab() {
         //Set enter to tab
@@ -679,6 +688,14 @@ End Code
                 break;
         }
     }
+    function LoadData() {
+        let code = $('#txtControlNo').val();
+        let branch = $('#txtBranchCode').val();
+        $('#txtBranchCode').val(branch);
+        $('#txtControlNo').val(code);
+        CallBackQueryVoucher(path, branch,code, ReadData);
+    }
+
     function ClearForm() {
         $('#txtBranchCode').val('');
         $('#txtBranchName').val('');
@@ -747,9 +764,10 @@ End Code
             return;
         }
         $.get(path + 'acc/delvouchersub?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val() + '&item=' + $('#txtItemNo').val(), function (r) {
-            SetGridPayment(r.voucher.data);            
+            LoadData();
             alert(r.voucher.result);
             $('#frmPayment').modal('hide');
+            
         });
     }
     function DeleteDocument() {
@@ -1128,9 +1146,9 @@ End Code
         $('#txtWhtExc').val('0.00');
         $('#txtVatInc').val('0.00');
         $('#txtWhtInc').val('0.00');
-        $('#txtCurrencyCode').val('');
-        $('#txtCurrencyName').val('');
-        $('#txtExchangeRate').val('0.00');
+        $('#txtCurrencyCode').val('THB');
+        $('#txtCurrencyName').val('THAI BAHT');
+        $('#txtExchangeRate').val('1');
         $('#txtIsLocal').val('');
         $('#txtChqStatus').val('');
         $('#cboChqStatus').val('');
@@ -1221,7 +1239,7 @@ End Code
             acType: $('#txtacType').val(),
             ForJNo: $('#txtForJNo').val()
         };
-        if (obj.PRVoucher != "") {
+        //if (obj.PRVoucher != "") {
             let ask = confirm("Do you need to Save " + obj.PRVoucher + "?");
             if (ask == false) return;
             let jsonText = JSON.stringify({ data:[ obj ]});
@@ -1242,9 +1260,9 @@ End Code
                     alert(e);
                 }
             });
-        } else {
-            alert('No data to save');
-        }
+        //} else {
+        //    alert('No data to save');
+        //}
     }
     function SaveDocument() {
         let obj = {

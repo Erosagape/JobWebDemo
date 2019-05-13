@@ -849,6 +849,7 @@ End Code
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
 
             if (dt.DocStatus > 2) {
+                $('#chkApprove').attr('disabled', 'disabled');
                 //if document paymented/cancelled/cleared then disable save button
                 EnableSave(false);
             } else {
@@ -857,6 +858,7 @@ End Code
                     EnableSave(true);
                 } else {
                     if (dt.DocStatus == 2) {
+                        $('#chkApprove').attr('disabled', 'disabled');
                         EnableSave(false);
                     }
                 }
@@ -971,7 +973,7 @@ End Code
         $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
         $('#chkReceive').prop('checked', $('#txtReceiveBy').val() == '' ? false : true);
 
-
+        $('#chkApprove').removeAttr('disabled');
         //Combos
         $('#cboClrType').val('1');
         $('#cboClrFrom').val('1');

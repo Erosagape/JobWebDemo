@@ -142,8 +142,18 @@ AND d.acType=r.acType
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format(" AND d.ForJNo ='{0}'", Request.QueryString("Job").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Type")) Then
-                    tSqlw &= String.Format(" AND d.DocNo Like '{0}%'", Request.QueryString("Type").ToString)
+                    Select Case Request.QueryString("Type").ToString
+                        Case "CHQP"
+                            tSqlw &= " AND d.ChqAmount>0 AND PRType='P'"
+                        Case "CHQR"
+                            tSqlw &= " AND d.ChqAmount>0 AND PRType='R'"
+                        Case "TACC"
+                            tSqlw &= String.Format(" AND d.DocNo Like '{0}%'", Request.QueryString("Type").ToString)
+                    End Select
                 End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(tSqlw)
                 Dim oHead As String = JsonConvert.SerializeObject(oData.AsEnumerable().ToList())

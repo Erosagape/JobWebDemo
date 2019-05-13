@@ -161,21 +161,21 @@ End Code
                         desc += '<tr><td>รายได้จากการปฏิบัติงาน</td></tr>';                        
                         desc += '</table>';
 
-                        credit += '<table style="text-align:right;width:100%">';
-                        credit += '<tr><td>' + CCurrency(CDbl(Number(obj.TotalAmount), 2)) + '</td></tr>';
-                        credit += '<tr><td>' + CCurrency(CDbl(Number(obj.VatExc) + Number(obj.VatInc), 2)) + '</td></tr>';
-                        credit += '<tr><td>' + CCurrency(CDbl(Number(obj.WhtExc) + Number(obj.WhtInc), 2)) + '</td></tr>';
-                        credit += '<tr><td><br/></td></tr>';
-                        credit += '<tr><td><br/></td></tr>';
-                        credit += '</table>';
-
                         debit += '<table style="text-align:right;width:100%">';
-                        debit += '<tr><td><br/></td></tr>';
-                        debit += '<tr><td><br/></td></tr>';
-                        debit += '<tr><td><br/></td></tr>';
+                        debit += '<tr><td>' + CCurrency(CDbl(Number(obj.TotalAmount), 2)) + '</td></tr>';
+                        debit += '<tr><td>' + CCurrency(CDbl(Number(obj.VatExc) + Number(obj.VatInc), 2)) + '</td></tr>';
                         debit += '<tr><td>' + CCurrency(CDbl(Number(obj.WhtExc) + Number(obj.WhtInc), 2)) + '</td></tr>';
-                        debit += '<tr><td>' + CCurrency(CDbl(Number(obj.TotalNet) + Number(obj.WhtExc) + Number(obj.WhtInc), 2)) + '</td></tr>';
+                        debit += '<tr><td><br/></td></tr>';
+                        debit += '<tr><td><br/></td></tr>';
                         debit += '</table>';
+
+                        credit += '<table style="text-align:right;width:100%">';
+                        credit += '<tr><td><br/></td></tr>';
+                        credit += '<tr><td><br/></td></tr>';
+                        credit += '<tr><td><br/></td></tr>';
+                        credit += '<tr><td>' + CCurrency(CDbl(Number(obj.WhtExc) + Number(obj.WhtInc), 2)) + '</td></tr>';
+                        credit += '<tr><td>' + CCurrency(CDbl(Number(obj.TotalNet) + Number(obj.WhtExc) + Number(obj.WhtInc), 2)) + '</td></tr>';
+                        credit += '</table>';
                         break;
                 }
                 appendLine(div, desc, debit, credit);
