@@ -389,6 +389,8 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("Status")) Then
                     tSqlW &= " AND a.DocStatus='" & Request.QueryString("Status") & "' "
+                Else
+                    tSqlW &= " AND a.DocStatus<>99 "
                 End If
                 If Not IsNothing(Request.QueryString("TaxNumber")) Then
                     tSqlW &= " AND b.TaxNumber='" & Request.QueryString("TaxNumber") & "' "
@@ -404,16 +406,16 @@ Namespace Controllers
                 Dim sql As String = "
 select a.*,d.ForJNo,d.ItemNo,d.SICode,d.SDescription,d.RateVAT,d.Rate50Tavi
 ,d.Base50TaviExc,d.Base50TaviInc,d.BaseAmount,d.ChargeVAT,d.Charge50Tavi
-,d.AdvNet,d.AdvPayAmount,
-,d.BaseVATExc,d.BaseVATInc,d.VATExc,d.WHTExc,d.VATInc,d.WHTInc,
+,d.AdvNet,d.AdvPayAmount
+,d.BaseVATExc,d.BaseVATInc,d.VATExc,d.WHTExc,d.VATInc,d.WHTInc
 ,b.TaxNumber,b.NameThai,b.NameEng
-,c.BaseAmount,c.RateVAT,c.Rate50Tavi,c.BaseVATInc,c.Base50TaviInc,c.BaseVATExc,c.Base50TaviExc
-,c.BaseVATInc+c.BaseVATExc as BaseVAT,c.Base50TaviExc+c.Base50TaviInc as Base50Tavi
-,c.VATInc,c.VATExc,c.WHTInc,c.WHTExc,c.TotalNet
+,d.BaseAmount,d.RateVAT,d.Rate50Tavi,d.BaseVATInc,d.Base50TaviInc,d.BaseVATExc,d.Base50TaviExc
+,d.BaseVATInc+d.BaseVATExc as BaseVAT,d.Base50TaviExc+d.Base50TaviInc as Base50Tavi
+,d.VATInc,d.VATExc,d.WHTInc,d.WHTExc
 FROM Job_AdvHeader as a LEFT JOIN
 Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
 LEFT JOIN (
-    SELECT BranchCode,AdvNo,ItemNo,SICode,SDescription,
+    SELECT BranchCode,AdvNo,ItemNo,SICode,SDescription,ForJNo,
     VATRate as RateVAT,Rate50Tavi,AdvAmount+ChargeVAT as AdvPayAmount,ChargeVAT,Charge50Tavi,
     (CASE WHEN Charge50Tavi>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as Base50TaviExc,
     (CASE WHEN ChargeVAT>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as BaseVATExc,
@@ -426,7 +428,7 @@ LEFT JOIN (
     AdvAmount as BaseAmount,AdvNet
     FROM Job_AdvDetail 
 ) d
-ON a.BranchCode=c.BranchCode AND a.AdvNo=d.AdvNo
+ON a.BranchCode=d.BranchCode AND a.AdvNo=d.AdvNo
 "
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
                 Dim json = "{""adv"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
@@ -476,6 +478,8 @@ ON a.BranchCode=c.BranchCode AND a.AdvNo=d.AdvNo
                 End If
                 If Not IsNothing(Request.QueryString("Status")) Then
                     tSqlW &= " AND a.DocStatus='" & Request.QueryString("Status") & "' "
+                Else
+                    tSqlW &= " AND a.DocStatus<>99 "
                 End If
                 If Not IsNothing(Request.QueryString("TaxNumber")) Then
                     tSqlW &= " AND b.TaxNumber='" & Request.QueryString("TaxNumber") & "' "

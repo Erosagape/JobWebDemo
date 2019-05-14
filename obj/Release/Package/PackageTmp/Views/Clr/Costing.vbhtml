@@ -257,7 +257,7 @@ End Code
         $('#dvDetail').modal('show');
     });
     $('#btnPrintJobsum').on('click', function () {
-        window.open(path + 'JobOrder/FormJobSum?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
+        window.open(path + 'JobOrder/FormJobSum?branchcode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(),'','');
     });
     $('#btnGenerateInv').on('click', function () {
         window.open(path + 'Clr/GenerateInv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
