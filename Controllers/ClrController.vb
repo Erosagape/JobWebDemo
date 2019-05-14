@@ -123,9 +123,9 @@ h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
 h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
 h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
 h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
-d.ItemNo,d.AdvNO,d.AdvItemNo,a.AdvAmount+a.ChargeVAT as AdvAmount,
+d.ItemNo,d.AdvNO,d.AdvItemNo,a.IsDuplicate,a.AdvAmount,a.AdvNet,
 d.SICode,d.SDescription,d.SlipNO,d.JobNo,
-d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.UsedAmount+d.ChargeVAT as ClrAmount,
+d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.BNet as ClrNet,
 d.FPrice,d.BPrice,d.FCost,d.BCost,
 d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
 d.LinkItem,d.LinkBillNo,s.IsExpense,s.IsCredit,s.IsTaxCharge,s.Is50Tavi,s.IsHaveSlip,s.IsLtdAdv50Tavi,
@@ -135,7 +135,8 @@ h.CancelProve,h.CancelReson,h.CancelDate
 from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
 left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
 left join (
-  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.EmpCode,ah.AdvDate,ad.AdvAmount,ad.ChargeVAT
+  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.EmpCode,ah.AdvDate,ad.AdvAmount,ad.ChargeVAT,
+  ad.IsDuplicate,ad.AdvNet 
   from Job_AdvHeader ah inner join Job_AdvDetail ad
   on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
 ) a 
@@ -428,8 +429,8 @@ a.AdvQty as Qty,b.UnitCharge as UnitCode,a.CurrencyCode,a.ExchangeRate as CurRat
 (CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice*a.ExchangeRate ELSE 0 END) as BPrice,
 q.TotalCharge as QUnitPrice,a.AdvQty*q.ChargeAmt as QFPrice,a.AdvQty*q.ChargeAmt*q.CurrencyRate as QBPrice,
 a.UnitPrice as UnitCost,a.AdvQty*a.UnitPrice as FCost,a.AdvQty*a.UnitPrice*a.ExchangeRate as BCost,
-a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,a.AdvNo as AdvNO,a.ItemNo as AdvItemNo,a.AdvAmount,
-a.AdvAmount-ISNULL(d.TotalCleared,0) as AdvBalance,ISNULL(d.TotalCleared,0) as UsedAmount,
+a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,a.AdvNo as AdvNO,a.ItemNo as AdvItemNo,a.AdvAmount,a.AdvNet,
+a.AdvNet-ISNULL(d.TotalCleared,0) as AdvBalance,ISNULL(d.TotalCleared,0) as UsedAmount,
 (CASE WHEN ISNULL(q.QNo,'')='' THEN 0 ELSE 1 END) as IsQuoItem,
 a.IsDuplicate,b.IsExpense,
 b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date50Tavi,
@@ -472,7 +473,7 @@ and b.UnitCharge=q.UnitCheck and a.AdvQty <=q.QtyEnd and a.AdvQty>=q.QtyBegin an
 left join 
 (
 	SELECT ad.BranchCode,ad.AdvNo,ad.ItemNo,
-    SUM(CASE WHEN ad.IsDuplicate=1 THEN ISNULL(cd.UsedAmount,0) ELSE ISNULL(cd.AdvAmount,0) END) as TotalCleared    
+    SUM(CASE WHEN ad.IsDuplicate=1 THEN ISNULL(cd.BNet,0) ELSE ISNULL(cd.AdvAmount,0) END) as TotalCleared    
 	FROM Job_ClearDetail cd INNER JOIN Job_ClearHeader ch
 	on cd.BranchCode=ch.BranchCode
 	and cd.ClrNo =ch.ClrNo 
@@ -488,7 +489,7 @@ left join
 	GROUP BY ad.BranchCode,ad.AdvNo,ad.ItemNo
 ) d
 ON a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNo and a.ItemNo=d.ItemNo
-WHERE (a.AdvAmount-d.TotalCleared)>0 AND c.DocStatus IN('3','4') 
+WHERE (a.AdvNet-ISNULL(d.TotalCleared,0))>0 AND c.DocStatus IN('3','4') 
 {0}
 "
             Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))

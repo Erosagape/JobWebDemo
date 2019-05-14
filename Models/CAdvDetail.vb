@@ -290,7 +290,7 @@ Public Class CAdvDetail
                                     ,b.Total50Tavi=ISNULL(a.Sum50Tavi,0)
                                     from Job_AdvHeader b left join 
                                     (
-	                                    select BranchCode,AdvNo,Sum(AdvAmount) as SumAdvance,
+	                                    select BranchCode,AdvNo,Sum(AdvNet) as SumAdvance,
 	                                    sum(ChargeVAT) as SumVAT,
 	                                    sum(Charge50Tavi) as Sum50Tavi
 	                                    from Job_AdvDetail 

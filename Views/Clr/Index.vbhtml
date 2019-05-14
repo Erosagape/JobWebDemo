@@ -1112,7 +1112,7 @@ End Code
             Tax50Tavi: $('#txtWHT').val(),
             AdvNO: $('#txtAdvNo').val(),
             AdvItemNo: $('#txtAdvItemNo').val(),
-            AdvAmount: ($('#chkDuplicate').prop('checked') == true ? $('#txtAMT').val() : dtl.AdvAmount),
+            AdvAmount: ($('#chkDuplicate').prop('checked') == true ? $('#txtNET').val() : dtl.AdvNet),
             UsedAmount: $('#txtAMT').val(),
             IsQuoItem: dtl.IsQuoItem,
             SlipNO: $('#txtSlipNo').val(),

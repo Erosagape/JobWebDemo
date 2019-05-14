@@ -159,97 +159,97 @@ End Code
 <script type="text/javascript">
     let path = '@Url.Content("~")';
     let user = '@ViewBag.User';
-    $(document).ready(function () {
-        let branch = getQueryString('branchcode');
-        let code = getQueryString('jno');
-        if (branch != "" && code != "") {
-            $.get(path + 'clr/getclearingreport?branch=' + branch + '&job=' + code, function (r) {
-                if (r.data[0].Table !== undefined) {
-                    let h = r.data[0].Table[0];
-                    $('#txtBranchCode').val(h.BranchCode);
-                    $('#txtBranchName').val(h.BranchName);
-                    $('#txtJNo').val(h.JobNo);
-                    $('#txtCloseDate').val(CDateEN(h.CloseJobDate));
-                    $('#txtJobStatus').val(h.JobStatusName);
+    let branch = getQueryString('branchcode');
+    let code = getQueryString('jno');
+    if (branch != "" && code != "") {
+        $('#txtBranchCode').val(branch);
+        $('#txtJNo').val(code);
+        $.get(path + 'clr/getclearingreport?branch=' + branch + '&job=' + code, function (r) {
+            if (r.data[0].Table !== undefined) {
+                let h = r.data[0].Table[0];
+                $('#txtBranchCode').val(h.BranchCode);
+                $('#txtBranchName').val(h.BranchName);
+                $('#txtJNo').val(h.JobNo);
+                $('#txtCloseDate').val(CDateEN(h.CloseJobDate));
+                $('#txtJobStatus').val(h.JobStatusName);
 
-                    let html = '';
+                let html = '';
 
-                    let amtforvat = 0;
-                    let amtnonvat = 0;
-                    let amtvat = 0;
-                    let amtwht = 0;
-                    let amtcharge = 0;
-                    let amtadvance = 0;
-                    let amttotal = 0;
-                    let amtprofit = 0;
-                    let amtcost = 0;
-                    let amtinv = 0;
-                    let amtbill = 0;
-                    let amtrcv = 0;
+                let amtforvat = 0;
+                let amtnonvat = 0;
+                let amtvat = 0;
+                let amtwht = 0;
+                let amtcharge = 0;
+                let amtadvance = 0;
+                let amttotal = 0;
+                let amtprofit = 0;
+                let amtcost = 0;
+                let amtinv = 0;
+                let amtbill = 0;
+                let amtrcv = 0;
 
-                    let d = r.data[0].Table.filter(function (data) {
-                        return data.BNet !== 0;
-                    });
-                    for (let i = 0; i < d.length; i++){
-                        let amt = d[i].UsedAmount + d[i].ChargeVAT - (d[i].IsCredit == 1 ? d[i].Tax50Tavi : 0);
-                        let adv = (d[i].IsCredit == 1 ? amt : 0);
-                        let serv = (d[i].IsCredit == 0 && d[i].IsExpense == 0 ? amt : 0);
-                        let cost = (d[i].IsExpense == 1 || d[i].IsCredit==1 ? amt : 0);
-                        let profit = (d[i].IsExpense == 1 ? amt*-1 : d[i].IsCredit==1 ? 0 : amt);
-                        let slipNo = (d[i].IsHaveSlip == 1 && d[i].IsCredit==1 ? ' #' + d[i].SlipNO : '');
+                let d = r.data[0].Table.filter(function (data) {
+                    return data.BNet !== 0;
+                });
+                for (let i = 0; i < d.length; i++){
+                    let amt = d[i].UsedAmount + d[i].ChargeVAT - (d[i].IsCredit == 1 ? d[i].Tax50Tavi : 0);
+                    let adv = (d[i].IsCredit == 1 ? amt : 0);
+                    let serv = (d[i].IsCredit == 0 && d[i].IsExpense == 0 ? amt : 0);
+                    let cost = (d[i].IsExpense == 1 || d[i].IsCredit==1 ? amt : 0);
+                    let profit = (d[i].IsExpense == 1 ? amt*-1 : d[i].IsCredit==1 ? 0 : amt);
+                    let slipNo = (d[i].IsHaveSlip == 1 && d[i].IsCredit==1 ? ' #' + d[i].SlipNO : '');
 
-                        if (d[i].IsCredit == 0 && d[i].IsExpense == 0) {
-                            if (d[i].IsTaxCharge > 0) {
-                                amtforvat += d[i].UsedAmount;
-                                amtvat += d[i].ChargeVAT;
-                                slipNo += '<br/>VAT ' + d[i].VATRate + '%=' + d[i].ChargeVAT;
-                            } else {
-                                amtnonvat += d[i].UsedAmount;
-                            }
-                            if (d[i].Is50Tavi > 0) {
-                                amtwht += d[i].Tax50Tavi;
-                                slipNo += '<br/>WH-Tax ' + d[i].Tax50TaviRate + '%=' + d[i].Tax50Tavi;
-                            }
+                    if (d[i].IsCredit == 0 && d[i].IsExpense == 0) {
+                        if (d[i].IsTaxCharge > 0) {
+                            amtforvat += d[i].UsedAmount;
+                            amtvat += d[i].ChargeVAT;
+                            slipNo += '<br/>VAT ' + d[i].VATRate + '%=' + d[i].ChargeVAT;
+                        } else {
+                            amtnonvat += d[i].UsedAmount;
                         }
+                        if (d[i].Is50Tavi > 0) {
+                            amtwht += d[i].Tax50Tavi;
+                            slipNo += '<br/>WH-Tax ' + d[i].Tax50TaviRate + '%=' + d[i].Tax50Tavi;
+                        }
+                    }
                         
 
-                        html += '<tr>';
-                        html += '<td><input type="checkbox" name="chkSelect" ' + (d[i].LinkBillNo == '' && d[i].IsExpense==0 ? '' : 'disabled') + '/></td>';
-                        html += '<td>' + d[i].ClrNo + '#' + d[i].ItemNo + '</td>';
-                        html += '<td>'+d[i].SICode+'</td>';
-                        html += '<td>' + d[i].SDescription + '' + slipNo + '</td>';
-                        html += '<td>'+ adv +'</td>';
-                        html += '<td>'+ serv +'</td>';
-                        html += '<td>' + cost + '</td>';
-                        html += '<td>' + profit + '</td>';
-                        html += '</tr>';
+                    html += '<tr>';
+                    html += '<td><input type="checkbox" name="chkSelect" ' + (d[i].LinkBillNo == '' && d[i].IsExpense==0 ? '' : 'disabled') + '/></td>';
+                    html += '<td>' + d[i].ClrNo + '#' + d[i].ItemNo + '</td>';
+                    html += '<td>'+d[i].SICode+'</td>';
+                    html += '<td>' + d[i].SDescription + '' + slipNo + '</td>';
+                    html += '<td>'+ adv +'</td>';
+                    html += '<td>'+ serv +'</td>';
+                    html += '<td>' + cost + '</td>';
+                    html += '<td>' + profit + '</td>';
+                    html += '</tr>';
 
-                        amtadvance += adv;
-                        amtcharge += serv;
-                        amtcost += cost;
-                        amttotal += serv + adv;
-                        amtprofit += profit;
-                    }
-                    $('#tbDetail tbody').html(html);
-
-                    $('#txtSumBaseVAT').val(CDbl(amtforvat,2));
-                    $('#txtSumNonVAT').val(CDbl(amtnonvat,2));
-                    $('#txtSumVAT').val(CDbl(amtvat,2));
-                    $('#txtSumWHT').val(CDbl(amtwht, 2));
-
-                    $('#txtSumService').val(CDbl(amtcharge,2));
-                    $('#txtSumAdvance').val(CDbl(amtadvance, 2));
-                    $('#txtSumCost').val(CDbl(amtcost, 2));
-                    $('#txtSumProfit').val(CDbl(amtprofit, 2));
-
-                    $('#txtSumCharge').val(CDbl(amttotal, 2));
-                    $('#txtSumInvoice').val(CDbl(amtinv, 2));
-                    $('#txtSumBilled').val(CDbl(amtbill, 2));
-                    $('#txtSumReceived').val(CDbl(amtrcv,2));
+                    amtadvance += adv;
+                    amtcharge += serv;
+                    amtcost += cost;
+                    amttotal += serv + adv;
+                    amtprofit += profit;
                 }
-            });
-        }
-    });
+                $('#tbDetail tbody').html(html);
+
+                $('#txtSumBaseVAT').val(CDbl(amtforvat,2));
+                $('#txtSumNonVAT').val(CDbl(amtnonvat,2));
+                $('#txtSumVAT').val(CDbl(amtvat,2));
+                $('#txtSumWHT').val(CDbl(amtwht, 2));
+
+                $('#txtSumService').val(CDbl(amtcharge,2));
+                $('#txtSumAdvance').val(CDbl(amtadvance, 2));
+                $('#txtSumCost').val(CDbl(amtcost, 2));
+                $('#txtSumProfit').val(CDbl(amtprofit, 2));
+
+                $('#txtSumCharge').val(CDbl(amttotal, 2));
+                $('#txtSumInvoice').val(CDbl(amtinv, 2));
+                $('#txtSumBilled').val(CDbl(amtbill, 2));
+                $('#txtSumReceived').val(CDbl(amtrcv,2));
+            }
+        });
+    }
     $('#tbDetail tbody').on('click', 'tr', function () {            
         let clearno = $(this).find('td:eq(1)').text();
 

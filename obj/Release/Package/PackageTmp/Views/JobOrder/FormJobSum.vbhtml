@@ -16,12 +16,15 @@ End Code
         border-collapse: collapse;
     }
 </style>
+<div style="text-align:left;width:100%">
+    <b>JOB NO: <label id="lblJNo"></label></b>
+</div>
 <div style="display:flex">
     <div style="flex:2">
         JOB TYPE : <label id="lblJobTypeName"></label>
     </div>
     <div style="flex:1">
-        JOB DATE : <label id="lblJobDate"></label>
+        SHIP BY : <label id="lblShipByName"></label>
     </div>
 </div>
 
@@ -30,7 +33,7 @@ End Code
         CUST NAME : <label id="lblCustName"></label>
     </div>
     <div style="flex:1">
-        SHIP BY : <label id="lblShipByName"></label>
+        JOB DATE : <label id="lblJobDate"></label>
     </div>
 </div>
 
@@ -79,7 +82,7 @@ End Code
                     <th width="15%">AMOUNT</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="dvAdv">
             </tbody>
             <tr>
                 <td colspan="4">
@@ -124,7 +127,7 @@ End Code
                     <th>AMOUNT</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="dvCustAdv">
             </tbody>
             <tr>
                 <th style="text-align:right">TOTAL ADVANCE</th>
@@ -149,7 +152,7 @@ End Code
                     <th width="15%">PROFIT</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="dvClear">
             </tbody>
             <tr>
                 <td colspan="2" height="50PX">
@@ -163,7 +166,18 @@ End Code
                         </div>
 
                         <div style="flex:1;text-align:right">
-                            PRE-INVOICED
+                            <table>
+                                <tr>
+                                    <td>Advance :</td>
+                                    <td><label id="lblSumAdv"></label></td>
+                                </tr>
+                                <tr>
+                                    <td>Service :</td>
+                                    <td><label id="lblSumServ"></label></td>
+                                </tr>
+
+                            </table>
+                            
                         </div>
 
                     </div>
@@ -207,47 +221,44 @@ End Code
             <th>REMARK</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="dvCheque">
     </tbody>
 </table>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
-    $(document).ready(function () {
-        ShowCompany('#divCompany');
-        let br = getQueryString('BranchCode');
-        let jno = getQueryString('JNo');
-        if (br != "" && jno != "") {
-            GetJob(br, jno);
-        }
-    });
-    function GetJob(branch,code) {
-        GetClearingInfo(branch, code);
-        GetAdvanceInfo(branch, code);
-        GetChequeInfo(branch, code);
+    ShowCompany('#divCompany');
+    let br = getQueryString('BranchCode');
+    let jno = getQueryString('JNo');
+    if (br != "" && jno != "") {
+        GetChequeInfo(br, jno);
+        GetClearingInfo(br, jno);
+        GetAdvanceInfo(br, jno);
     }
+
     function GetChequeInfo(branch, code) {
         $.get(path + 'acc/getvouchergrid?branch=' + branch + '&job=' + code + '&type=CHQR', function (r) {
-            let html = '';
-            if (r.voucher.length > 0) {
+            if (r.voucher.data.length > 0) {
+                let dv = $('#dvCheque');
+                dv.empty();
                 for (o of r.voucher.data[0].Table) {
+                    let html = '';
+
                     html += '<tr>';
                     html += '<td>'+o.ChqNo+'</td>';
-                    html += '<td>'+o.BankCode+'</td>';
+                    html += '<td>' + o.BankCode + ' สาขา ' + o.BankBranch + '</td>';
                     html += '<td>'+ShowDate(CDateTH(o.ChqDate))+'</td>';
-                    html += '<td>'+o.ChqAmount+'</td>';
-                    html += '<td>'+o.SumAmount+'</td>';
+                    html += '<td style="text-align:right">'+CCurrency(CDbl(o.ChqAmount,2))+'</td>';
+                    html += '<td style="text-align:right">'+CCurrency(CDbl(o.SumAmount,2))+'</td>';
                     html += '<td>'+o.DRemark+'</td>';
                     html += '</tr>';
+
+                    dv.append(html);
                 }
             }
-            let dv = $('#tbCheque tbody');
-            dv.html(html);
         });
     }
     function GetAdvanceInfo(branch, code) {
         $.get(path + 'adv/getadvancereport?branchcode=' + branch + '&jobno=' + code +'&advtype=1,2,3,4,5', function (r) {
-            let html1 = '';
-            let html2 = '';
             let i = 0;
             let itotalvat = 0;
             let itotalpay = 0;
@@ -256,61 +267,74 @@ End Code
             let itotalnet = 0;
             let jtotaladv = 0;
             let j = 0;
+
             if (r.adv.data.length > 0) {
+                let d1 = $('#dvAdv');
+                let d2 = $('#dvCustAdv');
+                d1.empty();
+                d2.empty();
                 let d = r.adv.data[0].Table;
 
                 for (let i = 0; i < d.length; i++){
                     let o = d[i];
+                    let html1 = '';
+                    let html2 = '';
+
                     if (o.AdvType < 5) {
+                        j += 1;
                         itotalamt += o.BaseAmount;
                         itotalvat += o.ChargeVAT;
                         itotalwht += o.Charge50Tavi;
                         itotalpay += o.AdvPayAmount;
                         itotalnet += o.AdvNet;
 
-                        html1 += '<tr>';
-                        html1 += '<td>' + i+1 + '</td>';
+                        html1 = '<tr>';
+                        html1 += '<td>' + j + '</td>';
                         html1 += '<td>' + ShowDate(o.PaymentDate) + '</td>';
                         html1 += '<td>' + o.AdvNo + '#' + o.ItemNo + '</td>';
-                        html1 += '<td>' + o.SICode + '-' + o.SDescription + '</td>';
-                        html1 += '<td class="text-align:right">' + CCurrency(CDbl(o.AdvPayAmount, 2)) + '</td>';
+                        html1 += '<td>';
+                        if (o.SICode !== null) html1 += o.SICode + '-' + o.SDescription;
+                        html1 += '</td>';
+                        html1 += '<td style="text-align:right">' + CCurrency(CDbl(o.AdvPayAmount, 2)) + '</td>';
                         html1 += '</tr>';
+                        d1.append(html1);
                     } else {
-                        j += 1;
                         jtotaladv += o.AdvPayAmount;
-                        html2 += '<tr>';
-                        html2 += '<td>' + o.SICode + '-' + o.SDescription + ' #' + o.AdvNo + '</td>';
-                        html2 += '<td class="text-align:right">' + CCurrency(CDbl(o.AdvPayAmount, 2)) + '</td>';
+                        html2 = '<tr>';
+                        html2 += '<td>';
+                        if (o.SICode !== null) html2 += o.SICode + '-' + o.SDescription + ' #' + o.AdvNo;
+                        html2 += '</td>';
+                        html2 += '<td style="text-align:right">' + CCurrency(CDbl(o.AdvPayAmount, 2)) + '</td>';
                         html2 += '</tr>';
+                        d2.append(html2);
                     }
                 }
             }
-            let d1 = $('#tbAdv tbody');
-            d1.html(html1);
-
-            let d2 = $('#tbCustAdv tbody');
-            d2.html(html2);
-
+ 
             $('#lblTotalCustAdv').text(CCurrency(CDbl(jtotaladv, 2)));
             $('#lblTotalADVVAT').text(CCurrency(CDbl(itotalvat,2)));
             $('#lblTotalADVAfterVAT').text(CCurrency(CDbl(itotalpay,2)));
             $('#lblTotalADVAmt').text(CCurrency(CDbl(itotalamt,2)));
             $('#lblTotalADVWHT').text(CCurrency(CDbl(itotalwht,2)));
-            $('#lblTotalADV').text(CCurrency(CDbl(itotalnet,2)));
-
+            $('#lblTotalADV').text(CCurrency(CDbl(itotalnet, 2)));
         });
     }
-    function GetClearingInfo(branch,code) {
+    function GetClearingInfo(branch, code) {
         $.get(path + 'clr/getclearingreport?branch=' + branch + '&job=' + code, function (r) {
-            let html = '';
-
+            let amtadv = 0;
+            let amtserv = 0;
             let amtvat = 0;
             let amtwht = 0;
             let amttotal = 0;
             let amtprofit = 0;
             let amtcost = 0;
+            let commrate = 0;
             if (r.data.length > 0) {
+                let dv = $('#dvClear');
+                dv.empty();
+
                 let h = r.data[0].Table[0];
+                $('#lblJNo').text(h.JobNo);
                 $('#lblJobTypeName').text(h.JobTypeName);
                 $('#lblJobDate').text(ShowDate(CDateTH(h.JobDate)));
                 $('#lblCustName').text(h.NameThai);
@@ -323,17 +347,23 @@ End Code
                 $('#lblContainer').text(h.TotalContainer);
                 $('#lblCSName').text(h.ClrByName);
                 $('#lblInvQty').text(h.InvProductQty);
-                $('#lblCommRate').text(h.Commission);
+                
+                commrate = h.Commission;
 
                 let d = r.data[0].Table.filter(function (data) {
                     return data.BNet !== 0;
                 });
                 for (let i = 0; i < d.length; i++){
-                    let amt = d[i].UsedAmount + d[i].ChargeVAT - (d[i].IsCredit == 1 ? d[i].Tax50Tavi : 0);
+                    let html = '';
+
+                    let amt = d[i].UsedAmount + d[i].ChargeVAT;
                     let adv = (d[i].IsCredit == 1 ? amt : 0);
                     let serv = (d[i].IsCredit == 0 && d[i].IsExpense == 0 ? amt : 0);
                     let cost = (d[i].IsExpense == 1 || d[i].IsCredit==1 ? amt : 0);
                     let profit = (d[i].IsExpense == 1 ? amt*-1 : d[i].IsCredit==1 ? 0 : amt);
+
+                    amtadv += adv;
+                    amtserv += serv;
 
                     if (d[i].IsCredit == 0 && d[i].IsExpense == 0) {
                         if (d[i].IsTaxCharge > 0) {
@@ -343,11 +373,11 @@ End Code
                             amtwht += d[i].Tax50Tavi;
                         }
                     }
-                    html += '<tr>';
+                    html = '<tr>';
                     html += '<td>' + d[i].ClrNo + '#' + d[i].ItemNo + '</td>';
                     html += '<td>' + d[i].SICode + '-' + d[i].SDescription;
                     if (d[i].AdvNO !== null) html +=' จากใบเบิก '+ d[i].AdvNO;
-                    if (d[i].SlipNO !== null) html += 'ใบเสริ็จเลขที่ ' + d[i].SlipNO;
+                    if (d[i].SlipNO !== null) html += ' ใบเสริ็จเลขที่ ' + d[i].SlipNO;
 
                     html += '</td>';
                     html += '<td style="text-align:right">' + CCurrency(CDbl(adv + serv, 2)) + '</td>';
@@ -359,17 +389,20 @@ End Code
                     amtcost += cost;
                     amttotal += serv + adv;
                     amtprofit += profit;
+
+                    dv.append(html);
                 }
             }
-            $('#tbClear tbody').html(html);
+            $('#lblSumAdv').text(CCurrency(CDbl(amtadv, 2)));
+            $('#lblSumServ').text(CCurrency(CDbl(amtserv,2)));
 
             $('#lblSumCharge').text(CCurrency(CDbl(amttotal,2)));
             $('#lblSumTax').text(CCurrency(CDbl(amtwht,2)));
             $('#lblSumCost').text(CCurrency(CDbl(amtcost,2)));
             $('#lblSumProfit').text(CCurrency(CDbl(amtprofit,2)));
-            $('#lblTotalVAT').text(CCurrency(CDbl(amtvat,2)));
-            $('#lblNetProfit').text(CCurrency(CDbl(amtprofit-(amtprofit*(h.Commission/100)),2)));
-
+            $('#lblTotalVAT').text(CCurrency(CDbl(amtvat, 2)));
+            $('#lblCommRate').text(CCurrency(CDbl(amtprofit*(commrate/100),2)));
+            $('#lblNetProfit').text(CCurrency(CDbl(amtprofit-(amtprofit*(commrate/100)),2)));
         });
     }
 </script>

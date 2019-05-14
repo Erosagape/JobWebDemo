@@ -231,7 +231,9 @@ End Code
                         advref = advref + (d[i].AdvNO !== null ? '<br/>จากใบเบิก ' + d[i].AdvNO : '');
                         advref = advref + (d[i].AdvAmount > 0 ? ' ยอดเบิก=' + CCurrency(CDbl(d[i].AdvAmount,2)) : '');
 
-                        html += '<tr><td>' + d[i].SICode + '</td><td>' + d[i].SDescription +''+ advref + '</td><td>' + d[i].JobNo + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].ChargeVAT,2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].Tax50Tavi,2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].UsedAmount,2)) + '</td></tr>'
+                        html += '<tr><td>' + d[i].SICode + '</td><td>' + d[i].SDescription + '' + advref + '</td><td>' + d[i].JobNo + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].ChargeVAT, 2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].Tax50Tavi, 2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].UsedAmount, 2)) + '</td></tr>';
+
+                        if(d[i].IsDuplicate)
                         advtotal += d[i].AdvAmount;
                         clrtotal += d[i].ClrAmount;
 

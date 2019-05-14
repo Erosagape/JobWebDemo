@@ -166,7 +166,18 @@ End Code
                         </div>
 
                         <div style="flex:1;text-align:right">
-                            PRE-INVOICED
+                            <table>
+                                <tr>
+                                    <td>Advance :</td>
+                                    <td><label id="lblSumAdv"></label></td>
+                                </tr>
+                                <tr>
+                                    <td>Service :</td>
+                                    <td><label id="lblSumServ"></label></td>
+                                </tr>
+
+                            </table>
+                            
                         </div>
 
                     </div>
@@ -310,6 +321,8 @@ End Code
     }
     function GetClearingInfo(branch, code) {
         $.get(path + 'clr/getclearingreport?branch=' + branch + '&job=' + code, function (r) {
+            let amtadv = 0;
+            let amtserv = 0;
             let amtvat = 0;
             let amtwht = 0;
             let amttotal = 0;
@@ -343,11 +356,14 @@ End Code
                 for (let i = 0; i < d.length; i++){
                     let html = '';
 
-                    let amt = d[i].UsedAmount + d[i].ChargeVAT - (d[i].IsCredit == 1 ? d[i].Tax50Tavi : 0);
+                    let amt = d[i].UsedAmount + d[i].ChargeVAT;
                     let adv = (d[i].IsCredit == 1 ? amt : 0);
                     let serv = (d[i].IsCredit == 0 && d[i].IsExpense == 0 ? amt : 0);
                     let cost = (d[i].IsExpense == 1 || d[i].IsCredit==1 ? amt : 0);
                     let profit = (d[i].IsExpense == 1 ? amt*-1 : d[i].IsCredit==1 ? 0 : amt);
+
+                    amtadv += adv;
+                    amtserv += serv;
 
                     if (d[i].IsCredit == 0 && d[i].IsExpense == 0) {
                         if (d[i].IsTaxCharge > 0) {
@@ -377,7 +393,8 @@ End Code
                     dv.append(html);
                 }
             }
-            
+            $('#lblSumAdv').text(CCurrency(CDbl(amtadv, 2)));
+            $('#lblSumServ').text(CCurrency(CDbl(amtserv,2)));
 
             $('#lblSumCharge').text(CCurrency(CDbl(amttotal,2)));
             $('#lblSumTax').text(CCurrency(CDbl(amtwht,2)));

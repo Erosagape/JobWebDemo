@@ -691,7 +691,7 @@ SET a.AdvTotal=ISNULL(b.AdvTotal,0)
 ,a.ClearBill=ISNULL(b.TotalBill,0)
 ,a.ClearCost=ISNULL(b.TotalCost,0)
 FROM Job_ClearHeader a LEFT JOIN (
-  SELECT d.BranchCode,d.ClrNo,Sum(ISNULL(h.AdvAmount,0)+ISNULL(h.ChargeVAT,0)) as AdvTotal,Sum(d.UsedAmount+d.ChargeVAT) as TotalExpense,
+  SELECT d.BranchCode,d.ClrNo,Sum(ISNULL(d.AdvAmount,0)+ISNULL(d.AdvAmount*d.VATRate*0.01,0)) as AdvTotal,Sum(d.UsedAmount+d.ChargeVAT) as TotalExpense,
   Sum(d.ChargeVAT) as TotalVAT,Sum(d.Tax50Tavi) as TotalWHT,Sum(d.BNet) as TotalNET,
   Sum(CASE WHEN d.BPrice >0 THEN d.BPrice+d.ChargeVAT ELSE 0 END) as TotalBill,
   Sum(CASE WHEN d.BPrice =0 THEN d.BCost+d.ChargeVAT ELSE 0 END) as TotalCost

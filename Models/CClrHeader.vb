@@ -528,7 +528,7 @@ Public Class CClrHeader
 UPDATE a
 SET a.AdvTotal=ISNULL(b.AdvTotal,0)
 ,a.TotalExpense=ISNULL(b.TotalExpense,0)
-,a.ClearTotal=ISNULL(b.AdvTotal-b.TotalExpense,0)
+,a.ClearTotal=ISNULL(b.AdvTotal-b.TotalNET,0)
 ,a.ClearVat=ISNULL(b.TotalVAT,0)
 ,a.ClearWht=ISNULL(b.TotalWHT,0)
 ,a.ClearNet=ISNULL(b.TotalNET,0)

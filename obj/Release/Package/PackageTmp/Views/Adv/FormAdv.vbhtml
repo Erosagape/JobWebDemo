@@ -254,7 +254,7 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
                 if (c.length > 0) {
                     strDesc = strDesc + (d.SICode + '-' + c[0].NameThai + '<br/>');
                 } else {
-                    strDesc = strDesc + (d.SICode + '-Not found Expenses<br/>');
+                    strDesc = strDesc + 'Not Assign Expenses<br/>';
                 }
             } else {
                 strDesc = strDesc + (d.SICode + '<br/>');
