@@ -1,5 +1,5 @@
 ﻿@Code
-    ViewBag.Title = "รับเคลียร์เงินตามใบปิดค่าใช้จ่าย"
+    ViewBag.Title = "รับเคลียร์เงินจากใบเบิกค่าใช้จ่าย"
 End Code
 <div class="panel-body">
     <div class="container">
@@ -52,7 +52,7 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        Clearing No:<input type="text" id="txtClrNo" />
+                        Clearing Document:<input type="text" id="txtAdvNo" />
                         <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
                         <br/>
                         <table id="tbHeader" class="table table-responsive">
@@ -321,8 +321,12 @@ End Code
         docno = '';
 
         let w = '';
-        if ($('#txtClrNo').val() !== "") {
-            w = w + '&clrno=' + $('#txtClrNo').val();
+        if ($('#txtAdvNo').val() !== "") {
+            if ($('#chkFromClr').prop('checked')) {
+                w = w + '&clrno=' + $('#txtAdvNo').val();
+            } else {
+                w = w + '&advno=' + $('#txtAdvNo').val();
+            }
         }
         if ($('#txtReqBy').val() !== "") {
             w = w + '&advby=' + $('#txtReqBy').val();
@@ -342,7 +346,7 @@ End Code
         if ($('#txtAdvDateT').val() !== "") {
             w = w + '&DateTo=' + CDateEN($('#txtAdvDateT').val());
         }
-        w = w + '&Show=BAL';
+        //w = w + '&Show=BAL';
         if ($('#chkFromClr').prop('checked') == true) {
             w = w + '&Data=CLR';
         }
@@ -370,8 +374,8 @@ End Code
                     { data: "ItemNo", title: "No" },
                     { data: "SICode", title: "Adv.Code" },
                     { data: "SDescription", title: "Adv.Expenses" },
-                    { data: "AdvTotal", title: "Adv Total" },
-                    { data: "ClrTotal", title: "Clear" },
+                    { data: "AdvNet", title: "Adv Total" },
+                    { data: "ClrNet", title: "Clear" },
                     { data: "ClrVat", title: "VAT" },
                     { data: "Clr50Tavi", title: "WT" },
                     { data: "ClrBal", title: "Balance" }
@@ -693,7 +697,7 @@ End Code
                 data: jsonString,
                 success: function (response) {
                     if (response.result.data != null) {
-                        if ($('#txtClrNo').val() !== '') {
+                        if ($('#txtAdvNo').val() !== '') {
                             ReceiveClearing(response.result.data);
                         }
                         SetGridAdv(false);
@@ -711,8 +715,9 @@ End Code
         let msg = "Clear Document " + cno + " Completed!";
 
         let dataApp = [];
-        dataApp.push(user + '|' + cno);
-        dataApp.push($('#txtBranchCode').val() + '|' + $('#txtClrNo').val());
+        dataApp.push(user + '|' + cno + '|' + ($('#chkFromClr').prop('checked') ? 'CLR' : 'ADV'));
+        
+        dataApp.push($('#txtBranchCode').val() + '|' + $('#txtAdvNo').val());
 
         let jsonString = JSON.stringify({ data: dataApp });
         $.ajax({

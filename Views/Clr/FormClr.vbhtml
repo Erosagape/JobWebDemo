@@ -233,9 +233,8 @@ End Code
 
                         html += '<tr><td>' + d[i].SICode + '</td><td>' + d[i].SDescription + '' + advref + '</td><td>' + d[i].JobNo + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].ChargeVAT, 2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].Tax50Tavi, 2)) + '</td><td style="text-align:right;">' + CCurrency(CDbl(d[i].UsedAmount, 2)) + '</td></tr>';
 
-                        if(d[i].IsDuplicate)
                         advtotal += d[i].AdvAmount;
-                        clrtotal += d[i].ClrAmount;
+                        clrtotal += d[i].ClrNet;
 
                         if (d[i].ChargeVAT > 0) {
                             amtforvat += d[i].UsedAmount;
@@ -247,7 +246,7 @@ End Code
                             amtforwht += d[i].UsedAmount;
                             amtwht += d[i].Tax50Tavi;
                         }
-                        amttotal += d[i].BCost;
+                        amttotal += d[i].BNet;
                     }
                     $('#tbDetail tbody').html(html);
 

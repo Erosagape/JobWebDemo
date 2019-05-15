@@ -524,69 +524,14 @@ Public Class CClrHeader
         Return msg
     End Function
     Public Sub UpdateTotal(cn As SqlConnection)
-        Dim sql As String = "
-UPDATE a
-SET a.AdvTotal=ISNULL(b.AdvTotal,0)
-,a.TotalExpense=ISNULL(b.TotalExpense,0)
-,a.ClearTotal=ISNULL(b.AdvTotal-b.TotalNET,0)
-,a.ClearVat=ISNULL(b.TotalVAT,0)
-,a.ClearWht=ISNULL(b.TotalWHT,0)
-,a.ClearNet=ISNULL(b.TotalNET,0)
-,a.ClearBill=ISNULL(b.TotalBill,0)
-,a.ClearCost=ISNULL(b.TotalCost,0)
-FROM Job_ClearHeader a LEFT JOIN (
-  SELECT BranchCode,ClrNo,Sum(AdvAmount) as AdvTotal,Sum(UsedAmount) as TotalExpense,
-  Sum(ChargeVAT) as TotalVAT,Sum(Tax50Tavi) as TotalWHT,Sum(BNet) as TotalNET,
-  Sum(CASE WHEN BPrice >0 THEN BPrice ELSE 0 END) as TotalBill,
-  Sum(CASE WHEN BPrice =0 THEN BCost ELSE 0 END) as TotalCost
-  FROM Job_ClearDetail
-  GROUP BY BranchCode,ClrNo
-) b
-ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
-"
+        Dim sql As String = Main.SQLUpdateClearHeader
         Using cm As New SqlCommand(sql, cn)
             cm.CommandText = sql + " WHERE a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
 
-            sql = "
-update adv
-set adv.DocStatus=src.ClrStatus
-from Job_AdvHeader adv inner join
-(
-    select BranchCode,AdvNo,
-    (CASE WHEN sum(AdvNet)-Sum(ClrNet)<=0 THEN 5 ELSE 
-         (CASE WHEN Sum(ClrNet) > 0 THEN 4 ELSE AdvStatus END) END) as ClrStatus 
-    from
-    (
-        select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvNet,
-        (CASE WHEN d.IsDuplicate=1 THEN ISNULL(c.ClrNet,0) ELSE 
-            (CASE WHEN c.ClrNet>0 THEN d.AdvNet ELSE 0 END)
-        END) as ClrNet,
-        (CASE WHEN h.PaymentRef<>'' THEN 3 ELSE (CASE WHEN h.ApproveBy<>'' THEN 2 ELSE 1 END) END) as AdvStatus
-        from Job_AdvHeader h inner join Job_AdvDetail d
-        on h.BranchCode=d.BranchCode
-        and h.AdvNo=d.AdvNo 
-        left join
-        (
-            select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.BNet) as ClrNet
-            FROM Job_ClearDetail a inner join Job_ClearHeader b
-            on a.BranchCode=b.BranchCode
-            and a.ClrNo=b.ClrNo
-            where b.DocStatus<>99
-            group by a.BranchCode,a.AdvNO,a.AdvItemNo
-        ) c
-        on h.BranchCode=c.BranchCode
-        and h.AdvNo=c.AdvNO
-        and d.ItemNo=c.AdvItemNo
-        where h.DocStatus<>99
-    ) clr
-    group by BranchCode,AdvNo,AdvStatus
-) src
-on adv.BranchCode=src.BranchCode
-and adv.AdvNo=src.AdvNo
-"
-            cm.CommandText = sql + " WHERE adv.BranchCode='" + Me.BranchCode + "' and adv.AdvNo IN(SELECT AdvNO FROM Job_ClearDetail WHERE BranchCode='" + Me.BranchCode + "' AND ClrNo='" + Me.ClrNo + "')"
+            sql = Main.SQLUpdateAdvStatus
+            cm.CommandText = sql + " WHERE adv.BranchCode='" + Me.BranchCode + "' and adv.AdvNo IN(SELECT AdvNO FROM Job_ClearDetail WHERE BranchCode='" + Me.BranchCode + "' AND ClrNo='" + Me.ClrNo + "' AND AdvNo IS NOT NULL)"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
         End Using

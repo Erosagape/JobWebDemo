@@ -680,70 +680,15 @@ Public Class CClrDetail
         Return msg
     End Function
     Public Sub UpdateTotal(cn As SqlConnection)
-        Dim sql As String = "
-UPDATE a
-SET a.AdvTotal=ISNULL(b.AdvTotal,0)
-,a.TotalExpense=ISNULL(b.TotalExpense,0)
-,a.ClearTotal=ISNULL(b.AdvTotal-b.TotalExpense,0)
-,a.ClearVat=ISNULL(b.TotalVAT,0)
-,a.ClearWht=ISNULL(b.TotalWHT,0)
-,a.ClearNet=ISNULL(b.TotalNET,0)
-,a.ClearBill=ISNULL(b.TotalBill,0)
-,a.ClearCost=ISNULL(b.TotalCost,0)
-FROM Job_ClearHeader a LEFT JOIN (
-  SELECT d.BranchCode,d.ClrNo,Sum(ISNULL(d.AdvAmount,0)+ISNULL(d.AdvAmount*d.VATRate*0.01,0)) as AdvTotal,Sum(d.UsedAmount+d.ChargeVAT) as TotalExpense,
-  Sum(d.ChargeVAT) as TotalVAT,Sum(d.Tax50Tavi) as TotalWHT,Sum(d.BNet) as TotalNET,
-  Sum(CASE WHEN d.BPrice >0 THEN d.BPrice+d.ChargeVAT ELSE 0 END) as TotalBill,
-  Sum(CASE WHEN d.BPrice =0 THEN d.BCost+d.ChargeVAT ELSE 0 END) as TotalCost
-  FROM Job_ClearDetail d LEFT JOIN Job_AdvDetail h
-  ON d.BranchCode=h.BranchCode and d.AdvNO=h.AdvNo and d.AdvItemNo=h.ItemNo
-  GROUP BY d.BranchCode,d.ClrNo
-) b
-ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
-"
+        Dim sql As String = SQLUpdateClearHeader()
+
         Using cm As New SqlCommand(sql, cn)
             cm.CommandText = sql + " WHERE a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
 
             If Me.AdvNO <> "" Then
-                sql = "
-update adv
-set adv.DocStatus=src.ClrStatus
-from Job_AdvHeader adv inner join
-(
-    select BranchCode,AdvNo,
-    (CASE WHEN sum(ClrNet)-Sum(AdvNet)>=0 THEN 5 ELSE 
-         (CASE WHEN Sum(ClrNet) > 0 THEN 4 ELSE AdvStatus END) 
-     END) as ClrStatus 
-    ,sum(ClrNet) as ClrNet,Sum(AdvNet) as AdvNet
-    from
-    (
-        select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvAmount as AdvNet,
-        (CASE WHEN d.IsDuplicate=1 THEN ISNULL(c.ClrNet,0) ELSE ISNULL(c.AdvNet,0) END) as ClrNet,
-        (CASE WHEN h.PaymentRef<>'' THEN 3 ELSE (CASE WHEN h.ApproveBy<>'' THEN 2 ELSE 1 END) END) as AdvStatus
-        from Job_AdvHeader h inner join Job_AdvDetail d
-        on h.BranchCode=d.BranchCode
-        and h.AdvNo=d.AdvNo 
-        left join
-        (
-            select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.UsedAmount) as ClrNet,Sum(a.AdvAmount) as AdvNet 
-            FROM Job_ClearDetail a inner join Job_ClearHeader b
-            on a.BranchCode=b.BranchCode
-            and a.ClrNo=b.ClrNo
-            where b.DocStatus<>99
-            group by a.BranchCode,a.AdvNO,a.AdvItemNo
-        ) c
-        on h.BranchCode=c.BranchCode
-        and h.AdvNo=c.AdvNO
-        and d.ItemNo=c.AdvItemNo
-        where h.DocStatus<>99
-    ) clr
-    group by BranchCode,AdvNo,AdvStatus
-) src
-on adv.BranchCode=src.BranchCode
-and adv.AdvNo=src.AdvNo
-"
+                sql = SQLUpdateAdvStatus()
                 cm.CommandText = sql + " WHERE adv.BranchCode='" + Me.BranchCode + "' and adv.AdvNo='" + Me.AdvNO + "'"
                 cm.CommandType = CommandType.Text
                 cm.ExecuteNonQuery()

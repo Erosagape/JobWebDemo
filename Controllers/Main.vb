@@ -153,4 +153,392 @@ GROUP BY a.UserID,b.ModuleID
             Return "[ERROR]" & ex.Message
         End Try
     End Function
+    Public Function SQLUpdateClearHeader() As String
+        Return "
+UPDATE a
+SET a.AdvTotal=ISNULL(b.AdvTotal,0)
+,a.TotalExpense=ISNULL(b.TotalNET,0)
+,a.ClearTotal=ISNULL(b.AdvTotal-b.TotalNET,0)
+,a.ClearVat=ISNULL(b.TotalVAT,0)
+,a.ClearWht=ISNULL(b.TotalWHT,0)
+,a.ClearNet=ISNULL(b.TotalNET,0)
+,a.ClearBill=ISNULL(b.TotalBill,0)
+,a.ClearCost=ISNULL(b.TotalCost,0)
+FROM Job_ClearHeader a LEFT JOIN (
+  SELECT BranchCode,ClrNo,Sum(AdvAmount) as AdvTotal,
+  Sum(ChargeVAT) as TotalVAT,Sum(Tax50Tavi) as TotalWHT,Sum(BNet) as TotalNET,
+  Sum(CASE WHEN BPrice >0 THEN BPrice ELSE 0 END) as TotalBill,
+  Sum(CASE WHEN BPrice =0 THEN BCost ELSE 0 END) as TotalCost
+  FROM Job_ClearDetail
+  GROUP BY BranchCode,ClrNo
+) b
+ON a.BranchCode=b.BranchCode AND a.ClrNo=b.ClrNo
+"
+    End Function
+    Public Function SQLUpdateAdvStatus() As String
+        Return "
+update adv
+set adv.DocStatus=src.ClrStatus
+from Job_AdvHeader adv inner join
+(
+    select BranchCode,AdvNo,
+    (CASE WHEN sum(ClrNet)-Sum(AdvNet)>=0 THEN 5 ELSE 
+         (CASE WHEN Sum(ClrNet) > 0 THEN 4 ELSE AdvStatus END) 
+     END) as ClrStatus 
+    ,sum(ClrNet) as ClrNet,Sum(AdvNet) as AdvNet
+    from
+    (
+        select h.BranchCode,d.AdvNo,d.ItemNo,d.AdvAmount as AdvNet,
+        (CASE WHEN d.IsDuplicate=1 THEN ISNULL(c.ClrNet,0) ELSE ISNULL(c.AdvNet,0) END) as ClrNet,
+        (CASE WHEN h.PaymentRef<>'' THEN 3 ELSE (CASE WHEN h.ApproveBy<>'' THEN 2 ELSE 1 END) END) as AdvStatus
+        from Job_AdvHeader h inner join Job_AdvDetail d
+        on h.BranchCode=d.BranchCode
+        and h.AdvNo=d.AdvNo 
+        left join
+        (
+            select a.BranchCode,a.AdvNO,a.AdvItemNo,Sum(a.BNet) as ClrNet,Sum(a.AdvAmount) as AdvNet 
+            FROM Job_ClearDetail a inner join Job_ClearHeader b
+            on a.BranchCode=b.BranchCode
+            and a.ClrNo=b.ClrNo
+            where b.DocStatus<>99
+            group by a.BranchCode,a.AdvNO,a.AdvItemNo
+        ) c
+        on h.BranchCode=c.BranchCode
+        and h.AdvNo=c.AdvNO
+        and d.ItemNo=c.AdvItemNo
+        where h.DocStatus<>99
+    ) clr
+    group by BranchCode,AdvNo,AdvStatus
+) src
+on adv.BranchCode=src.BranchCode
+and adv.AdvNo=src.AdvNo
+"
+    End Function
+    Public Function SQLUpdateAdvHeader()
+        Return "
+update b 
+set b.TotalAdvance =ISNULL(a.SumAdvance,0)
+,b.TotalVAT=ISNULL(a.SumVAT,0)
+,b.Total50Tavi=ISNULL(a.Sum50Tavi,0)
+from Job_AdvHeader b left join 
+(
+	select BranchCode,AdvNo,Sum(AdvNet) as SumAdvance,
+	sum(ChargeVAT) as SumVAT,
+	sum(Charge50Tavi) as Sum50Tavi
+	from Job_AdvDetail 
+	group by BranchCode,AdvNo
+) a                                     
+on b.BranchCode =a.BranchCode
+and b.AdvNo=a.AdvNo
+"
+    End Function
+    Function SQLUpdateWHTaxHeader() As String
+        Return "
+UPDATE h
+SET h.TotalPayAmount=d.TotalAmt,
+h.TotalPayTax=d.TotalTax
+FROM Job_WHTax h INNER JOIN (
+    SELECT BranchCode,DocNo,Sum(PayAmount) as TotalAmt,Sum(PayTax) as TotalTax
+    FROM Job_WHTaxDetail 
+    GROUP BY BranchCode,DocNo
+) d
+ON h.BranchCode=d.BranchCode
+AND h.DocNo=d.DocNo 
+"
+    End Function
+    Function SQLSelectVoucher() As String
+        Return "
+SELECT h.BranchCode,h.ControlNo,h.VoucherDate,h.TRemark,h.CustCode,h.CustBranch,h.RecUser,h.RecDate,h.RecTime,
+h.PostedBy,h.PostedDate,h.PostedTime,h.CancelReson,h.CancelProve,h.CancelDate,h.CancelTime,
+d.ItemNo,d.PRVoucher,d.PRType,d.ChqNo,d.BookCode,d.BankCode,d.BankBranch,d.ChqDate,d.CashAmount,d.ChqAmount,d.CreditAmount,
+d.SumAmount,d.CurrencyCode,d.ExchangeRate,d.VatInc+d.VatExc as VatAmount,d.WhtInc+d.WhtExc as WhtAmount,d.TotalAmount,
+d.TotalNet,d.IsLocal,d.ChqStatus,d.TRemark as DRemark,d.PayChqTo,d.DocNo as DRefNo,d.SICode,d.RecvBank,d.RecvBranch,
+d.acType,d.ForJNo,r.ItemNo as DocItemNo,r.DocType,r.DocNo,r.DocDate,r.CmpType,r.CmpCode,r.CmpBranch,r.PaidAmount as PaidTotal,r.TotalAmount as DocTotal
+FROM Job_CashControl h inner join Job_CashControlSub d
+on h.BranchCode=d.BranchCode AND h.ControlNo=d.ControlNo
+left join Job_CashControlDoc r
+on d.BranchCode=r.BranchCode AND d.ControlNo=r.ControlNo
+AND d.acType=r.acType
+"
+    End Function
+    Function SQLSelectWHTax()
+        Return "
+SELECT h.*,d.ItemNo,d.IncType,d.PayDate,d.PayAmount,d.PayTax,d.PayTaxDesc,
+d.JNo,d.DocRefType,d.DocRefNo,d.PayRate,
+j.InvNo,j.CustCode,j.CustBranch,u.TName as UpdateName 
+FROM dbo.Job_WHTax h LEFT JOIN dbo.Job_WHTaxDetail d
+ON h.BranchCode=d.BranchCode AND h.DocNo=d.DocNo
+LEFT JOIN dbo.Job_Order j ON d.BranchCode=j.BranchCode
+AND d.JNo=j.JNo 
+LEFT JOIN dbo.Mas_User u ON h.UpdateBy=u.UserID
+"
+    End Function
+    Function SQLSelectAdvHeader() As String
+        Return "
+select a.*,
+(SELECT STUFF((
+    SELECT DISTINCT ',' + ForJNo
+    FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
+    AND AdvNo=a.AdvNo AND ForJNo<>'' 
+FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
+)) as JobNo
+,
+(SELECT STUFF((
+    SELECT DISTINCT ',' + InvNo
+    FROM Job_Order WHERE BranchCode=a.BranchCode AND JNo in(SELECT ForJNo FROM Job_AdvDetail WHERE BranchCode=a.BranchCode
+    AND AdvNo=a.AdvNo AND ForJNo<>'')
+FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
+)) as CustInvNo
+,b.TaxNumber,b.NameThai,b.NameEng
+,c.BaseAmount,c.RateVAT,c.Rate50Tavi,c.BaseVATInc,c.Base50TaviInc,c.BaseVATExc,c.Base50TaviExc
+,c.BaseVATInc+c.BaseVATExc as BaseVAT,c.Base50TaviExc+c.Base50TaviInc as Base50Tavi
+,c.VATInc,c.VATExc,c.WHTInc,c.WHTExc,c.TotalNet
+FROM Job_AdvHeader as a LEFT JOIN
+Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
+LEFT JOIN (
+    SELECT BranchCode,AdvNo,MAX(VATRate) as RateVAT,MAX(Rate50Tavi) as Rate50Tavi,
+    SUM(CASE WHEN Charge50Tavi>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as Base50TaviExc,
+    SUM(CASE WHEN ChargeVAT>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as BaseVATExc,
+    SUM(CASE WHEN Charge50Tavi>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as Base50TaviInc,
+    SUM(CASE WHEN ChargeVAT>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as BaseVATInc,
+    SUM(CASE WHEN IsChargeVAT<>2 THEN ChargeVAT ELSE 0 END) as VATExc,
+    SUM(CASE WHEN IsChargeVAT=2 THEN ChargeVAT ELSE 0 END) as VATInc,
+    SUM(CASE WHEN IsChargeVAT<>2 THEN Charge50Tavi ELSE 0 END) as WHTExc,
+    SUM(CASE WHEN IsChargeVAT=2 THEN Charge50Tavi ELSE 0 END) as WHTInc,
+    SUM(AdvAmount) as BaseAmount,SUM(AdvNet) as TotalNet  
+    FROM Job_AdvDetail 
+    GROUP BY BranchCode,AdvNo
+) c
+ON a.BranchCode=c.BranchCode AND a.AdvNo=c.AdvNo
+"
+    End Function
+    Function SQLSelectAdvDetail() As String
+        Return "
+select a.*,d.ForJNo,d.ItemNo,d.SICode,d.SDescription,
+d.IsDuplicate,d.IsChargeVAT,d.Is50Tavi,d.CurrencyCode,d.ExchangeRate,
+b.TaxNumber,b.NameThai,b.NameEng,d.VenCode,d.TRemark as DRemark,
+d.BaseAmount,d.RateVAT,d.ChargeVAT,d.Rate50Tavi,d.Charge50Tavi,
+d.AdvQty,d.UnitPrice,d.AdvNet,d.AdvPayAmount,
+d.BaseVATExc,d.VATExc,d.BaseVATInc,d.VATInc,
+d.Base50TaviInc,d.WHTExc,d.Base50TaviExc,d.WHTInc,
+d.BaseVATInc+d.BaseVATExc as BaseVAT,d.Base50TaviExc+d.Base50TaviInc as Base50Tavi
+FROM Job_AdvHeader as a LEFT JOIN
+Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
+LEFT JOIN (
+    SELECT *,
+    VATRate as RateVAT,AdvAmount+ChargeVAT as AdvPayAmount,
+    AdvAmount as BaseAmount,
+    (CASE WHEN Charge50Tavi>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as Base50TaviExc,
+    (CASE WHEN ChargeVAT>0 And IsChargeVAT<>2 THEN AdvAmount ELSE 0 END) as BaseVATExc,
+    (CASE WHEN Charge50Tavi>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as Base50TaviInc,
+    (CASE WHEN ChargeVAT>0 And IsChargeVAT=2 THEN AdvAmount ELSE 0 END) as BaseVATInc,
+    (CASE WHEN IsChargeVAT<>2 THEN ChargeVAT ELSE 0 END) as VATExc,
+    (CASE WHEN IsChargeVAT=2 THEN ChargeVAT ELSE 0 END) as VATInc,
+    (CASE WHEN IsChargeVAT<>2 THEN Charge50Tavi ELSE 0 END) as WHTExc,
+    (CASE WHEN IsChargeVAT=2 THEN Charge50Tavi ELSE 0 END) as WHTInc
+    FROM Job_AdvDetail 
+) d
+ON a.BranchCode=d.BranchCode AND a.AdvNo=d.AdvNo
+"
+    End Function
+    Function SQLSelectAdvForClear() As String
+        Return "
+Select a.BranchCode,'' as ClrNo,0 as ItemNo,0 as LinkItem,
+a.STCode,a.SICode,a.SDescription,a.VenCode as VenderCode,
+a.AdvQty as Qty,b.UnitCharge as UnitCode,a.CurrencyCode,a.ExchangeRate as CurRate,
+(CASE WHEN b.IsExpense=0 THEN a.UnitPrice ELSE 0 END) as UnitPrice,
+(CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice ELSE 0 END) as FPrice,
+(CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice*a.ExchangeRate ELSE 0 END) as BPrice,
+q.TotalCharge as QUnitPrice,a.AdvQty*q.ChargeAmt as QFPrice,a.AdvQty*q.ChargeAmt*q.CurrencyRate as QBPrice,
+a.UnitPrice as UnitCost,a.AdvQty*a.UnitPrice as FCost,a.AdvQty*a.UnitPrice*a.ExchangeRate as BCost,
+a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,a.AdvNo as AdvNO,a.ItemNo as AdvItemNo,a.AdvAmount,a.AdvNet,
+a.AdvNet-ISNULL(d.TotalCleared,0) as AdvBalance,ISNULL(d.TotalCleared,0) as UsedAmount,
+(CASE WHEN ISNULL(q.QNo,'')='' THEN 0 ELSE 1 END) as IsQuoItem,
+a.IsDuplicate,b.IsExpense,
+b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date50Tavi,
+'' as VenderBillingNo,'' as SlipNO,'' as Remark,
+(SELECT STUFF((
+	SELECT DISTINCT ',' + Convert(varchar,QtyBegin) + '-'+convert(varchar,QtyEnd)+'='+convert(varchar,ChargeAmt)
+	FROM Job_QuotationItem WHERE BranchCode=q.BranchCode
+	AND QNo=q.QNo AND SICode=q.SICode AND VenderCode =q.VenderCode
+	AND UnitCheck=q.UnitCheck AND CalculateType=1
+FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
+)) as AirQtyStep,q.CalculateType as StepSub,
+a.ForJNo as JobNo,a.IsChargeVAT as VATType,a.VATRate,a.Rate50Tavi as Tax50TaviRate,q.QNo
+FROM Job_AdvDetail a LEFT JOIN Job_SrvSingle b on a.SICode=b.SICode
+INNER JOIN Job_AdvHeader c on a.BranchCode=c.BranchCode and a.AdvNo=c.AdvNo 
+left join Job_Order j on a.BranchCode=j.BranchCode and a.ForJNo=j.JNo
+left join 
+(
+	select qh.BranchCode,qh.QNo,
+	qd.JobType,qd.ShipBy,qd.SeqNo,
+	qi.ItemNo,qi.SICode,qi.CalculateType,
+	qi.QtyBegin,qi.QtyEnd,qi.UnitCheck,qi.CurrencyCode,
+	qi.CurrencyRate,qi.ChargeAmt,qi.Isvat,qi.VatRate,
+	qi.VatAmt,qi.IsTax,qi.TaxRate,qi.TaxAmt,
+	qi.TotalAmt,qi.TotalCharge,qi.UnitDiscntPerc,qi.UnitDiscntAmt,
+	qi.VenderCode,qi.VenderCost,qi.BaseProfit,qi.CommissionPerc,qi.CommissionAmt,
+	qi.NetProfit,qi.IsRequired
+	from Job_QuotationHeader qh	inner join Job_QuotationDetail qd ON qh.BranchCode=qd.BranchCode and qh.QNo=qd.QNo
+	inner join Job_QuotationItem qi	on qd.BranchCode=qi.BranchCode and qd.QNo=qi.QNo and qd.SeqNo=qi.SeqNo 
+    where qh.DocStatus=3 
+) q
+on a.BranchCode=q.BranchCode and b.SICode=q.SICode and ISNULL(a.VenCode,b.DefaultVender)=q.VenderCode 
+and b.UnitCharge=q.UnitCheck and a.AdvQty <=q.QtyEnd and a.AdvQty>=q.QtyBegin and q.QNo=j.QNo
+left join 
+(
+	SELECT ad.BranchCode,ad.AdvNo,ad.ItemNo,
+    SUM(CASE WHEN ad.IsDuplicate=1 THEN ISNULL(cd.BNet,0) ELSE ISNULL(cd.AdvAmount,0) END) as TotalCleared    
+	FROM Job_ClearDetail cd INNER JOIN Job_ClearHeader ch
+	on cd.BranchCode=ch.BranchCode	and cd.ClrNo =ch.ClrNo 	and ch.DocStatus<>99
+    RIGHT JOIN Job_AdvDetail ad on cd.BranchCode=ad.BranchCode and cd.AdvNO=ad.AdvNo and cd.AdvItemNo=ad.ItemNo
+    INNER JOIN Job_AdvHeader ah on ad.BranchCode=ah.BranchCode and ad.AdvNo=ah.AdvNo
+    WHERE ah.DocStatus<>99
+	GROUP BY ad.BranchCode,ad.AdvNo,ad.ItemNo
+) d
+ON a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNo and a.ItemNo=d.ItemNo
+WHERE (a.AdvNet-ISNULL(d.TotalCleared,0))>0 AND c.DocStatus IN('3','4') "
+    End Function
+    Function SQLSelectClrHeader() As String
+        Return "
+select a.*,
+b.CustCode,b.CustBranch,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,b.AdvNet,
+b.ClrAmt,b.BaseVat,b.RateVAT,b.ClrVat,b.Base50Tavi,b.Rate50Tavi,b.Clr50Tavi,b.ClrNet
+FROM Job_ClearHeader as a 
+left join 
+(
+    SELECT d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
+    d.AdvNO,d.CurrencyCode,
+    SUM(d.UsedAmount) as ClrAmt,sum(d.AdvAmount) as AdvNet,
+    SUM(CASE WHEN d.ChargeVAT>0 THEN d.UsedAmount ELSE 0 END) as BaseVat,
+    SUM(CASE WHEN d.Tax50Tavi>0 THEN d.UsedAmount ELSE 0 END) as Base50Tavi,
+    SUM(d.ChargeVAT) as ClrVat,SUM(d.Tax50Tavi) as Clr50Tavi,
+    MAX(VATRate) as RateVAT,MAX(Tax50TaviRate) as Rate50Tavi,
+    SUM(d.BNet) as ClrNet
+    FROM Job_ClearDetail d
+    inner join Job_Order j on d.JobNo=j.JNo and d.BranchCode=j.BranchCode
+    GROUP BY d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
+    d.AdvNO,d.CurrencyCode
+) b
+on b.BranchCode=a.BranchCode
+and b.ClrNo=a.ClrNo"
+    End Function
+    Function SQLSelectClrDetail() As String
+        Return "select 
+h.BranchCode,h.ClrNo,h.ClrDate,h.DocStatus,c1.ClrStatusName,
+h.ClearanceDate,h.JobType,c4.JobTypeName,j.ShipBy,c6.ShipByName,
+b.BrName as BranchName,h.CTN_NO,h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
+h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
+h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
+h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
+d.ItemNo,d.AdvNO,d.AdvItemNo,a.IsDuplicate,d.AdvAmount,a.AdvNet,
+d.SICode,d.SDescription,d.SlipNO,d.JobNo,
+d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.BNet as ClrNet,
+d.FPrice,d.BPrice,d.FCost,d.BCost,
+d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
+d.LinkItem,d.LinkBillNo,s.IsExpense,s.IsCredit,s.IsTaxCharge,s.Is50Tavi,s.IsHaveSlip,s.IsLtdAdv50Tavi,
+d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,j.TotalContainer,j.VesselName,j.Commission,
+j.JobDate,j.JobStatus,c5.JobStatusName,j.CloseJobDate,j.DeclareNumber,j.InvProduct,j.TotalGW,j.InvProductQty,
+h.CancelProve,h.CancelReson,h.CancelDate
+from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
+left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
+left join (
+  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.EmpCode,ah.AdvDate,ad.AdvAmount,ad.ChargeVAT,
+  ad.IsDuplicate,ad.AdvNet 
+  from Job_AdvHeader ah inner join Job_AdvDetail ad
+  on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
+) a 
+on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
+left join (
+  select j.BranchCode,j.JNo,j.DocDate as JobDate,j.DeclareNumber,j.VesselName,j.InvProduct,j.TotalGW,
+  j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,j.TotalContainer,j.InvProductQty,
+  c.NameThai,c.NameEng,j.ShipBy,j.Commission 
+  from Job_Order j inner join Mas_Company c
+  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
+) j
+on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
+left join 
+(SELECT ConfigKey as ClrStatusKey,ConfigValue as ClrStatusName FROM Mas_Config WHERE ConfigCode='CLR_STATUS') c1
+on h.DocStatus=c1.ClrStatusKey
+left join 
+(SELECT ConfigKey as ClrTypeKey,ConfigValue as ClrTypeName FROM Mas_Config WHERE ConfigCode='CLR_TYPE') c2
+on h.ClearType=c2.ClrTypeKey
+left join 
+(SELECT ConfigKey as ClrFromKey,ConfigValue as ClrFromName FROM Mas_Config WHERE ConfigCode='CLR_FROM') c3
+on h.ClearType=c3.ClrFromKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as JobTypeName FROM Mas_Config WHERE ConfigCode='JOB_TYPE') c4
+on h.JobType=c4.JobTypeKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as JobStatusName FROM Mas_Config WHERE ConfigCode='JOB_STATUS') c5
+on j.JobStatus=c5.JobTypeKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as ShipByName FROM Mas_Config WHERE ConfigCode='SHIP_BY') c6
+on j.ShipBy=c6.JobTypeKey
+left join Mas_User u1 on h.EmpCode=u1.UserID
+left join Mas_User u2 on h.ApproveBy=u2.UserID
+left join Mas_User u3 on h.ReceiveBy=u3.UserID 
+left join Job_SrvSingle s on d.SICode=s.SICode"
+    End Function
+    Function SQLSelectClrNoAdvance() As String
+        Return "
+select h.ClrDate,h.ReceiveRef,h.ClrNo,d.ItemNo,a.AdvAmount,a.ChargeVAT,a.Charge50Tavi,a.AdvNet,
+d.SICode,d.SDescription,j.CustCode,j.CustBranch,sum(d.UsedAmount+d.ChargeVAT) as ClrTotal,
+ISNULL(a.AdvNet,0)-sum(d.UsedAmount+d.ChargeVAT) as ClrBal,
+sum(d.UsedAmount) as ClrAmount,
+SUM(d.Tax50Tavi) as Clr50Tavi,SUM(d.ChargeVAT) as ClrVat,
+SUM(d.BNet) as ClrNet
+from Job_ClearHeader h
+left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
+left join (
+  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.PaymentRef,ah.JobType,
+  ah.EmpCode,ah.AdvDate,ad.SICode,ad.SDescription,ad.AdvAmount,ad.ChargeVAT,ad.Charge50Tavi,ad.AdvNet,
+  ah.CustCode,ah.CustBranch
+  from Job_AdvHeader ah inner join Job_AdvDetail ad
+  on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
+) a 
+on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
+left join (
+  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,
+  c.NameThai,c.NameEng
+  from Job_Order j inner join Mas_Company c
+  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
+) j
+on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
+{0} 
+group by h.ClrDate,h.ReceiveRef,h.ClrNo,d.ItemNo,a.AdvAmount,a.ChargeVAT,a.Charge50Tavi,a.AdvNet,
+d.SICode,d.SDescription,j.CustCode,j.CustBranch
+"
+    End Function
+    Function SQLSelectClrFromAdvance() As String
+        Return "
+select a.PaymentDate,a.PaymentRef,a.AdvNo,a.ItemNo,a.AdvAmount,a.ChargeVAT,a.Charge50Tavi,a.AdvNet,
+a.SICode,a.SDescription,a.CustCode,a.CustBranch,
+sum(d.UsedAmount+d.ChargeVAT) as ClrTotal,
+ISNULL(a.AdvNet,0)-sum(d.UsedAmount+d.ChargeVAT) as ClrBal,
+sum(d.UsedAmount) as ClrAmount,
+SUM(d.Tax50Tavi) as Clr50Tavi,SUM(d.ChargeVAT) as ClrVat,
+SUM(d.BNet) as ClrNet
+from Job_ClearHeader h
+left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
+left join (
+  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.PaymentRef,ah.JobType,
+  ah.EmpCode,ah.AdvDate,ad.SICode,ad.SDescription,ad.AdvAmount,ad.ChargeVAT,ad.Charge50Tavi,ad.AdvNet,
+  ah.CustCode,ah.CustBranch
+  from Job_AdvHeader ah inner join Job_AdvDetail ad
+  on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
+) a 
+on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
+left join (
+  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,
+  c.NameThai,c.NameEng
+  from Job_Order j inner join Mas_Company c
+  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
+) j
+on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
+{0} 
+group by a.PaymentDate,a.PaymentRef,a.AdvNo,a.ItemNo,a.AdvAmount,a.ChargeVAT,a.Charge50Tavi,a.AdvNet,
+a.SICode,a.SDescription,a.CustCode,a.CustBranch
+"
+    End Function
 End Module

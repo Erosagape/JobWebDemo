@@ -88,11 +88,13 @@ Namespace Controllers
 
             Dim lst As String = ""
             Dim i As Integer = 0
+            Dim doctype As String = "CLR"
             For Each str As String In data
                 i += 1
                 If i = 1 Then
                     Dim user As String = str.Split("|")(0)
                     Dim docno As String = str.Split("|")(1)
+                    doctype = str.Split("|")(2)
                 Else
                     If str.IndexOf("|") >= 0 Then
                         If lst <> "" Then lst &= ","
@@ -102,77 +104,29 @@ Namespace Controllers
             Next
 
             If lst <> "" Then
-                Dim tSQL As String = String.Format("UPDATE Job_ClearHeader SET DocStatus=3 WHERE DocStatus<3 AND BranchCode+'|'+ClrNo in({0})", lst)
-                Dim result = Main.DBExecute(jobWebConn, tSQL)
-                If result = "OK" Then
-                    Return New HttpResponseMessage(HttpStatusCode.OK)
+                If doctype = "CLR" Then
+                    Dim tSQL As String = String.Format("UPDATE Job_ClearHeader SET DocStatus=3 WHERE DocStatus<3 AND BranchCode+'|'+ClrNo in({0})", lst)
+                    Dim result = Main.DBExecute(jobWebConn, tSQL)
+                    If result = "OK" Then
+                        Return New HttpResponseMessage(HttpStatusCode.OK)
+                    End If
+                End If
+                If doctype = "ADV" Then
+                    Dim tSQL As String = String.Format("UPDATE Job_AdvHeader SET DocStatus=5 WHERE DocStatus<5 AND BranchCode+'|'+AdvNo in({0})", lst)
+                    Dim result = Main.DBExecute(jobWebConn, tSQL)
+                    If result = "OK" Then
+                        Return New HttpResponseMessage(HttpStatusCode.OK)
+                    End If
                 End If
             End If
-            Return New HttpResponseMessage(HttpStatusCode.OK)
+            Return New HttpResponseMessage(HttpStatusCode.NoContent)
         End Function
         Function GetClearingReport() As ActionResult
             Dim branch As String = ""
             If Not Request.QueryString("Branch") Is Nothing Then
                 branch = Request.QueryString("Branch").ToString
             End If
-            Dim sql As String = "
-select h.BranchCode,h.ClrNo,h.ClrDate,h.DocStatus,c1.ClrStatusName,
-h.ClearanceDate,h.JobType,c4.JobTypeName,j.ShipBy,c6.ShipByName,
-b.BrName as BranchName,h.CTN_NO,
-h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeName,h.ClearFrom,c3.ClrFromName,
-h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
-h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
-h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
-d.ItemNo,d.AdvNO,d.AdvItemNo,a.IsDuplicate,a.AdvAmount,a.AdvNet,
-d.SICode,d.SDescription,d.SlipNO,d.JobNo,
-d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.BNet as ClrNet,
-d.FPrice,d.BPrice,d.FCost,d.BCost,
-d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
-d.LinkItem,d.LinkBillNo,s.IsExpense,s.IsCredit,s.IsTaxCharge,s.Is50Tavi,s.IsHaveSlip,s.IsLtdAdv50Tavi,
-d.Remark,j.CustCode,j.CustBranch,j.InvNo,j.NameEng,j.NameThai,j.TotalContainer,j.VesselName,j.Commission,
-j.JobDate,j.JobStatus,c5.JobStatusName,j.CloseJobDate,j.DeclareNumber,j.InvProduct,j.TotalGW,j.InvProductQty,
-h.CancelProve,h.CancelReson,h.CancelDate
-from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
-left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
-left join (
-  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.EmpCode,ah.AdvDate,ad.AdvAmount,ad.ChargeVAT,
-  ad.IsDuplicate,ad.AdvNet 
-  from Job_AdvHeader ah inner join Job_AdvDetail ad
-  on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
-) a 
-on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
-left join (
-  select j.BranchCode,j.JNo,j.DocDate as JobDate,j.DeclareNumber,j.VesselName,j.InvProduct,j.TotalGW,
-  j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,j.TotalContainer,j.InvProductQty,
-  c.NameThai,c.NameEng,j.ShipBy,j.Commission 
-  from Job_Order j inner join Mas_Company c
-  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
-) j
-on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
-left join 
-(SELECT ConfigKey as ClrStatusKey,ConfigValue as ClrStatusName FROM Mas_Config WHERE ConfigCode='CLR_STATUS') c1
-on h.DocStatus=c1.ClrStatusKey
-left join 
-(SELECT ConfigKey as ClrTypeKey,ConfigValue as ClrTypeName FROM Mas_Config WHERE ConfigCode='CLR_TYPE') c2
-on h.ClearType=c2.ClrTypeKey
-left join 
-(SELECT ConfigKey as ClrFromKey,ConfigValue as ClrFromName FROM Mas_Config WHERE ConfigCode='CLR_FROM') c3
-on h.ClearType=c3.ClrFromKey
-left join 
-(SELECT ConfigKey as JobTypeKey,ConfigValue as JobTypeName FROM Mas_Config WHERE ConfigCode='JOB_TYPE') c4
-on h.JobType=c4.JobTypeKey
-left join 
-(SELECT ConfigKey as JobTypeKey,ConfigValue as JobStatusName FROM Mas_Config WHERE ConfigCode='JOB_STATUS') c5
-on j.JobStatus=c5.JobTypeKey
-left join 
-(SELECT ConfigKey as JobTypeKey,ConfigValue as ShipByName FROM Mas_Config WHERE ConfigCode='SHIP_BY') c6
-on j.ShipBy=c6.JobTypeKey
-left join Mas_User u1 on h.EmpCode=u1.UserID
-left join Mas_User u2 on h.ApproveBy=u2.UserID
-left join Mas_User u3 on h.ReceiveBy=u3.UserID 
-left join Job_SrvSingle s on d.SICode=s.SICode
-WHERE h.BranchCode='{0}' 
-"
+            Dim sql As String = SQLSelectClrDetail() & " WHERE h.BranchCode='{0}'"
             Try
                 If Not Request.QueryString("Code") Is Nothing Then
                     sql &= " AND h.ClrNo='" & Request.QueryString("Code").ToString & "' "
@@ -207,17 +161,9 @@ WHERE h.BranchCode='{0}'
 
                 Dim tSqlW As String = String.Format(" WHERE h.BranchCode='{0}'", Branch)
 
-                Dim sqlSelect As String = "
-a.PaymentDate,a.PaymentRef,a.AdvNo,a.ItemNo,a.AdvAmount,a.ChargeVAT,
-a.SICode,a.SDescription,a.CustCode,a.CustBranch
-"
                 Dim tbPrefix = "a"
                 If Not IsNothing(Request.QueryString("Data")) Then
                     If Request.QueryString("Data").ToString = "CLR" Then
-                        sqlSelect = "
-h.ClrDate,h.ReceiveRef,h.ClrNo,d.ItemNo,a.AdvAmount,a.ChargeVAT,
-d.SICode,d.SDescription,j.CustCode,j.CustBranch
-"
                         tbPrefix = "h"
                     End If
                     tSqlW &= " And h.DocStatus<3"
@@ -229,6 +175,7 @@ d.SICode,d.SDescription,j.CustCode,j.CustBranch
                 End If
                 If Not IsNothing(Request.QueryString("AdvNo")) Then
                     tSqlW &= " AND a.AdvNo='" & Request.QueryString("AdvNo") & "'"
+                    bClrDoc = True
                 End If
                 If Not IsNothing(Request.QueryString("JType")) Then
                     tSqlW &= " AND " & tbPrefix & ".JobType=" & Request.QueryString("JType") & ""
@@ -259,32 +206,7 @@ d.SICode,d.SDescription,j.CustCode,j.CustBranch
                     End If
                 End If
 
-                Dim sql As String = "
-select " + sqlSelect + ",a.AdvAmount+a.ChargeVAT as AdvTotal,sum(d.UsedAmount+d.ChargeVAT) as ClrTotal,
-(ISNULL(a.AdvAmount,0)+ISNULL(a.ChargeVAT,0))-sum(d.UsedAmount+d.ChargeVAT) as ClrBal,
-sum(d.UsedAmount) as ClrAmount,
-SUM(d.Tax50Tavi) as Clr50Tavi,SUM(d.ChargeVAT) as ClrVat,
-SUM(d.BNet) as ClrNet
-from Job_ClearHeader h
-left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
-left join (
-  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.PaymentRef,ah.JobType,
-  ah.EmpCode,ah.AdvDate,ad.SICode,ad.SDescription,ad.AdvAmount,ad.ChargeVAT,
-  ah.CustCode,ah.CustBranch
-  from Job_AdvHeader ah inner join Job_AdvDetail ad
-  on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
-) a 
-on d.BranchCode=a.BranchCode and d.AdvNO=a.AdvNo and d.AdvItemNo=a.ItemNo
-left join (
-  select j.BranchCode,j.JNo,j.CustCode,j.CustBranch,j.InvNo,j.JobStatus,j.CloseJobDate,
-  c.NameThai,c.NameEng
-  from Job_Order j inner join Mas_Company c
-  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
-) j
-on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
-{0} 
-group by 
-" & sqlSelect
+                Dim sql As String = If(tbPrefix = "a", SQLSelectClrFromAdvance(), SQLSelectClrNoAdvance())
                 If Not IsNothing(Request.QueryString("Show")) Then
                     If Request.QueryString("Show").ToString = "BAL" Then
                         sql &= " having (ISNULL(a.AdvAmount,0)+ISNULL(a.ChargeVAT,0))-sum(d.UsedAmount+d.ChargeVAT)<>0"
@@ -352,38 +274,8 @@ group by
                 Else
                     tSqlW &= " "
                 End If
-                Dim sql As String = "
-select a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
-a.JobType,a.DocStatus,a.TotalExpense,a.ClearTotal,
-a.ClearVat,a.ClearWht,a.ClearNet,a.ClearBill,a.ClearCost,
-a.TRemark,a.ReceiveDate,a.ApproveDate,
-b.CustCode,b.CustBranch,b.JobNo,b.InvNo as CustInvNo,b.CurrencyCode,b.AdvNO,
-b.AdvTotal,b.ClrAmt,b.ClrVat,b.Clr50Tavi,b.ClrNet,b.BaseVat,b.Base50Tavi,b.RateVAT,b.Rate50Tavi
-FROM Job_ClearHeader as a 
-left join 
-(
-    SELECT d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
-    d.AdvNO,d.CurrencyCode,
-    SUM(d.UsedAmount) as ClrAmt,sum(d.AdvAmount) as AdvTotal,
-    SUM(CASE WHEN d.ChargeVAT>0 THEN d.UsedAmount ELSE 0 END) as BaseVat,
-    SUM(CASE WHEN d.Tax50Tavi>0 THEN d.UsedAmount ELSE 0 END) as Base50Tavi,
-    SUM(d.ChargeVAT) as ClrVat,SUM(d.Tax50Tavi) as Clr50Tavi,
-    MAX(VATRate) as RateVAT,MAX(Tax50TaviRate) as Rate50Tavi,
-    SUM(d.BNet) as ClrNet
-    FROM Job_ClearDetail d
-    inner join Job_Order j on d.JobNo=j.JNo and d.BranchCode=j.BranchCode
-    GROUP BY d.BranchCode,d.ClrNo,d.JobNo,j.InvNo,j.CustCode,j.CustBranch,
-    d.AdvNO,d.CurrencyCode
-) b
-on b.BranchCode=a.BranchCode
-and b.ClrNo=a.ClrNo
-{0}
-"
-                'group by
-                'a.BranchCode,a.ClrNo,a.ClrDate,a.EmpCode,a.ClearFrom,a.ClearType,
-                'a.JobType,a.DocStatus,a.TotalExpense,a.TRemark,
-                'b.CustCode,b.JobNo,b.InvNo,b.CurrencyCode,b.AdvNO,b.AdvTotal,b.ClrVat,b.Clr50Tavi
-                '"
+                Dim sql As String = SQLSelectClrHeader() & "{0}"
+
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
                 Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
                 Return Content(json, jsonContent)
@@ -420,78 +312,8 @@ and b.ClrNo=a.ClrNo
             If Not IsNothing(Request.QueryString("Status")) Then
                 tSqlW &= " AND c.DocStatus='" & Request.QueryString("Status") & "' "
             End If
-            Dim sql As String = "
-Select a.BranchCode,'' as ClrNo,0 as ItemNo,0 as LinkItem
-,a.STCode,a.SICode,a.SDescription,a.VenCode as VenderCode,
-a.AdvQty as Qty,b.UnitCharge as UnitCode,a.CurrencyCode,a.ExchangeRate as CurRate,
-(CASE WHEN b.IsExpense=0 THEN a.UnitPrice ELSE 0 END) as UnitPrice,
-(CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice ELSE 0 END) as FPrice,
-(CASE WHEN b.IsExpense=0 THEN a.AdvQty*a.UnitPrice*a.ExchangeRate ELSE 0 END) as BPrice,
-q.TotalCharge as QUnitPrice,a.AdvQty*q.ChargeAmt as QFPrice,a.AdvQty*q.ChargeAmt*q.CurrencyRate as QBPrice,
-a.UnitPrice as UnitCost,a.AdvQty*a.UnitPrice as FCost,a.AdvQty*a.UnitPrice*a.ExchangeRate as BCost,
-a.ChargeVAT,a.Charge50Tavi as Tax50Tavi,a.AdvNo as AdvNO,a.ItemNo as AdvItemNo,a.AdvAmount,a.AdvNet,
-a.AdvNet-ISNULL(d.TotalCleared,0) as AdvBalance,ISNULL(d.TotalCleared,0) as UsedAmount,
-(CASE WHEN ISNULL(q.QNo,'')='' THEN 0 ELSE 1 END) as IsQuoItem,
-a.IsDuplicate,b.IsExpense,
-b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date50Tavi,
-'' as VenderBillingNo,'' as SlipNO,'' as Remark,
-(SELECT STUFF((
-	SELECT DISTINCT ',' + Convert(varchar,QtyBegin) + '-'+convert(varchar,QtyEnd)+'='+convert(varchar,ChargeAmt)
-	FROM Job_QuotationItem WHERE BranchCode=q.BranchCode
-	AND QNo=q.QNo AND SICode=q.SICode AND VenderCode =q.VenderCode
-	AND UnitCheck=q.UnitCheck AND CalculateType=1
-FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
-)) as AirQtyStep,
-q.CalculateType as StepSub,
-a.ForJNo as JobNo,a.IsChargeVAT as VATType,a.VATRate,a.Rate50Tavi as Tax50TaviRate,q.QNo
-FROM Job_AdvDetail a LEFT JOIN Job_SrvSingle b on a.SICode=b.SICode
-INNER JOIN Job_AdvHeader c on a.BranchCode=c.BranchCode and a.AdvNo=c.AdvNo 
-left join Job_Order j on a.BranchCode=j.BranchCode and a.ForJNo=j.JNo
-left join 
-(
-	select qh.BranchCode,qh.QNo,
-	qd.JobType,qd.ShipBy,qd.SeqNo,
-	qi.ItemNo,qi.SICode,qi.CalculateType,
-	qi.QtyBegin,qi.QtyEnd,qi.UnitCheck,qi.CurrencyCode,
-	qi.CurrencyRate,qi.ChargeAmt,qi.Isvat,qi.VatRate,
-	qi.VatAmt,qi.IsTax,qi.TaxRate,qi.TaxAmt,
-	qi.TotalAmt,qi.TotalCharge,qi.UnitDiscntPerc,qi.UnitDiscntAmt,
-	qi.VenderCode,qi.VenderCost,qi.BaseProfit,qi.CommissionPerc,qi.CommissionAmt,
-	qi.NetProfit,qi.IsRequired
-	from Job_QuotationHeader qh
-	inner join Job_QuotationDetail qd
-	ON qh.BranchCode=qd.BranchCode
-	and qh.QNo=qd.QNo
-	inner join Job_QuotationItem qi
-	on qd.BranchCode=qi.BranchCode
-	and qd.QNo=qi.QNo
-	and qd.SeqNo=qi.SeqNo
-	where qh.DocStatus=3 
-) q
-on a.BranchCode=q.BranchCode and b.SICode=q.SICode and ISNULL(a.VenCode,b.DefaultVender)=q.VenderCode 
-and b.UnitCharge=q.UnitCheck and a.AdvQty <=q.QtyEnd and a.AdvQty>=q.QtyBegin and q.QNo=j.QNo
-left join 
-(
-	SELECT ad.BranchCode,ad.AdvNo,ad.ItemNo,
-    SUM(CASE WHEN ad.IsDuplicate=1 THEN ISNULL(cd.BNet,0) ELSE ISNULL(cd.AdvAmount,0) END) as TotalCleared    
-	FROM Job_ClearDetail cd INNER JOIN Job_ClearHeader ch
-	on cd.BranchCode=ch.BranchCode
-	and cd.ClrNo =ch.ClrNo 
-	and ch.DocStatus<>99
-    RIGHT JOIN Job_AdvDetail ad 
-    on cd.BranchCode=ad.BranchCode
-    and cd.AdvNO=ad.AdvNo
-    and cd.AdvItemNo=ad.ItemNo
-    INNER JOIN Job_AdvHeader ah
-    on ad.BranchCode=ah.BranchCode
-    and ad.AdvNo=ah.AdvNo
-    WHERE ah.DocStatus<>99
-	GROUP BY ad.BranchCode,ad.AdvNo,ad.ItemNo
-) d
-ON a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNo and a.ItemNo=d.ItemNo
-WHERE (a.AdvNet-ISNULL(d.TotalCleared,0))>0 AND c.DocStatus IN('3','4') 
-{0}
-"
+            Dim sql As String = SQLSelectAdvForClear() & "{0}"
+
             Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
             Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
             Return Content(json, jsonContent)

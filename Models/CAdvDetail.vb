@@ -283,22 +283,8 @@ Public Class CAdvDetail
         Return msg
     End Function
     Public Sub UpdateTotal(cn As SqlConnection)
-        Dim sql As String = "
-                                    update b 
-                                    set b.TotalAdvance =ISNULL(a.SumAdvance,0)
-                                    ,b.TotalVAT=ISNULL(a.SumVAT,0)
-                                    ,b.Total50Tavi=ISNULL(a.Sum50Tavi,0)
-                                    from Job_AdvHeader b left join 
-                                    (
-	                                    select BranchCode,AdvNo,Sum(AdvNet) as SumAdvance,
-	                                    sum(ChargeVAT) as SumVAT,
-	                                    sum(Charge50Tavi) as Sum50Tavi
-	                                    from Job_AdvDetail 
-	                                    group by BranchCode,AdvNo
-                                    ) a                                     
-                                    on b.BranchCode =a.BranchCode
-                                    and b.AdvNo=a.AdvNo
-"
+        Dim sql As String = SQLUpdateAdvHeader()
+
         Using cm As New SqlCommand(sql, cn)
             cm.CommandText = sql + " WHERE b.BranchCode='" + Me.BranchCode + "' and b.AdvNo='" + Me.AdvNo + "'"
             cm.CommandType = CommandType.Text

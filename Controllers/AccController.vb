@@ -125,19 +125,7 @@ Namespace Controllers
                     End If
                 End If
 
-                Dim tSqlw As String = "
-SELECT h.BranchCode,h.ControlNo,h.VoucherDate,h.TRemark,h.CustCode,h.CustBranch,h.RecUser,h.RecDate,h.RecTime,
-h.PostedBy,h.PostedDate,h.PostedTime,h.CancelReson,h.CancelProve,h.CancelDate,h.CancelTime,
-d.ItemNo,d.PRVoucher,d.PRType,d.ChqNo,d.BookCode,d.BankCode,d.BankBranch,d.ChqDate,d.CashAmount,d.ChqAmount,d.CreditAmount,
-d.SumAmount,d.CurrencyCode,d.ExchangeRate,d.VatInc+d.VatExc as VatAmount,d.WhtInc+d.WhtExc as WhtAmount,d.TotalAmount,
-d.TotalNet,d.IsLocal,d.ChqStatus,d.TRemark as DRemark,d.PayChqTo,d.DocNo as DRefNo,d.SICode,d.RecvBank,d.RecvBranch,
-d.acType,d.ForJNo,r.ItemNo as DocItemNo,r.DocType,r.DocNo,r.DocDate,r.CmpType,r.CmpCode,r.CmpBranch,r.PaidAmount as PaidTotal,r.TotalAmount as DocTotal
-FROM Job_CashControl h inner join Job_CashControlSub d
-on h.BranchCode=d.BranchCode AND h.ControlNo=d.ControlNo
-left join Job_CashControlDoc r
-on d.BranchCode=r.BranchCode AND d.ControlNo=r.ControlNo
-AND d.acType=r.acType
-"
+                Dim tSqlw As String = SQLSelectVoucher()
                 tSqlw &= " WHERE h.ControlNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)
@@ -547,15 +535,7 @@ AND d.acType=r.acType
                     Return Content("{""whtax"":{""data"":null,""msg"":""You are not authorize to read""}}", jsonContent)
                 End If
 
-                Dim tSqlw As String = "
-SELECT h.*,d.ItemNo,d.IncType,d.PayDate,d.PayAmount,d.PayTax,d.PayTaxDesc,d.JNo,d.DocRefType,d.DocRefNo,d.PayRate,
-j.InvNo,j.CustCode,j.CustBranch,u.TName as UpdateName 
-FROM dbo.Job_WHTax h LEFT JOIN dbo.Job_WHTaxDetail d
-ON h.BranchCode=d.BranchCode AND h.DocNo=d.DocNo
-LEFT JOIN dbo.Job_Order j ON d.BranchCode=j.BranchCode
-AND d.JNo=j.JNo 
-LEFT JOIN dbo.Mas_User u ON h.UpdateBy=u.UserID
-"
+                Dim tSqlw As String = SQLSelectWHTax()
 
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" WHERE h.BranchCode ='{0}'", Request.QueryString("Branch").ToString)

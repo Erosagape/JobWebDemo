@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>05/14/2019 17:23:37</publishTime>
+      <publishTime>05/15/2019 16:12:23</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>05/14/2019 17:23:37</publishTime>
+      <publishTime>05/15/2019 16:12:23</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>05/14/2019 17:23:36</publishTime>
+      <publishTime>05/15/2019 16:12:23</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -1088,16 +1088,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:54:06</publishTime>
     </File>
     <File Include="Views/Clr/FormClr.vbhtml">
-      <publishTime>05/14/2019 15:50:20</publishTime>
+      <publishTime>05/15/2019 14:50:59</publishTime>
     </File>
     <File Include="Views/Clr/GenerateInv.vbhtml">
       <publishTime>03/19/2019 10:54:06</publishTime>
     </File>
     <File Include="Views/Clr/Index.vbhtml">
-      <publishTime>05/14/2019 17:23:21</publishTime>
+      <publishTime>05/15/2019 16:02:14</publishTime>
     </File>
     <File Include="Views/Clr/Receive.vbhtml">
-      <publishTime>05/10/2019 17:25:40</publishTime>
+      <publishTime>05/15/2019 15:56:39</publishTime>
     </File>
     <File Include="Views/Config/FileManager.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1205,7 +1205,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/Menu/Index.vbhtml">
-      <publishTime>04/30/2019 17:16:40</publishTime>
+      <publishTime>05/15/2019 15:52:22</publishTime>
     </File>
     <File Include="Views/Report/Index.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1241,7 +1241,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/19/2019 10:56:05</publishTime>
+      <publishTime>05/15/2019 12:46:11</publishTime>
     </File>
     <File Include="_Layout.vbhtml">
       <publishTime>01/01/0001 00:00:00</publishTime>
