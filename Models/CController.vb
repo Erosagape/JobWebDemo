@@ -10,14 +10,16 @@ Public Class CController
         End If
     End Function
     Friend Sub LoadCompanyProfile()
-        ViewBag.PROFILE_LOGO = Main.GetValueConfig("PROFILE", "COMPANY_LOGO")
-        ViewBag.PROFILE_COMPANY_NAME = Main.GetValueConfig("PROFILE", "COMPANY_NAME")
-        ViewBag.PROFILE_COMPANY_ADDR1 = Main.GetValueConfig("PROFILE", "COMPANY_ADDRESS1")
-        ViewBag.PROFILE_COMPANY_ADDR2 = Main.GetValueConfig("PROFILE", "COMPANY_ADDRESS2")
-        ViewBag.PROFILE_CURRENCY = Main.GetValueConfig("PROFILE", "CURRENCY")
-        ViewBag.PROFILE_VATRATE = Main.GetValueConfig("PROFILE", "VAT_RATE")
-        ViewBag.PROFILE_TAXNUMBER = Main.GetValueConfig("PROFILE", "COMPANY_TAXNUMBER")
-        ViewBag.PROFILE_TAXBRANCH = Main.GetValueConfig("PROFILE", "COMPANY_TAXBRANCH")
+        'Dim oConfig = Main.GetDataConfig("PROFILE")
+        ViewBag.PROFILE_DEFAULT_BRANCH = GetValueConfig("PROFILE", "DEFAULT_BRANCH")
+        ViewBag.PROFILE_LOGO = GetValueConfig("PROFILE", "COMPANY_LOGO")
+        ViewBag.PROFILE_COMPANY_NAME = GetValueConfig("PROFILE", "COMPANY_NAME")
+        ViewBag.PROFILE_COMPANY_ADDR1 = GetValueConfig("PROFILE", "COMPANY_ADDRESS1")
+        ViewBag.PROFILE_COMPANY_ADDR2 = GetValueConfig("PROFILE", "COMPANY_ADDRESS2")
+        ViewBag.PROFILE_CURRENCY = GetValueConfig("PROFILE", "CURRENCY")
+        ViewBag.PROFILE_VATRATE = GetValueConfig("PROFILE", "VATRATE")
+        ViewBag.PROFILE_TAXNUMBER = GetValueConfig("PROFILE", "COMPANY_TAXNUMBER")
+        ViewBag.PROFILE_TAXBRANCH = GetValueConfig("PROFILE", "COMPANY_TAXBRANCH")
     End Sub
     Friend Function GetView(vName As String, Optional modName As String = "") As ActionResult
         Try

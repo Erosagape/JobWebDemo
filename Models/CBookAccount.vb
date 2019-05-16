@@ -129,6 +129,15 @@ Public Class CBookAccount
             m_FaxNumber = value
         End Set
     End Property
+    Private m_LimitBalance As Double
+    Public Property LimitBalance As Double
+        Get
+            Return m_LimitBalance
+        End Get
+        Set(value As Double)
+            m_LimitBalance = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -154,6 +163,7 @@ Public Class CBookAccount
                             dr("EAddress2") = Me.EAddress2
                             dr("Phone") = Me.Phone
                             dr("FaxNumber") = Me.FaxNumber
+                            dr("LimitBalance") = Me.LimitBalance
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -229,6 +239,9 @@ Public Class CBookAccount
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("FaxNumber"))) = False Then
                         row.FaxNumber = rd.GetString(rd.GetOrdinal("FaxNumber")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("LimitBalance"))) = False Then
+                        row.LimitBalance = rd.GetDouble(rd.GetOrdinal("LimitBalance")).ToString()
                     End If
                     lst.Add(row)
                 End While

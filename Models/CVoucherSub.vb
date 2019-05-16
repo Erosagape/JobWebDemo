@@ -317,6 +317,18 @@ Public Class CVoucherSub
                             If Me.ItemNo = 0 Then
                                 Dim retStr = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_CashControlSub WHERE BranchCode='{0}' And ControlNo ='{1}' ", m_BranchCode, m_ControlNo), "____")
                                 m_ItemNo = Convert.ToInt32("0" & retStr)
+                                If m_PRType = "P" Then
+                                    Dim bal As Double = 0
+                                    If m_CashAmount > 0 Then
+                                        bal = Me.GetBalance("CashOnhand") - m_CashAmount
+                                    End If
+                                    If m_ChqAmount > 0 Then
+                                        bal = Me.GetBalance("Cash") - m_ChqAmount
+                                    End If
+                                    If bal <= 0 Then
+                                        msg = "[ERROR] Book " & Me.BookCode & " Is over balance=" & bal
+                                    End If
+                                End If
                             End If
                             dr("ItemNo") = Me.ItemNo
                             dr("PRVoucher") = Me.PRVoucher
@@ -355,7 +367,7 @@ Public Class CVoucherSub
                     End Using
                 End Using
             Catch ex As Exception
-                msg = ex.Message
+                msg = "[ERROR] " & ex.Message
             End Try
         End Using
         Return msg
@@ -503,5 +515,18 @@ Public Class CVoucherSub
             End Try
         End Using
         Return msg
+    End Function
+    Function GetBalance(Optional pField As String = "Bal") As Double
+        Dim bal = 0
+        Try
+            Dim dt = New CUtil(m_ConnStr).GetTableFromSQL(String.Format(SQLSelectBookAccBalance, " AND c.BookCode='" & Me.BookCode & "'"))
+            If dt.Rows.Count > 0 Then
+                Dim dr = dt.Rows(0)
+                bal = Convert.ToDouble(dr("Sum" & pField).ToString()) - Convert.ToDouble(dr("LimitBalance").ToString())
+            End If
+            Return bal
+        Catch ex As Exception
+            Return bal
+        End Try
     End Function
 End Class

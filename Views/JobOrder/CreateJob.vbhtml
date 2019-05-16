@@ -156,12 +156,12 @@ End Code
 <script type="text/javascript">
     //define letiables
     const path = '@Url.Content("~")';
-    $(document).ready(function () {
+    //$(document).ready(function () {
         CheckParam();
         SetLOVs();
         SetEvents();
         SetEnterToTab();
-    });
+    //});
     function SetEnterToTab() {
         //Set enter to tab
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
@@ -203,11 +203,13 @@ End Code
         //read query string parameters
         let br = getQueryString('Branch');
         let jt = getQueryString('JType');
-        let sb = getQueryString('SBy');
+        let sb = getQueryString('SBy');        
         if (br !== undefined) {
             $('#txtBranchCode').val(br);
-            ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
         }
+        ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
         if (jt == undefined) jt = "01";
         if (sb == undefined) sb = "01";
         //Combos

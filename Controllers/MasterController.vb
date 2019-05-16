@@ -186,6 +186,23 @@ AND b.IsApplyPolicy=1
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetBookBalance() As ActionResult
+            Try
+                Dim tSqlw As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND a.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND c.BookCode ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(String.Format(SQLSelectBookAccBalance(), tSqlw))
+                Dim json As String = JsonConvert.SerializeObject(oData.Rows)
+                json = "{""bookaccount"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""bookaccount"":{""data"":0,""msg"":" & ex.Message & "}}", jsonContent)
+            End Try
+        End Function
         Function SetBookAccount(<FromBody()> data As CBookAccount) As ActionResult
             Try
                 If Not IsNothing(data) Then

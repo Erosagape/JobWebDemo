@@ -139,6 +139,10 @@ Namespace Controllers
                             tSqlw &= " AND d.ChqAmount>0 AND PRType='P'"
                         Case "CHQR"
                             tSqlw &= " AND d.ChqAmount>0 AND PRType='R'"
+                        Case "CASHP"
+                            tSqlw &= " AND d.CashAmount>0 AND PRType='P'"
+                        Case "CASHR"
+                            tSqlw &= " AND d.CashAmount>0 AND PRType='R'"
                         Case "TACC"
                             tSqlw &= String.Format(" AND d.DocNo Like '{0}%'", Request.QueryString("Type").ToString)
                     End Select
@@ -297,7 +301,11 @@ Namespace Controllers
                         o.AddNew(o.PRType & "V-" & DateTime.Today.ToString("yyMM") & "-____")
                     End If
                     If str <> "" Then str &= ","
-                    str &= o.SaveData(String.Format(" WHERE BranchCode='{0}' AND  ControlNo='{1}' And ItemNo='{2}' ", o.BranchCode, o.ControlNo, o.ItemNo))
+                    Dim msg = o.SaveData(String.Format(" WHERE BranchCode='{0}' AND  ControlNo='{1}' And ItemNo='{2}' ", o.BranchCode, o.ControlNo, o.ItemNo))
+                    If msg.Substring(0, 1) = "[" Then
+                        Return Content("{""result"":{""data"":[],""msg"":""" & msg & """}}", jsonContent)
+                    End If
+                    str &= msg
                 Next
 
                 Dim obj = New CVoucherSub(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' And ControlNo='{1}'", branchcode, docno))

@@ -376,12 +376,12 @@ End Code
     var job = '';
     var isjobmode = false;
     var chkmode = false;
-    $(document).ready(function () {       
-        SetLOVs();
-        SetEvents();
-        SetEnterToTab();
-        CheckParam();
-    });
+    //$(document).ready(function () {       
+    SetLOVs();
+    SetEvents();
+    SetEnterToTab();
+    CheckParam();
+    //});
     function CheckParam() {
         ClearHeader();
         //read query string parameters
@@ -679,18 +679,6 @@ End Code
         alert('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
         $('#chkApprove').prop('checked', !chkmode);
     }
-    /*
-    function SetPayment(b) {
-        if (b == true) {
-            $('#txtPaymentBy').val(chkmode ? user : '');
-            $('#txtPaymentDate').val(chkmode ? CDateEN(GetToday()) : '');
-            $('#txtPaymentTime').val(chkmode ? ShowTime(GetTime()) : '');
-            return;
-        }
-        alert('You are not allow to ' + (b ? 'payment Advance!' : 'cancel payment!'));
-        $('#chkPayment').prop('checked', !chkmode);
-    }
-    */
     function GetStatus() {
         let status = 1;
         if ($('#txtPaymentBy').val() !== '') {
@@ -862,7 +850,7 @@ End Code
             AdvChqCash : CNum($('#txtAdvChqCash').val()),
             AdvCred : CNum($('#txtAdvCred').val()),
 
-            TotalAdvance : CNum($('#txtAdvAmount').val()),
+            TotalAdvance : CNum($('#txtTotalAmount').val()),
             TotalVAT : CNum($('#txtVatAmount').val()),
             Total50Tavi : CNum($('#txtWhtAmount').val()),
 
@@ -923,10 +911,10 @@ End Code
             $('#txtAdvChqCash').val(CDbl(dt.AdvChqCash,4));
             $('#txtAdvCred').val(CDbl(dt.AdvCred,4));
 
-            $('#txtAdvAmount').val(CDbl(dt.TotalAdvance,4));
+            $('#txtAdvAmount').val(CDbl(dt.TotalAdvance-dt.TotalVAT+dt.Total50Tavi,4));
             $('#txtVatAmount').val(CDbl(dt.TotalVAT,4));
             $('#txtWhtAmount').val(CDbl(dt.Total50Tavi,4));
-            $('#txtTotalAmount').val(CDbl((dt.TotalAdvance+dt.TotalVAT-dt.Total50Tavi),4));
+            $('#txtTotalAmount').val(CDbl((dt.TotalAdvance),4));
 
             $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
             $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
@@ -1181,7 +1169,6 @@ End Code
         }
         alert('No data to save');
     }
-
     function ReadAdvDetail(dt) {
         $('#tbDetail').DataTable({
             data:dt,
@@ -1505,10 +1492,10 @@ End Code
             $('#cboSTCode').val(dt.GroupCode);
 
             $('#txtSDescription').val(dt.NameThai);
-            $('#txtVatType').val(dt.IsTaxCharge);
-            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
-            $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
-            $('#txtUnitPrice').val(dt.StdPrice);
+            if ($('#txtVatType').val() == '') $('#txtVatType').val(dt.IsTaxCharge);
+            if ($('#txtVATRate').val() == '') $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
+            if ($('#txtWHTRate').val() == '') $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
+            if ($('#txtUnitPrice').val() == '') $('#txtUnitPrice').val(dt.StdPrice);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
                 $('#txtVATRate').attr('disabled', 'disabled');
@@ -1549,7 +1536,7 @@ End Code
     }
     function GetTotal() {
         let total = SumTotal();
-        let sum = CNum($('#txtAdvAmount').val()) + CNum($('#txtVatAmount').val());
+        let sum = CNum($('#txtTotalAmount').val());
         return CDbl(sum / CNum($('#txtExchangeRate').val()) - total,4);
     }
     function CalAmount() {
@@ -1620,14 +1607,12 @@ End Code
         $('#txtWHT').val(CDbl(wht,4));
         CalTotal();
     } 
-
     function GetExchangeRate() {
         $.get('https://free.currencyconverterapi.com/api/v6/convert?q=' + $('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val() + '&compact=ultra&apiKey=6210d55b79170a4a7da2', function (r) {
             let rate = CDbl(r[$('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val()], 4);
             $('#txtExchangeRate').val(rate);
         });
     }
-
     function AutoGenWHTax() {
         if ($('#txtDoc50Tavi').val() !== '') {
             window.open(path + 'Acc/WHTax?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDoc50Tavi').val());
@@ -1641,6 +1626,10 @@ End Code
         });
     }
     function SaveWHTax(dt) {
+        if ($('#btnSave').attr('disabled') == 'disabled') {
+            alert('Cannot Save WH-Tax because document has been locked');
+            return;
+        }
         let obj = GetWHTaxHeader(dt);
         let jsonText = JSON.stringify({ data: obj });
         //alert(jsonText);

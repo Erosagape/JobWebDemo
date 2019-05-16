@@ -286,7 +286,7 @@ Public Class CAdvDetail
         Dim sql As String = SQLUpdateAdvHeader()
 
         Using cm As New SqlCommand(sql, cn)
-            cm.CommandText = sql + " WHERE b.BranchCode='" + Me.BranchCode + "' and b.AdvNo='" + Me.AdvNo + "'"
+            cm.CommandText = sql & " WHERE b.BranchCode='" + Me.BranchCode + "' and b.AdvNo='" + Me.AdvNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
         End Using

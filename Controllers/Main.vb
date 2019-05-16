@@ -1,5 +1,4 @@
 ﻿Imports System.Data.SqlClient
-
 Module Main
     Friend Const jsonContent As String = "application/json;charset=UTF-8"
     Friend Const xmlContent As String = "application/xml;charset=UTF-8"
@@ -41,10 +40,9 @@ Module Main
             Return ""
         End If
     End Function
-    Friend Function GetDataConfig(sCode As String, sKey As String) As List(Of CConfig)
+    Friend Function GetDataConfig(sCode As String) As List(Of CConfig)
         Dim tSqlw As String = " WHERE ConfigCode<>'' "
         If sCode <> "" Then tSqlw &= String.Format("AND ConfigCode='{0}'", sCode)
-        If sKey <> "" Then tSqlw &= String.Format("AND ConfigKey='{0}'", sKey)
         Dim oData = New CConfig(jobWebConn).GetData(tSqlw)
         Return oData
     End Function
@@ -539,6 +537,28 @@ on d.BranchCode=j.BranchCode and d.JobNo=j.JNo
 {0} 
 group by a.PaymentDate,a.PaymentRef,a.AdvNo,a.ItemNo,a.AdvAmount,a.ChargeVAT,a.Charge50Tavi,a.AdvNet,
 a.SICode,a.SDescription,a.CustCode,a.CustBranch
+"
+    End Function
+    Function SQLSelectBookAccBalance() As String
+        Return "
+select c.BookCode,c.LimitBalance,
+Sum(Case when a.PRType='P' then -1*(a.CashAmount+a.ChqAmount) else (a.CashAmount+a.ChqAmount) end) as SumCash,
+Sum(Case when a.PRType='P' then -1*a.CashAmount else a.CashAmount end) as SumCashOnhand,
+Sum(Case when a.ChqStatus='P' then (CASE WHEN a.PRType='P' THEN -1*a.ChqAmount ELSE a.ChqAmount end) else 0 end) as SumChqClear,
+Sum(Case when a.ChqStatus='R' then (CASE WHEN a.PRType='P' THEN -1*a.ChqAmount ELSE a.ChqAmount end) else 0 end) as SumChqReturn,
+Sum(Case when a.ChqStatus NOT IN('P','R') then (CASE WHEN a.PRType='P' THEN -1*a.ChqAmount ELSE a.ChqAmount end) else 0 end) as SumChqOnhand,
+Sum(Case when a.PRType='P' then -1*a.CreditAmount else a.CreditAmount end) as SumCredit,
+Sum(Case when a.PRType='P' then -1*(a.CreditAmount) else 0 end) as SumAP,
+Sum(Case when a.PRType='R' then (a.CreditAmount) else 0 end) as SumAR,
+Sum(Case when a.PRType='P' then -1*(a.CashAmount+a.ChqAmount) else 0 end) as SumPV,
+Sum(Case when a.PRType='R' then (a.CashAmount+a.ChqAmount) else 0 end) as SumRV,
+Sum(Case when a.PRType='P' then -1*(a.CashAmount+a.ChqAmount+a.CreditAmount) else (a.CashAmount+a.ChqAmount+a.CreditAmount) end) as SumBal
+from Job_CashControlSub a inner join Job_CashControl b
+on a.BranchCode=b.BranchCode and a.ControlNo=b.ControlNo
+inner join Mas_BookAccount c 
+on a.BookCode=c.BookCode
+WHERE ISNULL(b.CancelProve,'')='' {0}
+group by c.BookCode,c.LimitBalance
 "
     End Function
 End Module
