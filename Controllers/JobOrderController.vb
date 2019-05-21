@@ -47,7 +47,44 @@ Namespace Controllers
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function
-
+        Function GetJobReport() As ActionResult
+            Try
+                Dim tSqlW As String = ""
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND j.JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlW &= " AND j.ShipBy=" & Request.QueryString("SBy") & ""
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlW &= " AND j.BranchCode='" & Request.QueryString("Branch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlW &= " AND j.JobStatus='" & Request.QueryString("Status") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("JNo")) Then
+                    tSqlW &= " AND j.JNo='" & Request.QueryString("JNo") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Year")) Then
+                    tSqlW &= " AND Year(j.DocDate)='" & Request.QueryString("Year") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Month")) Then
+                    tSqlW &= " AND Month(j.DocDate)='" & Request.QueryString("Month") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    tSqlW &= " AND j.CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlW &= " AND j.CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectJobReport() & " WHERE j.JNo<>'' " & tSqlW)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""job"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetJobSQL() As ActionResult
             Try
                 Dim oJob As New CJobOrder(jobWebConn)

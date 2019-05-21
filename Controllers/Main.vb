@@ -561,4 +561,32 @@ WHERE ISNULL(b.CancelProve,'')='' {0}
 group by c.BookCode,c.LimitBalance
 "
     End Function
+    Function SQLSelectJobReport() As String
+        Return "
+select j.*,c2.JobStatusName,c1.JobTypeName,c3.ShipByName,
+u1.ManagerName,u2.CSName,u3.ShippingName,
+c4.ConsigneeName,v1.AgentName,v2.ForwarderName
+from (
+  select j.*,
+  c.NameThai as CustTName,c.NameEng as CustEName
+  from Job_Order j inner join Mas_Company c
+  on j.CustCode=c.CustCode and j.CustBranch=c.Branch
+) j
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as JobTypeName FROM Mas_Config WHERE ConfigCode='JOB_TYPE') c1
+on j.JobType=c1.JobTypeKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as JobStatusName FROM Mas_Config WHERE ConfigCode='JOB_STATUS') c2
+on j.JobStatus=c2.JobTypeKey
+left join 
+(SELECT ConfigKey as JobTypeKey,ConfigValue as ShipByName FROM Mas_Config WHERE ConfigCode='SHIP_BY') c3
+on j.ShipBy=c3.JobTypeKey
+left join (select UserID,TName as ManagerName from Mas_User ) u1 on j.ManagerCode=u1.UserID
+left join (select UserID,TName as CSName from Mas_User ) u2 on j.CSCode=u2.UserID
+left join (select UserID,TName as ShippingName from Mas_User ) u3 on j.ShippingEmp=u3.UserID
+left join (select CustCode,Max(NameThai) as ConsigneeName from Mas_Company group by CustCode) c4 on j.consigneecode=c4.CustCode
+left join (select VenCode,TName as AgentName from Mas_Vender) v1 on j.AgentCode=v1.VenCode
+left join (select VenCode,TName as ForwarderName from Mas_Vender) v2 on j.ForwarderCode=v2.VenCode
+"
+    End Function
 End Module

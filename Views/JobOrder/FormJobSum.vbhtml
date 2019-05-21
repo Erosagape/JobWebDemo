@@ -230,11 +230,31 @@ End Code
     let br = getQueryString('BranchCode');
     let jno = getQueryString('JNo');
     if (br != "" && jno != "") {
+        GetJobInfo(br, jno);
         GetChequeInfo(br, jno);
         GetClearingInfo(br, jno);
         GetAdvanceInfo(br, jno);
     }
-
+    function GetJobInfo(branch, jno) {
+        $.get(path+ 'joborder/getjobreport?branch=' + branch + '&jno=' + jno, function (r) {
+            if (r.job.data.length > 0) {
+                let h = r.job.data[0];
+                $('#lblJNo').text(h.JNo);
+                $('#lblJobTypeName').text(h.JobTypeName);
+                $('#lblJobDate').text(ShowDate(CDateTH(h.DocDate)));
+                $('#lblCustName').text(h.CustTName);
+                $('#lblShipByName').text(h.ShipByName);
+                $('#lblInvNo').text(h.InvNo);
+                $('#lblDeclareNo').text(h.DeclareNumber);
+                $('#lblVesselName').text(h.VesselName);
+                $('#lblProductName').text(h.InvProduct);
+                $('#lblGrossWeight').text(h.TotalGW);
+                $('#lblContainer').text(h.TotalContainer);
+                $('#lblCSName').text(h.CSName);
+                $('#lblInvQty').text(h.InvProductQty);
+            }
+        });
+    }
     function GetChequeInfo(branch, code) {
         $.get(path + 'acc/getvouchergrid?branch=' + branch + '&job=' + code + '&type=CHQR', function (r) {
             if (r.voucher.data.length > 0) {
@@ -334,19 +354,6 @@ End Code
                 dv.empty();
 
                 let h = r.data[0].Table[0];
-                $('#lblJNo').text(h.JobNo);
-                $('#lblJobTypeName').text(h.JobTypeName);
-                $('#lblJobDate').text(ShowDate(CDateTH(h.JobDate)));
-                $('#lblCustName').text(h.NameThai);
-                $('#lblShipByName').text(h.ShipByName);
-                $('#lblInvNo').text(h.InvNo);
-                $('#lblDeclareNo').text(h.DeclareNumber);
-                $('#lblVesselName').text(h.VesselName);
-                $('#lblProductName').text(h.InvProduct);
-                $('#lblGrossWeight').text(h.TotalGW);
-                $('#lblContainer').text(h.TotalContainer);
-                $('#lblCSName').text(h.ClrByName);
-                $('#lblInvQty').text(h.InvProductQty);
                 
                 commrate = h.Commission;
 
