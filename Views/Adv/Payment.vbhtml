@@ -164,13 +164,20 @@ End Code
                         <br />
                     </div>
                     <div class="col-sm-3 table-bordered" id="dvCred">
-                        <b>Credit : </b><input type="text" id="txtAdvCred" class="form-control" value="" />
-                        <br />
-                        Ref No:<input type="text" id="txtRefNoCred" class="form-control" value="" />
-                        <br />
-                        Ref Date:<input type="date" id="txtCredTranDate" class="form-control" />
-                        Pay To:<input type="text" id="txtCredPayTo" class="form-control" />
-                        <br />
+                        <div>
+                            <b>Credit : </b><input type="text" id="txtAdvCred" class="form-control" value="" />
+                            <br />
+                            Ref No:<input type="text" id="txtRefNoCred" class="form-control" value="" />
+                            <br />
+                            Ref Date:<input type="date" id="txtCredTranDate" class="form-control" />
+                            Pay To:<input type="text" id="txtCredPayTo" class="form-control" />
+                        </div>
+                        <div style="background-color:greenyellow;padding:10px 10px 10px 10px;margin:10px 10px 10px 10px;">
+                            <b>Balance</b>
+                            <br />
+                            For Cash/Transfer :<br/> <input type="number" id="txtCashBal" class="form-control" disabled />
+                            For Cheque : <br/> <input type="number" id="txtChqCashBal" class="form-control" disabled />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -534,17 +541,21 @@ End Code
             destroy:true
         });
 
-        SetStatusInput('#dvCash', (cash > 0 ? true : false),'#txtAdvCash');
-        SetStatusInput('#dvChqCash', (chq > 0 ? true : false), '#txtAdvChqCash');
-        SetStatusInput('#dvChq', (chqcust > 0 ? true : false), '#txtAdvChq');
+        SetStatusInput('#dvCash', (cash > 0 ? true : false), '#txtAdvCash');
+        $('#txtAdvCash').val(CDbl(cash, 2));
+
+        SetStatusInput('#dvChqCash', (chqcust > 0 ? true : false), '#txtAdvChqCash');
+        $('#txtAdvChqCash').val(CDbl(chqcust, 2));
+
+        SetStatusInput('#dvChq', (chq > 0 ? true : false), '#txtAdvChq');
+        $('#txtAdvChq').val(CDbl(chq, 2));
+
         SetStatusInput('#dvCred', (cred > 0 ? true : false), '#txtAdvCred');
+        $('#txtAdvCred').val(CDbl(cred, 2));
 
         $('#txtSumApprove').val(CDbl(tot, 2));
         $('#txtSumWHTax').val(CDbl(wtax, 2));
-        $('#txtAdvCash').val(CDbl(cash, 2));
-        $('#txtAdvChqCash').val(CDbl(chq, 2));
-        $('#txtAdvChq').val(CDbl(chqcust, 2));
-        $('#txtAdvCred').val(CDbl(cred, 2));
+                                
         $('#txtListApprove').val(doc);
     }
     function GetSumPayment(type) {
@@ -802,6 +813,9 @@ End Code
             alert('no data to approve');
             return;
         }
+        if (CheckBalance() == false) {
+            return;
+        }
         let oHeader = {
             BranchCode: $('#txtBranchCode').val(),
             ControlNo: '',
@@ -872,11 +886,26 @@ End Code
         $('#txtBookCash').val(dt.BookCode);
         $('#fldBankCodeCash').val(dt.BankCode);
         $('#fldBankBranchCash').val(dt.BankBranch);
+        $('#txtCashBal').val(0);
+        $.get(path + 'master/getbookbalance?code='+ dt.BookCode, function (r) {
+            if (r.bookaccount.data.length > 0) {
+                let dt = r.bookaccount.data[0].Table[0];
+                $('#txtCashBal').val(dt.SumCashInBank);
+            }
+        });
     }
     function ReadBookChq(dt) {
         $('#txtBookChqCash').val(dt.BookCode);
         $('#fldBankCodeChqCash').val(dt.BankCode);
         $('#fldBankBranchChqCash').val(dt.BankBranch);
+        $('#txtChqCashBal').val(0);
+        $.get(path + 'master/getbookbalance?code='+ dt.BookCode, function (r) {
+            if (r.bookaccount.data.length > 0) {
+                let dt = r.bookaccount.data[0].Table[0];
+                $('#txtChqCashBal').val(dt.SumCashInBank);
+            }
+        });
+
     }
     function ReadReqBy(dt) {
         $('#txtReqBy').val(dt.UserID);
@@ -890,6 +919,43 @@ End Code
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+    }
+    function CheckBalance() {
+        let bPass = false;
+        if ($('#txtBookCash').val() == $('#txtBookChqCash').val()) {
+            let amtChk = Number($('#txtAdvCash').val()) + Number($('#txtAdvChqCash').val());
+            let amtBal = Number($('#txtCashBal').val());
+            if (amtBal < amtChk) {
+                alert('Your book balance ('+$('#txtBookCash').val()+') is not enough for payment =' + amtBal);
+            } else {
+                bPass = true;
+            }
+            return bPass;
+        } else {
+            let amtChk = Number($('#txtAdvCash').val());
+            if (amtChk > 0) {
+                bPass = false;
+                let amtBal = Number($('#txtCashBal').val());
+                if (amtBal < amtChk) {
+                    alert('Your cash balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
+                    return bPass;
+                } else {
+                    bPass = true; 
+                }                
+            }
+            amtChk = Number($('#txtAdvChqCash').val());
+            if (amtChk > 0) {
+                bPass = false;
+                let amtBal = Number($('#txtChqCashBal').val());
+                if (amtBal < amtChk) {
+                    alert('Your book balance ('+$('#txtBookChqCash').val()+') is not enough for payment =' + amtBal);
+                    return bPass;
+                } else {
+                    bPass = true; 
+                }
+            }
+            return bPass;
+        }
     }
     function PrintVoucher(br, cno) {
         window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());

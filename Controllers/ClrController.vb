@@ -76,6 +76,40 @@ Namespace Controllers
                 Return New HttpResponseMessage(HttpStatusCode.BadRequest)
             End Try
         End Function
+        Function ReceiveEarnest(<FromBody()> data As String()) As HttpResponseMessage
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Earnest")
+            If AuthorizeStr.IndexOf("I") < 0 Then
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End If
+            If IsNothing(data) Then
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End If
+
+            Dim lst As String = ""
+            Dim docno As String = ""
+            Dim i As Integer = 0
+            For Each str As String In data
+                i += 1
+                If i = 1 Then
+                    docno = str
+                Else
+                    If str.IndexOf("|") >= 0 Then
+                        If lst <> "" Then lst &= ","
+                        lst &= "'" & str & "'"
+                    End If
+                End If
+            Next
+
+            If lst <> "" Then
+                Dim tSQL As String = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}' WHERE BranchCode+'|'+ClrNo+'|'+Convert(varchar,ItemNo) in({1})", docno, lst)
+                Dim result = Main.DBExecute(jobWebConn, tSQL)
+                If result = "OK" Then
+                    Return New HttpResponseMessage(HttpStatusCode.OK)
+                End If
+            End If
+            Return New HttpResponseMessage(HttpStatusCode.NoContent)
+        End Function
         Function ReceiveClearing(<FromBody()> data As String()) As HttpResponseMessage
             ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CLR", "Receive")
@@ -135,7 +169,49 @@ Namespace Controllers
                 If Not Request.QueryString("Job") Is Nothing Then
                     sql &= " AND d.JobNo='" & Request.QueryString("Job").ToString & "' AND h.DocStatus<>99 "
                 End If
-                sql &= "ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo "
+
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    sql &= " AND h.JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("CFrom")) Then
+                    sql &= " AND h.ClearFrom=" & Request.QueryString("CFrom") & ""
+                End If
+                If Not IsNothing(Request.QueryString("CType")) Then
+                    sql &= " AND h.ClearType=" & Request.QueryString("CType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("ClrBy")) Then
+                    sql &= " AND h.EmpCode='" & Request.QueryString("ClrBy") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    sql &= " AND j.CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustBranch")) Then
+                    sql &= " AND j.CustBranch='" & Request.QueryString("CustBranch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    sql &= " AND h.ClrDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    sql &= " AND h.ClrDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    sql &= " AND h.DocStatus='" & Request.QueryString("Status") & "' "
+                Else
+                    sql &= " AND h.DocStatus<>99 "
+                End If
+                If Not IsNothing(Request.QueryString("SICode")) Then
+                    sql &= " AND d.SICode='" & Request.QueryString("SICode") & "' "
+                End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    sql &= " AND j.CustCode IN(Select CustCode from Mas_Company where TaxNumber='" & Request.QueryString("TaxNumber") & "') "
+                End If
+                If Not IsNothing(Request.QueryString("Condition")) Then
+                    Select Case Request.QueryString("Condition").ToString()
+                        Case "ERN"
+                            sql &= " AND d.LinkBillNo is null AND d.BNet > 0 "
+                    End Select
+                End If
+                sql &= " ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo "
 
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, branch))
                 Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & "}"
@@ -267,13 +343,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("TaxNumber")) Then
                     tSqlW &= " AND b.CustCode IN(Select CustCode from Mas_Company where TaxNumber='" & Request.QueryString("TaxNumber") & "') "
                 End If
-                If Not IsNothing(Request.QueryString("Condition")) Then
-                    Select Case Request.QueryString("Condition").ToString()
-                        Case "ALL"
-                    End Select
-                Else
-                    tSqlW &= " "
-                End If
+
                 Dim sql As String = SQLSelectClrHeader() & "{0}"
 
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
@@ -497,6 +567,28 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SaveClearDetail(<FromBody()> data As List(Of CClrDetail)) As ActionResult
+            Try
+                Dim branchcode As String = ""
+                Dim clrno As String = ""
+                Dim icount As Integer = 0
+                For Each o As CClrDetail In data
+                    branchcode = o.BranchCode
+                    clrno = o.ClrNo
+                    o.SetConnect(jobWebConn)
+                    Dim msg = o.SaveData(String.Format(" WHERE BranchCode='{0}' AND  ClrNo='{1}' And ItemNo='{2}' ", o.BranchCode, o.ClrNo, o.ItemNo))
+                    If msg.Substring(0, 1) = "S" Then
+                        icount = icount + 1
+                    End If
+                Next
+                Dim obj = New CClrDetail(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' And ClrNo='{1}'", branchcode, clrno))
+                Dim json = "{""result"":{""msg"":""" & icount & " row saved! (Clearing No=" + clrno + ")"",""data"":""" & clrno & """,""detail"":[" & JsonConvert.SerializeObject(obj) & "]}}"
+                Return Content(Json, jsonContent)
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """,""detail"":[]}}"
+                Return Content(json, jsonContent)
             End Try
         End Function
         Function SetClrDetail(<FromBody()> data As CClrDetail) As ActionResult

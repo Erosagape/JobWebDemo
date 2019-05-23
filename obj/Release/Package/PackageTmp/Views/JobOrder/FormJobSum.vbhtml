@@ -238,7 +238,7 @@ End Code
     function GetJobInfo(branch, jno) {
         $.get(path+ 'joborder/getjobreport?branch=' + branch + '&jno=' + jno, function (r) {
             if (r.job.data.length > 0) {
-                let h = r.job.data[0].Table[0];
+                let h = r.job.data[0];
                 $('#lblJNo').text(h.JNo);
                 $('#lblJobTypeName').text(h.JobTypeName);
                 $('#lblJobDate').text(ShowDate(CDateTH(h.DocDate)));

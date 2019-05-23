@@ -429,8 +429,8 @@ b.BrName as BranchName,h.CTN_NO,h.CoPersonCode,h.TRemark,h.ClearType,c2.ClrTypeN
 h.EmpCode,u1.TName as ClrByName,h.ApproveBy,u2.TName as ApproveByName,
 h.ApproveDate,h.ReceiveBy,u3.TName as ReceiveByName, h.ReceiveDate,h.ReceiveRef,
 h.AdvTotal,h.ClearTotal,h.TotalExpense,h.ClearVat,h.ClearWht,h.ClearNet,h.ClearBill,h.ClearCost,
-d.ItemNo,d.AdvNO,d.AdvItemNo,a.IsDuplicate,d.AdvAmount,a.AdvNet,
-d.SICode,d.SDescription,d.SlipNO,d.JobNo,
+d.ItemNo,d.AdvNO,d.AdvItemNo,a.IsDuplicate,d.AdvAmount,a.AdvNet,a.PaymentDate,a.AdvDate,
+d.SICode,d.SDescription,d.SlipNO,d.JobNo,d.VenderCode,v.TName as VenderName,
 d.UsedAmount,d.Tax50Tavi,d.ChargeVAT,d.BNet as ClrNet,
 d.FPrice,d.BPrice,d.FCost,d.BCost,
 d.UnitPrice,d.Qty,d.CurrencyCode,d.CurRate,d.UnitCost,d.FNet,d.BNet,d.Tax50TaviRate,d.VATRate,
@@ -463,7 +463,7 @@ left join
 on h.ClearType=c2.ClrTypeKey
 left join 
 (SELECT ConfigKey as ClrFromKey,ConfigValue as ClrFromName FROM Mas_Config WHERE ConfigCode='CLR_FROM') c3
-on h.ClearType=c3.ClrFromKey
+on h.ClearFrom=c3.ClrFromKey
 left join 
 (SELECT ConfigKey as JobTypeKey,ConfigValue as JobTypeName FROM Mas_Config WHERE ConfigCode='JOB_TYPE') c4
 on h.JobType=c4.JobTypeKey
@@ -476,7 +476,9 @@ on j.ShipBy=c6.JobTypeKey
 left join Mas_User u1 on h.EmpCode=u1.UserID
 left join Mas_User u2 on h.ApproveBy=u2.UserID
 left join Mas_User u3 on h.ReceiveBy=u3.UserID 
-left join Job_SrvSingle s on d.SICode=s.SICode"
+left join Job_SrvSingle s on d.SICode=s.SICode
+left join Mas_Vender v on d.VenderCode=v.VenCode
+"
     End Function
     Function SQLSelectClrNoAdvance() As String
         Return "
@@ -541,9 +543,13 @@ a.SICode,a.SDescription,a.CustCode,a.CustBranch
     End Function
     Function SQLSelectBookAccBalance() As String
         Return "
+SELECT q.*,q.SumCashOnhand+q.SumChqClear as SumCash,
+q.SumCashOnhand+q.SumChqClear+q.SumChqOnhand-q.LimitBalance as SumCashInBank,
+q.SumCashOnhand+q.SumChqClear+q.SumChqOnhand+q.SumCredit+q.SumChqReturn as SumBal,
+q.SumCredit+q.SumChqReturn as SumCreditable
+FROM (
 select c.BookCode,c.LimitBalance,
-Sum(Case when a.PRType='P' then -1*(a.CashAmount+a.ChqAmount) else (a.CashAmount+a.ChqAmount) end) as SumCash,
-Sum(Case when a.PRType='P' then -1*a.CashAmount else a.CashAmount end) as SumCashOnhand,
+Sum(Case when a.PRType='P' then -1*(a.CashAmount) else a.CashAmount end) as SumCashOnhand,
 Sum(Case when a.ChqStatus='P' then (CASE WHEN a.PRType='P' THEN -1*a.ChqAmount ELSE a.ChqAmount end) else 0 end) as SumChqClear,
 Sum(Case when a.ChqStatus='R' then (CASE WHEN a.PRType='P' THEN -1*a.ChqAmount ELSE a.ChqAmount end) else 0 end) as SumChqReturn,
 Sum(Case when a.ChqStatus NOT IN('P','R') then (CASE WHEN a.PRType='P' THEN -1*a.ChqAmount ELSE a.ChqAmount end) else 0 end) as SumChqOnhand,
@@ -551,14 +557,13 @@ Sum(Case when a.PRType='P' then -1*a.CreditAmount else a.CreditAmount end) as Su
 Sum(Case when a.PRType='P' then -1*(a.CreditAmount) else 0 end) as SumAP,
 Sum(Case when a.PRType='R' then (a.CreditAmount) else 0 end) as SumAR,
 Sum(Case when a.PRType='P' then -1*(a.CashAmount+a.ChqAmount) else 0 end) as SumPV,
-Sum(Case when a.PRType='R' then (a.CashAmount+a.ChqAmount) else 0 end) as SumRV,
-Sum(Case when a.PRType='P' then -1*(a.CashAmount+a.ChqAmount+a.CreditAmount) else (a.CashAmount+a.ChqAmount+a.CreditAmount) end) as SumBal
+Sum(Case when a.PRType='R' then (a.CashAmount+a.ChqAmount) else 0 end) as SumRV
 from Job_CashControlSub a inner join Job_CashControl b
 on a.BranchCode=b.BranchCode and a.ControlNo=b.ControlNo
 inner join Mas_BookAccount c 
 on a.BookCode=c.BookCode
 WHERE ISNULL(b.CancelProve,'')='' {0}
-group by c.BookCode,c.LimitBalance
+group by c.BookCode,c.LimitBalance) q
 "
     End Function
     Function SQLSelectJobReport() As String

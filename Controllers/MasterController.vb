@@ -200,7 +200,7 @@ AND b.IsApplyPolicy=1
                 json = "{""bookaccount"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("{""bookaccount"":{""data"":0,""msg"":" & ex.Message & "}}", jsonContent)
+                Return Content("{""bookaccount"":{""data"":[],""msg"":" & ex.Message & "}}", jsonContent)
             End Try
         End Function
         Function SetBookAccount(<FromBody()> data As CBookAccount) As ActionResult

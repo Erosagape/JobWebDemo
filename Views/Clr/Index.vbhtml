@@ -1438,7 +1438,7 @@ End Code
             $('#cboSTCode').val(dt.GroupCode);
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
-            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
+            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "@ViewBag.PROFILE_VATRATE");
             $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
