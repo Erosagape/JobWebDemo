@@ -163,8 +163,8 @@ End Code
                         Pay To:<input type="text" id="txtChqPayTo" class="form-control" />
                         <br />
                     </div>
-                    <div class="col-sm-3 table-bordered">
-                        <div id="dvCred">
+                    <div class="col-sm-3 table-bordered" id="dvCred">
+                        <div>
                             <b>Credit : </b><input type="text" id="txtAdvCred" class="form-control" value="" />
                             <br />
                             Ref No:<input type="text" id="txtRefNoCred" class="form-control" value="" />
@@ -172,7 +172,7 @@ End Code
                             Ref Date:<input type="date" id="txtCredTranDate" class="form-control" />
                             Pay To:<input type="text" id="txtCredPayTo" class="form-control" />
                         </div>
-                        <div>
+                        <div style="background-color:greenyellow;padding:10px 10px 10px 10px;margin:10px 10px 10px 10px;">
                             <b>Balance</b>
                             <br />
                             For Cash/Transfer :<br/> <input type="number" id="txtCashBal" class="form-control" disabled />
@@ -813,6 +813,9 @@ End Code
             alert('no data to approve');
             return;
         }
+        if (CheckBalance() == false) {
+            return;
+        }
         let oHeader = {
             BranchCode: $('#txtBranchCode').val(),
             ControlNo: '',
@@ -916,6 +919,43 @@ End Code
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+    }
+    function CheckBalance() {
+        let bPass = false;
+        if ($('#txtBookCash').val() == $('#txtBookChqCash').val()) {
+            let amtChk = Number($('#txtAdvCash').val()) + Number($('#txtAdvChqCash').val());
+            let amtBal = Number($('#txtCashBal').val());
+            if (amtBal < amtChk) {
+                alert('Your book balance ('+$('#txtBookCash').val()+') is not enough for payment =' + amtBal);
+            } else {
+                bPass = true;
+            }
+            return bPass;
+        } else {
+            let amtChk = Number($('#txtAdvCash').val());
+            if (amtChk > 0) {
+                bPass = false;
+                let amtBal = Number($('#txtCashBal').val());
+                if (amtBal < amtChk) {
+                    alert('Your cash balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
+                    return bPass;
+                } else {
+                    bPass = true; 
+                }                
+            }
+            amtChk = Number($('#txtAdvChqCash').val());
+            if (amtChk > 0) {
+                bPass = false;
+                let amtBal = Number($('#txtChqCashBal').val());
+                if (amtBal < amtChk) {
+                    alert('Your book balance ('+$('#txtBookChqCash').val()+') is not enough for payment =' + amtBal);
+                    return bPass;
+                } else {
+                    bPass = true; 
+                }
+            }
+            return bPass;
+        }
     }
     function PrintVoucher(br, cno) {
         window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());

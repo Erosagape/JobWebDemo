@@ -70,29 +70,8 @@ End Code
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            Clearing No : <br /><input type="text" id="txtClrNo" class="form-control" disabled />
-                        </div>
-                        <div class="col-sm-3">
-                            Earnest No : <br /><input type="text" id="txtSlipNo" class="form-control" disabled />
-                        </div>
-                        <div class="col-sm-4">
-                            Job No: <br /><input type="text" id="txtExpJobNo" class="form-control" disabled />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2">
-                            Item<br /><input type="text" id="txtItemNo" class="form-control" disabled />
-                        </div>
-                        <div class="col-sm-10">
-                            Vender:<br />
-                            <input type="text" id="txtVenderName" class="form-control" disabled />
-                        </div>
-                    </div>
                     <label><input type="radio" value="dvInfo" name="showInfo" onchange="ShowInfo()" checked />Earnest Info</label>
                     <label><input type="radio" value="dvExp" name="showInfo" onchange="ShowInfo()" />Expenses</label>
-
                 </div>                    
                 <div class="modal-body">
                     <input type="hidden" id="txtExpVender" />
@@ -102,6 +81,26 @@ End Code
                     <input type="hidden" id="txtVatRate" />
                     <input type="hidden" id="txtWhtRate" />
                     <div id="dvInfo">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Clearing No : <br /><input type="text" id="txtClrNo" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                Earnest No : <br /><input type="text" id="txtSlipNo" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-4">
+                                Job No: <br /><input type="text" id="txtExpJobNo" class="form-control" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                Item<br /><input type="text" id="txtItemNo" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-10">
+                                Vender:<br />
+                                <input type="text" id="txtVenderName" class="form-control" disabled />
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-3">
                                 Earnest : <br /><input type="text" id="txtClrNet" class="form-control" disabled />
@@ -126,7 +125,7 @@ End Code
                                 <input type="hidden" id="txtRecvBranch" />
                             </div>
                             <div class="col-sm-4">
-                                Ref:<br/> <input type="text" class="form-control" id="txtRefNo" />
+                                Ref:<br /> <input type="text" class="form-control" id="txtRefNo" />
                             </div>
                             <div class="col-sm-4">
                                 Date:<br /><input type="date" class="form-control" id="txtRefDate" />
@@ -528,6 +527,7 @@ End Code
             success: function (response) {
                 if (response.result.data != null) {
                     SavePayment(response.result.data);
+                    SaveDocument(response.result.data);
                     return;
                 }
                 alert(response.result.msg);
@@ -542,12 +542,7 @@ End Code
         let ask = confirm("Do you need to Save?");
         if (ask == false) return;
 
-        if (Number($('#txtExpSum').val()) > 0) {
-            SaveClearHeader();
-        }
-        if (Number($('#txtTotalNet').val()) > 0) {
-            SaveEarnest();
-        }
+        SaveEarnest();
     }
     function CalTotal() {
         let amt = CDbl($('#txtExpAmount').val(),4);
@@ -589,7 +584,7 @@ End Code
         $('#txtExpWht').val(CDbl(wht,4));
         CalTotal();
     }
-    function GetDataHeader() {
+    function GetDataHeader(controlno) {
         let dt = {
             BranchCode: $('#txtBranchCode').val(),
             ClrNo: '',
@@ -603,16 +598,16 @@ End Code
             InvNo: null,
             ClearType: 2,
             ClearFrom: 0,
-            DocStatus: 2,
+            DocStatus: 3,
             TotalExpense: 0,
             TRemark: '**Earnest clearing** ' + $('#txtSlipNo').val(),
             ApproveBy: user,
             ApproveDate: CDateTH(GetToday()),
             ApproveTime: GetTime(),
-            ReceiveBy: '',
-            ReceiveDate: null,
-            ReceiveTime: null,
-            ReceiveRef: '',
+            ReceiveBy: user,
+            ReceiveDate: CDateTH(GetToday()),
+            ReceiveTime: GetTime(),
+            ReceiveRef: controlno,
             CancelReson: '',
             CancelProve: '',
             CancelDate: null,
@@ -680,29 +675,31 @@ End Code
         return dt;
     }
     function SavePayment(docno) {
+        let prType = CNum($('#txtTotalNet').val()) > 0 ? 'R' : 'P';
+        let amt = CNum(Math.abs($('#txtTotalNet').val()));
         let obj = {
             BranchCode: $('#txtBranchCode').val(),
             ControlNo: docno,
             ItemNo: 0,
             PRVoucher:'',
-            PRType:'R',
+            PRType:prType,
             ChqNo:$('#txtRefNo').val(),
             BookCode:$('#txtRefBook').val(),
             BankCode:$('#txtRefBank').val(),
             BankBranch:$('#txtRefBranch').val(),
             ChqDate:CDateTH($('#txtRefDate').val()),
-            CashAmount: ($('#cboRefType').val() == "CA" ? CNum($('#txtTotalNet').val()) : 0),
-            ChqAmount: ($('#cboRefType').val() == "CH" || $('#cboRefType').val() == "CU" ? CNum($('#txtTotalNet').val()) : 0),
-            CreditAmount: ($('#cboRefType').val() == "CR" ? CNum($('#txtTotalNet').val()) : 0),
-            SumAmount: CNum($('#txtTotalNet').val()),
+            CashAmount: ($('#cboRefType').val() == "CA" ? amt : 0),
+            ChqAmount: ($('#cboRefType').val() == "CH" || $('#cboRefType').val() == "CU" ? amt : 0),
+            CreditAmount: ($('#cboRefType').val() == "CR" ? amt : 0),
+            SumAmount: amt,
             CurrencyCode: '@ViewBag.PROFILE_CURRENCY',
             ExchangeRate: 1,
-            TotalAmount: CNum($('#txtTotalNet').val()),
+            TotalAmount: amt,
             VatExc: 0,
             VatInc: 0,
             WhtExc: 0,
             WhtInc: 0,
-            TotalNet: CNum($('#txtTotalNet').val()),
+            TotalNet: amt,
             IsLocal:0,
             ChqStatus:'C',
             TRemark:'**Auto Clearing Earnest** #' + $('#txtSlipNo').val(),
@@ -723,8 +720,7 @@ End Code
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    if (response.result.data !== null) {
-                        SaveDocument(response.result.data[0].ControlNo);
+                    if (response.result.data !== null) {                        
                         return;
                     }
                     alert(response.result.msg);
@@ -745,8 +741,8 @@ End Code
             CmpType:'V',
             CmpCode:$('#txtExpVender').val(),
             CmpBranch:'',
-            PaidAmount:CNum($('#txtTotalNet').val()),
-            TotalAmount: CNum($('#txtTotalNet').val()),
+            PaidAmount:CNum(Math.abs($('#txtTotalNet').val())),
+            TotalAmount: CNum(Math.abs($('#txtTotalNet').val())),
             acType: $('#txtDocacType').val()
         };
         let jsonText = JSON.stringify({ data:[ obj ]});
@@ -758,6 +754,9 @@ End Code
             data: jsonText,
             success: function (response) {
                 if (response.result.data !== null) {
+                    if ($('#txtExpSum').val() > 0) {
+                        SaveClearHeader(response.result.data);
+                    }
                     ApproveData(response.result.data);
                     return;
                 }
@@ -768,8 +767,8 @@ End Code
             }
         });
     }
-    function SaveClearHeader() {
-        let obj = GetDataHeader();
+    function SaveClearHeader(controlno) {
+        let obj = GetDataHeader(controlno);
         let jsonString = JSON.stringify({ data: obj });
         //alert(jsonString);
         $.ajax({

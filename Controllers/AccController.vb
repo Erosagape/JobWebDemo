@@ -133,6 +133,11 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Job")) Then
                     tSqlw &= String.Format(" AND d.ForJNo ='{0}'", Request.QueryString("Job").ToString)
                 End If
+                If IsNothing(Request.QueryString("Cancel")) Then
+                    tSqlw &= " AND NOT ISNULL(h.CancelProve,'')<>'' "
+                Else
+                    tSqlw &= String.Format(" AND ISNULL(h.CancelProve,'')='{0}' ", Request.QueryString("Cancel").ToString())
+                End If
                 If Not IsNothing(Request.QueryString("Type")) Then
                     Select Case Request.QueryString("Type").ToString
                         Case "CHQP"
