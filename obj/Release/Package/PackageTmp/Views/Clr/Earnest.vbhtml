@@ -682,7 +682,7 @@ End Code
             ControlNo: docno,
             ItemNo: 0,
             PRVoucher:'',
-            PRType:prtype,
+            PRType:prType,
             ChqNo:$('#txtRefNo').val(),
             BookCode:$('#txtRefBook').val(),
             BankCode:$('#txtRefBank').val(),

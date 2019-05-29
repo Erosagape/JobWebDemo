@@ -651,4 +651,18 @@ Public Class CInvHeader
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal()
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+                Dim pSQLWhere As String = String.Format(" WHERE a.BranchCode='{0}' AND a.DocNo='{1}'", Me.BranchCode, Me.DocNo)
+                Using cm As New SqlCommand(SQLUpdateInvoiceHeader() + pSQLWhere, cn)
+                    cm.CommandTimeout = 0
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End Using
+            Catch ex As Exception
+            End Try
+        End Using
+    End Sub
 End Class

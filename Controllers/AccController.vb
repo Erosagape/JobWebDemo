@@ -946,6 +946,27 @@ Namespace Controllers
                 Return Content("{""rcpheader"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function GetClearForInv() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ISNULL(b.LinkBillNo,'')='' AND a.DocStatus<>99 AND b.UsedAmount>0 "
+
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND b.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format(" AND b.JobNo ='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND b.JobNo IN(SELECT JNo FROM Job_Order WHERE BranchCode='{0}' AND CustCode='{1}') ", Request.QueryString("Branch").ToString, Request.QueryString("Cust").ToString)
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectClrForInvoice() & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""invdetail"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
         Function GetInvDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE DocNo<>'' "

@@ -92,9 +92,7 @@ Module Main
         'D=Can Delete Data
         'P=Can Print Data
         Dim data = ""
-        If uname = "" Then
-            data = ""
-        Else
+        If uname <> "" Then
             Dim auth = New CUserAuth(jobWebConn).GetData(" WHERE UserID='" & uname & "' AND AppID='" & app & "' AND MenuID='" & mnu & "'")
             data = If(auth.Count > 0, "" & auth(0).Author, "")
         End If
@@ -114,18 +112,22 @@ SUBSTRING(b.ModuleID,CHARINDEX('/',b.ModuleID)+1,50) as ModuleFunc,
 (CASE WHEN MAX(CASE WHEN CHARINDEX('P',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'P' ELSE '' END) 
  as Authorize
 FROM Mas_UserRolePolicy b,Mas_UserRoleDetail a
-WHERE a.RoleID=b.RoleID
+WHERE a.RoleID=b.RoleID {0}
 GROUP BY a.UserID,b.ModuleID
 "
+            If uname <> "" Then
+                SQL = String.Format(SQL, " AND a.UserID='" & uname & "'")
+            End If
             Dim dt As DataTable = New CUtil(jobWebConn).GetTableFromSQL(SQL)
             Dim iRow As Integer = 0
             For Each dr As DataRow In dt.Rows
 
-                Dim oAuth = New CUserAuth(jobWebConn)
-                oAuth.UserID = dr("UserID").ToString()
-                oAuth.AppID = dr("ModuleCode").ToString()
-                oAuth.MenuID = dr("ModuleFunc").ToString()
-                oAuth.Author = dr("Authorize").ToString()
+                Dim oAuth = New CUserAuth(jobWebConn) With {
+                    .UserID = dr("UserID").ToString(),
+                    .AppID = dr("ModuleCode").ToString(),
+                    .MenuID = dr("ModuleFunc").ToString(),
+                    .Author = dr("Authorize").ToString()
+                }
                 msg += oAuth.SaveData(String.Format(" WHERE UserID='{0}' AND AppID='{1}' AND MenuID='{2}'", oAuth.UserID, oAuth.AppID, oAuth.MenuID)) & "\n"
                 iRow += 1
             Next
@@ -592,6 +594,75 @@ left join (select UserID,TName as ShippingName from Mas_User ) u3 on j.ShippingE
 left join (select CustCode,Max(NameThai) as ConsigneeName from Mas_Company group by CustCode) c4 on j.consigneecode=c4.CustCode
 left join (select VenCode,TName as AgentName from Mas_Vender) v1 on j.AgentCode=v1.VenCode
 left join (select VenCode,TName as ForwarderName from Mas_Vender) v2 on j.ForwarderCode=v2.VenCode
+"
+    End Function
+    Function SQLUpdateInvoiceHeader() As String
+        Return "
+Update a
+SET a.TotalAdvance=ISNULL(b.TotalAdvance,0)/a.ExchangeRate,
+a.TotalCharge=ISNULL(b.TotalCharge,0)/a.ExchangeRate,
+a.TotalIsTaxCharge=ISNULL(b.TotalIsTaxCharge,0)/a.ExchangeRate,
+a.TotalIs50Tavi=ISNULL(b.TotalIs50Tavi,0)/a.ExchangeRate,
+a.TotalVAT=ISNULL(b.TotalVAT,0)/a.ExchangeRate,
+a.Total50Tavi=ISNULL(b.Total50Tavi,0)/a.ExchangeRate,
+a.TotalCustAdv=ISNULL(a.TotalCustAdv,0)/a.ExchangeRate,
+a.TotalNet=ISNULL((b.TotalAdvance+b.TotalCharge+b.TotalVAT-b.Total50Tavi),0)/a.ExchangeRate,
+a.ForeignNet=ISNULL((b.TotalAdvance+b.TotalCharge+b.TotalVAT-b.Total50Tavi),0)
+from Job_InvoiceHeader a LEFT JOIN
+(
+	SELECT BranchCode,DocNo,
+	Sum(AmtAdvance) as TotalAdvance,
+	Sum(AmtCharge) as TotalCharge,
+	Sum(Case when IsTaxCharge>=1 then AmtCharge else 0 end) as TotalIsTaxCharge,
+	Sum(Case when Is50Tavi=1 then AmtCharge else 0 end) as TotalIs50Tavi,
+	sum(AmtVat) as TotalVAT,sum(Amt50Tavi) as Total50Tavi
+	from Job_InvoiceDetail
+	group by BranchCode,DocNo
+) b
+on a.BranchCode=b.BranchCode and a.DocNo=b.DocNo
+"
+    End Function
+    Function SQLSelectClrForInvoice() As String
+        Return "
+select b.BranchCode,
+b.LinkBillNo as DocNo,
+b.LinkItem as ItemNo,
+b.SICode,
+b.SDescription,
+b.SlipNO as ExpSlipNO,
+b.Remark as SRemark,
+b.CurrencyCode,
+b.CurRate as ExchangeRate,
+b.Qty,
+b.UnitCode as QtyUnit,
+b.UnitCost as UnitPrice,
+b.UnitCost*b.CurRate as FUnitPrice,
+b.UsedAmount as Amt,
+b.UsedAmount/b.CurRate as FAmt,
+0 as DiscountType,
+0 as DiscountPerc,
+0 as AmtDiscount,
+0 as FAmtDiscount,
+CASE WHEN b.Tax50TaviRate>0 THEN 1 ELSE 0 END as Is50Tavi,
+b.Tax50TaviRate as Rate50Tavi,
+CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.Tax50Tavi ELSE 0 END as Amt50Tavi,
+b.VATType as IsTaxCharge,
+CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.ChargeVAT ELSE 0 END as AmtVat,
+b.BNet as TotalAmt,
+b.BNet/b.CurRate as FTotalAmt,
+CASE WHEN ISNULL(b.SlipNO,'')<>'' AND b.BPrice>0 THEN b.BNet ELSE 0 END as AmtAdvance,
+CASE WHEN ISNULL(b.SlipNO,'')='' THEN b.UsedAmount ELSE 0 END as AmtCharge,
+'' as CurrencyCodeCredit,
+0 as ExchangeRateCredit,
+0 as AmtCredit,
+0 as FAmtCredit,
+b.VATRate,
+b.JobNo,b.ClrNo,b.ItemNo as ClrItemNo,
+(CASE WHEN b.BPrice=0 THEN b.BNet ELSE 0 END) as AmtCost,
+(CASE WHEN b.BPrice=0 THEN 0 ELSE b.BNet END) as AmtNet
+from Job_ClearHeader a INNER JOIN Job_ClearDetail b
+ON a.BranchCode=b.BranchCode
+AND a.ClrNo=b.ClrNo
 "
     End Function
 End Module
