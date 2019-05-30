@@ -21,6 +21,15 @@ Public Class CInvHeader
             m_BranchCode = value
         End Set
     End Property
+    Private m_DocType As String
+    Public Property DocType As String
+        Get
+            Return m_DocType
+        End Get
+        Set(value As String)
+            m_DocType = value
+        End Set
+    End Property
     Private m_DocNo As String
     Public Property DocNo As String
         Get

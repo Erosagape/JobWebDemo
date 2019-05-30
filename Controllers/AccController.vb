@@ -743,6 +743,12 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format("AND DocNo ='{0}' ", Request.QueryString("Code").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format("AND CustCode ='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cancel")) Then
+                    tSqlw &= String.Format("AND ISNULL(CancelProve,'') ", If(Request.QueryString("Cancel").ToString = "Y", "<>''", "=''"))
+                End If
                 Dim oData = New CInvHeader(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""invheader"":{""data"":" & json & "}}"
@@ -759,7 +765,13 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     If "" & data.DocNo = "" Then
-                        data.AddNew("INV-" & Today.ToString("yyMM") & "____")
+                        If data.DocType = "" Then
+                            data.DocType = invPrefix
+                        End If
+                        If data.DocDate = DateTime.MinValue Then
+                            data.DocDate = Today
+                        End If
+                        data.AddNew(data.DocType & data.DocDate.ToString("yyMM") & "____")
                     End If
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' ", data.BranchCode, data.DocNo))
                     Dim json = "{""result"":{""data"":""" & data.DocNo & """,""msg"":""" & msg & """}}"
@@ -956,8 +968,14 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Job")) Then
                     tSqlw &= String.Format(" AND b.JobNo ='{0}' ", Request.QueryString("Job").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlw &= String.Format(" AND c.JobType ={0} ", Request.QueryString("JType").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlw &= String.Format(" AND c.ShipBy ={0} ", Request.QueryString("SBy").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Cust")) Then
-                    tSqlw &= String.Format(" AND b.JobNo IN(SELECT JNo FROM Job_Order WHERE BranchCode='{0}' AND CustCode='{1}') ", Request.QueryString("Branch").ToString, Request.QueryString("Cust").ToString)
+                    tSqlw &= String.Format(" AND c.CustCode='{0}' ", Request.QueryString("Cust").ToString)
                 End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectClrForInvoice() & tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
@@ -984,6 +1002,35 @@ Namespace Controllers
                 Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function SaveInvDetail(<FromBody()> data As List(Of CInvDetail)) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data(0).BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    If "" & data(0).DocNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    Dim i As Integer = 0
+                    For Each dt In data
+                        dt.SetConnect(jobWebConn)
+                        Dim msg = dt.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' AND ItemNo='{2}'", dt.BranchCode, dt.DocNo, dt.ItemNo))
+                        If msg.Substring(0, 1) = "S" Then
+                            i += 1
+                        End If
+                    Next
+                    Dim json = "{""result"":{""data"":""" & data(0).DocNo & """,""msg"":""" & i & " rows saved""}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+
         Function SetInvDetail(<FromBody()> data As CInvDetail) As ActionResult
             Try
                 If Not IsNothing(data) Then

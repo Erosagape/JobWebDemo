@@ -380,6 +380,33 @@ function SetGridContactName(p, g, d, ev) {
             }
         });
 }
+function SetGridInv(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'acc/getinvheader' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'invheader.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "DocNo", title: "Invoice No" },
+            { data: "CustCode", title: "Customer" },
+            { data: "TotalNet", title: "Total" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
 function SetGridJob(p, g, d, t, ev) {
     $(g).DataTable({
         ajax: {

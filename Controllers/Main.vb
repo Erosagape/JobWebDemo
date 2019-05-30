@@ -9,6 +9,7 @@ Module Main
     Friend Const jobPrefix As String = "TJOB"
     Friend Const advPrefix As String = "TADV"
     Friend Const clrPrefix As String = "TCLR"
+    Friend Const invPrefix As String = "INV-"
     Friend jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionStringR").ConnectionString
     Friend jobMasConn As String = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString
     Friend Function GetDBDate(pDate As Date, Optional pTodayAsDefault As Boolean = False) As Object
@@ -657,12 +658,16 @@ CASE WHEN ISNULL(b.SlipNO,'')='' THEN b.UsedAmount ELSE 0 END as AmtCharge,
 0 as AmtCredit,
 0 as FAmtCredit,
 b.VATRate,
+c.CustCode,c.CustBranch,
 b.JobNo,b.ClrNo,b.ItemNo as ClrItemNo,
 (CASE WHEN b.BPrice=0 THEN b.BNet ELSE 0 END) as AmtCost,
 (CASE WHEN b.BPrice=0 THEN 0 ELSE b.BNet END) as AmtNet
 from Job_ClearHeader a INNER JOIN Job_ClearDetail b
 ON a.BranchCode=b.BranchCode
 AND a.ClrNo=b.ClrNo
+INNER JOIN Job_Order c
+ON b.BranchCode=c.BranchCode
+and b.JobNo=c.JNo
 "
     End Function
 End Module
