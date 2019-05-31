@@ -747,7 +747,7 @@ Namespace Controllers
                     tSqlw &= String.Format("AND CustCode ='{0}' ", Request.QueryString("Cust").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Cancel")) Then
-                    tSqlw &= String.Format("AND ISNULL(CancelProve,'') ", If(Request.QueryString("Cancel").ToString = "Y", "<>''", "=''"))
+                    tSqlw &= String.Format("AND ISNULL(CancelProve,''){0}", If(Request.QueryString("Cancel").ToString.ToUpper = "Y", "<>''", "=''"))
                 End If
                 Dim oData = New CInvHeader(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
@@ -1012,14 +1012,24 @@ Namespace Controllers
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     End If
                     Dim i As Integer = 0
+                    Dim msg As String = ""
                     For Each dt In data
-                        dt.SetConnect(jobWebConn)
-                        Dim msg = dt.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' AND ItemNo='{2}'", dt.BranchCode, dt.DocNo, dt.ItemNo))
-                        If msg.Substring(0, 1) = "S" Then
-                            i += 1
+                        If dt.ItemNo > 0 Then
+                            dt.SetConnect(jobWebConn)
+                            Dim result = dt.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' AND ItemNo={2}", dt.BranchCode, dt.DocNo, dt.ItemNo))
+                            If result.Substring(0, 1) = "S" Then
+                                i += 1
+                                msg &= i & " row(s) saved!\n"
+                            Else
+                                msg &= i & " Error: " & result & "\n"
+                            End If
+                        Else
+                            Dim Sql = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}',LinkItem={1} ", dt.DocNo, dt.ItemNo)
+                            Sql &= String.Format(" WHERE ClrNo='{0}' And ItemNo={1}", dt.ClrNo, dt.ClrItemNo)
+                            msg &= "Update " & dt.ClrNo & "/" & dt.ClrItemNo & "=" & Main.DBExecute(jobWebConn, Sql) & "\n"
                         End If
                     Next
-                    Dim json = "{""result"":{""data"":""" & data(0).DocNo & """,""msg"":""" & i & " rows saved""}}"
+                    Dim json = "{""result"":{""data"":""" & data(0).DocNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
                     Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"

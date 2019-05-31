@@ -112,12 +112,12 @@ Public Class CInvDetail
             m_ExchangeRate = value
         End Set
     End Property
-    Private m_Qty As Date
-    Public Property Qty As Date
+    Private m_Qty As Integer
+    Public Property Qty As Integer
         Get
             Return m_Qty
         End Get
-        Set(value As Date)
+        Set(value As Integer)
             m_Qty = value
         End Set
     End Property
@@ -148,12 +148,12 @@ Public Class CInvDetail
             m_FUnitPrice = value
         End Set
     End Property
-    Private m_Amt As Date
-    Public Property Amt As Date
+    Private m_Amt As Double
+    Public Property Amt As Double
         Get
             Return m_Amt
         End Get
-        Set(value As Date)
+        Set(value As Double)
             m_Amt = value
         End Set
     End Property
@@ -350,11 +350,11 @@ Public Class CInvDetail
                             dr("SRemark") = Me.SRemark
                             dr("CurrencyCode") = Me.CurrencyCode
                             dr("ExchangeRate") = Me.ExchangeRate
-                            dr("Qty") = Main.GetDBDate(Me.Qty)
+                            dr("Qty") = Me.Qty
                             dr("QtyUnit") = Me.QtyUnit
                             dr("UnitPrice") = Me.UnitPrice
                             dr("FUnitPrice") = Me.FUnitPrice
-                            dr("Amt") = Main.GetDBDate(Me.Amt)
+                            dr("Amt") = Me.Amt
                             dr("FAmt") = Me.FAmt
                             dr("DiscountType") = Me.DiscountType
                             dr("DiscountPerc") = Me.DiscountPerc
@@ -420,7 +420,7 @@ and h.DocNo=d.DocNo
             cm.ExecuteNonQuery()
             If Me.ClrItemNo <> 0 And Me.ClrNo <> "" Then
                 If Me.DocNo <> "" And Me.ItemNo <> 0 Then
-                    sql = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}' AND LinkItem={1}", Me.DocNo, Me.ItemNo)
+                    sql = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}',LinkItem={1}", Me.DocNo, Me.ItemNo)
                     sql &= String.Format(" WHERE ClrNo='{0}' And ItemNo={1}", Me.ClrNo, Me.ClrItemNo)
                     cm.CommandText = sql
                     cm.CommandType = CommandType.Text

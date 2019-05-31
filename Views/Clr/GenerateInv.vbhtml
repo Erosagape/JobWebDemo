@@ -61,32 +61,85 @@ End Code
         <div class="modal-dialog-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    Invoice Date :
-                    <input type="date" id="txtDocDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
-                    Invoice Type : 
-                    <select id="cboDocType">
-    <option value="IVS-">Service</option>
-    <option value="IVT-">Transport</option>
-    <option value="IVF-">Freight</option>
-</select>
-                    <a href="#" onclick="SearchData('invoice')"> Replace Invoice No :</a>
-                    <input type="text" id="txtDocNo" disabled />
-                    <button id="btnGen" class="btn btn-primary" onclick="ApproveData()">Save</button>
+                    <table>
+                        <tr>
+                            <td>
+                                Invoice Date :<br />
+                                <input type="date" id="txtDocDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+
+                            </td>
+                            <td>
+                                Invoice Type :<br />
+                                <select id="cboDocType">
+                                    <option value="IVS-">Service</option>
+                                    <option value="IVT-">Transport</option>
+                                    <option value="IVF-">Freight</option>
+                                </select>
+
+                            </td>
+                            <td>
+                                <a href="#" onclick="SearchData('invoice')"> Replace Invoice No :</a><br />
+                                <input type="text" id="txtDocNo" disabled />
+                            </td>
+                        </tr>
+                    </table>
+                    <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save</button>
                 </div>
                 <div class="modal-body">
-                    Advance <input type="text" id="txtTotalAdvance" /><br />
-                    Charge <input type="text" id="txtTotalCharge" /><br />
-                    VAT Base <input type="text" id="txtTotalIsTaxCharge" /><br />
-                    WHT Base <input type="text" id="txtTotalIs50Tavi" /><br />
-                    VAT <input type="text" id="txtTotalVAT" /><br />
-                    WHT <input type="text" id="txtTotal50Tavi" /><br />
-                    Cust Advance <input type="text" id="txtTotalCustAdv" /><br />
-                    Net <input type="text" id="txtTotalNet" /><br />
-                    Currency <input type="text" id="txtCurrencyCode" /><br />
-                    Rate <input type="text" id="txtExchangeRate" /><br />
-                    Total <input type="text" id="txtForeignNet" /><br />
-                </div>
-                <div class="modal-footer">
+                    <b>Invoice Summary:</b><br />
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <table style="width:100%">
+                                <tr><td>Advance </td><td><input type="text" id="txtTotalAdvance" disabled /></td></tr>
+                                <tr><td>Charge</td><td><input type="text" id="txtTotalCharge" disabled /></td></tr>
+                                <tr><td>Vatable</td><td><input type="text" id="txtTotalIsTaxCharge" disabled /></td></tr>
+                                <tr><td>Taxable</td><td><input type="text" id="txtTotalIs50Tavi" disabled /></td></tr>
+                                <tr><td>VAT</td><td><input type="text" id="txtTotalVat" disabled /></td></tr>
+                                <tr><td>After VAT</td><td><input type="text" id="txtTotalAfter" disabled /></td></tr>
+                                <tr><td>WHT</td><td><input type="text" id="txtTotal50Tavi" disabled /></td></tr>
+                                <tr><td>After WHT</td><td><input type="text" id="txtTotalService" disabled /></td></tr>
+                                <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" onchange="CalTotal()" /></td></tr>
+                                <tr><td>NET</td><td><input type="text" id="txtTotalNet" disabled /></td></tr>
+                                <tr><td>Currency</td><td><input type="text" id="txtCurrencyCode" disabled /></td></tr>
+                                <tr><td>Exc.Rate</td><td><input type="text" id="txtExchangeRate" onchange="CalForeign()" /></td></tr>
+                                <tr><td>Invoiced</td><td><input type="text" id="txtForeignNet" disabled /></td></tr>
+                                <tr><td>Cost</td><td><input type="text" id="txtTotalCost" disabled /></td></tr>
+                                <tr><td>Profit</td><td><input type="text" id="txtTotalProfit" disabled /></td></tr>
+                            </table>
+                        </div>
+                        <div class="col-sm-6">
+                            <b>Invoice Detail:</b><br />
+                            <table id="tbDetail" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>JobNo</th>
+                                        <th>Description</th>
+                                        <th>SlipNo</th>
+                                        <th>Advance</th>
+                                        <th>Charge</th>
+                                        <th>VAT</th>
+                                        <th>WH-Tax</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <b>Costing of Invoice:</b><br />
+                    <table id="tbCost" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>Job No</th>
+                                <th>Description</th>
+                                <th>SlipNo</th>
+                                <th>Expense</th>
+                                <th>VAT</th>
+                                <th>WH-Tax</th>
+                                <th>Net</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                     <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -192,10 +245,105 @@ End Code
         });
     }
     function ShowSummary() {
-        for (let obj of arr) {
+        let totaladv = 0;
+        let totalcharge = 0;
+        let totalistaxcharge = 0;
+        let totalis50tavi = 0;
+        let totalvat = 0;
+        let total50tavi = 0;
+        let totalcustadv = 0;
+        let totalnet = 0;
+        let totalcost = 0;
 
+        for (let obj of arr) {
+            totaladv += obj.AmtAdvance;
+            totalcharge += obj.AmtCharge;
+            totalcost += obj.AmtCost;
+            totalistaxcharge += (obj.AmtVat > 0 ? obj.AmtCharge : 0);
+            totalis50tavi += (obj.Amt50Tavi > 0 ? obj.AmtCharge : 0);
+            totalvat += obj.AmtVat;
+            total50tavi += obj.Amt50Tavi;
+            totalcustadv += 0;
+            totalnet += obj.AmtNet;
         }
+        $('#txtTotalAdvance').val(CDbl(totaladv, 2));
+        $('#txtTotalCharge').val(CDbl(totalcharge, 2));
+        $('#txtTotalIsTaxCharge').val(CDbl(totalistaxcharge, 2));
+        $('#txtTotalIs50Tavi').val(CDbl(totalis50tavi, 2));
+        $('#txtTotalVat').val(CDbl(totalvat, 2));
+        $('#txtTotalAfter').val(CDbl(totalcharge+totalvat, 2));
+        $('#txtTotal50Tavi').val(CDbl(total50tavi, 2));
+        $('#txtTotalService').val(CDbl(totalcharge+totalvat-total50tavi, 2));
+        $('#txtTotalNet').val(CDbl(totalnet, 2));
+        $('#txtTotalCustAdv').val(CDbl(totalcustadv, 2));
+
+        $('#txtCurrencyCode').val('@ViewBag.PROFILE_CURRENCY');
+        $('#txtExchangeRate').val(1);
+        $('#txtTotalCost').val(CDbl(totalcost, 2));
+        $('#txtTotalProfit').val(CDbl(totalcharge+totalvat-total50tavi - totalcost, 2));
+
+        CalForeign();
+
+        ShowDetail();
+        $('#txtDocNo').val('');
         $('#dvCreate').modal('show');
+    }
+    function ShowDetail() {
+        let arr_sel = arr.filter(function (d) {
+            return d.AmtCharge > 0 || d.AmtAdvance > 0;
+        });
+        $('#tbDetail').DataTable({
+            data: arr_sel,
+            selected: true, //ให้สามารถเลือกแถวได้
+            columns: [ //กำหนด property ของ header column
+                    { data: "JobNo", title: "Job No" },
+                    {
+                        data: null, title: "Description",
+                        render: function (data) {
+                            return data.SICode + '-' + data.SDescription;
+                        }
+                    },
+                    { data: "ExpSlipNO", title: "Slip No" },
+                    { data: "AmtAdvance", title: "Advance" },
+                    { data: "AmtCharge", title: "Charge" },
+                    { data: "AmtVat", title: "VAT" },
+                    { data: "Amt50Tavi", title: "WHT" }
+                ],
+                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+        });
+        let arr_cost = arr.filter(function (d) {
+            return d.AmtCost > 0;
+        });
+        $('#tbCost').DataTable({
+            data: arr_cost,
+            selected: true, //ให้สามารถเลือกแถวได้
+            columns: [ //กำหนด property ของ header column
+                { data: "JobNo", title: "Job No" },
+                {
+                    data: null, title: "Description",
+                    render: function (data) {
+                        return data.SICode + '-' + data.SDescription;
+                    }
+                },
+                { data: "ExpSlipNO", title: "Slip No" },
+                { data: "AmtCost", title: "Advance" },
+                { data: "AmtVat", title: "VAT" },
+                { data: "Amt50Tavi", title: "WHT" },
+                { data: "AmtNet", title: "NET" }
+            ],
+            destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+        });
+    }
+    function CalTotal() {
+        let totalnet = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
+        $('#txtTotalNet').val(totalnet);
+        $('#txtTotalProfit').val(CDbl(totalnet - CNum($('#txtTotalCost').val()), 2));
+
+        CalForeign();
+    }
+    function CalForeign() {
+        let totalforeign = CDbl(CNum($('#txtTotalNet').val()) / CNum($('#txtExchangeRate').val()), 2);
+        $('#txtForeignNet').val(totalforeign);
     }
     function AddData(o) {
         arr.push(o);
@@ -208,7 +356,7 @@ End Code
         arr.splice(idx, 1);
     }
     function ApproveData() {
-        if (arr.length < 0) {
+        if (Number($('#txtTotalNet').val()) == 0) {
             alert('no data to approve');
             return;
         }
@@ -232,7 +380,7 @@ End Code
             TotalCharge:CNum($('#txtTotalCharge').val()),
             TotalIsTaxCharge:CNum($('#txtTotalIsTaxCharge').val()),
             TotalIs50Tavi:CNum($('#txtTotalIs50Tavi').val()),
-            TotalVAT:CNum($('#txtTotalVAT').val()),
+            TotalVAT:CNum($('#txtTotalVat').val()),
             Total50Tavi:CNum($('#txtTotal50Tavi').val()),
             TotalCustAdv:CNum($('#txtTotalCustAdv').val()),
             TotalNet:CNum($('#txtTotalNet').val()),
@@ -258,7 +406,7 @@ End Code
             CancelTime:null,
             ShippingRemark:''
         };
-        let jsonString = JSON.stringify({ data: dataApp });
+        let jsonString = JSON.stringify({ data: dataInv });
         $.ajax({
             url: "@Url.Action("SetInvHeader", "Acc")",
             type: "POST",
@@ -267,7 +415,10 @@ End Code
             success: function (response) {
                 if (response.result.data !== null) {
                     SaveDetail(response.result.data);
+                    alert(response.result.data);
+                    return;
                 }
+                alert(response.result.msg);
             },
             error: function (e) {
                 alert(e);
@@ -276,7 +427,8 @@ End Code
         return;
     }
     function SaveDetail(docno) {
-        let jsonText = JSON.stringify({ data:[ arr ]});
+        let list = GetDataDetail(arr,docno);
+        let jsonText = JSON.stringify({ data: list });
             //alert(jsonText);
             $.ajax({
                 url: "@Url.Action("SaveInvDetail", "Acc")",
@@ -284,10 +436,13 @@ End Code
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    alert(response.result.data);
+                    if (response.result.data !== null) {
+                        alert(response.result.msg);
+                        SetGridAdv(false);
+                        $('#dvCreate').modal('hide');
+                        return;
+                    }
                     alert(response.result.msg);
-                    SetGridAdv(false);
-                    $('#dvCreate').modal('hide');
                 },
                 error: function (e) {
                     alert(e);
@@ -326,5 +481,91 @@ End Code
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
         $('#txtCustCode').focus();
+        }
+    function GetDataDetail(o, no) {
+        let data = [];
+        let i = 0;
+        for (let obj of o) {
+            if (obj.AmtCharge > 0 || obj.AmtAdvance > 0) {
+
+                i = i + 1;
+                data.push({
+                    BranchCode: obj.BranchCode,
+                    ClrNo: obj.ClrNo,
+                    ClrItemNo: obj.ClrItemNo,
+                    DocNo: no,
+                    ItemNo: i,
+                    SICode: obj.SICode,
+                    SDescription: obj.SDescription,
+                    ExpSlipNO: obj.ExpSlipNO,
+                    SRemark: obj.SRemark,
+                    CurrencyCode: $('#txtCurrencyCode').val(),
+                    ExchangeRate: $('#txtExchangeRate').val(),
+                    Qty: CNum(obj.Qty),
+                    QtyUnit: obj.QtyUnit,
+                    UnitPrice: obj.UnitPrice,
+                    FUnitPrice: CDbl(obj.UnitPrice / CNum($('#txtExchangeRate').val()), 2),
+                    Amt: obj.Amt,
+                    FAmt: CDbl(obj.Amt / CNum($('#txtExchangeRate').val()), 2),
+                    DiscountType: obj.DiscountType,
+                    DiscountPerc: obj.DiscountPerc,
+                    AmtDiscount: obj.AmtDiscount,
+                    FAmtDiscount: CDbl(obj.AmtDiscount / CNum($('#txtExchangeRate').val()), 2),
+                    Is50Tavi: obj.Is50Tavi,
+                    Rate50Tavi: obj.Rate50Tavi,
+                    Amt50Tavi: obj.Amt50Tavi,
+                    IsTaxCharge: obj.IsTaxCharge,
+                    AmtVat: obj.AmtVat,
+                    TotalAmt: obj.TotalAmt,
+                    FTotalAmt: CDbl(obj.TotalAmt / CNum($('#txtExchangeRate').val()), 2),
+                    AmtAdvance: obj.AmtAdvance,
+                    AmtCharge: obj.AmtCharge,
+                    CurrencyCodeCredit: obj.CurrencyCodeCredit,
+                    ExchangeRateCredit: obj.ExchangeRateCredit,
+                    AmtCredit: obj.AmtCredit,
+                    FAmtCredit: CDbl(obj.FAmtCredit / CNum($('#txtExchangeRate').val()), 2),
+                    VATRate: obj.VATRate
+                });
+            } else {
+                data.push({
+                    BranchCode: obj.BranchCode,
+                    ClrNo: obj.ClrNo,
+                    ClrItemNo: obj.ClrItemNo,
+                    DocNo: no,
+                    ItemNo: 0,
+                    SICode: obj.SICode,
+                    SDescription: obj.SDescription,
+                    ExpSlipNO: obj.ExpSlipNO,
+                    SRemark: obj.SRemark,
+                    CurrencyCode: $('#txtCurrencyCode').val(),
+                    ExchangeRate: $('#txtExchangeRate').val(),
+                    Qty: obj.Qty,
+                    QtyUnit: obj.QtyUnit,
+                    UnitPrice: obj.UnitPrice,
+                    FUnitPrice: CDbl(obj.UnitPrice / CNum($('#txtExchangeRate').val()), 2),
+                    Amt: obj.Amt,
+                    FAmt: CDbl(obj.Amt / CNum($('#txtExchangeRate').val()), 2),
+                    DiscountType: obj.DiscountType,
+                    DiscountPerc: obj.DiscountPerc,
+                    AmtDiscount: obj.AmtDiscount,
+                    FAmtDiscount: CDbl(obj.AmtDiscount / CNum($('#txtExchangeRate').val()), 2),
+                    Is50Tavi: obj.Is50Tavi,
+                    Rate50Tavi: obj.Rate50Tavi,
+                    Amt50Tavi: obj.Amt50Tavi,
+                    IsTaxCharge: obj.IsTaxCharge,
+                    AmtVat: obj.AmtVat,
+                    TotalAmt: obj.TotalAmt,
+                    FTotalAmt: CDbl(obj.TotalAmt / CNum($('#txtExchangeRate').val()), 2),
+                    AmtAdvance: obj.AmtAdvance,
+                    AmtCharge: obj.AmtCharge,
+                    CurrencyCodeCredit: obj.CurrencyCodeCredit,
+                    ExchangeRateCredit: obj.ExchangeRateCredit,
+                    AmtCredit: obj.AmtCredit,
+                    FAmtCredit: CDbl(obj.FAmtCredit / CNum($('#txtExchangeRate').val()), 2),
+                    VATRate: obj.VATRate
+                });
+            }
+        }
+        return data;
     }
 </script>
