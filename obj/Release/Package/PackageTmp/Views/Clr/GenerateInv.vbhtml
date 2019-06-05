@@ -285,7 +285,7 @@ End Code
         CalForeign();
 
         ShowDetail();
-
+        $('#txtDocNo').val('');
         $('#dvCreate').modal('show');
     }
     function ShowDetail() {
@@ -356,7 +356,7 @@ End Code
         arr.splice(idx, 1);
     }
     function ApproveData() {
-        if (Number($('#txtTotalNet').val()) < 0) {
+        if (Number($('#txtTotalNet').val()) == 0) {
             alert('no data to approve');
             return;
         }

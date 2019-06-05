@@ -246,6 +246,10 @@ function CNumEng(s) {
 function CCurrency(data) {
     return data.replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
+function ShowNumber(data, dec) {
+    let numstr = CDbl(data,dec);
+    return CCurrency(numstr);
+}
 function CCode(data) {
     let st = data;
 

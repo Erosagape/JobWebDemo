@@ -120,6 +120,24 @@ Public Class CBillDetail
             m_ExchangeRate = value
         End Set
     End Property
+    Private m_AmtCustAdvance As Double
+    Public Property AmtCustAdvance As Double
+        Get
+            Return m_AmtCustAdvance
+        End Get
+        Set(value As Double)
+            m_AmtCustAdvance = value
+        End Set
+    End Property
+    Private m_AmtForeign As Double
+    Public Property AmtForeign As Double
+        Get
+            Return m_AmtForeign
+        End Get
+        Set(value As Double)
+            m_AmtForeign = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -137,6 +155,7 @@ Public Class CBillDetail
                             If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("InvNo") = Me.InvNo
+                            dr("AmtCustAdvance") = Me.AmtCustAdvance
                             dr("AmtAdvance") = Me.AmtAdvance
                             dr("AmtChargeNonVAT") = Me.AmtChargeNonVAT
                             dr("AmtChargeVAT") = Me.AmtChargeVAT
@@ -145,9 +164,10 @@ Public Class CBillDetail
                             dr("AmtTotal") = Me.AmtTotal
                             dr("CurrencyCode") = Me.CurrencyCode
                             dr("ExchangeRate") = Me.ExchangeRate
+                            dr("AmtForeign") = Me.AmtForeign
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            msg = "Save Complete"
+                            msg = UpdateTotal(cn)
                         End Using
                     End Using
                 End Using
@@ -206,6 +226,12 @@ Public Class CBillDetail
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ExchangeRate"))) = False Then
                         row.ExchangeRate = rd.GetDouble(rd.GetOrdinal("ExchangeRate"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtForeign"))) = False Then
+                        row.AmtForeign = rd.GetDouble(rd.GetOrdinal("AmtForeign"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtCustAdvance"))) = False Then
+                        row.AmtCustAdvance = rd.GetDouble(rd.GetOrdinal("AmtCustAdvance"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -219,18 +245,39 @@ Public Class CBillDetail
             Try
                 cn.Open()
 
-                Using cm As New SqlCommand("DELETE FROM Job_BillAcceptDetail" + pSQLWhere, cn)
+                Using cm As New SqlCommand("DELETE FROM Job_BillAcceptDetail " + pSQLWhere, cn)
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-
+                If Me.BillAcceptNo <> "" Then
+                    CancelDocument(cn)
+                End If
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message
             End Try
         End Using
         Return msg
+    End Function
+    Sub CancelDocument(cn As SqlConnection)
+        Dim sql As String = SQLUpdateBillToInv(Me.BranchCode, Me.BillAcceptNo, True)
+
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql & If(Me.InvNo <> "", " AND a.DocNo='" + Me.InvNo + "'", "")
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+    End Sub
+    Function UpdateTotal(cn As SqlConnection) As String
+        Dim sql As String = SQLUpdateBillToInv(Me.BranchCode, Me.BillAcceptNo, False)
+
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql & If(Me.InvNo <> "", " AND a.DocNo='" + Me.InvNo + "'", "")
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+        Return "Update " & Me.InvNo & " Complete!"
     End Function
 End Class
 

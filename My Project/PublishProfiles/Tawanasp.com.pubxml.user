@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>05/31/2019 16:51:15</publishTime>
+      <publishTime>06/05/2019 16:23:08</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>05/31/2019 16:51:15</publishTime>
+      <publishTime>06/05/2019 16:23:08</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>05/31/2019 16:51:14</publishTime>
+      <publishTime>06/05/2019 16:23:08</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -215,64 +215,64 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:06</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.css.map">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.min.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.min.css.map">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.css.map">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.min.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.min.css.map">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-select.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-select.css.map">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap-select.min.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap.css.map">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap.min.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/bootstrap.min.css.map">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/jquery.datatables.min.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/sheets-of-paper-a4-landscape.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/sheets-of-paper-a4.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/sheets-of-paper.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Content/Site.css">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>03/19/2019 10:51:00</publishTime>
     </File>
     <File Include="Controllers/AdvanceController.vb">
       <publishTime>09/12/2018 16:29:44</publishTime>
@@ -626,10 +626,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/30/2019 12:23:10</publishTime>
     </File>
     <File Include="Scripts/Func/reports.js">
-      <publishTime>02/05/2019 11:40:22</publishTime>
+      <publishTime>05/02/2019 11:40:22</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>02/05/2019 11:19:22</publishTime>
+      <publishTime>06/05/2019 16:51:53</publishTime>
     </File>
     <File Include="Scripts/i18n/defaults-ar_AR.js">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -965,13 +965,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Test.html">
-      <publishTime>02/04/2019 12:03:37</publishTime>
+      <publishTime>04/02/2019 12:03:37</publishTime>
     </File>
     <File Include="Test2.html">
       <publishTime>04/25/2019 14:47:57</publishTime>
     </File>
     <File Include="Views/Acc/Billing.vbhtml">
-      <publishTime>03/19/2019 10:54:06</publishTime>
+      <publishTime>06/05/2019 14:42:53</publishTime>
     </File>
     <File Include="Views/Acc/Cheque.vbhtml">
       <publishTime>05/13/2019 13:42:25</publishTime>
@@ -995,7 +995,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:54:06</publishTime>
     </File>
     <File Include="Views/Acc/FormInv.vbhtml">
-      <publishTime>03/19/2019 10:54:06</publishTime>
+      <publishTime>06/05/2019 17:32:02</publishTime>
     </File>
     <File Include="Views/Acc/FormRcp.vbhtml">
       <publishTime>03/19/2019 10:54:06</publishTime>
@@ -1241,7 +1241,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/15/2019 12:46:11</publishTime>
+      <publishTime>06/05/2019 10:50:29</publishTime>
     </File>
     <File Include="_Layout.vbhtml">
       <publishTime>01/01/0001 00:00:00</publishTime>

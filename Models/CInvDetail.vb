@@ -558,6 +558,14 @@ and h.DocNo=d.DocNo
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    If Me.DocNo <> "" And Me.ItemNo <> 0 Then
+                        Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo='',LinkItem=0"
+                        Sql &= String.Format(" WHERE BranchCode='{0}' AND LinkBillNo='{1}' And LinkItem={2}", Me.BranchCode, Me.DocNo, Me.ItemNo)
+
+                        cm.CommandText = Sql
+                        cm.CommandType = CommandType.Text
+                        cm.ExecuteNonQuery()
+                    End If
                 End Using
                 UpdateTotal(cn)
 

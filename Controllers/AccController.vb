@@ -48,16 +48,16 @@ Namespace Controllers
             Return GetView("FormGL")
         End Function
         Function Expense() As ActionResult
-            'Return GetView("Expense", "MODULE_ACC")
-            Return RedirectToAction("FormExpense")
+            Return GetView("Expense", "MODULE_ACC")
+            'Return RedirectToAction("FormExpense")
         End Function
         Function Invoice() As ActionResult
-            'Return GetView("Invoice", "MODULE_ACC")
-            Return RedirectToAction("FormInv")
+            Return GetView("Invoice", "MODULE_ACC")
+            'Return RedirectToAction("FormInv")
         End Function
         Function Billing() As ActionResult
-            'Return GetView("Billing", "MODULE_ACC")
-            Return RedirectToAction("FormBill")
+            Return GetView("Billing", "MODULE_ACC")
+            'Return RedirectToAction("FormBill")
         End Function
         Function PettyCash() As ActionResult
             Return GetView("PettyCash", "MODULE_ACC")
@@ -66,23 +66,23 @@ Namespace Controllers
             Return GetView("Cheque", "MODULE_ACC")
         End Function
         Function Receipt() As ActionResult
-            'Return GetView("Receipt", "MODULE_ACC")
-            Return RedirectToAction("FormRcp")
+            Return GetView("Receipt", "MODULE_ACC")
+            'Return RedirectToAction("FormRcp")
         End Function
         Function RecvInv() As ActionResult
             Return GetView("RecvInv", "MODULE_ACC")
         End Function
         Function TaxInvoice() As ActionResult
-            'Return GetView("TaxInvoice", "MODULE_ACC")
-            Return RedirectToAction("FormTaxInv")
+            Return GetView("TaxInvoice", "MODULE_ACC")
+            'Return RedirectToAction("FormTaxInv")
         End Function
         Function CreditNote() As ActionResult
-            'Return GetView("CreditNote", "MODULE_ACC")
-            Return RedirectToAction("FormCreditNote")
+            Return GetView("CreditNote", "MODULE_ACC")
+            'Return RedirectToAction("FormCreditNote")
         End Function
         Function GLNote() As ActionResult
-            'Return GetView("GLNote", "MODULE_ACC")
-            Return RedirectToAction("FormGL")
+            Return GetView("GLNote", "MODULE_ACC")
+            'Return RedirectToAction("FormGL")
         End Function
         Function FormExpense() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
@@ -227,7 +227,10 @@ Namespace Controllers
                                 End If
                             End If
                         End If
-                        data.AddNew(DateTime.Now.ToString("yyMM") & "-___")
+                        If data.VoucherDate = DateTime.MinValue Then
+                            data.VoucherDate = Today.Date
+                        End If
+                        data.AddNew(data.VoucherDate.ToString("yyMM") & "-___")
                     End If
                     Dim tSql As String = String.Format(" WHERE BranchCode='{0}' AND  ControlNo='{1}' ", data.BranchCode, data.ControlNo)
                     If data.CancelProve <> "" Then
@@ -589,7 +592,10 @@ Namespace Controllers
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":null,""msg"":""You are not authorize to add""}}", jsonContent)
                         End If
-                        data.AddNew("WT-" & DateTime.Now.ToString("yyMM") & "-____")
+                        If data.DocDate = DateTime.MinValue Then
+                            data.DocDate = Today.Date
+                        End If
+                        data.AddNew("WT-" & data.DocDate.ToString("yyMM") & "-____")
                     End If
 
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' ", data.BranchCode, data.DocNo))
@@ -734,6 +740,37 @@ Namespace Controllers
                 Return Content("{""whtax"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function GetInvoice() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND DocNo='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oHead = New CInvHeader(jobWebConn).GetData(tSqlw)
+                Dim jsonH As String = JsonConvert.SerializeObject(oHead)
+
+                Dim oDet = New CInvDetail(jobWebConn).GetData(tSqlw)
+                Dim jsonD As String = JsonConvert.SerializeObject(oDet)
+
+                Dim jsonC As String = ""
+                If oHead.Count > 0 Then
+                    Dim oCust = New CCompany(jobWebConn).GetData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}'", oHead(0).CustCode, oHead(0).CustBranch))
+                    jsonC = JsonConvert.SerializeObject(oCust)
+                End If
+
+                Dim jsonJob As String = ""
+                If oDet.Count > 0 Then
+                    Dim oJob = New CJobOrder(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND JNo IN(SELECT JobNo FROM Job_ClearDetail WHERE BranchCode='{0}' AND LinkBillNo='{1}')", oDet(0).BranchCode, oDet(0).DocNo))
+                    jsonJob = JsonConvert.SerializeObject(oJob)
+                End If
+                Return Content("{""invoice"":{""msg"":""" & Request.QueryString("Code").ToString & """,""header"":[" & jsonH & "],""detail"":[" & jsonD & "],""customer"":[" & jsonC & "],""job"":[" & jsonJob & "]}}", jsonContent)
+            Catch ex As Exception
+                Return Content("{""invoice"":{""msg"":""" & ex.Message & """,""header"":[],""detail"":[]}}", jsonContent)
+            End Try
+        End Function
         Function GetInvHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE DocNo<>'' "
@@ -803,11 +840,12 @@ Namespace Controllers
                     Return Content("{""invheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
                 Dim oData As New CInvHeader(jobWebConn)
+                oData.BranchCode = Branch
+                oData.DocNo = DocNo
                 Dim msg = oData.DeleteData(tSqlw)
-                Dim oDetail As New CInvDetail(jobWebConn)
-                oDetail.BranchCode = Branch
-                oDetail.DocNo = DocNo
-                oDetail.DeleteData(tSqlw)
+
+                Dim oDet As New CInvDetail(jobWebConn)
+                oDet.DeleteData(tSqlw)
 
                 Dim json = "{""invheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
@@ -840,7 +878,10 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     If "" & data.BillAcceptNo = "" Then
-                        data.AddNew("BL-" & Today.ToString("yyMM") & "____")
+                        If data.BillDate = DateTime.MinValue Then
+                            data.BillDate = Today.Date
+                        End If
+                        data.AddNew("BL-" & data.BillDate.ToString("yyMM") & "____")
                     End If
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BillAcceptNo='{1}' ", data.BranchCode, data.BillAcceptNo))
                     Dim json = "{""result"":{""data"":""" & data.BillAcceptNo & """,""msg"":""" & msg & """}}"
@@ -867,7 +908,12 @@ Namespace Controllers
                 Else
                     Return Content("{""billheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
+                Dim Branch As String = Request.QueryString("Branch").ToString
+                Dim Code As String = Request.QueryString("Code").ToString
+
                 Dim oData As New CBillHeader(jobWebConn)
+                oData.BranchCode = Branch
+                oData.BillAcceptNo = Code
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim oDet As New CBillDetail(jobWebConn)
@@ -905,15 +951,18 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     If "" & data.ReceiptNo = "" Then
+                        If data.ReceiptDate = DateTime.MinValue Then
+                            data.ReceiptDate = Today.Date
+                        End If
                         Select Case data.ReceiptType
                             Case "RCP"
-                                data.AddNew("RC" & Today.ToString("yyMM") & "___")
+                                data.AddNew("RC" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "TAX"
-                                data.AddNew("TX" & Today.ToString("yyMM") & "___")
+                                data.AddNew("TX" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "REC"
-                                data.AddNew("RV" & Today.ToString("yyMM") & "___")
+                                data.AddNew("RV" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "ADV"
-                                data.AddNew("AV" & Today.ToString("yyMM") & "___")
+                                data.AddNew("AV" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case Else
                                 Return Content("{""result"":{""data"":null,""msg"":""Please Enter Receipt Type""}}", jsonContent)
                         End Select
@@ -1094,6 +1143,30 @@ Namespace Controllers
                 Return Content("{""invdetail"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function GetInvForBill() As ActionResult
+            Try
+                Dim tSqlw As String = " AND ISNULL(a.BillAcceptNo,'')='' AND a.TotalNet>0 "
+
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND a.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND a.DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND a.DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND a.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvForBilling() & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""invdetail"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
         Function GetBillDetail() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
@@ -1111,15 +1184,23 @@ Namespace Controllers
                 Return Content("{""billdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
-        Function SetBillDetail(<FromBody()> data As CBillDetail) As ActionResult
+        Function SetBillDetail(<FromBody()> data As List(Of CBillDetail)) As ActionResult
             Try
                 If Not IsNothing(data) Then
-                    If "" & data.BillAcceptNo = "" Then
+                    If "" & data(0).BillAcceptNo = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    Else
+                        Dim o = New CBillDetail(jobWebConn)
+                        o.BranchCode = data(0).BranchCode
+                        o.BillAcceptNo = data(0).BillAcceptNo
+                        o.DeleteData(String.Format(" WHERE BranchCode='{0}' And BillAcceptNo='{1}'", data(0).BranchCode, data(0).BillAcceptNo))
                     End If
-                    data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BillAcceptNo='{1}' AND ItemNo='{2}' ", data.BranchCode, data.BillAcceptNo, data.ItemNo))
-                    Dim json = "{""result"":{""data"":""" & data.BillAcceptNo & """,""msg"":""" & msg & """}}"
+                    Dim msg = ""
+                    For Each dt In data
+                        dt.SetConnect(jobWebConn)
+                        msg &= "\n" & dt.SaveData(String.Format(" WHERE BranchCode='{0}' AND BillAcceptNo='{1}' AND ItemNo='{2}' ", dt.BranchCode, dt.BillAcceptNo, dt.ItemNo))
+                    Next
+                    Dim json = "{""result"":{""data"":""" & data(0).BillAcceptNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
                     Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
@@ -1132,21 +1213,30 @@ Namespace Controllers
         End Function
         Function DelBillDetail() As ActionResult
             Try
+                Dim Branch As String = ""
                 Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlw &= String.Format("AND BranchCode Like '{0}' ", Request.QueryString("Branch").ToString)
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                    Branch = Request.QueryString("Branch").ToString
                 Else
                     Return Content("{""billdetail"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
                 End If
+                Dim Code As String = ""
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND BillAcceptNo Like '{0}' ", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND BillAcceptNo ='{0}' ", Request.QueryString("Code").ToString)
+                    Code = Request.QueryString("Code").ToString
                 Else
                     Return Content("{""billdetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
+                Dim Item As String = ""
                 If Not IsNothing(Request.QueryString("Item")) Then
                     tSqlw &= String.Format("AND ItemNo ='{0}' ", Request.QueryString("Item").ToString)
+                    Item = Request.QueryString("Item").ToString
                 End If
                 Dim oData As New CBillDetail(jobWebConn)
+                oData.BranchCode = Branch
+                oData.BillAcceptNo = Code
+                oData.ItemNo = Convert.ToInt32(0 & Item)
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""billdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"

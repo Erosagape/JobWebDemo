@@ -130,7 +130,10 @@ Namespace Controllers
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
                         End If
-                        data.AddNew(prefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+                        If data.AdvDate = DateTime.MinValue Then
+                            data.AdvDate = Today.Date
+                        End If
+                        data.AddNew(prefix & "-" & data.AdvDate.ToString("yyMM") & "____")
                     End If
 
                     If AuthorizeStr.IndexOf("E") < 0 Then
@@ -161,7 +164,10 @@ Namespace Controllers
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
                         End If
-                        data.AddNew(prefix & "-" & DateTime.Now.ToString("yyMM") & "____")
+                        If data.AdvDate = DateTime.MinValue Then
+                            data.AdvDate = Today.Date
+                        End If
+                        data.AddNew(prefix & "-" & data.AdvDate.ToString("yyMM") & "____")
                     End If
 
                     If AuthorizeStr.IndexOf("E") < 0 Then

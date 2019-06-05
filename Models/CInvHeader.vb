@@ -475,6 +475,10 @@ Public Class CInvHeader
                             dr("ShippingRemark") = Me.ShippingRemark
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            If Me.CancelProve <> "" Then
+                                CancelData(cn)
+                            End If
+
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -641,6 +645,28 @@ Public Class CInvHeader
         End Using
         Return lst
     End Function
+    Public Function CancelData(cn As SqlConnection) As String
+        Dim msg As String = ""
+        Try
+            Using cm As New SqlCommand()
+                cm.Connection = cn
+                cm.CommandTimeout = 0
+                If Me.DocNo <> "" Then
+                    Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo='',LinkItem=0"
+                    Sql &= String.Format(" WHERE BranchCode ='{0}' AND LinkBillNo='{1}' ", Me.BranchCode, Me.DocNo)
+
+                    cm.CommandText = Sql
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End If
+            End Using
+
+            msg = "Cancel Complete"
+        Catch ex As Exception
+            msg = ex.Message
+        End Try
+        Return msg
+    End Function
     Public Function DeleteData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -652,8 +678,11 @@ Public Class CInvHeader
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-
-                msg = "Delete Complete"
+                If Me.DocNo <> "" Then
+                    msg = CancelData(cn)
+                Else
+                    msg = "Delete Complete"
+                End If
             Catch ex As Exception
                 msg = ex.Message
             End Try

@@ -490,13 +490,16 @@ Namespace Controllers
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":[],""msg"":""You are not authorize to add""}}", jsonContent)
                         End If
+                        If data.ClrDate = DateTime.MinValue Then
+                            data.ClrDate = Today.Date
+                        End If
                         Select Case data.ClearType
                             Case 2
-                                data.AddNew("TEXP" & DateTime.Now.ToString("yyMM") & "-_____")
+                                data.AddNew("TEXP" & data.ClrDate.ToString("yyMM") & "-_____")
                             Case 3
-                                data.AddNew("TSRV" & DateTime.Now.ToString("yyMM") & "-_____")
+                                data.AddNew("TSRV" & data.ClrDate.ToString("yyMM") & "-_____")
                             Case Else
-                                data.AddNew(clrPrefix & DateTime.Now.ToString("yyMM") & "-_____")
+                                data.AddNew(clrPrefix & data.ClrDate.ToString("yyMM") & "-_____")
                         End Select
 
                     End If

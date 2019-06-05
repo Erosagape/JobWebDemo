@@ -670,4 +670,24 @@ ON b.BranchCode=c.BranchCode
 and b.JobNo=c.JNo
 "
     End Function
+    Function SQLSelectInvForBilling() As String
+        Return "
+SELECT a.*,b.NameThai,b.NameEng FROM Job_InvoiceHeader a
+LEFT JOIN Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
+WHERE ISNULL(a.CancelProve,'')='' 
+"
+    End Function
+    Function SQLUpdateBillToInv(branch As String, billno As String, Optional iscancel As Boolean = False) As String
+        Dim sql As String = "UPDATE a"
+        If iscancel Then
+            sql &= " SET a.BillAcceptNo='',a.BillIssueDate=null,a.BillAcceptDate=null "
+            sql &= " FROM Job_InvoiceHeader a "
+            sql &= " WHERE a.BranchCode='{0}' AND a.BillAcceptNo='{1}' "
+        Else
+            sql &= " SET a.BillAcceptNo=b.BillAcceptNo,a.BillIssueDate=b.BillDate,a.BillAcceptDate=b.BillRecvDate "
+            sql &= " FROM Job_InvoiceHeader a,Job_BillAcceptHeader b "
+            sql &= " WHERE a.BranchCode=b.BranchCode AND a.BranchCode='{0}' AND b.BillAcceptNo='{1}' "
+        End If
+        Return String.Format(sql, branch, billno)
+    End Function
 End Module

@@ -129,6 +129,24 @@ Public Class CBillHeader
             m_CancelTime = value
         End Set
     End Property
+    Private m_EmpCode As String
+    Public Property EmpCode As String
+        Get
+            Return m_EmpCode
+        End Get
+        Set(value As String)
+            m_EmpCode = value
+        End Set
+    End Property
+    Private m_RecDateTime As Date
+    Public Property RecDateTime As Date
+        Get
+            Return m_RecDateTime
+        End Get
+        Set(value As Date)
+            m_RecDateTime = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -154,8 +172,17 @@ Public Class CBillHeader
                             dr("CancelProve") = Me.CancelProve
                             dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
                             dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
+                            dr("EmpCode") = Me.EmpCode
+                            dr("RecDateTime") = Main.GetDBDate(Me.RecDateTime)
+
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            If Me.CancelProve <> "" Then
+                                Dim o As New CBillDetail(jobWebConn)
+                                o.BranchCode = Me.BranchCode
+                                o.BillAcceptNo = Me.BillAcceptNo
+                                o.CancelDocument(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -222,6 +249,12 @@ Public Class CBillHeader
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("CancelTime"))) = False Then
                         row.CancelTime = rd.GetValue(rd.GetOrdinal("CancelTime"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("EmpCode"))) = False Then
+                        row.EmpCode = rd.GetString(rd.GetOrdinal("EmpCode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("RecDateTime"))) = False Then
+                        row.RecDateTime = rd.GetValue(rd.GetOrdinal("RecDateTime"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -239,6 +272,10 @@ Public Class CBillHeader
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    If Me.BillAcceptNo <> "" Then
+                        cm.CommandText = SQLUpdateBillToInv(Me.BranchCode, Me.BillAcceptNo, True)
+                        cm.ExecuteNonQuery()
+                    End If
                 End Using
 
                 msg = "Delete Complete"
