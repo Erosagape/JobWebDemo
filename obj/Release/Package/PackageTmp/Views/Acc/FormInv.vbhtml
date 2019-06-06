@@ -99,9 +99,9 @@ End Code
                 <th width="200px" rowspan="2">SERVICE CHARGE</th>
             </tr>
             <tr style="background-color :gainsboro;text-align:center;">
-                <th width="120px">SERVICE</th>
+                <th width="120px">EXPENSE</th>
                 <th width="120px">VAT</th>
-                <th width="120px">AMOUNT</th>
+                <th width="120px">WHT</th>
             </tr>
         </thead>
         <tbody id="tbDetail"></tbody>
@@ -222,7 +222,7 @@ End Code
             $('#lblSumVat').text(ShowNumber(h.TotalVAT,2));
             $('#lblSumAfterVat').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalVAT),2));
             $('#lblSumAdvance').text(ShowNumber(h.TotalAdvance,2));
-            $('#lblSumTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance),2));
+            $('#lblSumTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT),2));
             $('#lblSumGrandTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT),2));
             $('#lblTotalBaht').text('(' + CNumThai(CDbl(Number(h.TotalCharge) + Number(h.TotalAdvance) + Number(h.TotalVAT), 2)) + ')');
 

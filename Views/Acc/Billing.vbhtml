@@ -49,7 +49,7 @@ End Code
                     </thead>
                 </table>
                 <br />
-                <input type="button" class="btn btn-success" value="Create Invoice" onclick="ShowSummary()" />
+                <input type="button" class="btn btn-success" value="Create Billing" onclick="ShowSummary()" />
             </div>
         </div>
     </div>
@@ -63,15 +63,21 @@ End Code
                                 Billing Date :<br />
                                 <input type="date" id="txtDocDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
                             </td>
-                            <td style="width:80%">
+                            <td style="width:20%">
                                 <a href="#" onclick="SearchData('billing')">Billing Place :</a><br />
-                                <input type="hidden" id="txtBillToCustCode" />
-                                <input type="hidden" id="txtBillToCustBranch" />
+                                <input type="text" id="txtBillToCustCode" style="width:100%" disabled />
+                            </td>
+                            <td style="width:10%">
+                                </br>
+                                <input type="text" id="txtBillToCustBranch" style="width:100%" disabled />
+                            </td>
+                            <td style="width:50%">
+                                <br/>
                                 <input type="text" id="txtBillToCustName" style="width:100%" disabled />
                             </td>
                         </tr>
                     </table>
-                    <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save</button>
+                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
                 <div class="modal-body">
                     <b>Billing Summary:</b><br />
@@ -107,9 +113,9 @@ End Code
                                 <tbody></tbody>
                             </table>
                         </div>
-                    </div>                    
+                    </div>
                     Billing No : <input type="text" id="txtDocNo" disabled />
-                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Billing</button>
                 </div>
             </div>
         </div>

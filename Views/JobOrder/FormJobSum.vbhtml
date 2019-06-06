@@ -408,8 +408,13 @@ End Code
             $('#lblSumCost').text(CCurrency(CDbl(amtcost,2)));
             $('#lblSumProfit').text(CCurrency(CDbl(amtprofit,2)));
             $('#lblTotalVAT').text(CCurrency(CDbl(amtvat, 2)));
-            $('#lblCommRate').text(CCurrency(CDbl(amtprofit*(commrate/100),2)));
-            $('#lblNetProfit').text(CCurrency(CDbl(amtprofit-(amtprofit*(commrate/100)),2)));
+            if (amtprofit > 0) {
+                $('#lblCommRate').text(CCurrency(CDbl(amtprofit * (commrate / 100), 2)));
+                $('#lblNetProfit').text(CCurrency(CDbl(amtprofit - (amtprofit * (commrate / 100)), 2)));
+            } else {
+                $('#lblCommRate').text(CCurrency(CDbl(0,2)));
+                $('#lblNetProfit').text(CCurrency(CDbl(amtprofit, 2)));
+            }
         });
     }
 </script>

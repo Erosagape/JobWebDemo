@@ -1546,8 +1546,10 @@ End Code
     }
     function LoadAdvance() {
         let jtype = $('#cboJobType').val();
-        let cfrom = $('#cboClrFrom').val();
         let branch = $('#txtBranchCode').val();
+        if (job !== null) {
+            jtype += '&jobno=' + job;
+        }
         //$.get(path + 'Clr / GetAdvForClear ? branchcode = '+branch+' & jtype=' + jtype + GetClrFrom(cfrom), function (r) {
         $.get(path + 'Clr/GetAdvForClear?branchcode=' + branch + '&jtype=' + jtype, function (r) {
             if (r.clr.data.length > 0) {

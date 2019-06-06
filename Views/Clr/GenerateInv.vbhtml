@@ -83,7 +83,7 @@ End Code
                             </td>
                         </tr>
                     </table>
-                    <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save</button>
+                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
                 <div class="modal-body">
                     <b>Invoice Summary:</b><br />
@@ -106,6 +106,7 @@ End Code
                                 <tr><td>Cost</td><td><input type="text" id="txtTotalCost" disabled /></td></tr>
                                 <tr><td>Profit</td><td><input type="text" id="txtTotalProfit" disabled /></td></tr>
                             </table>
+                            <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Invoice</button>
                         </div>
                         <div class="col-sm-6">
                             <b>Invoice Detail:</b><br />
@@ -140,7 +141,6 @@ End Code
                         </thead>
                         <tbody></tbody>
                     </table>
-                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -155,6 +155,14 @@ End Code
     var arr = [];
     $(document).ready(function () {
         SetEvents();
+        //Load params
+        let branch = getQueryString("branch");
+        let code = getQueryString("code");
+        if (branch !== null && code !== null) {
+            $('#txtBranchCode').val(branch);
+            ShowBranch(path, branch, '#txtBranchName');
+            $('#txtJobNo').val(code.toUpperCase());            
+        }
     });
     function SetEvents() {
         //Combos
@@ -185,10 +193,9 @@ End Code
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
         });
+
     }
     function SetGridAdv(isAlert) {
-        arr = [];
-
         let w = '';
         if ($('#txtJobNo').val() !== "") {
             w = w + '&job=' + $('#txtJobNo').val();
@@ -259,10 +266,12 @@ End Code
             totaladv += obj.AmtAdvance;
             totalcharge += obj.AmtCharge;
             totalcost += obj.AmtCost;
-            totalistaxcharge += (obj.AmtVat > 0 ? obj.AmtCharge : 0);
-            totalis50tavi += (obj.Amt50Tavi > 0 ? obj.AmtCharge : 0);
-            totalvat += obj.AmtVat;
-            total50tavi += obj.Amt50Tavi;
+            if (obj.AmtCharge > 0) {
+                totalistaxcharge += (obj.AmtVat > 0 ? obj.AmtCharge : 0);
+                totalis50tavi += (obj.Amt50Tavi > 0 ? obj.AmtCharge : 0);
+                totalvat += obj.AmtVat;
+                total50tavi += obj.Amt50Tavi;
+            }
             totalcustadv += 0;
             totalnet += obj.AmtNet;
         }
@@ -360,6 +369,10 @@ End Code
             alert('no data to approve');
             return;
         }
+        if ($('#txtCustCode').val() == '') {
+            alert('Please select Customer first!');
+            return;
+        }
         let dataInv = {
             BranchCode:$('#txtBranchCode').val(),
             DocNo: $('#txtDocNo').val(),
@@ -367,8 +380,8 @@ End Code
             DocDate: CDateTH($('#txtDocDate').val()),
             CustCode:$('#txtCustCode').val(),
             CustBranch:$('#txtCustBranch').val(),
-            BillToCustCode:$('#txtCustCode').val(),
-            BillToCustBranch:$('#txtCustBranch').val(),
+            BillToCustCode:null,
+            BillToCustBranch: null,
             ContactName:'',
             EmpCode:user,
             PrintedBy:'',
@@ -439,7 +452,9 @@ End Code
                     if (response.result.data !== null) {
                         alert(response.result.msg);
                         SetGridAdv(false);
+                        PrintInvoice($('#txtBranchCode').val(), response.result.data);
                         $('#dvCreate').modal('hide');
+                        arr = [];
                         return;
                     }
                     alert(response.result.msg);
@@ -567,5 +582,8 @@ End Code
             }
         }
         return data;
+    }
+    function PrintInvoice(branch, code) {
+        window.open(path + 'Acc/FormInv?Branch=' + branch + '&Code=' + code);
     }
 </script>

@@ -102,7 +102,7 @@ Namespace Controllers
             Next
 
             If lst <> "" Then
-                Dim tSQL As String = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}' WHERE BranchCode+'|'+ClrNo+'|'+Convert(varchar,ItemNo) in({1})", docno, lst)
+                Dim tSQL As String = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}',LinkItem=1,UsedAmount=0,ChargeVAT=0,Tax50Tavi=0,FNet=0,BNet=0 WHERE BranchCode+'|'+ClrNo+'|'+Convert(varchar,ItemNo) in({1})", docno, lst)
                 Dim result = Main.DBExecute(jobWebConn, tSQL)
                 If result = "OK" Then
                     Return New HttpResponseMessage(HttpStatusCode.OK)
@@ -311,7 +311,7 @@ Namespace Controllers
 
                 Dim tSqlW As String = String.Format(" WHERE a.BranchCode='{0}'", Branch)
                 If Not IsNothing(Request.QueryString("JobNo")) Then
-                    tSqlW &= " AND a.ClrNo IN(SELECT ClrNo FROM Job_ClearDetail WHERE BranchCode='" & Branch & "' And JobNo='" & Request.QueryString("JobNo") & "')"
+                    tSqlW &= " AND b.JobNo='" & Request.QueryString("JobNo") & "' "
                 End If
                 If Not IsNothing(Request.QueryString("JType")) Then
                     tSqlW &= " AND a.JobType=" & Request.QueryString("JType") & ""

@@ -22,12 +22,12 @@ End Code
         <div style="display:flex;">
             <div style="flex:1;" class="text-left">
                 <p>
-                  TAX-ID : 0105512002448 HEAD OFFICE
+                  TAX-ID : <label id="lblTaxNumber"></label>
                 </p>
             </div>
             <div style="flex:1;" class="text-right">
-                DOC NO : BN-1802-0001
-                <br />DATE : 08/02/2018
+                DOC NO : <label id="lblBillAcceptNo"></label>
+                <br />DATE : <label id="lblBillDate"></label>
             </div>
         </div>
         <div style="display:flex;">
@@ -54,18 +54,11 @@ End Code
                 <th class="text-center" width="130" rowspan="2">INVOICE NO.</th>
                 <th class="text-center" width="130" rowspan="2">JOB NO.</th>
                 <th class="text-center" colspan="2">AMOUNT</th>
-
                 <th class="text-center" width="60" rowspan="2">VAT</th>
                 <th class="text-center" colspan="2">W/H</th>
                 <th class="text-center" width="100" rowspan="2">TOTAL</th>
-
-
             </tr>
             <tr>
-
-
-
-
                 <th class="text-center"  width="130">REIMBURSEMENT</th>
                 <th class="text-center"  width="90">SERVICE</th>
                 <th class="text-center"  width="50">1%</th>
@@ -77,7 +70,6 @@ End Code
                 <td>INV-1802-00021</td>
                 <td>IS1802-00014</td>
                 <td>12,000.00</td>
-
                 <td>1500.00</td>
                 <td>105.00</td>
                 <td>0.00</td>
@@ -88,13 +80,9 @@ End Code
                 <td colspan="4">&nbsp;</td>
                 <td colspan="5" class="text-right" >TOTAL</td>
                 <td colspan="1">13,605.00</td>
-
-
-
             </tr>
             <tr style="background-color:lightblue">
                 <th class="text-center"  colspan="10">THIRTEEN THOUSAND SIX HUNDRED AND FIVE ONLY</th>
-
             </tr>
         </table>
 

@@ -99,9 +99,9 @@ End Code
                 <th width="200px" rowspan="2">SERVICE CHARGE</th>
             </tr>
             <tr style="background-color :gainsboro;text-align:center;">
-                <th width="120px">SERVICE</th>
+                <th width="120px">EXPENSE</th>
                 <th width="120px">VAT</th>
-                <th width="120px">AMOUNT</th>
+                <th width="120px">WHT</th>
             </tr>
         </thead>
         <tbody id="tbDetail"></tbody>

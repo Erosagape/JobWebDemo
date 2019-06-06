@@ -1009,7 +1009,7 @@ Namespace Controllers
         End Function
         Function GetClearForInv() As ActionResult
             Try
-                Dim tSqlw As String = " WHERE ISNULL(b.LinkBillNo,'')='' AND a.DocStatus<>99 AND b.UsedAmount>0 "
+                Dim tSqlw As String = " WHERE ISNULL(b.LinkBillNo,'')='' AND a.DocStatus NOT IN('99','1') AND b.UsedAmount>0 "
 
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND b.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
@@ -1133,12 +1133,15 @@ Namespace Controllers
                     tSqlw &= String.Format("AND ItemNo ='{0}' ", Request.QueryString("Item").ToString)
                 End If
                 Dim oData As New CInvDetail(jobWebConn)
-                oData.BranchCode = Branch
-                oData.DocNo = DocNo
-                Dim msg = oData.DeleteData(tSqlw)
-
-                Dim json = "{""invdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
-                Return Content(json, jsonContent)
+                Dim oRec = oData.GetData(tSqlw)
+                If oRec.Count > 0 Then
+                    Dim msg = oRec(0).DeleteData(tSqlw)
+                    Dim json = "{""invdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oRec(0)) & "]}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""invdetail"":{""result"":""Data Not Found"",""data"":[]}}"
+                    Return Content(json, jsonContent)
+                End If
             Catch ex As Exception
                 Return Content("{""invdetail"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
@@ -1234,13 +1237,15 @@ Namespace Controllers
                     Item = Request.QueryString("Item").ToString
                 End If
                 Dim oData As New CBillDetail(jobWebConn)
-                oData.BranchCode = Branch
-                oData.BillAcceptNo = Code
-                oData.ItemNo = Convert.ToInt32(0 & Item)
-                Dim msg = oData.DeleteData(tSqlw)
-
-                Dim json = "{""billdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
-                Return Content(json, jsonContent)
+                Dim oRec = oData.GetData(tSqlw)
+                If oRec.Count > 0 Then
+                    Dim msg = oRec(0).DeleteData(tSqlw)
+                    Dim json = "{""billdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oRec(0)) & "]}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""billdetail"":{""result"":""Data Not Found"",""data"":[]}}"
+                    Return Content(json, jsonContent)
+                End If
             Catch ex As Exception
                 Return Content("{""billdetail"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try

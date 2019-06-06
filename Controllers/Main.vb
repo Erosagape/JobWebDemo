@@ -616,7 +616,8 @@ from Job_InvoiceHeader a LEFT JOIN
 	Sum(AmtCharge) as TotalCharge,
 	Sum(Case when IsTaxCharge>=1 then AmtCharge else 0 end) as TotalIsTaxCharge,
 	Sum(Case when Is50Tavi=1 then AmtCharge else 0 end) as TotalIs50Tavi,
-	sum(AmtVat) as TotalVAT,sum(Amt50Tavi) as Total50Tavi
+	sum(case when AmtCharge>0 then AmtVat else 0 end) as TotalVAT,
+    sum(case when AmtCharge>0 then Amt50Tavi else 0 end) as Total50Tavi
 	from Job_InvoiceDetail
 	group by BranchCode,DocNo
 ) b
@@ -652,7 +653,7 @@ CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.ChargeVAT ELSE 0 END as A
 b.BNet as TotalAmt,
 b.BNet/b.CurRate as FTotalAmt,
 CASE WHEN ISNULL(b.SlipNO,'')<>'' AND b.BPrice>0 THEN b.BNet ELSE 0 END as AmtAdvance,
-CASE WHEN ISNULL(b.SlipNO,'')='' THEN b.UsedAmount ELSE 0 END as AmtCharge,
+CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.UsedAmount ELSE 0 END as AmtCharge,
 '' as CurrencyCodeCredit,
 0 as ExchangeRateCredit,
 0 as AmtCredit,
@@ -680,11 +681,13 @@ WHERE ISNULL(a.CancelProve,'')=''
     Function SQLUpdateBillToInv(branch As String, billno As String, Optional iscancel As Boolean = False) As String
         Dim sql As String = "UPDATE a"
         If iscancel Then
-            sql &= " SET a.BillAcceptNo='',a.BillIssueDate=null,a.BillAcceptDate=null "
+            sql &= " SET a.BillAcceptNo='',a.BillIssueDate=null,a.BillAcceptDate=null,"
+            sql &= " a.BillToCustCode=null,a.BillToCustBranch=null"
             sql &= " FROM Job_InvoiceHeader a "
             sql &= " WHERE a.BranchCode='{0}' AND a.BillAcceptNo='{1}' "
         Else
-            sql &= " SET a.BillAcceptNo=b.BillAcceptNo,a.BillIssueDate=b.BillDate,a.BillAcceptDate=b.BillRecvDate "
+            sql &= " SET a.BillAcceptNo=b.BillAcceptNo,a.BillIssueDate=b.BillDate,a.BillAcceptDate=b.BillRecvDate,"
+            sql &= " a.BillToCustCode=b.CustCode,a.BillToCustBranch=b.CustBranch "
             sql &= " FROM Job_InvoiceHeader a,Job_BillAcceptHeader b "
             sql &= " WHERE a.BranchCode=b.BranchCode AND a.BranchCode='{0}' AND b.BillAcceptNo='{1}' "
         End If

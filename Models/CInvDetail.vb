@@ -403,10 +403,10 @@ inner join (
 	select BranchCode,DocNo,
 	sum(AmtCharge*ExchangeRate) as TotalCharge,
 	sum(AmtAdvance*ExchangeRate) as TotalAdvance,
-	sum(case when IsTaxCharge=1 then Amt else 0 end) as TotalIsTaxCharge, 
-	sum(case when Is50Tavi=1 then Amt else 0 end) as TotalIs50Tavi,
-	sum(AmtVat) as TotalVAT,
-	sum(Amt50Tavi) as Total50Tavi,
+	sum(case when IsTaxCharge=1 And AmtCharge>0 then Amt else 0 end) as TotalIsTaxCharge, 
+	sum(case when Is50Tavi=1 And AmtCharge>0 then Amt else 0 end) as TotalIs50Tavi,
+	sum(case when AmtCharge>0 then AmtVat else 0 end) as TotalVAT,
+	sum(case when AmtCharge>0 then Amt50Tavi else 0 end) as Total50Tavi,
 	sum(TotalAmt) as TotalNet
 	from Job_InvoiceDetail
 	group by BranchCode,DocNo

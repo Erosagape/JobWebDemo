@@ -326,10 +326,18 @@ End Code
     var path = '@Url.Content("~")';
     var user = '@ViewBag.User';
     var userRights = '@ViewBag.UserRights';
+    var job = '';
     $(document).ready(function () {
         SetEvents();
         SetLOVs();
         SetEnterToTab();
+        let branch = getQueryString("BranchCode");
+        job = getQueryString("JNo");
+        if (branch !== null && job !== null) {
+            $('#txtBranchCode').val(branch);
+
+            ShowBranch(path, branch, '#txtBranchName');
+        }
     });
     function SetIsLocal() {
         $('#txtIsLocal').val($('#chkIsLocal').prop('checked') ? '1' : '0');
@@ -655,6 +663,9 @@ End Code
     }
     function SetGridControl() {
         let code = $('#txtBranchCode').val();
+        if (job !== null) {
+            code += '&job=' + job;
+        }
         $.get(path + 'acc/getvouchergrid?branch=' + code + '&type=TACC', function (r) {
             if (r.voucher.data.length == 0) {
                 alert('data not found on this branch');

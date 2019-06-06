@@ -440,8 +440,8 @@ End Code
     }
     function ShowExpense(dr) {
         RemoveData(dr);
-        $('#txtClrNo').val(dr.ClrNo); 
-        $('#txtItemNo').val(dr.ItemNo);
+        $('#txtClrNo').val(dr.AdvNO); 
+        $('#txtItemNo').val(dr.AdvItemNo);
         $('#txtSlipNo').val(dr.SlipNO);
         $('#txtExpCode').val('');
         $('#txtCTN_NO').val('');
@@ -567,7 +567,7 @@ End Code
         if (type == '2') {
             amt = CDbl($('#txtExpNet').val(),4);
         }
-        let vatrate = CDbl($('#txtVatRate').val(),4);
+        let vatrate = CDbl($('#txtVatRate').val(),4)*100;
         let whtrate = CDbl($('#txtWhtRate').val(),4);
         let vat = 0;
         let wht = 0;
@@ -665,7 +665,7 @@ End Code
             LinkBillNo : '',
             JobNo : $('#txtExpJobNo').val(),
             VATType : $('#txtVatType').val(),
-            VATRate: $('#txtVatRate').val(),
+            VATRate: $('#txtVatRate').val()*100,
             Tax50TaviRate : $('#txtWhtRate').val(),
             IsDuplicate: 0,
             QNo: '',
