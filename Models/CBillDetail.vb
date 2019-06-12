@@ -48,6 +48,24 @@ Public Class CBillDetail
             m_InvNo = value
         End Set
     End Property
+    Private m_InvDate As Date
+    Public Property InvDate As Date
+        Get
+            Return m_InvDate
+        End Get
+        Set(value As Date)
+            m_InvDate = value
+        End Set
+    End Property
+    Private m_RefNo As String
+    Public Property RefNo As String
+        Get
+            Return m_RefNo
+        End Get
+        Set(value As String)
+            m_RefNo = value
+        End Set
+    End Property
     Private m_AmtAdvance As Double
     Public Property AmtAdvance As Double
         Get
@@ -138,6 +156,24 @@ Public Class CBillDetail
             m_AmtForeign = value
         End Set
     End Property
+    Private m_AmtVATRate As Double
+    Public Property AmtVATRate As Double
+        Get
+            Return m_AmtVATRate
+        End Get
+        Set(value As Double)
+            m_AmtVATRate = value
+        End Set
+    End Property
+    Private m_AmtWHRate As Double
+    Public Property AmtWHRate As Double
+        Get
+            Return m_AmtWHRate
+        End Get
+        Set(value As Double)
+            m_AmtWHRate = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -155,12 +191,16 @@ Public Class CBillDetail
                             If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("InvNo") = Me.InvNo
+                            dr("InvDate") = Main.GetDBDate(Me.InvDate)
+                            dr("RefNo") = Me.RefNo
                             dr("AmtCustAdvance") = Me.AmtCustAdvance
                             dr("AmtAdvance") = Me.AmtAdvance
                             dr("AmtChargeNonVAT") = Me.AmtChargeNonVAT
                             dr("AmtChargeVAT") = Me.AmtChargeVAT
                             dr("AmtWH") = Me.AmtWH
+                            dr("AmtWHRate") = Me.AmtWHRate
                             dr("AmtVAT") = Me.AmtVAT
+                            dr("AmtVATRate") = Me.AmtVATRate
                             dr("AmtTotal") = Me.AmtTotal
                             dr("CurrencyCode") = Me.CurrencyCode
                             dr("ExchangeRate") = Me.ExchangeRate
@@ -202,6 +242,12 @@ Public Class CBillDetail
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("InvNo"))) = False Then
                         row.InvNo = rd.GetString(rd.GetOrdinal("InvNo")).ToString()
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("InvDate"))) = False Then
+                        row.InvDate = rd.GetValue(rd.GetOrdinal("InvDate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("RefNo"))) = False Then
+                        row.RefNo = rd.GetString(rd.GetOrdinal("RefNo")).ToString()
+                    End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtAdvance"))) = False Then
                         row.AmtAdvance = rd.GetDouble(rd.GetOrdinal("AmtAdvance"))
                     End If
@@ -231,6 +277,12 @@ Public Class CBillDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtCustAdvance"))) = False Then
                         row.AmtCustAdvance = rd.GetDouble(rd.GetOrdinal("AmtCustAdvance"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtWHRate"))) = False Then
+                        row.AmtWHRate = rd.GetDouble(rd.GetOrdinal("AmtWHRate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtVATRate"))) = False Then
+                        row.AmtVATRate = rd.GetDouble(rd.GetOrdinal("AmtVATRate"))
                     End If
                     lst.Add(row)
                 End While

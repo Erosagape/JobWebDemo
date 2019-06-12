@@ -1247,6 +1247,7 @@ End Code
         ShowCaption();
         $('#txtVenCode').val('');
         $('#txtAdvNo').val('');
+        $('#txtSlipNo').val('');
         $('#txtAdvItemNo').val('0');
 
         $('#chkDuplicate').prop('checked', false);
@@ -1438,7 +1439,7 @@ End Code
             $('#cboSTCode').val(dt.GroupCode);
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
-            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "@ViewBag.PROFILE_VATRATE");
+            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : Number(@ViewBag.PROFILE_VATRATE*100));
             $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');

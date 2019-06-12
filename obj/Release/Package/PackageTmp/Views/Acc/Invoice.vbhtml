@@ -12,6 +12,7 @@ End Code
 </head>
 <body>
     <div> 
+        <a href="/Clr/GenerateInv">Create Invoice</a>
     </div>
 </body>
 </html>

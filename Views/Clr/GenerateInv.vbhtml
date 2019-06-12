@@ -54,6 +54,7 @@ End Code
                 </table>
                 <br />
                 <input type="button" class="btn btn-success" value="Create Invoice" onclick="ShowSummary()" />
+                <input type="button" class="btn btn-default" value="Reset Data" onclick="ResetData()" />
             </div>
         </div>
     </div>
@@ -79,7 +80,7 @@ End Code
                             </td>
                             <td>
                                 <a href="#" onclick="SearchData('invoice')"> Replace Invoice No :</a><br />
-                                <input type="text" id="txtDocNo" disabled />
+                                <input type="text" id="txtDocNo" ondblclick="PrintInvoice()" disabled/>
                             </td>
                         </tr>
                     </table>
@@ -226,7 +227,7 @@ End Code
                     {
                         data: null, title: "Description",
                         render: function (data) {
-                            return data.SICode + '-' + data.SDescription;
+                            return data.SICode + '-' + data.SDescription + (data.ExpSlipNO == null ? '' : ' #' + data.ExpSlipNO);
                         }
                     },
                     { data: "AmtCost", title: "Cost" },
@@ -249,9 +250,22 @@ End Code
                 let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 AddData(data); //callback function from caller
             });
+            $('#tbHeader tbody').on('dblclick', 'tr', function () {            
+                let clearno = $(this).find('td:eq(1)').text();
+                //alert('you click ' + clearno);
+                window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
+            });
         });
     }
     function ShowSummary() {
+        if ($('#txtCustCode').val() == '') {
+            alert('Please Select Customer Before');
+            return;
+        }
+        if (arr.length == 0) {
+            alert('No data selected');
+            return;
+        }
         let totaladv = 0;
         let totalcharge = 0;
         let totalistaxcharge = 0;
@@ -309,7 +323,7 @@ End Code
                     {
                         data: null, title: "Description",
                         render: function (data) {
-                            return data.SICode + '-' + data.SDescription;
+                            return data.SICode + '-' + data.SDescription + (data.ExpSlipNO == null ? '' : ' #' + data.ExpSlipNO);
                         }
                     },
                     { data: "ExpSlipNO", title: "Slip No" },
@@ -331,7 +345,7 @@ End Code
                 {
                     data: null, title: "Description",
                     render: function (data) {
-                        return data.SICode + '-' + data.SDescription;
+                        return data.SICode + '-' + data.SDescription + (data.ExpSlipNO == null ? '' : ' #' + data.ExpSlipNO);
                     }
                 },
                 { data: "ExpSlipNO", title: "Slip No" },
@@ -387,8 +401,8 @@ End Code
             PrintedBy:'',
             PrintedDate:null,
             PrintedTime:null,
-            RefNo:'',
-            VATRate:CNum(@ViewBag.PROFILE_VATRATE),
+            RefNo: GetRefNo(),
+            VATRate:CNum(Number(@ViewBag.PROFILE_VATRATE)*100),
             TotalAdvance:CNum($('#txtTotalAdvance').val()),
             TotalCharge:CNum($('#txtTotalCharge').val()),
             TotalIsTaxCharge:CNum($('#txtTotalIsTaxCharge').val()),
@@ -439,7 +453,20 @@ End Code
         });
         return;
     }
+    function GetRefNo() {
+        let joblist = [];
+        let retstr = '';
+        for (let obj of arr) {
+            if (joblist.indexOf(obj.JobNo) < 0) {
+                joblist.push(obj.JobNo);
+                if (retstr !== '') retstr += ',';
+                retstr += obj.JobNo;
+            }
+        }
+        return retstr;
+    }
     function SaveDetail(docno) {
+        $('#txtDocNo').val(docno);
         let list = GetDataDetail(arr,docno);
         let jsonText = JSON.stringify({ data: list });
             //alert(jsonText);
@@ -450,10 +477,9 @@ End Code
                 data: jsonText,
                 success: function (response) {
                     if (response.result.data !== null) {
-                        alert(response.result.msg);
+                        alert(response.result.msg + '\n=>' + response.result.data);
                         SetGridAdv(false);
-                        PrintInvoice($('#txtBranchCode').val(), response.result.data);
-                        $('#dvCreate').modal('hide');
+                        //$('#dvCreate').modal('hide');
                         arr = [];
                         return;
                     }
@@ -494,9 +520,10 @@ End Code
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
-        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+        //ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+        $('#txtCustName').val(dt.NameThai);
         $('#txtCustCode').focus();
-        }
+    }
     function GetDataDetail(o, no) {
         let data = [];
         let i = 0;
@@ -583,7 +610,15 @@ End Code
         }
         return data;
     }
-    function PrintInvoice(branch, code) {
-        window.open(path + 'Acc/FormInv?Branch=' + branch + '&Code=' + code);
+    function PrintInvoice() {
+        let code = $('#txtDocNo').val();
+        if (code !== '') {
+            let branch = $('#txtBranchCode').val();
+            window.open(path + 'Acc/FormInv?Branch=' + branch + '&Code=' + code);
+        }
+    }
+    function ResetData() {
+        arr = [];
+        SetGridAdv(true);
     }
 </script>

@@ -59,6 +59,9 @@ Namespace Controllers
             Return GetView("Billing", "MODULE_ACC")
             'Return RedirectToAction("FormBill")
         End Function
+        Function GenerateBilling() As ActionResult
+            Return GetView("GenerateBilling")
+        End Function
         Function PettyCash() As ActionResult
             Return GetView("PettyCash", "MODULE_ACC")
         End Function
@@ -743,30 +746,37 @@ Namespace Controllers
         Function GetInvoice() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE DocNo<>'' "
+                Dim docNo As String = ""
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format("AND DocNo='{0}' ", Request.QueryString("Code").ToString)
+                    docNo = Request.QueryString("Code").ToString
                 End If
+
                 Dim oHead = New CInvHeader(jobWebConn).GetData(tSqlw)
-                Dim jsonH As String = JsonConvert.SerializeObject(oHead)
-
                 Dim oDet = New CInvDetail(jobWebConn).GetData(tSqlw)
-                Dim jsonD As String = JsonConvert.SerializeObject(oDet)
 
+                Dim jsonH As String = ""
+                Dim jsonD As String = ""
                 Dim jsonC As String = ""
+                Dim jsonJob As String = ""
+
                 If oHead.Count > 0 Then
+                    jsonH = JsonConvert.SerializeObject(oHead)
+                    If oDet.Count > 0 Then
+                        jsonD = JsonConvert.SerializeObject(oDet)
+                    End If
                     Dim oCust = New CCompany(jobWebConn).GetData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}'", oHead(0).CustCode, oHead(0).CustBranch))
                     jsonC = JsonConvert.SerializeObject(oCust)
                 End If
 
-                Dim jsonJob As String = ""
                 If oDet.Count > 0 Then
                     Dim oJob = New CJobOrder(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND JNo IN(SELECT JobNo FROM Job_ClearDetail WHERE BranchCode='{0}' AND LinkBillNo='{1}')", oDet(0).BranchCode, oDet(0).DocNo))
                     jsonJob = JsonConvert.SerializeObject(oJob)
                 End If
-                Return Content("{""invoice"":{""msg"":""" & Request.QueryString("Code").ToString & """,""header"":[" & jsonH & "],""detail"":[" & jsonD & "],""customer"":[" & jsonC & "],""job"":[" & jsonJob & "]}}", jsonContent)
+                Return Content("{""invoice"":{""msg"":""" & docNo & """,""header"":[" & jsonH & "],""detail"":[" & jsonD & "],""customer"":[" & jsonC & "],""job"":[" & jsonJob & "]}}", jsonContent)
             Catch ex As Exception
                 Return Content("{""invoice"":{""msg"":""" & ex.Message & """,""header"":[],""detail"":[]}}", jsonContent)
             End Try
@@ -1168,6 +1178,45 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
+        Function GetBilling() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                Dim docNo As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BillAcceptNo='{0}' ", Request.QueryString("Code").ToString)
+                    docNo = Request.QueryString("Code").ToString
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format("AND CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+
+                Dim oHead = New CBillHeader(jobWebConn).GetData(tSqlw)
+                Dim oDet = New CBillDetail(jobWebConn).GetData(tSqlw)
+
+                Dim jsonH As String = ""
+                Dim jsonD As String = ""
+                Dim jsonC As String = ""
+
+                If oHead.Count > 0 Then
+                    jsonH = JsonConvert.SerializeObject(oHead)
+                    If oDet.Count > 0 Then
+                        jsonD = JsonConvert.SerializeObject(oDet)
+                    End If
+
+                    Dim oCust = New CCompany(jobWebConn).GetData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}'", oHead(0).CustCode, oHead(0).CustBranch))
+                    If oCust.Count > 0 Then
+                        jsonC = JsonConvert.SerializeObject(oCust)
+                    End If
+                End If
+
+                Return Content("{""billing"":{""msg"":""" & docNo & """,""header"":[" & jsonH & "],""detail"":[" & jsonD & "],""customer"":[" & jsonC & "]}}", jsonContent)
+            Catch ex As Exception
+                Return Content("{""billing"":{""msg"":""" & ex.Message & """,""header"":[],""detail"":[],""customer"":[]}}", jsonContent)
             End Try
         End Function
         Function GetBillDetail() As ActionResult

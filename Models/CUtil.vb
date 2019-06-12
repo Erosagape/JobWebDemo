@@ -3,6 +3,7 @@ Public Class CResult
     Public Sub New()
 
     End Sub
+    Public Property IsError As Boolean
     Public Property Source As String
     Public Property Param As String
     Public Property Result As String

@@ -560,6 +560,7 @@
     <Content Include="Views\Acc\FormGL.vbhtml" />
     <Content Include="Views\JobOrder\FormTransport.vbhtml" />
     <Content Include="Views\Acc\FormExpense.vbhtml" />
+    <Content Include="Views\Acc\GenerateBilling.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

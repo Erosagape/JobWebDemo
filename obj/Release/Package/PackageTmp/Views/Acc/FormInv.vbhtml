@@ -114,7 +114,7 @@ End Code
                             <label id="lblDescription"></label>
                         </div>
                         <div class="text-right" style="flex:1">
-                            SUB TOTAL <br />DISCOUNT<br />CUST. ADV<br />SUBTOTAL 7%<br />VAT 7%<br />TOTAL<br />ADVANCE RE-IMBERSEMENT<br />TOTAL<br />GRAND TOTAL
+                            SUB TOTAL <br />DISCOUNT<br />CUST. ADV<br />SUBTOTAL 7%<br />VAT 7%<br />TOTAL SERVICE<br />ADVANCE RE-IMBERSEMENT<br />TOTAL INVOICE<br />GRAND TOTAL
                         </div>
                     </div>
                 </td>
@@ -164,7 +164,7 @@ End Code
             AUTHORIZED SIGNATURE
         </div>
         <div style="border:1px solid black;border-radius:5px;flex:1;text-align:center;">
-            FOR KSA(THAILAND)CO.,LTD. <br /><br />
+            FOR @ViewBag.PROFILE_COMPANY_NAME <br /><br />
             ......................................................... <br />
             __________/_________/________ <br />
             AUTHORIZED SIGNATURE
@@ -223,8 +223,8 @@ End Code
             $('#lblSumAfterVat').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalVAT),2));
             $('#lblSumAdvance').text(ShowNumber(h.TotalAdvance,2));
             $('#lblSumTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT),2));
-            $('#lblSumGrandTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT),2));
-            $('#lblTotalBaht').text('(' + CNumThai(CDbl(Number(h.TotalCharge) + Number(h.TotalAdvance) + Number(h.TotalVAT), 2)) + ')');
+            $('#lblSumGrandTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT)-Number(h.TotalCustAdv),2));
+            $('#lblTotalBaht').text('(' + CNumThai(CDbl(Number(h.TotalCharge) + Number(h.TotalAdvance) + Number(h.TotalVAT)-Number(h.TotalCustAdv), 2)) + ')');
 
             $('#lblSumNetInvoice').text(ShowNumber(Number(h.TotalNet),2));
         }

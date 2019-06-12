@@ -30,6 +30,31 @@ Module Main
             Return System.DBNull.Value
         End If
     End Function
+    Friend Function GetValueSQL(conn As String, sql As String) As CResult
+        Dim ret As New CResult
+        ret.Source = sql
+        ret.Param = conn
+        ret.Result = ""
+        Try
+            Using cn As New SqlConnection(conn)
+                cn.Open()
+                Using rd As SqlDataReader = New SqlCommand(sql, cn).ExecuteReader
+                    If rd.Read Then
+                        If rd.HasRows Then
+                            Dim val As String = rd.GetValue(0).ToString()
+                            ret.Result = val
+                        End If
+                    End If
+                    rd.Close()
+                End Using
+            End Using
+        Catch ex As Exception
+            ret.IsError = True
+            ret.Result = ex.Message
+        End Try
+        Return ret
+    End Function
+
     Friend Function GetValueConfig(sCode As String, sKey As String) As String
         Dim tSqlw As String = " WHERE ConfigCode<>'' "
         tSqlw &= String.Format("AND ConfigCode='{0}'", sCode)
@@ -681,7 +706,7 @@ WHERE ISNULL(a.CancelProve,'')=''
     Function SQLUpdateBillToInv(branch As String, billno As String, Optional iscancel As Boolean = False) As String
         Dim sql As String = "UPDATE a"
         If iscancel Then
-            sql &= " SET a.BillAcceptNo='',a.BillIssueDate=null,a.BillAcceptDate=null,"
+            sql &= " SET a.BillAcceptNo=null,a.BillIssueDate=null,a.BillAcceptDate=null,"
             sql &= " a.BillToCustCode=null,a.BillToCustBranch=null"
             sql &= " FROM Job_InvoiceHeader a "
             sql &= " WHERE a.BranchCode='{0}' AND a.BillAcceptNo='{1}' "
