@@ -68,7 +68,7 @@ End Code
                 </div>
                 <div class="col-xs-4" style="border-style:solid;border-width:1px">
                     <input type="checkbox" id="chkPosted" />
-                    <label for="chkPosted">Paymented By</label><br />
+                    <label for="chkPosted">Posted By</label><br />
                     <input type="text" id="txtPostedBy" style="width:250px" disabled />
                     <br />
                     Date:
@@ -138,6 +138,13 @@ End Code
                                 </div>
                                 <div class="col-md-5">
                                     Voucher No:<br /><input type="text" id="txtPRVoucher" class="form-control" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    Transaction Type<br />
+                                    <select id="cboPRTypeD" class="form-control dropdown">
+                                        <option value="P">Withdraw</option>
+                                        <option value="R">Deposit</option>
+                                    </select>
                                 </div>
                             </div>
                             <div id="dvBookInfo">
@@ -717,7 +724,7 @@ End Code
             ControlNo: $('#txtControlNo').val(),
             ItemNo: $('#txtItemNo').val(),
             PRVoucher:$('#txtPRVoucher').val(),
-            PRType:$('#cboPRType').val(),
+            PRType:$('#cboPRTypeD').val(),
             ChqNo:'',
             BookCode:$('#txtBookCode').val(),
             BankCode:$('#txtBankCode').val(),

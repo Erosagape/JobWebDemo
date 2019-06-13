@@ -156,12 +156,69 @@ End Code
 <script type="text/javascript">
     //define letiables
     const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
     //$(document).ready(function () {
         CheckParam();
         SetLOVs();
         SetEvents();
         SetEnterToTab();
     //});
+    function CheckParam() {
+        //read query string parameters
+        let br = getQueryString('Branch');
+        let jt = getQueryString('JType');
+        let sb = getQueryString('SBy');        
+        if (br !== "") {
+            $('#txtBranchCode').val(br);
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        }
+        ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
+        if (jt == "") jt = "01";
+        if (sb == "") sb = "01";
+        //Combos
+        let lists = 'JOB_TYPE=#cboJobType|'+jt+',SHIP_BY=#cboShipBy|' +sb;
+        loadCombos(path, lists);
+
+        $('#cboJobType').val(jt);
+        $('#cboShipBy').val(sb);
+        $('#txtCSCode').val(user);
+        ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
+    }
+    function SetLOVs() {
+        //3 Fields Show
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            let dv = document.getElementById("dvLOVs");
+            //Customers            
+            CreateLOV(dv,'#frmSearchCust','#tbCust','Customers',response,3);
+            //Consignee
+            CreateLOV(dv,'#frmSearchCons','#tbCons','Consignees',response,3);
+            //Job
+            CreateLOV(dv,'#frmSearchJob','#tbJob','Job List',response,3);
+            //2 Fields
+            //Users
+            CreateLOV(dv,'#frmSearchUser','#tbUser','Users',response,2);
+            //Branch
+            CreateLOV(dv,'#frmSearchBranch','#tbBranch','Branch',response,2);
+            //1 Fields
+            //Contact Name
+            CreateLOV(dv,'#frmSearchContact','#tbContact','Contact Person',response,1);
+        });
+    }
+    function SetEvents() {
+        $('#txtBranchCode').focusout(function () {
+            ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
+        });
+        $('#txtCSCode').focusout(function () {
+            ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
+        });
+        $('#txtCustBranch').focusout(function () {
+            ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
+        });
+        $('#txtConsignee').focusout(function () {
+            ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
+        });
+    }
     function SetEnterToTab() {
         //Set enter to tab
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
@@ -185,60 +242,6 @@ End Code
         });
         $('#txtBranchCode').focus();
     }
-    function SetEvents() {
-        $('#txtBranchCode').focusout(function () {
-            ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
-        });
-        $('#txtCSCode').focusout(function () {
-            ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
-        });
-        $('#txtCustBranch').focusout(function () {
-            ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
-        });
-        $('#txtConsignee').focusout(function () {
-            ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
-        });
-    }
-    function CheckParam() {
-        //read query string parameters
-        let br = getQueryString('Branch');
-        let jt = getQueryString('JType');
-        let sb = getQueryString('SBy');        
-        if (br !== undefined) {
-            $('#txtBranchCode').val(br);
-        } else {
-            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
-        }
-        ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-        if (jt == undefined) jt = "01";
-        if (sb == undefined) sb = "01";
-        //Combos
-        let lists = 'JOB_TYPE=#cboJobType|'+jt+',SHIP_BY=#cboShipBy|' +sb;
-        loadCombos(path, lists);
-
-        $('#cboJobType').val(jt);
-        $('#cboShipBy').val(sb);
-    }
-    function SetLOVs() {
-        //3 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            let dv = document.getElementById("dvLOVs");
-            //Customers            
-            CreateLOV(dv,'#frmSearchCust','#tbCust','Customers',response,3);
-            //Consignee
-            CreateLOV(dv,'#frmSearchCons','#tbCons','Consignees',response,3);
-            //Job
-            CreateLOV(dv,'#frmSearchJob','#tbJob','Job List',response,3);
-            //2 Fields
-            //Users
-            CreateLOV(dv,'#frmSearchUser','#tbUser','Users',response,2);
-            //Branch
-            CreateLOV(dv,'#frmSearchBranch','#tbBranch','Branch',response,2);
-            //1 Fields
-            //Contact Name
-            CreateLOV(dv,'#frmSearchContact','#tbContact','Contact Person',response,1);
-        });
-    }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
@@ -252,7 +255,9 @@ End Code
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
-        ShowCustomer(path,dt.CustCode, dt.Branch, '#txtCustName');
+        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+        $('#txtConsignee').val(dt.CustCode);
+        ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
         $('#txtCustCode').focus();
     }
     function ReadConsignee(dt) {

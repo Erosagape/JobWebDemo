@@ -75,7 +75,7 @@ End Code
                 </div>
                 <div class="col-xs-4" style="border-style:solid;border-width:1px">
                     <input type="checkbox" id="chkPosted" />
-                    <label for="chkPosted">Paymented By</label><br />
+                    <label for="chkPosted">Posted By</label><br />
                     <input type="text" id="txtPostedBy" style="width:250px" disabled />
                     <br />
                     Date:
@@ -639,7 +639,7 @@ End Code
     }
     function SetGridControl() {
         let code = $('#txtBranchCode').val();
-        if (job !== null) {
+        if (job !== "") {
             code += '&job=' + job;
         }
         $.get(path + 'acc/getvouchergrid?branch=' + code + '&type=CHQ' + $('#cboPRType').val(), function (r) {

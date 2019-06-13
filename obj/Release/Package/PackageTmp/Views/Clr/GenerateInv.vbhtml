@@ -82,6 +82,10 @@ End Code
                                 <a href="#" onclick="SearchData('invoice')"> Replace Invoice No :</a><br />
                                 <input type="text" id="txtDocNo" ondblclick="PrintInvoice()" disabled/>
                             </td>
+                            <td>
+                                <br />
+                                <input type="button" onclick="PrintInvoice()" class="btn btn-success" value="Print Invoice" />
+                            </td>
                         </tr>
                     </table>
                     <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -227,7 +231,7 @@ End Code
                     {
                         data: null, title: "Description",
                         render: function (data) {
-                            return data.SICode + '-' + data.SDescription;
+                            return data.SICode + '-' + data.SDescription + (data.ExpSlipNO == null ? '' : ' #' + data.ExpSlipNO);
                         }
                     },
                     { data: "AmtCost", title: "Cost" },
@@ -249,6 +253,11 @@ End Code
                 $(this).addClass('selected');
                 let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 AddData(data); //callback function from caller
+            });
+            $('#tbHeader tbody').on('dblclick', 'tr', function () {            
+                let clearno = $(this).find('td:eq(1)').text();
+                //alert('you click ' + clearno);
+                window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
             });
         });
     }
@@ -304,6 +313,7 @@ End Code
 
         ShowDetail();
         $('#txtDocNo').val('');
+        $('#btnGen').show();
         $('#dvCreate').modal('show');
     }
     function ShowDetail() {
@@ -318,7 +328,7 @@ End Code
                     {
                         data: null, title: "Description",
                         render: function (data) {
-                            return data.SICode + '-' + data.SDescription;
+                            return data.SICode + '-' + data.SDescription + (data.ExpSlipNO == null ? '' : ' #' + data.ExpSlipNO);
                         }
                     },
                     { data: "ExpSlipNO", title: "Slip No" },
@@ -340,7 +350,7 @@ End Code
                 {
                     data: null, title: "Description",
                     render: function (data) {
-                        return data.SICode + '-' + data.SDescription;
+                        return data.SICode + '-' + data.SDescription + (data.ExpSlipNO == null ? '' : ' #' + data.ExpSlipNO);
                     }
                 },
                 { data: "ExpSlipNO", title: "Slip No" },
@@ -408,7 +418,11 @@ End Code
             TotalNet:CNum($('#txtTotalNet').val()),
             CurrencyCode:$('#txtCurrencyCode').val(),
             ExchangeRate:CNum($('#txtExchangeRate').val()),
-            ForeignNet:CNum($('#txtForeignNet').val()),
+            ForeignNet: CNum($('#txtForeignNet').val()),
+            TotalDiscount: 0,
+            SumDiscount: 0,
+            DiscountRate: 0,
+            CalDiscount:0,
             BillAcceptDate:null,
             BillIssueDate:null,
             BillAcceptNo:'',
@@ -474,7 +488,7 @@ End Code
                     if (response.result.data !== null) {
                         alert(response.result.msg + '\n=>' + response.result.data);
                         SetGridAdv(false);
-                        //$('#dvCreate').modal('hide');
+                        $('#btnGen').hide();
                         arr = [];
                         return;
                     }

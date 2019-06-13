@@ -417,6 +417,33 @@ Public Class CInvHeader
             m_ShippingRemark = value
         End Set
     End Property
+    Private m_SumDiscount As Double
+    Public Property SumDiscount As Double
+        Get
+            Return m_SumDiscount
+        End Get
+        Set(value As Double)
+            m_SumDiscount = value
+        End Set
+    End Property
+    Private m_DiscountRate As Double
+    Public Property DiscountRate As Double
+        Get
+            Return m_DiscountRate
+        End Get
+        Set(value As Double)
+            m_DiscountRate = value
+        End Set
+    End Property
+    Private m_DiscountCal As Double
+    Public Property DiscountCal As Double
+        Get
+            Return m_DiscountCal
+        End Get
+        Set(value As Double)
+            m_DiscountCal = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -473,6 +500,9 @@ Public Class CInvHeader
                             dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
                             dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
                             dr("ShippingRemark") = Me.ShippingRemark
+                            dr("SumDiscount") = Me.SumDiscount
+                            dr("DiscountRate") = Me.DiscountRate
+                            dr("DiscountCal") = Me.DiscountCal
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             If Me.CancelProve <> "" Then
@@ -638,6 +668,15 @@ Public Class CInvHeader
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ShippingRemark"))) = False Then
                         row.ShippingRemark = rd.GetString(rd.GetOrdinal("ShippingRemark")).ToString()
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("SumDiscount"))) = False Then
+                        row.SumDiscount = rd.GetDouble(rd.GetOrdinal("SumDiscount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DiscountRate"))) = False Then
+                        row.DiscountRate = rd.GetDouble(rd.GetOrdinal("DiscountRate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DiscountCal"))) = False Then
+                        row.DiscountCal = rd.GetDouble(rd.GetOrdinal("DiscountCal"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -652,7 +691,7 @@ Public Class CInvHeader
                 cm.Connection = cn
                 cm.CommandTimeout = 0
                 If Me.DocNo <> "" Then
-                    Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo='',LinkItem=0"
+                    Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo=null,LinkItem=0"
                     Sql &= String.Format(" WHERE BranchCode ='{0}' AND LinkBillNo='{1}' ", Me.BranchCode, Me.DocNo)
 
                     cm.CommandText = Sql
@@ -689,18 +728,4 @@ Public Class CInvHeader
         End Using
         Return msg
     End Function
-    Public Sub UpdateTotal()
-        Using cn As New SqlConnection(m_ConnStr)
-            Try
-                cn.Open()
-                Dim pSQLWhere As String = String.Format(" WHERE a.BranchCode='{0}' AND a.DocNo='{1}'", Me.BranchCode, Me.DocNo)
-                Using cm As New SqlCommand(SQLUpdateInvoiceHeader() + pSQLWhere, cn)
-                    cm.CommandTimeout = 0
-                    cm.CommandType = CommandType.Text
-                    cm.ExecuteNonQuery()
-                End Using
-            Catch ex As Exception
-            End Try
-        End Using
-    End Sub
 End Class

@@ -95,6 +95,7 @@ End Code
                                 <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" disabled /></td></tr>
                                 <tr><td>NET</td><td><input type="text" id="txtTotalNet" disabled /></td></tr>
                             </table>
+                            <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Billing</button>
                         </div>
                         <div class="col-sm-6">
                             <b>Billing Detail:</b><br />
@@ -115,7 +116,7 @@ End Code
                         </div>
                     </div>
                     Billing No : <input type="text" id="txtDocNo" ondblclick="PrintBilling()" disabled />
-                    <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Billing</button>
+                    <input type="button" onclick="PrintBilling()" class="btn btn-success" value="Print Billing" />
                 </div>
             </div>
         </div>
@@ -252,6 +253,7 @@ End Code
 
         ShowDetail();
         $('#txtDocNo').val('');
+        $('#btnGen').show();
         $('#dvCreate').modal('show');
     }
     function ShowDetail() {
@@ -345,7 +347,7 @@ End Code
                     if (response.result.data !== null) {
                         alert(response.result.msg+'\n->'+response.result.data);
                         SetGridAdv(false);
-                        //$('#dvCreate').modal('hide');
+                        $('#btnGen').hide();
                         return;
                     }
                     alert(response.result.msg);
@@ -415,6 +417,8 @@ End Code
                     AmtWHRate: Number(obj.Total50Tavi) > 0 ? Number(obj.TotalCharge) / Number(obj.Total50Tavi) : 0,
                     AmtTotal: obj.TotalNet,
                     AmtCustAdvance: obj.TotalCustAdv,
+                    AmtDiscount: obj.TotalDiscount,
+                    AmtDiscRate: obj.DiscountRate,
                     AmtForeign: obj.ForeignNet
                 });
             }

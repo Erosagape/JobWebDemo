@@ -680,7 +680,7 @@ End Code
                 }
             });
         } else {
-            alert('No data need to payment');
+            ReceiveClearing(docno);
         }
     }
     function SaveDetail() {
@@ -769,7 +769,7 @@ End Code
                     if (docno != '') {
                         $('#txtControlNo').val(docno);
                         SavePayment();
-                    }
+                    } 
                 }
             },
             error: function (e) {

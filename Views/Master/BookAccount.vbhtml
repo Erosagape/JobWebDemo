@@ -77,8 +77,8 @@ End Code
     <table id="tbBalance" class="table table-responsive">
         <thead>
             <tr>
-                <th>Cash in bank</th>
                 <th>Cash on hand</th>
+                <th>Cash avaiable</th>
                 <th>Chq on hand</th>
                 <th>Chq return</th>
                 <th>Credit</th>
@@ -207,7 +207,7 @@ End Code
                     data: tb,
                     columns: [
                         { data: "SumCash" },
-                        { data: "SumCashOnhand" },
+                        { data: "SumCashInBank" },
                         { data: "SumChqOnhand" },
                         { data: "SumChqReturn" },
                         { data: "SumCredit" },

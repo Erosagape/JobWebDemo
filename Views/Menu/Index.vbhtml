@@ -158,10 +158,10 @@ End Code
                                     </div>
                                 </div>
                                 <div id="mnuMas" class="panel-collapse collapse">
-                                    <div class="panel-body">                                        
+                                    <div class="panel-body">
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasG')">ข้อมูลพื้นฐาน</a>
+                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasA')">ข้อมูลทางบัญชี</a>
                                         <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasS')">ข้อมูลระบบ</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasG')">ข้อมูลทั่วไป</a>
-                                        <a href="#" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuMas" onclick="OpenMenu('MasA')">ข้อมูลบัญชี</a>
                                     </div>
                                 </div>
                             </div>

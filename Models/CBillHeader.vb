@@ -147,6 +147,78 @@ Public Class CBillHeader
             m_RecDateTime = value
         End Set
     End Property
+    Private m_TotalCustAdv As Double
+    Public Property TotalCustAdv As Double
+        Get
+            Return m_TotalCustAdv
+        End Get
+        Set(value As Double)
+            m_TotalCustAdv = value
+        End Set
+    End Property
+    Private m_TotalAdvance As Double
+    Public Property TotalAdvance As Double
+        Get
+            Return m_TotalAdvance
+        End Get
+        Set(value As Double)
+            m_TotalAdvance = value
+        End Set
+    End Property
+    Private m_TotalChargeVAT As Double
+    Public Property TotalChargeVAT As Double
+        Get
+            Return m_TotalChargeVAT
+        End Get
+        Set(value As Double)
+            m_TotalChargeVAT = value
+        End Set
+    End Property
+    Private m_TotalChargeNonVAT As Double
+    Public Property TotalChargeNonVAT As Double
+        Get
+            Return m_TotalChargeNonVAT
+        End Get
+        Set(value As Double)
+            m_TotalChargeNonVAT = value
+        End Set
+    End Property
+    Private m_TotalVAT As Double
+    Public Property TotalVAT As Double
+        Get
+            Return m_TotalVAT
+        End Get
+        Set(value As Double)
+            m_TotalVAT = value
+        End Set
+    End Property
+    Private m_TotalWH As Double
+    Public Property TotalWH As Double
+        Get
+            Return m_TotalWH
+        End Get
+        Set(value As Double)
+            m_TotalWH = value
+        End Set
+    End Property
+    Private m_TotalDiscount As Double
+    Public Property TotalDiscount As Double
+        Get
+            Return m_TotalDiscount
+        End Get
+        Set(value As Double)
+            m_TotalDiscount = value
+        End Set
+    End Property
+    Private m_TotalNet As Double
+    Public Property TotalNet As Double
+        Get
+            Return m_TotalNet
+        End Get
+        Set(value As Double)
+            m_TotalNet = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -174,6 +246,14 @@ Public Class CBillHeader
                             dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
                             dr("EmpCode") = Me.EmpCode
                             dr("RecDateTime") = Main.GetDBDate(Me.RecDateTime)
+                            dr("TotalCustAdv") = Me.TotalCustAdv
+                            dr("TotalAdvance") = Me.TotalAdvance
+                            dr("TotalChargeVAT") = Me.TotalChargeVAT
+                            dr("TotalChargeNonVAT") = Me.TotalChargeNonVAT
+                            dr("TotalVAT") = Me.TotalVAT
+                            dr("TotalWH") = Me.TotalWH
+                            dr("TotalDiscount") = Me.TotalDiscount
+                            dr("TotalNet") = Me.TotalNet
 
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
@@ -254,6 +334,30 @@ Public Class CBillHeader
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("RecDateTime"))) = False Then
                         row.RecDateTime = rd.GetValue(rd.GetOrdinal("RecDateTime"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalCustAdv"))) = False Then
+                        row.TotalCustAdv = rd.GetDouble(rd.GetOrdinal("TotalCustAdv"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalAdvance"))) = False Then
+                        row.TotalAdvance = rd.GetDouble(rd.GetOrdinal("TotalAdvance"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalVAT"))) = False Then
+                        row.TotalVAT = rd.GetDouble(rd.GetOrdinal("TotalVAT"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalWH"))) = False Then
+                        row.TotalWH = rd.GetDouble(rd.GetOrdinal("TotalWH"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalChargeVAT"))) = False Then
+                        row.TotalChargeVAT = rd.GetDouble(rd.GetOrdinal("TotalChargeVAT"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalChargeNonVAT"))) = False Then
+                        row.TotalChargeNonVAT = rd.GetDouble(rd.GetOrdinal("TotalChargeNonVAT"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalDiscount"))) = False Then
+                        row.TotalDiscount = rd.GetDouble(rd.GetOrdinal("TotalDiscount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalNet"))) = False Then
+                        row.TotalNet = rd.GetDouble(rd.GetOrdinal("TotalNet"))
                     End If
                     lst.Add(row)
                 End While

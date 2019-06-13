@@ -174,6 +174,24 @@ Public Class CBillDetail
             m_AmtWHRate = value
         End Set
     End Property
+    Private m_AmtDiscount As Double
+    Public Property AmtDiscount As Double
+        Get
+            Return m_AmtDiscount
+        End Get
+        Set(value As Double)
+            m_AmtDiscount = value
+        End Set
+    End Property
+    Private m_AmtDiscRate As Double
+    Public Property AmtDiscRate As Double
+        Get
+            Return m_AmtDiscRate
+        End Get
+        Set(value As Double)
+            m_AmtDiscRate = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -201,6 +219,8 @@ Public Class CBillDetail
                             dr("AmtWHRate") = Me.AmtWHRate
                             dr("AmtVAT") = Me.AmtVAT
                             dr("AmtVATRate") = Me.AmtVATRate
+                            dr("AmtDiscount") = Me.AmtDiscount
+                            dr("AmtDiscRate") = Me.AmtDiscRate
                             dr("AmtTotal") = Me.AmtTotal
                             dr("CurrencyCode") = Me.CurrencyCode
                             dr("ExchangeRate") = Me.ExchangeRate
@@ -284,6 +304,12 @@ Public Class CBillDetail
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtVATRate"))) = False Then
                         row.AmtVATRate = rd.GetDouble(rd.GetOrdinal("AmtVATRate"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtDiscount"))) = False Then
+                        row.AmtDiscount = rd.GetDouble(rd.GetOrdinal("AmtDiscount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtDiscRate"))) = False Then
+                        row.AmtDiscRate = rd.GetDouble(rd.GetOrdinal("AmtDiscRate"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -328,8 +354,12 @@ Public Class CBillDetail
             cm.CommandText = sql & If(Me.InvNo <> "", " AND a.DocNo='" + Me.InvNo + "'", "")
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+
+            sql = SQLUpdateBillHeader(Me.BranchCode, Me.BillAcceptNo)
+            cm.CommandText = sql
+            cm.ExecuteNonQuery()
         End Using
-        Return "Update " & Me.InvNo & " Complete!"
+        Return "Save " & Me.BillAcceptNo & " Complete!"
     End Function
 End Class
 

@@ -149,7 +149,7 @@ GROUP BY a.UserID,b.ModuleID
             For Each dr As DataRow In dt.Rows
 
                 Dim oAuth = New CUserAuth(jobWebConn) With {
-                    .UserID = dr("UserID").ToString(),
+                    .UserID = If(uname <> "", uname, dr("UserID").ToString()),
                     .AppID = dr("ModuleCode").ToString(),
                     .MenuID = dr("ModuleFunc").ToString(),
                     .Author = dr("Authorize").ToString()
@@ -573,7 +573,7 @@ a.SICode,a.SDescription,a.CustCode,a.CustBranch
         Return "
 SELECT q.*,q.SumCashOnhand+q.SumChqClear as SumCash,
 q.SumCashOnhand+q.SumChqClear+q.SumChqOnhand-q.LimitBalance as SumCashInBank,
-q.SumCashOnhand+q.SumChqClear+q.SumChqOnhand+q.SumCredit+q.SumChqReturn as SumBal,
+q.SumCashOnhand+q.SumChqClear+q.SumChqOnhand+q.SumCredit as SumBal,
 q.SumCredit+q.SumChqReturn as SumCreditable
 FROM (
 select c.BookCode,c.LimitBalance,
@@ -624,29 +624,34 @@ left join (select VenCode,TName as ForwarderName from Mas_Vender) v2 on j.Forwar
     End Function
     Function SQLUpdateInvoiceHeader() As String
         Return "
-Update a
-SET a.TotalAdvance=ISNULL(b.TotalAdvance,0)/a.ExchangeRate,
-a.TotalCharge=ISNULL(b.TotalCharge,0)/a.ExchangeRate,
-a.TotalIsTaxCharge=ISNULL(b.TotalIsTaxCharge,0)/a.ExchangeRate,
-a.TotalIs50Tavi=ISNULL(b.TotalIs50Tavi,0)/a.ExchangeRate,
-a.TotalVAT=ISNULL(b.TotalVAT,0)/a.ExchangeRate,
-a.Total50Tavi=ISNULL(b.Total50Tavi,0)/a.ExchangeRate,
-a.TotalCustAdv=ISNULL(a.TotalCustAdv,0)/a.ExchangeRate,
-a.TotalNet=ISNULL((b.TotalAdvance+b.TotalCharge+b.TotalVAT-b.Total50Tavi),0)/a.ExchangeRate,
-a.ForeignNet=ISNULL((b.TotalAdvance+b.TotalCharge+b.TotalVAT-b.Total50Tavi),0)
-from Job_InvoiceHeader a LEFT JOIN
-(
-	SELECT BranchCode,DocNo,
-	Sum(AmtAdvance) as TotalAdvance,
-	Sum(AmtCharge) as TotalCharge,
-	Sum(Case when IsTaxCharge>=1 then AmtCharge else 0 end) as TotalIsTaxCharge,
-	Sum(Case when Is50Tavi=1 then AmtCharge else 0 end) as TotalIs50Tavi,
+update h
+set h.TotalAdvance=d.TotalAdvance,
+h.TotalCharge=d.TotalCharge,
+h.TotalIsTaxCharge=d.TotalIsTaxCharge,
+h.TotalIs50Tavi=d.TotalIs50Tavi,
+h.TotalVAT=d.TotalVAT,
+h.Total50Tavi=d.Total50Tavi,
+h.SumDiscount=d.SumDiscount,
+h.DiscountCal=d.TotalNet*(h.DiscountRate/100),
+h.TotalDiscount=d.SumDiscount+(d.TotalNet*(h.DiscountRate/100)),
+h.TotalNet=d.TotalNet-(d.SumDiscount+(d.TotalNet*(h.DiscountRate/100))),
+h.ForeignNet=d.TotalNet-(d.SumDiscount+(d.TotalNet*(h.DiscountRate/100)))/h.ExchangeRate
+from Job_InvoiceHeader h
+inner join (
+	select BranchCode,DocNo,
+	sum(AmtCharge) as TotalCharge,
+	sum(AmtAdvance) as TotalAdvance,
+	sum(case when IsTaxCharge=1 And AmtCharge>0 then Amt else 0 end) as TotalIsTaxCharge, 
+	sum(case when Is50Tavi=1 And AmtCharge>0 then Amt else 0 end) as TotalIs50Tavi,
 	sum(case when AmtCharge>0 then AmtVat else 0 end) as TotalVAT,
-    sum(case when AmtCharge>0 then Amt50Tavi else 0 end) as Total50Tavi
+	sum(case when AmtCharge>0 then Amt50Tavi else 0 end) as Total50Tavi,
+    sum(AmtDiscount) as SumDiscount,
+	sum(TotalAmt) as TotalNet
 	from Job_InvoiceDetail
 	group by BranchCode,DocNo
-) b
-on a.BranchCode=b.BranchCode and a.DocNo=b.DocNo
+) d
+on h.BranchCode=d.BranchCode
+and h.DocNo=d.DocNo 
 "
     End Function
     Function SQLSelectClrForInvoice() As String
@@ -680,7 +685,7 @@ b.BNet/b.CurRate as FTotalAmt,
 CASE WHEN ISNULL(b.SlipNO,'')<>'' AND b.BPrice>0 THEN b.BNet ELSE 0 END as AmtAdvance,
 CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.UsedAmount ELSE 0 END as AmtCharge,
 '' as CurrencyCodeCredit,
-0 as ExchangeRateCredit,
+1 as ExchangeRateCredit,
 0 as AmtCredit,
 0 as FAmtCredit,
 b.VATRate,
@@ -702,6 +707,36 @@ SELECT a.*,b.NameThai,b.NameEng FROM Job_InvoiceHeader a
 LEFT JOIN Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
 WHERE ISNULL(a.CancelProve,'')='' 
 "
+    End Function
+    Function SQLUpdateBillHeader(branch As String, billno As String) As String
+        Dim sql As String = "
+UPDATE a
+SET a.TotalCustAdv=ISNULL(b.SumCustAdvance,0),
+a.TotalAdvance=ISNULL(b.SumAdvance,0),
+a.TotalChargeVAT=ISNULL(b.SumChargeVAT,0),
+a.TotalChargeNonVAT=ISNULL(b.SumChargeNonVAT,0),
+a.TotalVAT=ISNULL(b.SumVAT,0),
+a.TotalWH=ISNULL(b.SumWH,0),
+a.TotalDiscount=ISNULL(b.SumDiscount,0),
+a.TotalNet=ISNULL(b.SumNet,0)
+FROM Job_BillAcceptHeader a 
+LEFT JOIN (
+    SELECT BranchCode,BillAcceptNo,
+    SUM(AmtCustAdvance) as SumCustAdvance,
+    SUM(AmtAdvance) as SumAdvance,
+    SUM(AmtChargeVAT) as SumChargeVAT,
+    SUM(AmtChargeNonVAT) as SumChargeNonVAT,
+    SUM(AmtVAT) as SumVAT,
+    SUM(AmtWH) as SumWH,
+    SUM(AmtDiscount) as SumDiscount,
+    SUM(AmtTotal) as SumNet
+    FROM Job_BillAcceptDetail
+    GROUP BY BranchCode,BillAcceptNo
+) b
+ON a.BranchCode=b.BranchCode
+AND a.BillAcceptNo=b.BillAcceptNo
+"
+        Return sql & If(billno <> "" And branch <> "", String.Format(" WHERE a.BranchCode='{0}' AND a.BillAcceptNo='{1}' ", branch, billno), "")
     End Function
     Function SQLUpdateBillToInv(branch As String, billno As String, Optional iscancel As Boolean = False) As String
         Dim sql As String = "UPDATE a"

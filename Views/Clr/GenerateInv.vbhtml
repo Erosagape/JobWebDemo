@@ -82,6 +82,10 @@ End Code
                                 <a href="#" onclick="SearchData('invoice')"> Replace Invoice No :</a><br />
                                 <input type="text" id="txtDocNo" ondblclick="PrintInvoice()" disabled/>
                             </td>
+                            <td>
+                                <br />
+                                <input type="button" onclick="PrintInvoice()" class="btn btn-success" value="Print Invoice" />
+                            </td>
                         </tr>
                     </table>
                     <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -309,6 +313,7 @@ End Code
 
         ShowDetail();
         $('#txtDocNo').val('');
+        $('#btnGen').show();
         $('#dvCreate').modal('show');
     }
     function ShowDetail() {
@@ -413,7 +418,11 @@ End Code
             TotalNet:CNum($('#txtTotalNet').val()),
             CurrencyCode:$('#txtCurrencyCode').val(),
             ExchangeRate:CNum($('#txtExchangeRate').val()),
-            ForeignNet:CNum($('#txtForeignNet').val()),
+            ForeignNet: CNum($('#txtForeignNet').val()),
+            TotalDiscount: 0,
+            SumDiscount: 0,
+            DiscountRate: 0,
+            CalDiscount:0,
             BillAcceptDate:null,
             BillIssueDate:null,
             BillAcceptNo:'',
@@ -479,7 +488,7 @@ End Code
                     if (response.result.data !== null) {
                         alert(response.result.msg + '\n=>' + response.result.data);
                         SetGridAdv(false);
-                        //$('#dvCreate').modal('hide');
+                        $('#btnGen').hide();
                         arr = [];
                         return;
                     }

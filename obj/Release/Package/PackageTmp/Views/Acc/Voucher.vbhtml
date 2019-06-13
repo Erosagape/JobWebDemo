@@ -864,7 +864,7 @@ End Code
             CustCode: $('#txtCustCode').val(),
             CustBranch:$('#txtCustBranch').val()
         };
-        if (obj.ControlNo != "") {
+        //if (obj.ControlNo != "") {
             let ask = confirm("Do you need to Save " + obj.ControlNo + "?");
             if (ask == false) return;
             let jsonText = JSON.stringify({ data: obj });
@@ -885,9 +885,9 @@ End Code
                     alert(e);
                 }
             });
-        } else {
-            alert('No data to save');
-        }
+        //} else {
+        //    alert('No data to save');
+        //}
     }
     function SetGridControl() {
         let code = $('#txtBranchCode').val();

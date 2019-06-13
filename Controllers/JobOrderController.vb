@@ -193,8 +193,14 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     oJob.CustCode = "" & Request.QueryString("Cust").Split("|")(0)
                     oJob.CustBranch = "" & Request.QueryString("Cust").Split("|")(1)
+                    Dim oCust = New CCompany(jobWebConn).GetData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}'", oJob.CustCode, oJob.CustBranch))
+                    If oCust.Count > 0 Then
+                        oJob.Commission = oCust(0).CommRate
+                    Else
+                        Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""Customer '" + oJob.CustCode + "/" + oJob.CustBranch + "' Not Found!""}}", jsonContent)
+                    End If
                 End If
-                sql = sql + String.Format(" AND CustCode='{0}' And CustBranch='{1}' And InvNo='{2}'", oJob.CustCode, oJob.CustBranch, oJob.InvNo)
+                sql &= String.Format(" AND CustCode='{0}' And CustBranch='{1}' And InvNo='{2}'", oJob.CustCode, oJob.CustBranch, oJob.InvNo)
                 Dim FindJob = oJob.GetData(sql)
                 If FindJob.Count > 0 Then
                     Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""invoice '" + oJob.InvNo + "' has been opened for job '" + FindJob(0).JNo + "' ""}}", jsonContent)

@@ -389,33 +389,9 @@ Public Class CInvDetail
         Return msg
     End Function
     Public Sub UpdateTotal(cn As SqlConnection)
-        Dim sql As String = "
-update h
-set h.TotalAdvance=d.TotalAdvance,
-h.TotalCharge=d.TotalCharge,
-h.TotalIsTaxCharge=d.TotalIsTaxCharge,
-h.TotalIs50Tavi=d.TotalIs50Tavi,
-h.TotalVAT=d.TotalVAT,
-h.Total50Tavi=d.Total50Tavi,
-h.TotalNet=d.TotalNet
-from Job_InvoiceHeader h
-inner join (
-	select BranchCode,DocNo,
-	sum(AmtCharge*ExchangeRate) as TotalCharge,
-	sum(AmtAdvance*ExchangeRate) as TotalAdvance,
-	sum(case when IsTaxCharge=1 And AmtCharge>0 then Amt else 0 end) as TotalIsTaxCharge, 
-	sum(case when Is50Tavi=1 And AmtCharge>0 then Amt else 0 end) as TotalIs50Tavi,
-	sum(case when AmtCharge>0 then AmtVat else 0 end) as TotalVAT,
-	sum(case when AmtCharge>0 then Amt50Tavi else 0 end) as Total50Tavi,
-	sum(TotalAmt) as TotalNet
-	from Job_InvoiceDetail
-	group by BranchCode,DocNo
-) d
-on h.BranchCode=d.BranchCode
-and h.DocNo=d.DocNo 
-"
+        Dim sql As String = SQLUpdateInvoiceHeader()
         Using cm As New SqlCommand(sql, cn)
-            cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
+            cm.CommandText = sql + " WHERE h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
             If Me.ClrItemNo <> 0 And Me.ClrNo <> "" Then
@@ -559,7 +535,7 @@ and h.DocNo=d.DocNo
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                     If Me.DocNo <> "" And Me.ItemNo <> 0 Then
-                        Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo='',LinkItem=0"
+                        Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo=null,LinkItem=0"
                         Sql &= String.Format(" WHERE BranchCode='{0}' AND LinkBillNo='{1}' And LinkItem={2}", Me.BranchCode, Me.DocNo, Me.ItemNo)
 
                         cm.CommandText = Sql
