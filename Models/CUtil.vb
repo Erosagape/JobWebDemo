@@ -30,7 +30,7 @@ Public Class CUtil
                     cm.Connection = cn
                     cm.CommandText = pSQL
                     cm.CommandType = CommandType.Text
-                    cm.ExecuteNonQuery()
+                    Message &= " Row(s)=" & cm.ExecuteNonQuery()
                 End Using
 
             Catch ex As Exception

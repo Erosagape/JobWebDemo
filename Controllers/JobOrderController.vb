@@ -239,5 +239,37 @@ Namespace Controllers
                 Return Content("No data to save", textContent)
             End If
         End Function
+        Function UpdateJobStatus() As ActionResult
+            Dim tSqlW As String = ""
+            If Not IsNothing(Request.QueryString("JType")) Then
+                tSqlW &= " AND j.JobType=" & Request.QueryString("JType") & ""
+            End If
+            If Not IsNothing(Request.QueryString("SBy")) Then
+                tSqlW &= " AND j.ShipBy=" & Request.QueryString("SBy") & ""
+            End If
+            If Not IsNothing(Request.QueryString("Branch")) Then
+                tSqlW &= " AND j.BranchCode='" & Request.QueryString("Branch") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("Status")) Then
+                tSqlW &= " AND j.JobStatus='" & Request.QueryString("Status") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("JNo")) Then
+                tSqlW &= " AND j.JNo='" & Request.QueryString("JNo") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("Year")) Then
+                tSqlW &= " AND Year(j.DocDate)='" & Request.QueryString("Year") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("Month")) Then
+                tSqlW &= " AND Month(j.DocDate)='" & Request.QueryString("Month") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("CustCode")) Then
+                tSqlW &= " AND j.CustCode='" & Request.QueryString("CustCode") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                tSqlW &= " AND j.CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
+            End If
+            Dim tResult = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(tSqlW))
+            Return Content(tResult, textContent)
+        End Function
     End Class
 End Namespace

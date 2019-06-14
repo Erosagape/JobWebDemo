@@ -1077,23 +1077,58 @@ End Code
                 $('#txtCancelDate').val(CDateEN(GetToday()));
                 ShowJobTypeShipBy(path, rec.JobType, rec.ShipBy, rec.JobStatus, '#txtJobType', '#txtShipBy', '#txtJobStatus');
                 SaveData();
+                return;
             } else {
                 alert('Please enter reason of canceling');
+                return;
             }
         } else {
-            alert('This job already cancelled');
+            if (user == rec.CancelProve) {
+                rec.JobStatus = 0;
+                rec.CancelProve = null;
+                rec.CancelTime = null;
+                rec.CancelDate = null;
+                rec.CancelReson = null;
+                $('#txtCancelBy').val('');
+                $('#txtCancelDate').val('');
+                $('#txtCancelReason').val('');
+                SaveData();
+                $.get(path + 'joborder/updatejobstatus?branch=' + rec.BranchCode + '&JNo=' + rec.JNo, function (r) {
+                    ShowJob(rec.BranchCode, rec.JNo);
+                    return;
+                });
+                return;
+            }
         }
+        alert('This job already cancelled');
     }
     function CloseJob() {
         if (rec.JobStatus < 3) {
             rec.JobStatus = 3;
             rec.CloseJobBy = user;
             rec.CloseJobTime = GetTime();
-            ShowUser(path,rec.CloseJobBy, '#txtCloseBy');
+            ShowUser(path, rec.CloseJobBy, '#txtCloseBy');
             $('#txtCloseDate').val(CDateEN(GetToday()));
-            ShowJobTypeShipBy(path,rec.JobType, rec.ShipBy, rec.JobStatus, '#txtJobType', '#txtShipBy', '#txtJobStatus');
+            ShowJobTypeShipBy(path, rec.JobType, rec.ShipBy, rec.JobStatus, '#txtJobType', '#txtShipBy', '#txtJobStatus');
             SaveData();
             return;
+        } else {
+            if (user == rec.CloseJobBy) {
+                if (rec.JobStatus == 3) {
+                    rec.JobStatus = 0;
+                    rec.CloseJobBy = null;
+                    rec.CloseJobTime = null;
+                    rec.CloseJobDate = null;
+                    $('#txtCloseBy').val('');
+                    $('#txtCloseDate').val('');
+                    SaveData();
+                    $.get(path + 'joborder/updatejobstatus?branch=' + rec.BranchCode + '&JNo=' + rec.JNo, function (r) {
+                        ShowJob(rec.BranchCode, rec.JNo);
+                        return;
+                    });
+                    return;
+                }
+            }
         }
         alert('job is already closed');
     }

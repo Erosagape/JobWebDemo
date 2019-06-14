@@ -4,11 +4,6 @@
     ViewBag.ReportName = "CLEARING SLIP"
 End Code
 <style>
-    * {
-        font-family: Tahoma;
-        font-size: 11px;
-    }
-
     td {
         font-size: 11px;
     }

@@ -753,4 +753,107 @@ AND a.BillAcceptNo=b.BillAcceptNo
         End If
         Return String.Format(sql, branch, billno)
     End Function
+    Function SQLUpdateJobStatus(sqlwhere As String) As String
+        Dim sql As String = "
+UPDATE j
+SET j.JobStatus=c.JobStatus
+FROM Job_Order j INNER JOIN (
+    SELECT s.BranchCode,s.JNo,MAX(s.JobStatus) as JobStatus
+    FROM (
+        SELECT BranchCode,JNo,0 as JobStatus FROM Job_Order 
+        WHERE ConfirmDate IS NULL 
+        AND JobStatus<>99 AND NOT ISNULL(CancelReson,'')<>''
+        UNION
+        SELECT BranchCode,JNo,1 FROM Job_Order 
+        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NULL AND DutyDate>GETDATE() 
+        AND JobStatus<>1 AND NOT ISNULL(CancelReson,'')<>''
+        UNION
+        SELECT BranchCode,JNo,2 FROM Job_Order 
+        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NULL AND DutyDate<=GETDATE()
+        AND JobStatus<>2 AND NOT ISNULL(CancelReson,'')<>'' 
+        UNION
+        SELECT BranchCode,JNo,3 FROM Job_Order 
+        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NOT NULL  
+        AND JobStatus<>3 AND NOT ISNULL(CancelReson,'')<>''
+        UNION
+        SELECT a.BranchCode,a.JNo,4 FROM Job_Order a 
+        WHERE EXISTS(
+              SELECT b.BranchCode,b.JobNo as JNo,
+              SUM(CASE WHEN ISNULL(b.LinkBillNo,'')<>'' THEN 1 ELSE 0 END) as TotalBill
+              FROM Job_ClearDetail b INNER JOIN Job_ClearHeader h
+              ON b.BranchCode=h.BranchCode AND b.ClrNo=h.ClrNo
+              WHERE b.BranchCode=a.BranchCode AND b.JobNo=a.JNo
+              AND h.DocStatus<>99 
+              GROUP BY b.BranchCode,b.JobNo
+              HAVING SUM(CASE WHEN ISNULL(b.LinkBillNo,'')<>'' THEN 1 ELSE 0 END)=0
+        )
+        AND a.JobStatus<>99 AND NOT ISNULL(a.CancelReson,'')<>''
+        UNION 
+        SELECT a.BranchCode,a.JNo,5 FROM Job_Order a 
+        WHERE EXISTS(
+              SELECT b.BranchCode,b.JobNo as JNo,
+              SUM(CASE WHEN ISNULL(b.LinkBillNo,'')<>'' THEN 1 ELSE 0 END) as TotalBill,
+              COUNT(*) as TotalDoc
+              FROM Job_ClearDetail b INNER JOIN Job_ClearHeader h
+              ON b.BranchCode=h.BranchCode AND b.ClrNo=h.ClrNo
+              WHERE b.BranchCode=a.BranchCode AND b.JobNo=a.JNo
+              AND h.DocStatus<>99 
+              GROUP BY b.BranchCode,b.JobNo
+              HAVING COUNT(*)>SUM(CASE WHEN ISNULL(b.LinkBillNo,'')<>'' THEN 1 ELSE 0 END)
+              AND SUM(CASE WHEN ISNULL(b.LinkBillNo,'')<>'' THEN 1 ELSE 0 END)>0
+        )
+        AND a.JobStatus<>99 AND NOT ISNULL(a.CancelReson,'')<>''
+        UNION 
+        SELECT a.BranchCode,a.JNo,6 FROM Job_Order a 
+        WHERE EXISTS (
+              SELECT b.BranchCode,b.JobNo as JNo,
+              SUM(CASE WHEN ISNULL(b.LinkBillNo,'')<>'' THEN 1 ELSE 0 END) as TotalBill,
+              COUNT(*) as TotalDoc
+              FROM Job_ClearDetail b INNER JOIN Job_ClearHeader h
+              ON b.BranchCode=h.BranchCode AND b.ClrNo=h.ClrNo
+              WHERE b.BranchCode=a.BranchCode AND b.JobNo=a.JNo
+              AND h.DocStatus<>99 
+              GROUP BY b.BranchCode,b.JobNo
+              HAVING COUNT(*)=SUM(CASE WHEN ISNULL(b.LinkBillNo,'')<>'' THEN 1 ELSE 0 END)
+        )
+        AND a.JobStatus<>99 AND NOT ISNULL(a.CancelReson,'')<>''
+        UNION
+        SELECT a.BranchCode,a.JNo,7 FROM Job_Order a 
+        WHERE EXISTS
+        (
+              SELECT b.BranchCode,b.JobNo as JNo,SUM(b.BNet-ISNULL(r.TotalRcv,0)) as Balance
+              FROM Job_ClearDetail b INNER JOIN Job_ClearHeader h
+              ON b.BranchCode=h.BranchCode AND b.ClrNo=h.ClrNo
+              LEFT JOIN (
+                SELECT rh.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo,Sum(rd.Net) as TotalRcv
+                FROM Job_ReceiptHeader rh INNER JOIN Job_ReceiptDetail rd
+                ON rh.BranchCode=rd.BranchCode AND rh.ReceiptNo=rd.ReceiptNo
+                INNER JOIN Job_InvoiceHeader i
+                ON rd.BranchCode=i.BranchCode AND rd.InvoiceNo=i.DocNo
+                WHERE ISNULL(rh.CancelProve,'')='' AND ISNULL(i.CancelProve,'')='' 
+                GROUP BY rh.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo
+              ) r
+              ON b.BranchCode=r.BranchCode AND b.LinkBillNo=r.InvoiceNo AND b.LinkItem=r.InvoiceItemNo
+              WHERE h.DocStatus<>99 AND b.BranchCode=a.BranchCode AND b.JobNo=a.JNo 
+              AND b.LinkItem>0 AND ISNULL(b.LinkBillNo,'')<>'' 
+              GROUP BY b.BranchCode,b.JobNo
+              HAVING SUM(b.BNet-ISNULL(r.TotalRcv,0))<=0
+        ) AND a.ConfirmDate IS NOT NULL AND a.CloseJobDate IS NOT NULL  
+        AND a.JobStatus<>99 AND NOT ISNULL(a.CancelReson,'')<>''
+        UNION
+        SELECT BranchCode,JNo,98 as JobStatus FROM Job_Order 
+        WHERE ISNULL(CancelReson,'')<>'' AND JobStatus<>99
+        UNION
+        SELECT BranchCode,JNo,98 as JobStatus FROM Job_Order 
+        WHERE ISNULL(CancelReson,'')<>'' AND JobStatus=99
+    ) s
+    GROUP BY s.BranchCode,s.JNo
+) c
+ON j.BranchCode=c.BranchCode
+AND j.JNo=c.JNo 
+WHERE j.JobStatus<> c.JobStatus
+{0}
+"
+        Return String.Format(sql, sqlwhere)
+    End Function
 End Module
