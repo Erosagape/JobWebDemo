@@ -20,7 +20,7 @@ End Code
                         <td>
                             <b><a onclick="SearchData('clearing')">Clearing No:</a></b>
                             <br />
-                            <input type="text" id="txtClrNo" style="font-style:bold;font-size:20px;text-align:center" tabindex="0" />
+                            <input type="text" id="txtClrNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
                         </td>
                     </tr>
                 </table>
@@ -381,21 +381,21 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    let path = '@Url.Content("~")';
-    let user = '@ViewBag.User';
-    let userRights = '@ViewBag.UserRights';
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
     let serv = []; //must be array of object
     let hdr = {}; //simple object
     let dtl = {}; //simple object
     let job = '';
     let isjobmode = false;
     let chkmode = false;
-    $(document).ready(function () {
+    //$(document).ready(function () {
         SetLOVs();
         SetEvents();
         SetEnterToTab();
         CheckParam();
-    });
+    //});
     function CheckParam() {
         ClearHeader();
         //read query string parameters
@@ -416,6 +416,9 @@ End Code
                 }
             }
 
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
         }
     }
     function LoadJob(dt) {
@@ -1014,6 +1017,14 @@ End Code
             alert('Please save header first');
             return;
         }
+        if ($('#txtUnitCode').val() == '') {
+            alert('Please select unit');
+            return;
+        }
+        if ($('#txtSlipNo').val().length<2 && $('#txtSlipNo').attr('disabled')=='disabled') {
+            alert('Please enter slip number');
+            return;
+        }
         if (dtl != undefined) {
             let obj = GetDataDetail();
             if (obj.ItemNo == 0) {
@@ -1251,6 +1262,7 @@ End Code
         $('#txtAdvItemNo').val('0');
 
         $('#chkDuplicate').prop('checked', false);
+        $('#txtSlipNo').removeAttr('disabled');
         $('#txtAMT').removeAttr('disabled');
         $('#txtVATRate').removeAttr('disabled');
         $('#txtWHTRate').removeAttr('disabled');
@@ -1455,6 +1467,9 @@ End Code
                 $('#txtWHT').removeAttr('disabled');
             }
             $('#chkIsCost').prop('checked', dt.IsExpense == 1 ? true : false);
+            if (dt.IsHaveSlip == 0) {
+                $('#txtSlipNo').attr('disabled', 'disabled');
+            }
             CalVATWHT();
             return;
         }
@@ -1548,7 +1563,7 @@ End Code
     function LoadAdvance() {
         let jtype = $('#cboJobType').val();
         let branch = $('#txtBranchCode').val();
-        if (job !== null) {
+        if (job !== "") {
             jtype += '&jobno=' + job;
         }
         //$.get(path + 'Clr / GetAdvForClear ? branchcode = '+branch+' & jtype=' + jtype + GetClrFrom(cfrom), function (r) {

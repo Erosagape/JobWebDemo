@@ -319,6 +319,10 @@ FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 ,c.BaseAmount,c.RateVAT,c.Rate50Tavi,c.BaseVATInc,c.Base50TaviInc,c.BaseVATExc,c.Base50TaviExc
 ,c.BaseVATInc+c.BaseVATExc as BaseVAT,c.Base50TaviExc+c.Base50TaviInc as Base50Tavi
 ,c.VATInc,c.VATExc,c.WHTInc,c.WHTExc,c.TotalNet
+,a.AdvCash*a.ExchangeRate as AdvCashCal
+,a.AdvChq*a.ExchangeRate as AdvChqCal
+,a.AdvChqCash*a.ExchangeRate as AdvChqCashCal
+,a.AdvCred*a.ExchangeRate as AdvCredCal
 FROM Job_AdvHeader as a LEFT JOIN
 Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
 LEFT JOIN (
@@ -655,6 +659,53 @@ and h.DocNo=d.DocNo
 "
     End Function
     Function SQLSelectClrForInvoice() As String
+        Return "
+select b.BranchCode,
+b.LinkBillNo as DocNo,
+b.LinkItem as ItemNo,
+b.SICode,
+b.SDescription,
+b.SlipNO as ExpSlipNO,
+b.Remark as SRemark,
+b.CurrencyCode,
+b.CurRate as ExchangeRate,
+b.Qty,
+b.UnitCode as QtyUnit,
+b.UnitCost as UnitPrice,
+b.UnitCost*b.CurRate as FUnitPrice,
+b.UsedAmount as Amt,
+b.UsedAmount/b.CurRate as FAmt,
+0 as DiscountType,
+0 as DiscountPerc,
+0 as AmtDiscount,
+0 as FAmtDiscount,
+CASE WHEN b.Tax50TaviRate>0 THEN 1 ELSE 0 END as Is50Tavi,
+b.Tax50TaviRate as Rate50Tavi,
+CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.Tax50Tavi ELSE 0 END as Amt50Tavi,
+b.VATType as IsTaxCharge,
+CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.ChargeVAT ELSE 0 END as AmtVat,
+b.BNet as TotalAmt,
+b.BNet/b.CurRate as FTotalAmt,
+CASE WHEN ISNULL(b.SlipNO,'')<>'' AND b.BPrice>0 THEN b.BNet ELSE 0 END as AmtAdvance,
+CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.UsedAmount ELSE 0 END as AmtCharge,
+'' as CurrencyCodeCredit,
+1 as ExchangeRateCredit,
+0 as AmtCredit,
+0 as FAmtCredit,
+b.VATRate,
+c.CustCode,c.CustBranch,
+b.JobNo,b.ClrNo,b.ItemNo as ClrItemNo,
+(CASE WHEN b.BPrice=0 THEN b.BNet ELSE 0 END) as AmtCost,
+(CASE WHEN b.BPrice=0 THEN 0 ELSE b.BNet END) as AmtNet
+from Job_ClearHeader a INNER JOIN Job_ClearDetail b
+ON a.BranchCode=b.BranchCode
+AND a.ClrNo=b.ClrNo
+INNER JOIN Job_Order c
+ON b.BranchCode=c.BranchCode
+and b.JobNo=c.JNo
+"
+    End Function
+    Function SQLSelectClrSumForInvoice() As String
         Return "
 select b.BranchCode,
 b.LinkBillNo as DocNo,

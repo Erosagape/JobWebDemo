@@ -12,7 +12,7 @@ Public Class CController
     Friend Sub LoadCompanyProfile()
         'Dim oConfig = Main.GetDataConfig("PROFILE")
         ViewBag.PROFILE_DEFAULT_BRANCH = GetValueConfig("PROFILE", "DEFAULT_BRANCH")
-        ViewBag.PROFILE_DEFAULT_BRANCH_NAME = Main.GetValueSQL(jobWebConn, String.Format("SELECT BrName FROM Mas_Branch WHERE [Code]='{0}'", ViewBag.PROFILE_DEFAULT_BRANCH))
+        ViewBag.PROFILE_DEFAULT_BRANCH_NAME = Main.GetValueSQL(jobWebConn, String.Format("SELECT BrName FROM Mas_Branch WHERE [Code]='{0}'", ViewBag.PROFILE_DEFAULT_BRANCH)).Result
         ViewBag.PROFILE_LOGO = GetValueConfig("PROFILE", "COMPANY_LOGO")
         ViewBag.PROFILE_COMPANY_NAME = GetValueConfig("PROFILE", "COMPANY_NAME")
         ViewBag.PROFILE_COMPANY_FAX = GetValueConfig("PROFILE", "COMPANY_FAX")

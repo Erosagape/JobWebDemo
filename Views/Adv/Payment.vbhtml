@@ -227,9 +227,9 @@ End Code
     var arr = [];
     var list = [];
     var docno = '';
-    $(document).ready(function () {
+    //$(document).ready(function () {
         SetEvents();
-    });
+    //});
     function SetEvents() {
         //Combos
         let lists = 'JOB_TYPE=#cboJobType';
@@ -241,6 +241,9 @@ End Code
         //default values
         $('#txtCurrencyCode').val('THB');
         ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
+
+        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
 
         //Events
         $('#txtBranchCode').focusout(function (event) {
@@ -380,10 +383,10 @@ End Code
                     { data: "JobNo", title: "Job Number" },
                     { data: "CustInvNo", title: "InvNo" },
                     { data: "CustCode", title: "Customer" },
-                    { data: "AdvCash", title: "Cash/Transfer" },
-                    { data: "AdvChqCash", title: "Company Chq" },
-                    { data: "AdvChq", title: "Customer Chq" },
-                    { data: "AdvCred", title: "Credit" },
+                    { data: "AdvCashCal", title: "Cash/Transfer" },
+                    { data: "AdvChqCashCal", title: "Company Chq" },
+                    { data: "AdvChqCal", title: "Customer Chq" },
+                    { data: "AdvCredCal", title: "Credit" },
                     { data: "TotalAdvance", title: "Total" },
                     { data: "Total50Tavi", title: "W/T Amt" },
                     { data: "EmpCode", title: "Request By" }
@@ -445,10 +448,10 @@ End Code
             let o = arr[i];
             wtax += (o.Total50Tavi > 0 ? o.Total50Tavi : 0);
             tot += (o.TotalAdvance > 0 ? o.TotalAdvance+o.TotalVAT : 0);
-            cash += (o.AdvCash > 0 ? o.AdvCash : 0);
-            chq += (o.AdvChqCash > 0 ? o.AdvChqCash : 0);
-            chqcust += (o.AdvChq > 0 ? o.AdvChq : 0);
-            cred += (o.AdvCred > 0 ? o.AdvCred : 0);
+            cash += (o.AdvCash > 0 ? o.AdvCashCal : 0);
+            chq += (o.AdvChqCash > 0 ? o.AdvChqCashCal : 0);
+            chqcust += (o.AdvChq > 0 ? o.AdvChqCal : 0);
+            cred += (o.AdvCred > 0 ? o.AdvCredCal : 0);
             doc += (doc != '' ? ',' : '') + o.AdvNo;
             if (o.AdvCash > 0) {
                 let obj = {
@@ -461,7 +464,7 @@ End Code
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvCash, 2),
+                    PaidAmount: CDbl(o.AdvCashCal, 2),
                     TotalAmount: CDbl((o.TotalAdvance), 2),
                     acType:'CA'
                 };
@@ -478,7 +481,7 @@ End Code
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvChqCash, 2),
+                    PaidAmount: CDbl(o.AdvChqCashCal, 2),
                     TotalAmount: CDbl((o.TotalAdvance), 2),
                     acType:'CU'
                 };
@@ -495,7 +498,7 @@ End Code
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvChq, 2),
+                    PaidAmount: CDbl(o.AdvChqCal, 2),
                     TotalAmount: CDbl((o.TotalAdvance), 2),
                     acType:'CH'
                 };
@@ -512,7 +515,7 @@ End Code
                     CmpType: 'C',
                     CmpCode: o.CustCode,
                     CmpBranch: o.CustBranch,
-                    PaidAmount: CDbl(o.AdvCred, 2),
+                    PaidAmount: CDbl(o.AdvCredCal, 2),
                     TotalAmount: CDbl((o.TotalAdvance), 2),
                     acType:'CR'
                 };
@@ -626,43 +629,6 @@ End Code
                 acType : 'CA'
             });
         }
-        if ($('#txtAdvChqCash').val() > 0) {
-            i = i + 1;
-            let sum_chqcash = GetSumPayment('AdvChqCash');
-            oData.push({
-                BranchCode: $('#txtBranchCode').val(),
-                ControlNo: docno,
-                ItemNo: i,
-                PRVoucher: '',
-                PRType: 'P',
-                ChqNo: $('#txtRefNoChqCash').val(),
-                BookCode: '',
-                BankCode: '',
-                BankBranch: '',
-                ChqDate: CDateTH($('#txtChqCashTranDate').val()),
-                CashAmount: 0,
-                ChqAmount: CNum($('#txtAdvChqCash').val()),
-                CreditAmount: 0,
-                SumAmount: sum_chqcash.sumamount,
-                CurrencyCode: sum_chqcash.currencycode,
-                ExchangeRate: sum_chqcash.exchangerate,
-                TotalAmount: sum_chqcash.totalamount,
-                VatInc: sum_chqcash.vatinc,
-                VatExc: sum_chqcash.vatexc,
-                WhtInc: sum_chqcash.whtinc,
-                WhtExc: sum_chqcash.whtexc,
-                TotalNet: sum_chqcash.totalnet,
-                IsLocal: 0,
-                ChqStatus: $('#chkStatusChq').prop('checked')==true? 'P':'',
-                TRemark: '',
-                PayChqTo: $('#txtChqCashPayTo').val(),
-                DocNo: '',
-                SICode: '',
-                RecvBank: $('#cboBankChqCash').val(),
-                RecvBranch: $('#txtBankBranchChqCash').val(),
-                acType: 'CU'
-            });
-        }
         if ($('#txtAdvChq').val() > 0) {
             i = i + 1;
             let sum_chq = GetSumPayment('AdvChq');
@@ -673,9 +639,9 @@ End Code
                 PRVoucher: '',
                 PRType: 'P',
                 ChqNo: $('#txtRefNoChq').val(),
-                BookCode: $('#txtBookChq').val(),
-                BankCode: $('#fldBankCodeChqCash').val(),
-                BankBranch: $('#fldBankBranchChqCash').val(),
+                BookCode: '',
+                BankCode: '',
+                BankBranch: '',
                 ChqDate: CDateTH($('#txtChqTranDate').val()),
                 CashAmount: 0,
                 ChqAmount: CNum($('#txtAdvChq').val()),
@@ -689,14 +655,51 @@ End Code
                 WhtInc: sum_chq.whtinc,
                 WhtExc: sum_chq.whtexc,
                 TotalNet: sum_chq.totalnet,
-                IsLocal: $('#chkIsLocal').prop('checked') == true ? 'P' : '',
-                ChqStatus: '',
+                IsLocal: $('#chkStatusChq').prop('checked') == true ? 1 : 0,
+                ChqStatus:'C',
                 TRemark: '',
                 PayChqTo: $('#txtChqPayTo').val(),
                 DocNo: '',
                 SICode: '',
                 RecvBank: $('#cboBankChq').val(),
                 RecvBranch: $('#txtBankBranchChq').val(),
+                acType: 'CU'
+            });
+        }
+        if ($('#txtAdvChqCash').val() > 0) {
+            i = i + 1;
+            let sum_chqcash = GetSumPayment('AdvChqCash');
+            oData.push({
+                BranchCode: $('#txtBranchCode').val(),
+                ControlNo: docno,
+                ItemNo: i,
+                PRVoucher: '',
+                PRType: 'P',
+                ChqNo: $('#txtRefNoChqCash').val(),
+                BookCode: $('#txtBookChqCash').val(),
+                BankCode: $('#fldBankCodeChqCash').val(),
+                BankBranch: $('#fldBankBranchChqCash').val(),
+                ChqDate: CDateTH($('#txtChqCashTranDate').val()),
+                CashAmount: 0,
+                ChqAmount: CNum($('#txtAdvChqCash').val()),
+                CreditAmount: 0,
+                SumAmount: sum_chqcash.sumamount,
+                CurrencyCode: sum_chqcash.currencycode,
+                ExchangeRate: sum_chqcash.exchangerate,
+                TotalAmount: sum_chqcash.totalamount,
+                VatInc: sum_chqcash.vatinc,
+                VatExc: sum_chqcash.vatexc,
+                WhtInc: sum_chqcash.whtinc,
+                WhtExc: sum_chqcash.whtexc,
+                TotalNet: sum_chqcash.totalnet,
+                IsLocal: '',
+                ChqStatus: $('#chkStatusChq').prop('checked') == true ? 'R' : 'P',
+                TRemark: '',
+                PayChqTo: $('#txtChqCashPayTo').val(),
+                DocNo: '',
+                SICode: '',
+                RecvBank: $('#cboBankChqCash').val(),
+                RecvBranch: $('#txtBankBranchChqCash').val(),
                 acType: 'CH'
             });
         }

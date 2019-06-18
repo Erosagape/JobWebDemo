@@ -386,7 +386,7 @@ End Code
         ClearHeader();
         //read query string parameters
         let br = getQueryString('BranchCode');
-        if (br.length > 0) {
+        if (br.length>0) {
             $('#txtBranchCode').val(br);
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             let ano = getQueryString('AdvNo');
@@ -398,10 +398,13 @@ End Code
                 if (job.length > 0) {
                     isjobmode = true;
                     $('#txtAdvNo').attr('disabled', 'disabled');
-                    CallBackQueryJob(path, $('#txtBranchCode').val(), job, LoadJob);                    
+                    CallBackQueryJob(path, $('#txtBranchCode').val(), job, LoadJob);
                 }
             }
 
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
         }
     }
     function LoadJob(dt) {

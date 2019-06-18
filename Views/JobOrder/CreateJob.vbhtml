@@ -170,10 +170,11 @@ End Code
         let sb = getQueryString('SBy');        
         if (br !== "") {
             $('#txtBranchCode').val(br);
+            ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
         } else {
             $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
         }
-        ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
         if (jt == "") jt = "01";
         if (sb == "") sb = "01";
         //Combos

@@ -30,13 +30,13 @@ End Code
         var path = '@Url.Content("~")';
         var user = '@ViewBag.User';
         $('#btnShow').on('click', function () {
-            $.get(path + 'acc/getinvforbill?branch=' + $('#txtBranchCode').val(), function (r) {
-                if (r.invdetail.data.length == 0) {
+            $.get(path + 'acc/getbillheader?branch=' + $('#txtBranchCode').val(), function (r) {
+                if (r.billheader.data.length == 0) {
                     $('#tbHeader').DataTable().clear().draw();
                     if (isAlert==true) alert('data not found');
                     return;
                 }
-                let h = r.invdetail.data;
+                let h = r.billheader.data;
                 $('#tbHeader').DataTable({
                     data: h,
                     selected: true, //ให้สามารถเลือกแถวได้
@@ -63,9 +63,9 @@ End Code
                             }
                         },
                         { data: "TotalAdvance", title: "Advance" },
-                        { data: "TotalCharge", title: "Charge" },
+                        { data: "TotalChargeVAT", title: "Charge" },
                         { data: "TotalVAT", title: "VAT" },
-                        { data: "Total50Tavi", title: "WHT" },
+                        { data: "TotalWH", title: "WHT" },
                         { data: "TotalNet", title: "NET" }
                     ],
                     destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
