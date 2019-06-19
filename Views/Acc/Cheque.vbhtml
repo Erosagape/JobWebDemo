@@ -27,7 +27,7 @@ End Code
                             <td>
                                 <b><a onclick="SearchData('controlno')">Reference No:</a></b>
                                 <br />
-                                <input type="text" id="txtControlNo" style="font-style:bold;font-size:20px;text-align:center" tabindex="1" />
+                                <input type="text" id="txtControlNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="1" />
                             </td>
                         </tr>
                     </table>
@@ -352,9 +352,9 @@ End Code
         $('#dvChqInfo').show();
         $('#dvBookInfo').hide();
         switch (typ) {
-            case 'CH':
-                break;
             case 'CU':
+                break;
+            case 'CH':
                 $('#dvBookInfo').show();
                 break;
             default:

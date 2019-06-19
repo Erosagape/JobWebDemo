@@ -1021,7 +1021,7 @@ End Code
             alert('Please select unit');
             return;
         }
-        if ($('#txtSlipNo').val().length<2 && $('#txtSlipNo').attr('disabled')=='disabled') {
+        if ($('#txtSlipNo').val().length<2 && $('#txtSlipNo').prop('disabled')==false) {
             alert('Please enter slip number');
             return;
         }

@@ -151,7 +151,8 @@ End Code
                     <div class="col-sm-3 table-bordered" id="dvChq">
                         <b>Customer Chq : </b><input type="text" id="txtAdvChq" class="form-control" value="" />
                         <br />
-                        Chq No:<input type="text" id="txtRefNoChq" class="form-control" value="" />
+                        <a href="/acc/cheque" target="_blank">Chq No:</a><input type="text" id="txtRefNoChq" class="form-control" value="" disabled />
+                        <input type="button" class="btn" id="btnBrowseChq" value="..." onclick="SearchData('chequecust')"/>
                         <br />
                         Chq Date:<input type="date" id="txtChqTranDate" class="form-control" />
                         <br />
@@ -167,7 +168,7 @@ End Code
                         <div>
                             <b>Credit : </b><input type="text" id="txtAdvCred" class="form-control" value="" />
                             <br />
-                            Ref No:<input type="text" id="txtRefNoCred" class="form-control" value="" />
+                            <a href="#" onclick="SearchData('document')">Ref No</a>:<input type="text" id="txtRefNoCred" class="form-control" value="" disabled />
                             <br />
                             Ref Date:<input type="date" id="txtCredTranDate" class="form-control" />
                             Pay To:<input type="text" id="txtCredPayTo" class="form-control" />
@@ -219,6 +220,33 @@ End Code
         </div>
     </div>
     <div id="dvLOVs"></div>
+    <did id="frmSearchChq" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     Select Cheque Onhand
+                 </div>
+                 <div class="modal-body">
+                     <table id="tbChq" class="table table-responsive">
+                         <thead>
+                             <tr>
+                                 <th>#</th>
+                                 <th>ChqNo</th>
+                                 <th>ChqDate</th>
+                                 <th>ChqAmount</th>
+                                 <th>AmountUsed</th>
+                                 <th>AmountRemain</th>
+                             </tr>
+                         </thead>
+                         <tbody></tbody>
+                     </table>
+                 </div>
+                 <div class="modal-footer">
+                     <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+    </did>
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
@@ -286,7 +314,7 @@ End Code
         });
         
         //3 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (response) {
             let dv = document.getElementById("dvLOVs");
 
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
@@ -295,6 +323,7 @@ End Code
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
             CreateLOV(dv, '#frmSearchBookCash', '#tbBookCash', 'Book Accounts', response, 2);
             CreateLOV(dv, '#frmSearchBookChq', '#tbBookChq', 'Book Accounts', response, 2);
+            CreateLOV(dv, '#frmSearchDoc', '#tbDoc', 'Account Receivables', response, 5);
         });
     }
     function ClearData() {
@@ -483,7 +512,7 @@ End Code
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChqCashCal, 2),
                     TotalAmount: CDbl((o.TotalAdvance), 2),
-                    acType:'CU'
+                    acType:'CH'
                 };
                 list.push(obj);
             }
@@ -500,7 +529,7 @@ End Code
                     CmpBranch: o.CustBranch,
                     PaidAmount: CDbl(o.AdvChqCal, 2),
                     TotalAmount: CDbl((o.TotalAdvance), 2),
-                    acType:'CH'
+                    acType:'CU'
                 };
                 list.push(obj);
             }
@@ -552,6 +581,7 @@ End Code
 
         SetStatusInput('#dvChq', (chq > 0 ? true : false), '#txtAdvChq');
         $('#txtAdvChq').val(CDbl(chq, 2));
+        $('#txtRefNoChq').attr('disabled', 'disabled');
 
         SetStatusInput('#dvCred', (cred > 0 ? true : false), '#txtAdvCred');
         $('#txtAdvCred').val(CDbl(cred, 2));
@@ -879,7 +909,38 @@ End Code
             case 'currency':
                 SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadCurrency);
                 break;
+            case 'chequecust':
+                if (type == 'chequecust') {
+                    SetGridCheque(path, '#tbChq', '#frmSearchChq', '?cancel=N& type=CU & branch=' + $('#txtBranchCode').val(), ReadCheque);
+                } else {
+                    SetGridCheque(path, '#tbChq', '#frmSearchChq', '?cancel=N&type=CH&branch=' + $('#txtBranchCode').val(), ReadCheque);
+                }
+                break;
+            case 'document':
+                SetGridDocument(path, '#tbDoc', '#frmSearchDoc', '?type=R&branch=' + $('#txtBranchCode').val(), ReadDocument);
+                break;
         }
+    }
+    function ReadDocument(dt) {
+        let crAmt = Number($('#txtAdvCred').val());
+        if (dt.AmountRemain < crAmt) {
+            alert('Balance not enough to payment');
+            return;
+        }
+        $('#txtRefNoCred').val(dt.DocNo);
+    }
+    function ReadCheque(dt) {
+        let chqAmt = dt.acType == 'CU' ? Number($('#txtAdvChq').val()) : Number($('#txtAdvChqCash').val());
+        if (dt.AmountRemain < chqAmt) {
+            alert('Cheque Amount not enough to payment');
+            return;
+        }
+        $('#txtRefNoChq').val(dt.ChqNo);
+        $('#txtChqTranDate').val(CDateEN(dt.ChqDate));
+        $('#chkIsLocal').prop('checked', dt.IsLocal == 1 ? true : false);
+        $('#txtChqPayTo').val(dt.PayChqTo);
+        $('#cboBankChq').val(dt.RecvBank);
+        $('#txtBankBranchChq').val(dt.RecvBranch);
     }
     function ReadCurrency(dt) {
         $('#txtCurrencyCode').val(dt.Code);
@@ -924,41 +985,102 @@ End Code
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
     }
     function CheckBalance() {
-        let bPass = false;
         if ($('#txtBookCash').val() == $('#txtBookChqCash').val()) {
             let amtChk = Number($('#txtAdvCash').val()) + Number($('#txtAdvChqCash').val());
             let amtBal = Number($('#txtCashBal').val());
             if (amtBal < amtChk) {
-                alert('Your book balance ('+$('#txtBookCash').val()+') is not enough for payment =' + amtBal);
+                alert('Your book balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
+                return false;
+            }
+        }
+        let amtChk = Number($('#txtAdvCash').val());
+        if (amtChk > 0) {
+            let amtBal = Number($('#txtCashBal').val());
+            if (amtBal < amtChk) {
+                alert('Your cash balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
+                return false;
             } else {
-                bPass = true;
-            }
-            return bPass;
-        } else {
-            let amtChk = Number($('#txtAdvCash').val());
-            if (amtChk > 0) {
-                bPass = false;
-                let amtBal = Number($('#txtCashBal').val());
-                if (amtBal < amtChk) {
-                    alert('Your cash balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
-                    return bPass;
+                if ($('#txtBookCash').val() == '') {
+                    alert('Please select book account');
+                    $('#txtBookCash').focus();
+                    return false;
                 } else {
-                    bPass = true; 
-                }                
-            }
-            amtChk = Number($('#txtAdvChqCash').val());
-            if (amtChk > 0) {
-                bPass = false;
-                let amtBal = Number($('#txtChqCashBal').val());
-                if (amtBal < amtChk) {
-                    alert('Your book balance ('+$('#txtBookChqCash').val()+') is not enough for payment =' + amtBal);
-                    return bPass;
+                    if ($('#txtCashTranDate').val() == '') {
+                        alert('Please input transaction date');
+                        $('#txtCashTranDate').focus();
+                        return false;
+                    }
+                }
+            }   
+        }
+        amtChk = Number($('#txtAdvChqCash').val());
+        if (amtChk > 0) {
+            let amtBal = CNum($('#txtChqCashBal').val());
+            if (amtBal < amtChk) {
+                alert('Your book balance (' + $('#txtBookChqCash').val() + ') is not enough for payment =' + amtBal);
+                return false
+            } else {
+                if ($('#txtBookChqCash').val() == '') {
+                    alert('Please select book account');
+                    $('#txtBookChqCash').focus();
+                    return false;
                 } else {
-                    bPass = true; 
+                    if ($('#txtRefNoChqCash').val() == '') {
+                        alert('Please input cheque Number');
+                        $('#txtRefNoChqCash').focus();
+                        return false;
+                    } else {
+                        if ($('#txtChqCashTranDate').val() == '') {
+                            alert('Please input cheque date');
+                            $('#txtChqCashTranDate').focus();
+                            return false;
+                        } 
+                    }
+                    if ($('#chkStatusChq').prop('checked') == true) {
+                        if ($('#cboBankChqCash').val() == '' || $('#txtBankBranchChqCash').val() == '') {
+                            alert('Please Enter Bank and Branch which cheque Returned');
+                            $('#cboBankChqCash').focus();
+                            return false;
+                        }
+                    }
                 }
             }
-            return bPass;
         }
+        amtChk = Number($('#txtAdvChq').val());
+        if (amtChk > 0) {
+            if ($('#txtRefNoChq').val() == '') {
+                alert('Please input cheque Number');
+                $('#txtRefNoChq').focus();
+                return false;
+            } else {
+                if ($('#txtChqTranDate').val() == '') {
+                    alert('Please input cheque date');
+                    $('#txtChqTranDate').focus();
+                    return false;
+                } else {
+                    if ($('#cboBankChq').val() == '' || $('#txtBankBranchChq').val() == '') {
+                        alert('Please Enter Bank and Branch');
+                        $('#cboBankChq').focus();
+                        return false;
+                    }
+                }
+            }
+        }
+        amtChk = Number($('#txtAdvCred').val());
+        if (amtChk > 0) {
+            if ($('#txtRefNoCred').val() == '') {
+                alert('Please input reference Number');
+                $('#txtRefNoCred').focus();
+                return false;
+            } else {
+                if ($('#txtCredTranDate').val() == '') {
+                    alert('Please input reference date');
+                    $('#txtCredTranDate').focus();
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     function PrintVoucher(br, cno) {
         window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());

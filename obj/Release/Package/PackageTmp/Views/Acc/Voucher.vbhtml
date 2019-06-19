@@ -477,13 +477,13 @@ End Code
                 $('#dvChqInfo').hide();
                 $('#dvBookInfo').show();
                 break;
-            case 'CH':
+            case 'CU':
                 $('#txt' + cashfld).val(0);
                 $('#txt' + credfld).val(0);
                 $('#txt' + chqfld).val(sumval);
                 $('#txt' + chqfld).removeAttr('disabled');
                 break;
-            case 'CU':
+            case 'CH':
                 $('#txt' + cashfld).val(0);
                 $('#txt' + credfld).val(0);
                 $('#txt' + chqfld).val(sumval);

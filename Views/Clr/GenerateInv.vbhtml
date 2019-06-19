@@ -87,10 +87,21 @@ End Code
                                 <input type="button" onclick="PrintInvoice()" class="btn btn-success" value="Print Invoice" />
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <a href="#" onclick="SearchData('chequecust')">Customer Cheque Used</a> <br/>
+                                <input type="text" id="txtChqNo" class="form-control" disabled />
+                            </td>
+                            <td>
+                                Cheque Amount<br/>
+                                <input type="text" id="txtChqAmount" class="form-control" disabled />
+                                <input type="button" id="btnAddCheque" value="Add" class="btn" onclick="AddCheque()" />
+                            </td>
+                        </tr>
                     </table>
                     <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body">                    
                     <b>Invoice Summary:</b><br />
                     <div class="row">
                         <div class="col-sm-4">
@@ -131,21 +142,37 @@ End Code
                             </table>
                         </div>
                     </div>
-                    <b>Costing of Invoice:</b><br />
-                    <table id="tbCost" style="width:100%;">
-                        <thead>
-                            <tr>
-                                <th>Job No</th>
-                                <th>Description</th>
-                                <th>SlipNo</th>
-                                <th>Expense</th>
-                                <th>VAT</th>
-                                <th>WH-Tax</th>
-                                <th>Net</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <b>Cheque Used</b><br/>
+                            <table id="tbCheque">
+                                <thead>
+                                    <tr>
+                                        <th>Cheque No</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-6">
+                            <b>Costing of Invoice:</b><br />
+                            <table id="tbCost" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Job No</th>
+                                        <th>Description</th>
+                                        <th>SlipNo</th>
+                                        <th>Expense</th>
+                                        <th>VAT</th>
+                                        <th>WH-Tax</th>
+                                        <th>Net</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,6 +185,7 @@ End Code
     var path = '@Url.Content("~")';
     var user = '@ViewBag.User';
     var arr = [];
+    var chq = [];
     $(document).ready(function () {
         SetEvents();
         //Load params
@@ -189,7 +217,7 @@ End Code
         });
 
         //3 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (response) {
             let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
@@ -197,6 +225,8 @@ End Code
             CreateLOV(dv, '#frmSearchInv', '#tbInv', 'Cancelled Invoice', response, 3);
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            //Cheque
+            CreateLOV(dv, '#frmSearchChq', '#tbChq', 'Customer Cheque', response, 5);
         });
 
     }
@@ -290,8 +320,10 @@ End Code
                 totalvat += obj.AmtVat;
                 total50tavi += obj.Amt50Tavi;
             }
-            totalcustadv += 0;
             totalnet += obj.AmtNet;
+        }
+        for (let c of chq) {
+            totalcustadv += c.ChqAmount;
         }
         $('#txtTotalAdvance').val(CDbl(totaladv, 2));
         $('#txtTotalCharge').val(CDbl(totalcharge, 2));
@@ -513,6 +545,9 @@ End Code
             case 'customer':
                 SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
+            case 'chequecust':
+                SetGridCheque(path, '#tbChq', '#frmSearchChq', '?type=CU&Cancel=N&Branch=' + $('#txtBranchCode').val(), ReadCheque);
+                break;
         }
     }
     function ReadInv(dt) {
@@ -520,6 +555,10 @@ End Code
     }
     function ReadJob(dt) {
         $('#txtJobNo').val(dt.JNo);
+    }
+    function ReadCheque(dt) {
+        $('#txtChqNo').val(dt.ChqNo);
+        $('#txtChqAmount').val(dt.AmountRemain);
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
@@ -629,5 +668,27 @@ End Code
     function ResetData() {
         arr = [];
         SetGridAdv(true);
+    }
+    function AddCheque() {
+        let c = {
+            ChqNo: $('#txtChqNo').val(),
+            ChqAmount: $('#txtChqAmount').val()
+        };
+        if (chq.indexOf(c) < 0) {
+            chq.push(c);
+        }
+        ShowCheque();
+        ShowSummary();
+    }
+    function ShowCheque() {
+        $('#tbCheque').DataTable({
+            data: chq,
+            selected: true, //ให้สามารถเลือกแถวได้
+            columns: [ //กำหนด property ของ header column
+                { data: "ChqNo", title: "Cheque No" },
+                { data: "ChqAmount", title: "Amount" }
+            ],
+            destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+        });
     }
 </script>

@@ -1017,6 +1017,68 @@ Namespace Controllers
                 Return Content("{""rcpheader"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function GetCheque() As ActionResult
+            Try
+                Dim tSqlw = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND b.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND b.ChqNo ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim chqType = "CU"
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    chqType = Request.QueryString("Type").ToString
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND b.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cancel")) Then
+                    If Request.QueryString("Cancel").ToString() = "Y" Then
+                        tSqlw &= " AND ISNULL(b.CancelProve,'')<>'' "
+                    Else
+                        tSqlw &= " AND ISNULL(b.CancelProve,'')='' "
+                    End If
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectChequeBalance(chqType) & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""cheque"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""cheque"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
+        Function GetDocBalance() As ActionResult
+            Try
+                Dim tSqlw = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND b.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND b.DocNo ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim prType = "R"
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    prType = Request.QueryString("Type").ToString
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND b.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cancel")) Then
+                    If Request.QueryString("Cancel").ToString() = "Y" Then
+                        tSqlw &= " AND ISNULL(b.CancelProve,'')<>'' "
+                    Else
+                        tSqlw &= " AND ISNULL(b.CancelProve,'')='' "
+                    End If
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectDocumentBalance(prType) & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""document"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""document"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
         Function GetClearForInv() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ISNULL(b.LinkBillNo,'')='' AND a.DocStatus NOT IN('99','1') AND b.UsedAmount>0 "

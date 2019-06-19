@@ -609,7 +609,7 @@ End Code
             }
         });
         $('#txtWHTRate').focusout(function (event) {
-            if (true) {
+            if (true) {                
                 CalVATWHT();
             }
         });
@@ -1495,20 +1495,16 @@ End Code
             $('#cboSTCode').val(dt.GroupCode);
 
             $('#txtSDescription').val(dt.NameThai);
-            if ($('#txtVatType').val() == '') $('#txtVatType').val(dt.IsTaxCharge);
-            if ($('#txtVATRate').val() == '') $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
+            $('#txtVatType').val(dt.IsTaxCharge);
+            if ($('#txtVATRate').val() == '') $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "@ViewBag.PROFILE_VATRATE");
             if ($('#txtWHTRate').val() == '') $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
             if ($('#txtUnitPrice').val() == '') $('#txtUnitPrice').val(dt.StdPrice);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
-                $('#txtVATRate').attr('disabled', 'disabled');
-                $('#txtWHTRate').attr('disabled', 'disabled');
                 $('#txtVAT').attr('disabled', 'disabled');
                 $('#txtWHT').attr('disabled', 'disabled');
             } else {
                 $('#txtAMT').removeAttr('disabled');
-                $('#txtVATRate').removeAttr('disabled');
-                $('#txtWHTRate').removeAttr('disabled');
                 $('#txtVAT').removeAttr('disabled');
                 $('#txtWHT').removeAttr('disabled');
             }
@@ -1588,7 +1584,10 @@ End Code
     }
     function CalVATWHT() {
         let type = $('#txtVatType').val();
-        if (type == ''||type=='0') type = '1';
+        if (type == '' || type == '0') {
+            type = '1';
+            $('#txtVatType').val(type);
+        }
         let amt = CDbl($('#txtAMT').val(),4);
         if (type == '2') {
             amt = CDbl($('#txtNET').val(),4);

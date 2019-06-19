@@ -1,5 +1,7 @@
 ﻿//basic function tools for binding
 function CreateLOV(dv, frm, tb, name, html, c) {
+    if (c <= 4) html = html.replace('<th>desc2</th>', '');
+    if (c <= 3) html = html.replace('<th>desc1</th>', '');
     if (c <= 2) html = html.replace('<th>name</th>', '');
     if (c == 1) html = html.replace('<th>key</th>', '');
 
@@ -177,6 +179,74 @@ function SetGridSICodeByGroup(p, g, t, d, ev) {
             { data: null, title: "#" },
             { data: "SICode", title: "Service Code" },
             { data: "NameThai", title: "Description" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridDocument(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Acc/GetDocBalance' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'document.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "DocNo", title: "เลขที่" },
+            {
+                data: null, title: "วันที่เช็ค",
+                render: function (data) {
+                    return CDateTH(data.VoucherDate);
+                }
+            },
+            { data: "CreditAmount", title: "ยอดเงินที่ตั้งไว้" },
+            { data: "AmountUsed", title: "ยอดเงินที่ใช้" },
+            { data: "AmountRemain", title: "ยอดเงินคงเหลือ" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridCheque(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Acc/GetCheque' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'cheque.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "ChqNo", title: "เลขที่" },
+            {
+                data: null, title: "วันที่เช็ค",
+                render: function (data) {
+                    return CDateTH(data.ChqDate);
+                }
+            },
+            { data: "ChqAmount", title: "ยอดเงินหน้าเช็ค" },
+            { data: "AmountUsed", title: "ยอดเงินที่ใช้" },
+            { data: "AmountRemain", title: "ยอดเงินคงเหลือ" }
         ],
         "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
             {

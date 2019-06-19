@@ -40,6 +40,7 @@ End Code
                 <thead>
                     <tr>
                         <th>JobNo</th>
+                        <th>JobType/ShipBy</th>
                         <th>InspectDate</th>
                         <th>Inv.Customer</th>
                         <th>Customer</th>
@@ -99,12 +100,18 @@ End Code
             $('#tblJob').DataTable({
                 "ajax": {
                     //"url": "joborder/getjobjson" + strParam,
-                    "url": path+"joborder/getjobsql" + GetCliteria(),
+                    "url": path+"joborder/getjobreport" + GetCliteria(),
                     "dataSrc": "job.data"
                 },
                 "destroy": true,
                 "columns": [
                     { "data": "JNo", "title": "Job Number" },
+                    {
+                        "data": null, "title": "JobType",
+                        "render": function (data) {
+                            return data.JobTypeName + '/' + data.ShipByName;
+                        }
+                    },
                     {
                         "data": "DutyDate", "title": "Clearance Date",
                         "render" : function (data) {

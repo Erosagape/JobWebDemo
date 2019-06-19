@@ -87,10 +87,20 @@ End Code
                                 <input type="button" onclick="PrintInvoice()" class="btn btn-success" value="Print Invoice" />
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <a href="#" onclick="SearchData('chequecust')">Customer Cheque Used</a> <br/>
+                                <input type="text" id="txtChequeNo" class="form-control" disabled />
+                            </td>
+                            <td>
+                                Cheque Amount<br/>
+                                <input type="text" id="txtChequeAmount" class="form-control" disabled />
+                            </td>
+                        </tr>
                     </table>
                     <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body">                    
                     <b>Invoice Summary:</b><br />
                     <div class="row">
                         <div class="col-sm-4">

@@ -598,6 +598,51 @@ WHERE ISNULL(b.CancelProve,'')='' {0}
 group by c.BookCode,c.LimitBalance) q
 "
     End Function
+    Function SQLSelectChequeBalance(pType As String) As String
+        Return "
+SELECT a.*,ISNULL(c.ChqUsed,0) AS AmountUsed,a.ChqAmount-ISNULL(c.ChqUsed,0) as AmountRemain,
+b.CustCode,b.CustBranch,b.VoucherDate
+FROM Job_CashControlSub a INNER JOIN Job_CashControl b
+ON a.BranchCode=b.BranchCode AND a.ControlNo=b.ControlNo
+LEFT JOIN (
+    SELECT h.BranchCode,h.ChqNo,SUM(d.PaidAmount) as ChqUsed,
+    " & If(pType = "CU", "h.RecvBank,h.RecvBranch", "h.BankCode,h.BankBranch") & "
+    FROM Job_CashControlSub h INNER JOIN Job_CashControlDoc d
+    ON h.BranchCode=d.BranchCode AND h.ControlNo=d.ControlNo
+    WHERE h.PRType='P' AND NOT EXISTS(
+        select ControlNo from Job_CashControl
+        where BranchCode=h.BranchCode AND ControlNo=h.ControlNo AND ISNULL(CancelProve,'')<>''
+    )
+    GROUP BY h.BranchCode,h.ChqNo
+    " & If(pType = "CU", ",h.RecvBank,h.RecvBranch", ",h.BankCode,h.BankBranch") & "
+) c
+ON a.BranchCode=c.BranchCode
+AND a.ChqNo=c.ChqNo " & If(pType = "CU", "AND a.RecvBank=c.RecvBank ", "AND a.BankCode=c.BankCode ") & "
+WHERE a.acType='" & pType & "'
+AND a.PRType='R' AND a.ChqAmount>0 AND ISNULL(a.ChqNo,'')<>''
+"
+    End Function
+    Function SQLSelectDocumentBalance(pType As String) As String
+        Return "
+SELECT a.*,ISNULL(c.CreditUsed,0) AS AmountUsed,a.CreditAmount-ISNULL(c.CreditUsed,0) as AmountRemain,
+b.CustCode,b.CustBranch,b.VoucherDate
+FROM Job_CashControlSub a INNER JOIN Job_CashControl b
+ON a.BranchCode=b.BranchCode AND a.ControlNo=b.ControlNo
+LEFT JOIN (
+    SELECT h.BranchCode,h.DocNo,SUM(d.PaidAmount) as CreditUsed    
+    FROM Job_CashControlSub h INNER JOIN Job_CashControlDoc d
+    ON h.BranchCode=d.BranchCode AND h.ControlNo=d.ControlNo
+    WHERE h.PRType='" & If(pType = "R", "P", "R") & "' AND NOT EXISTS(
+        select ControlNo from Job_CashControl
+        where BranchCode=h.BranchCode AND ControlNo=h.ControlNo AND ISNULL(CancelProve,'')<>''
+    )
+    GROUP BY h.BranchCode,h.DocNo
+) c
+ON a.BranchCode=c.BranchCode
+AND a.DocNo=c.DocNo 
+WHERE a.PRType='" & pType & "' AND a.CreditAmount>0 AND ISNULL(a.DocNo,'')<>'' 
+"
+    End Function
     Function SQLSelectJobReport() As String
         Return "
 select j.*,c2.JobStatusName,c1.JobTypeName,c3.ShipByName,
