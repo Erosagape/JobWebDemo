@@ -58,6 +58,52 @@ End Code
             </div>
         </div>
     </div>
+    <div id="dvEditor" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Clearing No : <label id="lblClrNo"></label>
+                    Item No : <label id="lblClrItemNo"></label>
+                    Job No : <label id="lblJobNo"></label>
+                    Code : <label id="lblSICode"></label>
+                    Description : <label id="lblSDescription"></label>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr style="width:100%">
+                            <td style="width:20%">
+                                Advance :<br />
+                                <input type="text" class="form-control" id="txtAmtAdvance" />
+                            </td>
+                            <td style="width:20%">
+                                Charges :<br />
+                                <input type="text" class="form-control" id="txtAmtCharge" />
+                            </td>
+                            <td style="width:15%">
+                                VAT :<br />
+                                <input type="text" class="form-control" id="txtAmtVAT" />
+                            </td>
+                            <td style="width:15%">
+                                W/T :<br />
+                                <input type="text" class="form-control" id="txtAmtWHT" />
+                            </td>
+                            <td style="width:20%">
+                                NET :<br />
+                                <input type="text" class="form-control" id="txtAmtNET" />
+                            </td>
+                            <td style="width:10%">
+                                <br />
+                                <input type="button" class="btn btn-default" value="Update" onclick="UpdateData()" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="dvCreate" class="modal modal-lg fade" role="dialog">
         <div class="modal-dialog-lg">
             <div class="modal-content">
@@ -139,7 +185,7 @@ End Code
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
-                            </table>
+                            </table>                            
                         </div>
                     </div>
                     <div class="row">
@@ -182,10 +228,12 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var arr = [];
-    var chq = [];
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    let arr = [];
+    let arr_split = {};
+    let arr_clr = [];
+    let chq = [];
     $(document).ready(function () {
         SetEvents();
         //Load params
@@ -371,6 +419,13 @@ End Code
                 ],
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
+        $('#tbDetail tbody').on('dblclick','tr', function () {
+            let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+            let ask = confirm('do you need to edit this row?');
+            if (ask == true) {
+                ShowEditor(data);
+            }
+        });
         let arr_cost = arr.filter(function (d) {
             return d.AmtCost > 0;
         });
@@ -393,6 +448,49 @@ End Code
             ],
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
+    }
+    function ShowEditor(dr) {
+        arr_split = dr;
+        $('#lblClrNo').text(dr.ClrNo);
+        $('#lblClrItemNo').text(dr.ClrItemNo);
+        $('#lblJobNo').text(dr.JobNo);
+        $('#lblSICode').text(dr.SICode);
+        $('#lblSDescription').text(dr.SDescription);
+        $('#txtAmtAdvance').val(dr.AmtAdvance);
+        $('#txtAmtCharge').val(dr.AmtCharge);
+        $('#txtAmtVAT').val(dr.AmtVat);
+        $('#txtAmtWHT').val(dr.Amt50Tavi);
+        $('#txtAmtNET').val(dr.AmtNet);
+
+        LoadClearDetail(dr);
+    }
+    function UpdateData() {
+        let arr_new = arr[arr.indexOf(arr_split)].slice();
+        let arr_org = arr[arr.indexOf(arr_split)];
+
+        arr_org.AmtAdvance -= Number($('#txtAmtAdvance').val());
+        arr_org.AmtCharge -= Number($('#txtAmtCharge').val());
+        arr_org.AmtVat -= Number($('#txtAmtVAT').val());
+        arr_org.Amt50Tavi -= Number($('#txtAmtWHT').val());
+
+        arr_new.ClrItemNo = 0;
+        arr_new.AmtAdvance = $('#txtAmtAdvance').val();
+        arr_new.AmtCharge = $('#txtAmtCharge').val();
+        arr_new.AmtVat = $('#txtAmtVAT').val();
+        arr_new.Amt50Tavi = $('#txtAmtWHT').val();
+
+        arr.push(arr_new);
+    }
+    function LoadClearDetail(dr) {
+        for (let r of dr) {
+            $.get(path + 'Clr/GetClrDetail?Branch=' + r.BranchCode + '&Code=' + r.ClrNo + '&Item=' + r.ClrItemNo, function (res) {
+                if (res.clr.detail.length > 0) {
+                    let row = res.clr.detail[0];
+                    arr_clr.push(row);
+                    $('#dvEditor').modal('show');
+                }
+            });           
+        }
     }
     function CalTotal() {
         let totalnet = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
@@ -667,6 +765,8 @@ End Code
     }
     function ResetData() {
         arr = [];
+        arr_split = {};
+        arr_clr = [];
         SetGridAdv(true);
     }
     function AddCheque() {
