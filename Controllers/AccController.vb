@@ -1135,6 +1135,7 @@ Namespace Controllers
                     Dim i As Integer = 0
                     Dim msg As String = ""
                     For Each dt In data
+                        'Invoice's Service+Advance
                         If dt.ItemNo > 0 Then
                             dt.SetConnect(jobWebConn)
                             Dim result = dt.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' AND ItemNo={2}", dt.BranchCode, dt.DocNo, dt.ItemNo))
@@ -1145,9 +1146,10 @@ Namespace Controllers
                                 msg &= i & " Error: " & result & "\n"
                             End If
                         Else
+                            'Invoice's Cost
                             Dim Sql = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}',LinkItem={1} ", dt.DocNo, dt.ItemNo)
-                            Sql &= String.Format(" WHERE ClrNo='{0}' And ItemNo={1}", dt.ClrNo, dt.ClrItemNo)
-                            msg &= "Update " & dt.ClrNo & "/" & dt.ClrItemNo & "=" & Main.DBExecute(jobWebConn, Sql) & "\n"
+                            Sql &= String.Format(" WHERE ClrNo+'/'+Convert(varchar,ItemNo) IN('{0}')", dt.ClrNoList.Replace(",", "','"))
+                            msg &= "Update " & dt.ClrNoList & "=" & Main.DBExecute(jobWebConn, Sql) & "\n"
                         End If
                     Next
                     Dim json = "{""result"":{""data"":""" & data(0).DocNo & """,""msg"":""" & msg & """}}"
@@ -1220,8 +1222,14 @@ Namespace Controllers
         End Function
         Function GetInvForBill() As ActionResult
             Try
-                Dim tSqlw As String = " AND ISNULL(a.BillAcceptNo,'')='' AND a.TotalNet>0 "
-
+                Dim tSqlw As String = " AND a.TotalNet>0 "
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString = "BILLED" Then
+                        tSqlw &= " AND ISNULL(a.BillAcceptNo,'')<>'' "
+                    End If
+                Else
+                    tSqlw &= " AND ISNULL(a.BillAcceptNo,'')='' "
+                End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND a.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
                 End If

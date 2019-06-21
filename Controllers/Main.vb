@@ -739,7 +739,7 @@ CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.UsedAmount ELSE 0 END as 
 0 as FAmtCredit,
 b.VATRate,
 c.CustCode,c.CustBranch,
-b.JobNo,b.ClrNo,b.ItemNo as ClrItemNo,
+b.JobNo,b.ClrNo,b.ItemNo as ClrItemNo,b.ClrNo+'/'+Convert(varchar,b.ItemNo) as ClrNoList,
 (CASE WHEN b.BPrice=0 THEN b.BNet ELSE 0 END) as AmtCost,
 (CASE WHEN b.BPrice=0 THEN 0 ELSE b.BNet END) as AmtNet
 from Job_ClearHeader a INNER JOIN Job_ClearDetail b

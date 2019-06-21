@@ -28,7 +28,7 @@ End Code
         var path = '@Url.Content("~")';
         var user = '@ViewBag.User';
         $('#btnShow').on('click', function () {
-            $.get(path + 'acc/getinvforbill?branch=' + $('#txtBranchCode').val(), function (r) {
+            $.get(path + 'acc/getinvforbill?show=ALL&branch=' + $('#txtBranchCode').val(), function (r) {
                 if (r.invdetail.data.length == 0) {
                     $('#tbHeader').DataTable().clear().draw();
                     if (isAlert==true) alert('data not found');

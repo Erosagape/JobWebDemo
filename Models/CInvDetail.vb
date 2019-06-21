@@ -21,25 +21,15 @@ Public Class CInvDetail
             m_BranchCode = value
         End Set
     End Property
-    Private m_ClrNo As String
-    Public Property ClrNo As String
+    Private m_ClrNoList As String
+    Public Property ClrNoList As String
         Get
-            Return m_ClrNo
+            Return m_ClrNoList
         End Get
         Set(value As String)
-            m_ClrNo = value
+            m_ClrNoList = value
         End Set
     End Property
-    Private m_ClrItemNo As Integer
-    Public Property ClrItemNo As Integer
-        Get
-            Return m_ClrItemNo
-        End Get
-        Set(value As Integer)
-            m_ClrItemNo = value
-        End Set
-    End Property
-
     Private m_DocNo As String
     Public Property DocNo As String
         Get
@@ -394,10 +384,10 @@ Public Class CInvDetail
             cm.CommandText = sql + " WHERE h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
-            If Me.ClrItemNo <> 0 And Me.ClrNo <> "" Then
+            If Me.ClrNoList <> "" Then
                 If Me.DocNo <> "" And Me.ItemNo <> 0 Then
                     sql = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}',LinkItem={1}", Me.DocNo, Me.ItemNo)
-                    sql &= String.Format(" WHERE ClrNo='{0}' And ItemNo={1}", Me.ClrNo, Me.ClrItemNo)
+                    sql &= String.Format(" WHERE ClrNo+'/'+Convert(varchar,ItemNo) IN('{0}')", Me.ClrNoList.Replace(",", "','"))
                     cm.CommandText = sql
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()

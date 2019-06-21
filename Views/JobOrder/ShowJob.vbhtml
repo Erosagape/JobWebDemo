@@ -1103,8 +1103,10 @@ End Code
         alert('This job already cancelled');
     }
     function CloseJob() {
-        if (rec.JobStatus < 3) {
-            rec.JobStatus = 3;
+        if ($('#txtCloseBy').val()=='') {
+            if (rec.JobStatus < 3) {
+                rec.JobStatus = 3;
+            }
             rec.CloseJobBy = user;
             rec.CloseJobTime = GetTime();
             ShowUser(path, rec.CloseJobBy, '#txtCloseBy');
