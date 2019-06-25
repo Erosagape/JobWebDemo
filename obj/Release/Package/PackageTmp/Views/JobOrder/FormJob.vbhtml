@@ -165,7 +165,8 @@ End Code
 <table id="tblFooter">
     <tr>
         <td colspan="2" width="60%" align="left" valign="top">
-            <b>NOTE:</b>
+            <b>NOTE:</b> <br/>
+            <label id="lblDescription"></label>
         </td>
         <td colspan="2" align="center" width="40%">
             <b>PREPARED BY:</b>
@@ -265,8 +266,9 @@ End Code
         $('#lblDeclareNo').text(j.DeclareNumber);
         $('#lblContact').text(j.CustContactName);
         $('#lblDutyAmt').text(j.DutyAmount);
-        $('#lblTaxPrivilege').text(j.Description);
+        $('#lblTaxPrivilege').text(j.TyClearTaxReson);
         $('#lblShippingCmd').text(j.ShippingCmd);
+        $('#lblDescription').text(j.Description);
         $('#divRemark').html('<b>REMARKS:</b>' + j.TRemark);
 
         var jt = j.JobType;

@@ -20,6 +20,9 @@ Namespace Controllers
         Function FileManager() As ActionResult
             Return GetView("FileManager", "MODULE_ADM")
         End Function
+        Function Role() As ActionResult
+            Return GetView("Role", "MODULE_ADM")
+        End Function
         Function GetSQLResult(<FromBody> data As CResult) As ActionResult
             Dim tSQL As String = data.Source
             Dim tConn As String = ""
@@ -193,6 +196,9 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format("AND ConfigCode IN('{0}')", Request.QueryString("Code").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("Prefix")) Then
+                    tSqlw &= String.Format("AND ConfigCode Like '{0}'", Request.QueryString("Prefix").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Key")) Then
                     tSqlw &= String.Format("AND ConfigKey='{0}'", Request.QueryString("Key").ToString)
                 End If
@@ -208,7 +214,7 @@ Namespace Controllers
             Try
                 Dim tSql As String = ""
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSql = String.Format(" WHERE [Code]='{0}'", Request.QueryString("Code").ToString())
+                    tSql = String.Format(" WHERE [Code]='{0}' ORDER BY [Code]", Request.QueryString("Code").ToString())
                 End If
                 Dim oData = New CBranch(jobWebConn).GetData(tSql)
                 Dim json As String = JsonConvert.SerializeObject(oData)
@@ -306,6 +312,7 @@ Namespace Controllers
                 Dim oData = New CUser(jobWebConn).GetData(tSqlw)
                 If chk = 2 And oData.Count > 0 Then
                     ViewBag.User = oData(0).UserID
+                    Session.Timeout = 30
                     Session("CurrUser") = ViewBag.User
                     Session("UserProfiles") = oData(0)
                 Else
@@ -419,6 +426,234 @@ Namespace Controllers
                 lst.Add(file.Name)
             Next
             Return lst
+        End Function
+        Function GetUserRole() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE RoleID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RoleID ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CUserRole(jobWebConn).GetData(tSqlw)
+                Dim oDetail = New CUserRoleDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                Dim jsonD As String = JsonConvert.SerializeObject(oDetail)
+                json = "{""userrole"":{""data"":" & json & ",""detail"":" + jsonD + "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetUserRolePolicy() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ModuleID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RoleID ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CUserRolePolicy(jobWebConn).GetData(tSqlw)
+                Dim oConfig = New CConfig(jobWebConn).GetData(" WHERE ConfigCode Like 'MODULE_%'")
+                Dim jsonD = "["
+                For Each oRow As CUserRolePolicy In oData
+                    Dim moduleCode = Mid(oRow.ModuleID, 1, oRow.ModuleID.IndexOf("/"))
+                    Dim moduleKey = Mid(oRow.ModuleID, oRow.ModuleID.IndexOf("/") + 2)
+                    Dim moduleName As String = (From conf In oConfig
+                                                Where conf.ConfigCode = moduleCode And conf.ConfigKey = moduleKey
+                                                Select conf.ConfigValue).FirstOrDefault()
+
+                    If jsonD <> "[" Then jsonD += ","
+                    jsonD += "{""RoleID"":""" & oRow.RoleID & """,""ModuleID"":""" & oRow.ModuleID & """,""Author"":""" & oRow.Author & """,""ModuleName"":""" & moduleName & """}"
+                Next
+                jsonD += "]"
+                Dim json As String = "{""userrole"":{""policy"":" & jsonD & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""userrole"":{""policy"":[],""message"":""" & ex.Message & """}}", jsonContent)
+            End Try
+
+        End Function
+        Function GetUserRolePolicyTest() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ModuleID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RoleID ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CUserRolePolicy(jobWebConn).GetData(tSqlw)
+                Dim json As String = "{""userrole"":{""policy"":" & JsonConvert.SerializeObject(oData) & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""userrole"":{""policy"":[],""message"":""" & ex.Message & """}}", jsonContent)
+            End Try
+
+        End Function
+
+        Function GetUserRoleDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE UserID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RoleID ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("ID")) Then
+                    tSqlw &= String.Format("AND UserID ='{0}' ", Request.QueryString("ID").ToString)
+                End If
+                Dim oData = New CUserRoleDetail(jobWebConn).GetData(tSqlw & " ORDER BY RoleID,UserID")
+                Dim jsonD = "["
+                Dim oUser = New CUser(jobWebConn).GetData(" ORDER BY UserID")
+                Dim oRole = New CUserRole(jobWebConn).GetData(" ORDER BY RoleID")
+                For Each oRow As CUserRoleDetail In oData
+                    If jsonD <> "[" Then jsonD += ","
+                    Dim userName As String = "" & oRow.UserID
+                    Dim roleDescr As String = "" & oRow.RoleID
+                    Try
+                        userName = (From user In oUser
+                                    Where user.UserID = oRow.UserID
+                                    Select user.TName).FirstOrDefault()
+                        roleDescr = (From role In oRole
+                                     Where role.RoleID = oRow.RoleID
+                                     Select role.RoleDesc).FirstOrDefault()
+                    Catch ex As Exception
+
+                    End Try
+                    jsonD += "{""RoleID"":""" & oRow.RoleID & """,""UserID"":""" & oRow.UserID & """,""UserName"":""" & userName & """,""RoleDesc"":""" & roleDescr & """}"
+                Next
+                jsonD += "]"
+                Dim json As String = "{""userrole"":{""detail"":" & jsonD & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""userrole"":{""msg"":" & ex.Message & "}}", jsonContent)
+            End Try
+        End Function
+        Function SetUserRole(<FromBody()> data As CUserRole) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.RoleID = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE roleId='{0}' ", data.RoleID))
+                    Dim json = "{""result"":{""data"":""" & data.RoleID & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function SetUserRoleDetail(<FromBody()> data As CUserRoleDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.RoleID = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Role""}}", jsonContent)
+                    End If
+                    If "" & data.UserID = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter User""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE roleId='{0}' AND userId='{1}' ", data.RoleID, data.UserID))
+                    Dim log = ""
+                    If msg.Substring(0, 1) = "S" Then
+                        log = Main.SetAuthorizeFromRole(data.UserID)
+                    End If
+                    Dim json = "{""result"":{""data"":""" & data.UserID & """,""msg"":""" & msg & """,""log"":""" + log + """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save"",""log"":null}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """,""log"":null}}"
+                Return Content(json, jsonContent)
+            End Try
+
+        End Function
+        Function SetUserRolePolicy(<FromBody()> data As CUserRolePolicy) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.RoleID = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Role""}}", jsonContent)
+                    End If
+                    If "" & data.ModuleID = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Module""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE RoleID='{0}' AND ModuleID='{1}' ", data.RoleID, data.ModuleID))
+                    Dim json = "{""result"":{""data"":""" & data.ModuleID & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+
+        Function DelUserRole() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE roleId<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND roleId Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""userrole"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CUserRole(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function DelUserRoleDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE RoleId<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RoleId Like '{0}' ", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""userrole"":{""result"":""Please Select Some Role"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("ID")) Then
+                    tSqlw &= String.Format("AND UserID Like '{0}' ", Request.QueryString("ID").ToString)
+                Else
+                    Return Content("{""userrole"":{""result"":""Please Select Some User"",""data"":[]}}", jsonContent)
+                End If
+
+                Dim oData As New CUserRoleDetail(jobWebConn)
+                oData.RoleID = Request.QueryString("Code").ToString()
+                oData.UserID = Request.QueryString("ID").ToString()
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function DelUserRolePolicy() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE RoleID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RoleID Like '{0}' ", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""userrole"":{""result"":""Please Select Some Role"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("ID")) Then
+                    tSqlw &= String.Format("AND ModuleID Like '{0}' ", Request.QueryString("ID").ToString)
+                Else
+                    Return Content("{""userrole"":{""result"":""Please Select Some Module"",""data"":[]}}", jsonContent)
+                End If
+
+                Dim oData As New CUserRolePolicy(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
         End Function
     End Class
 End Namespace

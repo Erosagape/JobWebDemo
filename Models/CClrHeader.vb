@@ -273,6 +273,51 @@ Public Class CClrHeader
             m_ClearTotal = value
         End Set
     End Property
+    Private m_ClearVat As Double
+    Public Property ClearVat As Double
+        Get
+            Return m_ClearVat
+        End Get
+        Set(value As Double)
+            m_ClearVat = value
+        End Set
+    End Property
+    Private m_ClearWht As Double
+    Public Property ClearWht As Double
+        Get
+            Return m_ClearWht
+        End Get
+        Set(value As Double)
+            m_ClearWht = value
+        End Set
+    End Property
+    Private m_ClearNet As Double
+    Public Property ClearNet As Double
+        Get
+            Return m_ClearNet
+        End Get
+        Set(value As Double)
+            m_ClearNet = value
+        End Set
+    End Property
+    Private m_ClearBill As Double
+    Public Property ClearBill As Double
+        Get
+            Return m_ClearBill
+        End Get
+        Set(value As Double)
+            m_ClearBill = value
+        End Set
+    End Property
+    Private m_ClearCost As Double
+    Public Property ClearCost As Double
+        Get
+            Return m_ClearCost
+        End Get
+        Set(value As Double)
+            m_ClearCost = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -314,8 +359,14 @@ Public Class CClrHeader
                             dr("CoPersonCode") = Me.CoPersonCode
                             dr("CTN_NO") = Me.CTN_NO
                             dr("ClearTotal") = Me.ClearTotal
+                            dr("ClearVat") = Me.ClearVat
+                            dr("ClearWht") = Me.ClearWht
+                            dr("ClearNet") = Me.ClearNet
+                            dr("ClearBill") = Me.ClearBill
+                            dr("ClearCost") = Me.ClearCost
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            UpdateTotal(cn)
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -430,6 +481,21 @@ Public Class CClrHeader
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ClearTotal"))) = False Then
                         row.ClearTotal = rd.GetDouble(rd.GetOrdinal("ClearTotal"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ClearNet"))) = False Then
+                        row.ClearNet = rd.GetDouble(rd.GetOrdinal("ClearNet"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ClearVat"))) = False Then
+                        row.ClearVat = rd.GetDouble(rd.GetOrdinal("ClearVat"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ClearWht"))) = False Then
+                        row.ClearWht = rd.GetDouble(rd.GetOrdinal("ClearWht"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ClearBill"))) = False Then
+                        row.ClearBill = rd.GetDouble(rd.GetOrdinal("ClearBill"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ClearCost"))) = False Then
+                        row.ClearCost = rd.GetDouble(rd.GetOrdinal("ClearCost"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -442,13 +508,14 @@ Public Class CClrHeader
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
+                UpdateTotal(cn)
 
                 Using cm As New SqlCommand("DELETE FROM Job_ClearHeader" + pSQLWhere, cn)
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message
@@ -456,4 +523,17 @@ Public Class CClrHeader
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = Main.SQLUpdateClearHeader
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " WHERE a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+
+            sql = Main.SQLUpdateAdvStatus
+            cm.CommandText = sql + " WHERE adv.BranchCode='" + Me.BranchCode + "' and adv.AdvNo IN(SELECT AdvNO FROM Job_ClearDetail WHERE BranchCode='" + Me.BranchCode + "' AND ClrNo='" + Me.ClrNo + "' AND AdvNo IS NOT NULL)"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+    End Sub
 End Class

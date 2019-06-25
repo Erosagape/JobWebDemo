@@ -1,10 +1,10 @@
 ﻿//Function for loading combo / drop down selector
 function loadCombos(path, params) {
-    var arr = params.split(',');
-    var qry = '';
-    var ctls = '';
-    for (var i = 0; i < arr.length; i++) {
-        var obj = arr[i].split('=');
+    let arr = params.split(',');
+    let qry = '';
+    let ctls = '';
+    for (let i = 0; i < arr.length; i++) {
+        let obj = arr[i].split('=');
         if (qry != '') qry += ',';
         if (ctls != '') ctls += ',';
         qry += obj[0];
@@ -13,17 +13,23 @@ function loadCombos(path, params) {
     loadConfigMultiple(path, qry, ctls);
 }
 function loadConfigMultiple(path, list, controls) {
-    var query = list.split(",").join("','");
+    let query = list.split(",").join("','");
     $.get(path + 'Config/getConfig?Code=' + query).done(function (r) {
-        var arr = r.config.data;
-        var ctl = controls.split(',');
-        var cfg = list.split(',');
+        let arr = r.config.data;
+        let ctl = controls.split(',');
+        let cfg = list.split(',');
         if (arr.length > 0) {
-            for (var i = 0; i < cfg.length; i++) {
-                var dr = $.grep(arr, function (data) {
+            for (let i = 0; i < cfg.length; i++) {
+                let dr = $.grep(arr, function (data) {
                     return data.ConfigCode === cfg[i];
                 });
-                loadComboArray(ctl[i], dr, '');
+                let d = '';
+                let o = ctl[i];
+                if (o.indexOf('|') > 0) {
+                    d = o.substr(o.indexOf('|') + 1);
+                    o = o.substr(0, o.indexOf('|'));
+                }
+                loadComboArray(o, dr, d);
             }
         }
     });
@@ -33,7 +39,7 @@ function loadComboArray(e, dr, def) {
     $(e).append($('<option>', { value: '' })
         .text('N/A'));
     if (dr.length > 0) {
-        for (var i = 0; i < dr.length; i++) {
+        for (let i = 0; i < dr.length; i++) {
             $(e).append($('<option>', { value: dr[i].ConfigKey.trim() })
                 .text(dr[i].ConfigKey.trim() + ' / ' + dr[i].ConfigValue.trim()));
         }
@@ -45,9 +51,9 @@ function loadConfig(e, code, path, def) {
     $(e).append($('<option>', { value: '' })
         .text('N/A'));
     $.get(path +'Config/getConfig?Code=' + code).done(function (r) {
-        var dr = r.config.data;
+        let dr = r.config.data;
         if (dr.length > 0) {
-            for (var i = 0; i < dr.length; i++) {
+            for (let i = 0; i < dr.length; i++) {
                     $(e).append($('<option>', { value: dr[i].ConfigKey.trim() })
                         .text(dr[i].ConfigKey.trim() + ' / ' + dr[i].ConfigValue.trim()));
             }
@@ -57,14 +63,14 @@ function loadConfig(e, code, path, def) {
 }
 function loadBank(cb, path) {
     $.get(path + 'Master/GetBank').done(function (r) {
-        var dr = r.bank.data;
-        for (var j = 0; j < cb.length; j++) {
-            var e = cb[j];
+        let dr = r.bank.data;
+        for (let j = 0; j < cb.length; j++) {
+            let e = cb[j];
             $(e).empty();
             $(e).append($('<option>', { value: '' })
                 .text('N/A'));
             if (dr.length > 0) {
-                for (var i = 0; i < dr.length; i++) {
+                for (let i = 0; i < dr.length; i++) {
                     $(e).append($('<option>', { value: dr[i].Code.trim() })
                         .text(dr[i].BName.trim()));
                 }
@@ -75,9 +81,9 @@ function loadBank(cb, path) {
 function loadBranch(path) {
     $('#cboBranch').empty();
     $.get(path + 'Config/getBranch').done(function (r) {
-        var dr = r.branch.data;
+        let dr = r.branch.data;
         if (dr.length > 0) {
-            for (var i = 0; i < dr.length; i++) {
+            for (let i = 0; i < dr.length; i++) {
                 $('#cboBranch')
                     .append($('<option>', { value: dr[i].Code })
                         .text(dr[i].Code + ' / ' + dr[i].BrName));
@@ -85,12 +91,19 @@ function loadBranch(path) {
         }
     });
 }
-function loadServiceGroup(path,e) {
+function loadServiceGroup(path,e,foradv) {
     $(e).empty();
+    if (foradv !== undefined) {
+        if (foradv == true) {
+            $(e)
+                .append($('<option>', { value: "" })
+                    .text("N/A"));
+        }
+    }
     $.get(path + 'Master/GetServiceGroup').done(function (r) {
-        var dr = r.servicegroup.data;
+        let dr = r.servicegroup.data;
         if (dr.length > 0) {
-            for (var i = 0; i < dr.length; i++) {
+            for (let i = 0; i < dr.length; i++) {
                 $(e)
                     .append($('<option>', { value: dr[i].GroupCode })
                         .text(dr[i].GroupCode + ' / ' + dr[i].GroupName));
@@ -102,7 +115,7 @@ function loadMonth(e) {
     $(e).empty();
     $(e).append($('<option>', { value: '' })
         .text('ALL'));
-    for (var i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 12; i++) {
         $(e)
             .append($('<option>', { value: i })
                 .text(i.toString()));
@@ -120,9 +133,9 @@ function loadYear(path) {
     $('#cboYear').append($('<option>', { value: '' })
         .text('ALL'));
     $.get(path +'joborder/getjobyear').done(function (r) {
-        var dr = r[0].Table;
+        let dr = r[0].Table;
         if (dr.length > 0) {
-            for (var i = 0; i < dr.length; i++) {
+            for (let i = 0; i < dr.length; i++) {
                 $('#cboYear')
                     .append($('<option>', { value: dr[i].JobYear })
                         .text(dr[i].JobYear));
@@ -137,7 +150,7 @@ function ShowInvNo(path, Branch, Code, ControlID) {
         $.get(path + 'JobOrder/GetJobSql?Branch=' + Branch + '&JNo=' + Code)
             .done(function (r) {
                 if (r.job.data.length > 0) {
-                    var c = r.job.data[0];
+                    let c = r.job.data[0];
                     $(ControlID).val(c.InvNo);
                 }
             });
@@ -149,7 +162,7 @@ function ShowCustomer(path, Code, Branch, ControlID) {
         $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
             .done(function (r) {
                 if (r.company.data.length > 0) {
-                    var c = r.company.data[0];
+                    let c = r.company.data[0];
                     $(ControlID).val(c.NameThai);
                 }
             });
@@ -170,7 +183,7 @@ function ShowCustomerFull(path, Code, Branch, CustNameID,NameThaiID,NameEngID,Ph
         $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
             .done(function (r) {
                 if (r.company.data.length > 0) {
-                    var c = r.company.data[0];
+                    let c = r.company.data[0];
                     if (PhoneFaxID == '') {
                         $(CustNameID).val(c.NameThai);
                         $(NameEngID).val((c.EAddress1 + ' ' + c.EAddress2).trim());
@@ -191,7 +204,7 @@ function ShowUser(path ,UserID, ControlID) {
         $.get(path + 'Master/GetUser?Code=' + UserID)
             .done(function (r) {
                 if (r.user.data.length > 0) {
-                    var b = r.user.data[0];
+                    let b = r.user.data[0];
                     $(ControlID).val(b.TName);
                 }
             });
@@ -202,7 +215,7 @@ function ShowCurrency(path, Code, ControlID) {
     $.get(path + 'Master/GetCurrency?Code=' + Code)
         .done(function (r) {
             if (r.currency.data.length > 0) {
-                var b = r.currency.data[0];
+                let b = r.currency.data[0];
                 $(ControlID).val(b.TName);
             }
         });
@@ -212,7 +225,7 @@ function ShowBank(path, Code, ControlID) {
     $.get(path + 'Master/GetBank?Code=' + Code)
         .done(function (r) {
             if (r.bank.data.length > 0) {
-                var b = r.bank.data[0];
+                let b = r.bank.data[0];
                 $(ControlID).val(b.BName);
             }
         });
@@ -222,7 +235,7 @@ function ShowBookAccount(path, Code, ControlID) {
     $.get(path + 'Master/GetBookAccount?Code=' + Code)
         .done(function (r) {
             if (r.bookaccount.data.length > 0) {
-                var b = r.bookaccount.data[0];
+                let b = r.bookaccount.data[0];
                 $(ControlID).val(b.BookName);
             }
         });
@@ -232,7 +245,7 @@ function ShowBranch(path, Branch, ControlID) {
     $.get(path + 'Config/GetBranch?Code=' + Branch)
         .done(function (r) {
             if (r.branch.data.length > 0) {
-                var b = r.branch.data[0];
+                let b = r.branch.data[0];
                 $(ControlID).val(b.BrName);
             }
         });
@@ -243,7 +256,7 @@ function ShowVender(path, VenderID, ControlID) {
         $.get(path + 'Master/GetVender?Code=' + VenderID)
             .done(function (r) {
                 if (r.vender.data.length > 0) {
-                    var b = r.vender.data[0];
+                    let b = r.vender.data[0];
                     $(ControlID).val(b.TName);
                 }
             });
@@ -255,7 +268,7 @@ function ShowCountry(path, CountryID, ControlID) {
         $.get(path + 'Master/GetCountry?Code=' + CountryID)
             .done(function (r) {
                 if (r.country.data.length > 0) {
-                    var b = r.country.data[0];
+                    let b = r.country.data[0];
                     $(ControlID).val(b.CTYName);
                 }
             });
@@ -266,7 +279,7 @@ function ShowInterPort(path, CountryID, PortCode, ControlID) {
     $.get(path + 'Master/GetInterPort?Code=' + PortCode + '&Key=' + CountryID)
         .done(function (r) {
             if (r.interport.data.length > 0) {
-                var b = r.interport.data[0];
+                let b = r.interport.data[0];
                 $(ControlID).val(b.PortName);
             }
         });
@@ -276,7 +289,7 @@ function ShowDeclareType(path, Code, ControlID) {
     $.get(path + 'Master/GetDeclareType?Code=' + Code)
         .done(function (r) {
             if (r.RFDCT.data.length > 0) {
-                var b = r.RFDCT.data[0];
+                let b = r.RFDCT.data[0];
                 $(ControlID).val(b.Description);
             }
         });
@@ -286,7 +299,7 @@ function ShowReleasePort(path, Code, ControlID) {
     $.get(path + 'Master/GetCustomsPort?Code=' + Code)
         .done(function (r) {
             if (r.RFARS.data.length > 0) {
-                var b = r.RFARS.data[0];
+                let b = r.RFARS.data[0];
                 $(ControlID).val(b.AreaName);
             }
         });
@@ -296,7 +309,7 @@ function ShowServiceCode(path, Code, ControlID) {
     $.get(path + 'master/getservicecode?code=' + Code)
         .done(function (r) {
             if (r.servicecode.data.length > 0) {
-                var b = r.servicecode.data[0];
+                let b = r.servicecode.data[0];
                 $(ControlID).val(b.NameThai);
             }
         });
@@ -305,7 +318,7 @@ function GetServiceCode(path, Code, ev) {
     $.get(path + 'master/getservicecode?code=' + Code)
         .done(function (r) {
             if (r.servicecode.data.length > 0) {
-                var b = r.servicecode.data[0];
+                let b = r.servicecode.data[0];
                 ev(b);
             }
         });
@@ -317,14 +330,14 @@ function ShowJobTypeShipBy(path, jt, sb, js ,ControlJT,ControlSB,ControlST) {
     if (sb < 10) sb = '0' + sb;
     $.get(path + 'Config/GetConfig?Code=JOB_TYPE&Key=' + jt)
         .done(function (r) {
-            var b = r.config.data;
+            let b = r.config.data;
             if (b.length > 0) {
                 $(ControlJT).val(b[0].ConfigValue);
             }
         });
     $.get(path + 'Config/GetConfig?Code=SHIP_BY&Key=' + sb)
         .done(function (r) {
-            var b = r.config.data;
+            let b = r.config.data;
             if (b.length > 0) {
                 $(ControlSB).val(b[0].ConfigValue);
             }
@@ -334,7 +347,7 @@ function ShowJobTypeShipBy(path, jt, sb, js ,ControlJT,ControlSB,ControlST) {
         if (js < 10) js = '0' + js;
         $.get(path + 'Config/GetConfig?Code=JOB_STATUS&Key=' + js)
             .done(function (r) {
-                var b = r.config.data;
+                let b = r.config.data;
                 if (b.length > 0) {
                     $(ControlST).val(b[0].ConfigValue);
                 }

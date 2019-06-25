@@ -84,12 +84,12 @@ Public Class CClrDetail
             m_VenderCode = value
         End Set
     End Property
-    Private m_Qty As Date
-    Public Property Qty As Date
+    Private m_Qty As Double
+    Public Property Qty As Double
         Get
             Return m_Qty
         End Get
-        Set(value As Date)
+        Set(value As Double)
             m_Qty = value
         End Set
     End Property
@@ -399,6 +399,33 @@ Public Class CClrDetail
             m_Tax50TaviRate = value
         End Set
     End Property
+    Private m_QNo As String
+    Public Property QNo As String
+        Get
+            Return m_QNo
+        End Get
+        Set(value As String)
+            m_QNo = value
+        End Set
+    End Property
+    Private m_FNet As Double
+    Public Property FNet As Double
+        Get
+            Return m_FNet
+        End Get
+        Set(value As Double)
+            m_FNet = value
+        End Set
+    End Property
+    Private m_BNet As Double
+    Public Property BNet As Double
+        Get
+            Return m_BNet
+        End Get
+        Set(value As Double)
+            m_BNet = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -420,7 +447,7 @@ Public Class CClrDetail
                             dr("SICode") = Me.SICode
                             dr("SDescription") = Me.SDescription
                             dr("VenderCode") = Me.VenderCode
-                            dr("Qty") = Main.GetDBDate(Me.Qty)
+                            dr("Qty") = Me.Qty
                             dr("UnitCode") = Me.UnitCode
                             dr("CurrencyCode") = Me.CurrencyCode
                             dr("CurRate") = Me.CurRate
@@ -455,8 +482,13 @@ Public Class CClrDetail
                             dr("VATType") = Me.VATType
                             dr("VATRate") = Me.VATRate
                             dr("Tax50TaviRate") = Me.Tax50TaviRate
+                            dr("QNo") = Me.QNo
+                            dr("FNet") = Me.FNet
+                            dr("BNet") = Me.BNet
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -609,6 +641,15 @@ Public Class CClrDetail
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Tax50TaviRate"))) = False Then
                         row.Tax50TaviRate = rd.GetDouble(rd.GetOrdinal("Tax50TaviRate"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("QNo"))) = False Then
+                        row.QNo = rd.GetString(rd.GetOrdinal("QNo")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("FNet"))) = False Then
+                        row.FNet = rd.GetDouble(rd.GetOrdinal("FNet"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("BNet"))) = False Then
+                        row.BNet = rd.GetDouble(rd.GetOrdinal("BNet"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -626,8 +667,11 @@ Public Class CClrDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    If Me.ClrNo <> "" Then
+                        UpdateTotal(cn)
+                    End If
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message
@@ -635,4 +679,20 @@ Public Class CClrDetail
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = SQLUpdateClearHeader()
+
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " WHERE a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+
+            If Me.AdvNO <> "" Then
+                sql = SQLUpdateAdvStatus()
+                cm.CommandText = sql + " WHERE adv.BranchCode='" + Me.BranchCode + "' and adv.AdvNo='" + Me.AdvNO + "'"
+                cm.CommandType = CommandType.Text
+                cm.ExecuteNonQuery()
+            End If
+        End Using
+    End Sub
 End Class

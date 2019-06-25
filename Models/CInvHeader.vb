@@ -21,6 +21,15 @@ Public Class CInvHeader
             m_BranchCode = value
         End Set
     End Property
+    Private m_DocType As String
+    Public Property DocType As String
+        Get
+            Return m_DocType
+        End Get
+        Set(value As String)
+            m_DocType = value
+        End Set
+    End Property
     Private m_DocNo As String
     Public Property DocNo As String
         Get
@@ -408,6 +417,33 @@ Public Class CInvHeader
             m_ShippingRemark = value
         End Set
     End Property
+    Private m_SumDiscount As Double
+    Public Property SumDiscount As Double
+        Get
+            Return m_SumDiscount
+        End Get
+        Set(value As Double)
+            m_SumDiscount = value
+        End Set
+    End Property
+    Private m_DiscountRate As Double
+    Public Property DiscountRate As Double
+        Get
+            Return m_DiscountRate
+        End Get
+        Set(value As Double)
+            m_DiscountRate = value
+        End Set
+    End Property
+    Private m_DiscountCal As Double
+    Public Property DiscountCal As Double
+        Get
+            Return m_DiscountCal
+        End Get
+        Set(value As Double)
+            m_DiscountCal = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -464,8 +500,15 @@ Public Class CInvHeader
                             dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
                             dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
                             dr("ShippingRemark") = Me.ShippingRemark
+                            dr("SumDiscount") = Me.SumDiscount
+                            dr("DiscountRate") = Me.DiscountRate
+                            dr("DiscountCal") = Me.DiscountCal
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            If Me.CancelProve <> "" Then
+                                CancelData(cn)
+                            End If
+
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -476,8 +519,13 @@ Public Class CInvHeader
         End Using
         Return msg
     End Function
-    Public Sub AddNew()
-
+    Public Sub AddNew(pFormatSQL As String)
+        If pFormatSQL = "" Then
+            m_DocNo = ""
+        Else
+            Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(DocNo) as t FROM Job_InvoiceHeader WHERE BranchCode='{0}' And DocNo Like '%{1}' ", m_BranchCode, pFormatSQL), pFormatSQL)
+            m_DocNo = retStr
+        End If
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CInvHeader)
         Dim lst As New List(Of CInvHeader)
@@ -620,12 +668,43 @@ Public Class CInvHeader
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ShippingRemark"))) = False Then
                         row.ShippingRemark = rd.GetString(rd.GetOrdinal("ShippingRemark")).ToString()
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("SumDiscount"))) = False Then
+                        row.SumDiscount = rd.GetDouble(rd.GetOrdinal("SumDiscount"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DiscountRate"))) = False Then
+                        row.DiscountRate = rd.GetDouble(rd.GetOrdinal("DiscountRate"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DiscountCal"))) = False Then
+                        row.DiscountCal = rd.GetDouble(rd.GetOrdinal("DiscountCal"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
             End Try
         End Using
         Return lst
+    End Function
+    Public Function CancelData(cn As SqlConnection) As String
+        Dim msg As String = ""
+        Try
+            Using cm As New SqlCommand()
+                cm.Connection = cn
+                cm.CommandTimeout = 0
+                If Me.DocNo <> "" Then
+                    Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo=null,LinkItem=0"
+                    Sql &= String.Format(" WHERE BranchCode ='{0}' AND LinkBillNo='{1}' ", Me.BranchCode, Me.DocNo)
+
+                    cm.CommandText = Sql
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End If
+            End Using
+
+            msg = "Cancel Complete"
+        Catch ex As Exception
+            msg = ex.Message
+        End Try
+        Return msg
     End Function
     Public Function DeleteData(pSQLWhere As String) As String
         Dim msg As String = ""
@@ -638,8 +717,11 @@ Public Class CInvHeader
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
-                msg = "Delete Complete"
+                If Me.DocNo <> "" Then
+                    msg = CancelData(cn)
+                Else
+                    msg = "Delete Complete"
+                End If
             Catch ex As Exception
                 msg = ex.Message
             End Try

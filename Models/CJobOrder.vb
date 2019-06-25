@@ -875,6 +875,33 @@ Public Class CJobOrder
             m_privilegests = value
         End Set
     End Property
+    Private m_DeliveryNo As String
+    Public Property DeliveryNo As String
+        Get
+            Return m_DeliveryNo
+        End Get
+        Set(value As String)
+            m_DeliveryNo = value
+        End Set
+    End Property
+    Private m_DeliveryTo As String
+    Public Property DeliveryTo As String
+        Get
+            Return m_DeliveryTo
+        End Get
+        Set(value As String)
+            m_DeliveryTo = value
+        End Set
+    End Property
+    Private m_DeliveryAddr As String
+    Public Property DeliveryAddr As String
+        Get
+            Return m_DeliveryAddr
+        End Get
+        Set(value As String)
+            m_DeliveryAddr = value
+        End Set
+    End Property
     Public Sub AddNew(pFormatSQL As String, Optional pClearAll As Boolean = True)
         If pFormatSQL = "" Then
             m_JNo = ""
@@ -1036,7 +1063,9 @@ Public Class CJobOrder
                                 dr("MAWB") = Me.MAWB
                                 dr("consigneecode") = Me.consigneecode
                                 dr("privilegests") = Me.privilegests
-
+                                dr("DeliveryTo") = Me.deliveryTo
+                                dr("DeliveryNo") = Me.deliveryNo
+                                dr("DeliveryAddr") = Me.deliveryAddr
                                 pass = "11"
                             Catch ex As Exception
                                 msg = "[exception]:" & ex.Message
@@ -1047,7 +1076,7 @@ Public Class CJobOrder
                             msg = "Save " & Me.JNo & " Complete"
                         End Using
                     End Using
-                    cn.Close()
+
                 End Using
             Catch e As Exception
                 msg = "[error" & pass & "]" & e.Message
@@ -1351,6 +1380,15 @@ Public Class CJobOrder
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("privilegests"))) = False Then
                         row.privilegests = rd.GetString(rd.GetOrdinal("privilegests")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DeliveryNo"))) = False Then
+                        row.DeliveryNo = rd.GetString(rd.GetOrdinal("DeliveryNo")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DeliveryTo"))) = False Then
+                        row.DeliveryTo = rd.GetString(rd.GetOrdinal("DeliveryTo")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DeliveryAddr"))) = False Then
+                        row.DeliveryAddr = rd.GetString(rd.GetOrdinal("DeliveryAddr")).ToString()
                     End If
                     lst.Add(row)
                 End While

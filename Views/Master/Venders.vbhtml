@@ -57,9 +57,9 @@ End Code
                 <br />Sales : <input type="text" id="txtContactSale" Class="form-control" tabIndex="14">
             </div>
             <div class="col-sm-6">
-                Customer Service :<br /><input type="text" id="txtContactSupport1" Class="form-control" tabIndex="15">
-                <br /><input type="text" id="txtContactSupport2" Class="form-control" tabIndex="16">
-                <br /><input type="text" id="txtContactSupport3" Class="form-control" tabIndex="17">
+                Customer Service :<br />IMPORT : <input type="text" id="txtContactSupport1" Class="form-control" tabIndex="15">
+                <br />EXPORT :<input type="text" id="txtContactSupport2" Class="form-control" tabIndex="16">
+                <br />DOMESTIC :<input type="text" id="txtContactSupport3" Class="form-control" tabIndex="17">
             </div>
         </div>
         <input type="hidden" id="txtLoginName">
@@ -72,16 +72,16 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var row = {};
-    $(document).ready(function () {
+    const path = '@Url.Content("~")';
+    let row = {};
+    //$(document).ready(function () {
         SetEvents();
         SetLOVs();
         SetEnterToTab();
         ClearData();
-    });
+    //});
     function GetDataSave() {
-        var dr = {
+        let dr = {
             VenCode: $('#txtVenCode').val().trim(),
             BranchCode: $('#txtBranchCode').val(),
             TaxNumber: $('#txtTaxNumber').val(),
@@ -132,8 +132,8 @@ End Code
         $('#txtVenCode').focus();
     }
     function DeleteData() {
-        var code = $('#txtVenCode').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
+        let code = $('#txtVenCode').val();
+        let ask = confirm("Do you need to Delete " + code + "?");
         if (ask == false) return;
 
         $.get(path + 'master/delvender?code=' + code, function (r) {
@@ -142,39 +142,35 @@ End Code
         });
     }
     function SaveData() {
-        if (row.VenCode != undefined) {
-            var obj = GetDataSave();
-            if (obj.VenCode == '') {
-                alert('Please enter vender code');
-                return;
-            }
-            if (obj.TName == '') {
-                alert('Please enter vender name');
-                return;
-            }
-            var ask = confirm("Do you need to " + (row.VenCode == "" ? "Add" : "Save") + " this data?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetVender", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data!=null) {
-                        $('#txtVenCode').val(response.result.data);
-                        $('#txtVenCode').focus();
-                    }
-                    alert(response.result.msg);
-                },
-                error: function (e) {
-                    alert(e);
-                }
-            });
-        } else {
-            alert('No data to save');
+        let obj = GetDataSave();
+        if (obj.VenCode == '') {
+            alert('Please enter vender code');
+            return;
         }
+        if (obj.TName == '') {
+            alert('Please enter vender name');
+            return;
+        }
+        let ask = confirm("Do you need to " + (obj.VenCode == "" ? "Add" : "Save") + " this data?");
+        if (ask == false) return;
+        let jsonText = JSON.stringify({ data: obj });
+        //alert(jsonText);
+        $.ajax({
+            url: "@Url.Action("SetVender", "Master")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data!=null) {
+                    $('#txtVenCode').val(response.result.data);
+                    $('#txtVenCode').focus();
+                }
+                alert(response.result.msg);
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });        
     }
     function ReadVender(dr) {
         if (dr.VenCode != undefined) {
@@ -223,7 +219,7 @@ End Code
     function SetEvents() {
         $('#txtVenCode').keydown(function (event) {
             if (event.which == 13) {
-                var code = $('#txtVenCode').val();
+                let code = $('#txtVenCode').val();
                 ClearData();
                 $('#txtVenCode').val(code);
                 CallBackQueryVender(path, code, ReadVender);
@@ -233,7 +229,7 @@ End Code
     function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var dv = document.getElementById("dvLOVs");
+            let dv = document.getElementById("dvLOVs");
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
         });
     }
@@ -243,8 +239,8 @@ End Code
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var idx = (this.tabIndex + 1);
-                    var nextElement = $('[tabindex="' + idx + '"]');
+                    let idx = (this.tabIndex + 1);
+                    let nextElement = $('[tabindex="' + idx + '"]');
                     while (nextElement.length) {
                         if (nextElement.prop('disabled') == false) {
                             $('[tabindex="' + idx + '"]').focus();

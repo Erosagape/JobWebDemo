@@ -237,6 +237,15 @@ Public Class CUser
             m_AlertPolicy = value
         End Set
     End Property
+    Private m_DeptID As String
+    Public Property DeptID As String
+        Get
+            Return m_DeptID
+        End Get
+        Set(value As String)
+            m_DeptID = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -274,6 +283,7 @@ Public Class CUser
                             stepFld = 23 : dr("DMailPassword") = Me.DMailPassword
                             stepFld = 24 : dr("JobPolicy") = Me.JobPolicy
                             stepFld = 25 : dr("AlertPolicy") = Me.AlertPolicy
+                            stepFld = 26 : dr("DeptID") = Me.DeptID
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = String.Format("Save user {0} Complete", Me.UserID)
@@ -312,6 +322,7 @@ Public Class CUser
         m_DMailPassword = ""
         m_JobPolicy = ""
         m_AlertPolicy = ""
+        m_DeptID = ""
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CUser)
         Dim lst As New List(Of CUser)
@@ -397,6 +408,9 @@ Public Class CUser
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AlertPolicy"))) = False Then
                         row.AlertPolicy = rd.GetString(rd.GetOrdinal("AlertPolicy")).ToString()
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DeptID"))) = False Then
+                        row.DeptID = rd.GetString(rd.GetOrdinal("DeptID")).ToString()
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -415,7 +429,7 @@ Public Class CUser
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message

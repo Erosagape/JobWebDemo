@@ -154,81 +154,42 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    //define variables
-    var path = '@Url.Content("~")';
-    $(document).ready(function () {
+    //define letiables
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    //$(document).ready(function () {
         CheckParam();
         SetLOVs();
         SetEvents();
         SetEnterToTab();
-    });
-    function SetEnterToTab() {
-        //Set enter to tab
-        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
-            $(this).on("keypress", function (e) {
-                if (e.keyCode === 13) {
-                    var idx = (this.tabIndex + 1);
-                    var nextElement = $('[tabindex="' + idx + '"]');
-                    while (nextElement.length) {
-                        if (nextElement.prop('disabled') == false) {
-                            $('[tabindex="' + idx + '"]').focus();
-                            e.preventDefault();
-                            return;
-                        } else {
-                            idx = idx + 1;
-                            nextElement = $('[tabindex="' + idx + '"]');
-                        }
-                    }
-                    $('[tabindex="1"]').focus();
-                }
-            });
-        });
-        $('#txtBranchCode').focus();
-    }
-    function SetEvents() {
-        $('#txtBranchCode').keydown(function (event) {
-            if (event.which == 13) {
-                ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
-            }
-        });
-        $('#txtCSCode').keydown(function (event) {
-            if (event.which == 13) {
-                ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
-            }
-        });
-        $('#txtCustBranch').keydown(function (event) {
-            if (event.which == 13) {
-                ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
-            }
-        });
-        $('#txtConsignee').keydown(function (event) {
-            if (event.which == 13) {
-                ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
-            }
-        });
-    }
+    //});
     function CheckParam() {
         //read query string parameters
-        var br = getQueryString('Branch');
-        var jt = getQueryString('JType');
-        var sb = getQueryString('SBy');
-        if (br != null) {
+        let br = getQueryString('Branch');
+        let jt = getQueryString('JType');
+        let sb = getQueryString('SBy');        
+        if (br !== "") {
             $('#txtBranchCode').val(br);
-            ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
+            ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
         }
-        if (jt == null) jt = "01";
-        if (sb == null) sb = "01";
+        if (jt == "") jt = "01";
+        if (sb == "") sb = "01";
         //Combos
-        var lists = 'JOB_TYPE=#cboJobType,SHIP_BY=#cboShipBy';
+        let lists = 'JOB_TYPE=#cboJobType|'+jt+',SHIP_BY=#cboShipBy|' +sb;
         loadCombos(path, lists);
 
         $('#cboJobType').val(jt);
         $('#cboShipBy').val(sb);
+        $('#txtCSCode').val(user);
+        ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
     }
     function SetLOVs() {
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var dv = document.getElementById("dvLOVs");
+            let dv = document.getElementById("dvLOVs");
             //Customers            
             CreateLOV(dv,'#frmSearchCust','#tbCust','Customers',response,3);
             //Consignee
@@ -245,6 +206,43 @@ End Code
             CreateLOV(dv,'#frmSearchContact','#tbContact','Contact Person',response,1);
         });
     }
+    function SetEvents() {
+        $('#txtBranchCode').focusout(function () {
+            ShowBranch(path,$('#txtBranchCode').val(), '#txtBranchName');
+        });
+        $('#txtCSCode').focusout(function () {
+            ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
+        });
+        $('#txtCustBranch').focusout(function () {
+            ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
+        });
+        $('#txtConsignee').focusout(function () {
+            ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
+        });
+    }
+    function SetEnterToTab() {
+        //Set enter to tab
+        $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
+            $(this).on("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    let idx = (this.tabIndex + 1);
+                    let nextElement = $('[tabindex="' + idx + '"]');
+                    while (nextElement.length) {
+                        if (nextElement.prop('disabled') == false) {
+                            $('[tabindex="' + idx + '"]').focus();
+                            e.preventDefault();
+                            return;
+                        } else {
+                            idx = idx + 1;
+                            nextElement = $('[tabindex="' + idx + '"]');
+                        }
+                    }
+                    $('[tabindex="1"]').focus();
+                }
+            });
+        });
+        $('#txtBranchCode').focus();
+    }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
@@ -258,7 +256,9 @@ End Code
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
-        ShowCustomer(path,dt.CustCode, dt.Branch, '#txtCustName');
+        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+        $('#txtConsignee').val(dt.CustCode);
+        ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
         $('#txtCustCode').focus();
     }
     function ReadConsignee(dt) {
@@ -297,7 +297,7 @@ End Code
         }
     }
     function GetParam() {
-        var strParam = '?';
+        let strParam = '?';
         strParam += 'Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
@@ -305,7 +305,7 @@ End Code
         return strParam;
     }
     function CreateJob() {
-        if ($('#txtBranchCode').val() === '') {
+        if ($('#txtBranchName').val() === '') {
             alert('Please select branch before create job');
             $('#txtBranchCode').focus();
             return;
@@ -320,12 +320,12 @@ End Code
             $('#cboShipBy').focus();
             return;
         }
-        if ($('#txtCSCode').val() === '') {
+        if ($('#txtCSName').val() === '') {
             alert('Please select CS before create job');
             $('#txtCSCode').focus();
             return;
         }
-        if ($('#txtCustCode').val() === '') {
+        if ($('#txtCustName').val() === '') {
             alert('Please select customer before create job');
             $('#txtCustCode').focus();
             return;
@@ -336,7 +336,7 @@ End Code
             return;
         }
         //if pass every checked
-        var strParam = path + 'JobOrder/GetNewJob?';
+        let strParam = path + 'JobOrder/GetNewJob?';
         strParam += 'Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0,2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
@@ -352,7 +352,7 @@ End Code
                     return;
                 }
                 if (r.job.status == "Y") {
-                    var data = r.job.data;
+                    let data = r.job.data;
 
                     data.CustCode = $('#txtCustCode').val();
                     data.CustBranch = $('#txtCustBranch').val();
@@ -379,7 +379,7 @@ End Code
         window.location.href='ShowJob?BranchCode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val();
     }
     function PostData(obj) {
-        var jsonString = JSON.stringify({ data: obj });
+        let jsonString = JSON.stringify({ data: obj });
         //alert(jsonString);
         $.ajax({
             url: "@Url.Action("SaveJobData", "JobOrder")",

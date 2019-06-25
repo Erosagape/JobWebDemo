@@ -66,6 +66,15 @@ Public Class CWHTaxDetail
             m_PayAmount = value
         End Set
     End Property
+    Private m_PayRate As Double
+    Public Property PayRate As Double
+        Get
+            Return m_PayRate
+        End Get
+        Set(value As Double)
+            m_PayRate = value
+        End Set
+    End Property
     Private m_PayTax As Double
     Public Property PayTax As Double
         Get
@@ -130,13 +139,16 @@ Public Class CWHTaxDetail
                             dr("IncType") = Me.IncType
                             dr("PayDate") = Main.GetDBDate(Me.PayDate)
                             dr("PayAmount") = Me.PayAmount
+                            dr("PayRate") = Me.PayRate
                             dr("PayTax") = Me.PayTax
                             dr("PayTaxDesc") = Me.PayTaxDesc
                             dr("JNo") = Me.JNo
                             dr("DocRefType") = Me.DocRefType
                             dr("DocRefNo") = Me.DocRefNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -178,6 +190,9 @@ Public Class CWHTaxDetail
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("PayAmount"))) = False Then
                         row.PayAmount = rd.GetDouble(rd.GetOrdinal("PayAmount"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("PayRate"))) = False Then
+                        row.PayRate = rd.GetDouble(rd.GetOrdinal("PayRate"))
+                    End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("PayTax"))) = False Then
                         row.PayTax = rd.GetDouble(rd.GetOrdinal("PayTax"))
                     End If
@@ -211,7 +226,7 @@ Public Class CWHTaxDetail
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message
@@ -219,4 +234,13 @@ Public Class CWHTaxDetail
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = SQLUpdateWHTaxHeader()
+
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+        End Using
+    End Sub
 End Class

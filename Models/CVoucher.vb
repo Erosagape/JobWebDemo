@@ -138,6 +138,25 @@ Public Class CVoucher
             m_CancelTime = value
         End Set
     End Property
+    Private m_CustCode As String
+    Public Property CustCode As String
+        Get
+            Return m_CustCode
+        End Get
+        Set(value As String)
+            m_CustCode = value
+        End Set
+    End Property
+    Private m_CustBranch As String
+    Public Property CustBranch As String
+        Get
+            Return m_CustBranch
+        End Get
+        Set(value As String)
+            m_CustBranch = value
+        End Set
+    End Property
+
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -164,6 +183,8 @@ Public Class CVoucher
                             dr("CancelProve") = Me.CancelProve
                             dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
                             dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
+                            dr("CustCode") = Me.CustCode
+                            dr("CustBranch") = Me.CustBranch
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -236,6 +257,12 @@ Public Class CVoucher
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("CancelTime"))) = False Then
                         row.CancelTime = rd.GetValue(rd.GetOrdinal("CancelTime"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("CustCode"))) = False Then
+                        row.CustCode = rd.GetString(rd.GetOrdinal("CustCode")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("CustBranch"))) = False Then
+                        row.CustBranch = rd.GetString(rd.GetOrdinal("CustBranch")).ToString()
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -254,7 +281,7 @@ Public Class CVoucher
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = "[ERROR]" & ex.Message

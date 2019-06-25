@@ -37,7 +37,7 @@ Public Class CConfig
                         End Using
                     End Using
                 End Using
-                cn.Close()
+
             End Using
         Catch ex As Exception
         End Try
@@ -52,7 +52,7 @@ Public Class CConfig
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
             End Using
             Return "Delete Data Complete"
         Catch ex As Exception
@@ -74,7 +74,7 @@ Public Class CConfig
                         lst.Add(data)
                     End While
                 End Using
-                cn.Close()
+
             End Using
         Catch ex As Exception
         End Try

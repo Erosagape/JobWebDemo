@@ -213,23 +213,66 @@ Public Class CVoucherDoc
         End Using
         Return lst
     End Function
-    Public Function DeleteData(pSQLWhere As String) As String
+    Public Function DeleteData(Optional pSQLWhere As String = "") As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
+                If pSQLWhere = "" Then
+                    pSQLWhere &= String.Format(" WHERE BranchCode='{0}'", Me.BranchCode)
+                    pSQLWhere &= String.Format(" AND ControlNo='{0}'", Me.ControlNo)
+                    pSQLWhere &= String.Format(" AND ItemNo='{0}'", Me.ItemNo)
+                End If
+                msg = Me.CancelData
+                If msg = "OK" Then
+                    Using cm As New SqlCommand("DELETE FROM Job_CashControlDoc" + pSQLWhere, cn)
+                        cm.CommandTimeout = 0
+                        cm.CommandType = CommandType.Text
+                        cm.ExecuteNonQuery()
+                    End Using
 
-                Using cm As New SqlCommand("DELETE FROM Job_CashControlDoc" + pSQLWhere, cn)
-                    cm.CommandTimeout = 0
-                    cm.CommandType = CommandType.Text
-                    cm.ExecuteNonQuery()
-                End Using
-                cn.Close()
-                msg = "Delete Complete"
+                    msg = "Delete Complete"
+                End If
+
             Catch ex As Exception
                 msg = ex.Message
             End Try
         End Using
+        Return msg
+    End Function
+    Public Function CancelData() As String
+        Dim msg As String = "OK"
+        Select Case Me.DocType
+            Case "ADV" 'Advance Payments
+                Dim sql = String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}'", Me.BranchCode, Me.DocNo)
+                Dim tb = New CAdvHeader(jobWebConn).GetData(sql)
+                If tb.Count > 0 Then
+                    Dim row = tb(0)
+                    If row.DocStatus = 3 Then
+                        row.DocStatus = 2
+                        row.PaymentBy = ""
+                        row.PaymentDate = Nothing
+                        row.PaymentTime = Nothing
+                        row.PaymentRef = ""
+
+                        row.SaveData(sql)
+                    Else
+                        msg = "Cannot Cancel Document Status=" & row.DocStatus
+                    End If
+                End If
+            Case "CLR" 'Clearing Receival
+                Dim sql = String.Format(" WHERE BranchCode='{0}' AND ClrNo='{1}'", Me.BranchCode, Me.DocNo)
+                Dim tb = New CClrHeader(jobWebConn).GetData(sql)
+                If tb.Count > 0 Then
+                    Dim row = tb(0)
+                    If row.DocStatus = 3 Then
+                        row.DocStatus = 2
+                        row.SaveData(sql)
+                    Else
+                        msg = "Cannot Cancel Document Status=" + row.DocStatus
+                    End If
+                End If
+        End Select
         Return msg
     End Function
 End Class

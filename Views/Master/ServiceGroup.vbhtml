@@ -3,12 +3,12 @@
 End Code
 <div class="panel-body">
     <div id="dvForm" class="container" style="width:100%">
-            <div class="form-group row">
+        <div class="form-group row">
 
-                <div class="col-sm-3"><a onclick="RefreshGrid()">Group Code :</a><br /><input type="text" id="txtGroupCode" class="form-control" tabIndex="1"></div>
-                <div class="col-sm-5">Group Name :<br /><input type="text" id="txtGroupName" class="form-control" tabIndex="2"></div>
-                <div class="col-sm-4">GL Account :<br /><input type="text" id="txtGLAccountCode" class="form-control" tabIndex="3"></div>
-            </div>
+            <div class="col-sm-3"><a onclick="RefreshGrid()">Group Code :</a><br /><input type="text" id="txtGroupCode" class="form-control" tabIndex="1"></div>
+            <div class="col-sm-5">Group Name :<br /><input type="text" id="txtGroupName" class="form-control" tabIndex="2"></div>
+            <div class="col-sm-4">GL Account :<br /><input type="text" id="txtGLAccountCode" class="form-control" tabIndex="3"></div>
+        </div>
         <div class="form-group row">
             <div class="col-md-6">
                 <input type="checkbox" id="chkIsTaxCharge" />
@@ -40,6 +40,16 @@ End Code
         <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
         <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
         <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <table class="table table-responsive" id="tbDetail">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 <div id="dvList"></div>
@@ -170,6 +180,17 @@ End Code
         $('#chkIsCredit').prop('checked', dt.IsCredit === 0 ? false : true);
         $('#chkIsExpense').prop('checked', dt.IsExpense === 0 ? false : true);
 
+        $.get(path + 'Master/GetServiceCode?Group=' + dt.GroupCode, function (r) {
+            $('#tbDetail').dataTable({
+                data: r.servicecode.data,
+                columns: [
+                    { data: "SICode", title: "Id" },
+                    { data: "NameThai", title: "Description (TH)" },
+                    { data: "NameEng", title: "Description (EN)" }
+                ],
+                destroy:true
+            });
+        });
     }
     function GetDataSave(dt) {
         dt.GroupCode = $('#txtGroupCode').val();

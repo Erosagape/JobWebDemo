@@ -151,8 +151,8 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
     var serv = [];
     $(document).ready(function () {
         ShowCompany('#divCompany');
-        var branch = getQueryString('branch');
-        var advno = getQueryString('advno');
+        let branch = getQueryString('branch');
+        let advno = getQueryString('advno');
         if (branch != "" && advno != "") {
             GetAdv(branch, advno);
         }
@@ -176,7 +176,7 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
     
     function ShowData(data) {
         //show headers
-        var h = data.adv.header[0];
+        let h = data.adv.header[0];
         $('#lblAdvNo').text(h.AdvNo);
         $('#lblReqDate').text(ShowDate(GetToday()));
         $('#lblCustCode').text(h.CustCode + '/' + h.CustBranch);
@@ -194,9 +194,9 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
         $('#lblAppDate').text(ShowDate(h.ApproveDate));
         $('#lblPayDate').text(ShowDate(h.PaymentDate));
 
-        var jt = h.JobType;
-        var sb = h.ShipBy;
-        var at = h.AdvType;
+        let jt = h.JobType;
+        let sb = h.ShipBy;
+        let at = h.AdvType;
         if (jt < 10) jt = '0' + jt;
         if (sb < 10) sb = '0' + sb;
         if (at < 10) at = '0' + at;
@@ -222,7 +222,7 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
 
         $('#txtTotalText').val(CNumEng(CCurrency((h.TotalAdvance + h.TotalVAT - h.Total50Tavi).toFixed(2))));
         //show details
-        var d = data.adv.detail;
+        let d = data.adv.detail;
         LoadServices(d,h);
     }
     function ShowCustomer(Code, Branch) {
@@ -231,7 +231,7 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
             $.get(path +'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
                 .done(function (r) {
                     if (r.company.data.length > 0) {
-                        var c = r.company.data[0];
+                        let c = r.company.data[0];
                         $('#lblCustName').text(c.NameThai);
                     }
                 });
@@ -239,22 +239,22 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
     }    
     function ShowDetail(r,h) {
         //Dummy Data
-        var strDesc = '';
-        var strJob = '';
-        var strAmt = '';
-        var totAmt = 0;
-        //var vat = 0;
-        //var wht = 0;
+        let strDesc = '';
+        let strJob = '';
+        let strAmt = '';
+        let totAmt = 0;
+        //let vat = 0;
+        //let wht = 0;
         for (i = 0; i < r.length; i++) {
-            var d = r[i];
+            let d = r[i];
             if (serv.length > 0) {
-                var c = $.grep(serv, function (data) {
+                let c = $.grep(serv, function (data) {
                     return data.SICode === d.SICode;
                 });
                 if (c.length > 0) {
                     strDesc = strDesc + (d.SICode + '-' + c[0].NameThai + '<br/>');
                 } else {
-                    strDesc = strDesc + (d.SICode + '-Not found Expenses<br/>');
+                    strDesc = strDesc + 'Not Assign Expenses<br/>';
                 }
             } else {
                 strDesc = strDesc + (d.SICode + '<br/>');

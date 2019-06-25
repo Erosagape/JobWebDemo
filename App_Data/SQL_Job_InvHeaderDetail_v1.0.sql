@@ -79,7 +79,6 @@ CREATE TABLE [dbo].[Job_InvoiceDetail](
 	[FTotalAmt] [float] NOT NULL,
 	[AmtAdvance] [float] NOT NULL,
 	[AmtCharge] [float] NOT NULL,
-..
 	CONSTRAINT PK_InvD PRIMARY KEY CLUSTERED 
 	(
 		BranchCode,DocNo,ItemNo

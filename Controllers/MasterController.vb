@@ -72,6 +72,25 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE GroupCode='{0}' ", data.GroupCode))
+                    If data.IsApplyPolicy = 1 Then
+                        Dim cmd As New CUtil(jobWebConn)
+                        Dim sql As String = "
+UPDATE a
+SET a.IsTaxCharge=b.IsTaxCharge,
+a.Is50Tavi=b.Is50Tavi,
+a.Rate50Tavi=b.Rate50Tavi,
+a.IsCredit=b.IsCredit,
+a.IsExpense=b.IsExpense,
+a.IsHaveSlip=b.IsHaveSlip,
+a.IsLtdAdv50Tavi=b.IsLtdAdv50Tavi
+FROM Job_SrvSingle a
+INNER JOIN Job_SrvGroup b
+ON a.GroupCode=b.GroupCode
+AND b.GroupCode='{0}'
+AND b.IsApplyPolicy=1
+"
+                        cmd.ExecuteSQL(String.Format(sql, data.GroupCode))
+                    End If
                     Dim json = "{""result"":{""data"":""" & data.GroupCode & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -165,6 +184,23 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetBookBalance() As ActionResult
+            Try
+                Dim tSqlw As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND a.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND c.BookCode ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(String.Format(SQLSelectBookAccBalance(), tSqlw))
+                Dim json As String = JsonConvert.SerializeObject(oData.Rows)
+                json = "{""bookaccount"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""bookaccount"":{""data"":[],""msg"":" & ex.Message & "}}", jsonContent)
             End Try
         End Function
         Function SetBookAccount(<FromBody()> data As CBookAccount) As ActionResult
@@ -726,7 +762,18 @@ Namespace Controllers
                     tSqlw &= String.Format("AND SICode Like '{0}%' ", Request.QueryString("Code").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Group")) Then
-                    tSqlw &= String.Format("AND GroupCode Like '{0}%'", Request.QueryString("Group").ToString)
+                    tSqlw &= String.Format("AND GroupCode Like '{0}%' ", Request.QueryString("Group").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    Dim type = Request.QueryString("Type").ToString
+                    Select Case type
+                        Case "A"
+                            tSqlw &= "AND IsCredit=1 AND IsExpense=0 "
+                        Case "C"
+                            tSqlw &= "AND IsExpense=1 "
+                        Case "S"
+                            tSqlw &= "AND IsCredit=0 AND IsExpense=0 "
+                    End Select
                 End If
                 Dim oData = New CServiceCode(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)

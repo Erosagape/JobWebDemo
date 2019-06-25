@@ -57,11 +57,14 @@ End Code
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     Phone :<br /><input type="text" id="txtPhone" class="form-control" tabIndex="12">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     Fax :<br /><input type="text" id="txtFaxNumber" class="form-control" tabIndex="13">
+                </div>
+                <div class="col-sm-4">
+                    Minimum Balance :<br /><input type="number" id="txtLimitBalance" class="form-control" tabIndex="14">
                 </div>
             </div>
         </div>
@@ -71,16 +74,29 @@ End Code
             <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
         </div>
     </div>
+    <table id="tbBalance" class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Cash on hand</th>
+                <th>Cash avaiable</th>
+                <th>Chq on hand</th>
+                <th>Chq return</th>
+                <th>Credit</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
     <div id="dvLOVs"></div>
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
-    $(document).ready(function () {
+    //$(document).ready(function () {
         SetEvents();
         SetEnterToTab();
         ClearData();
-    });
+    //});
     function SetEvents() {
         $('#txtBranchCode').keydown(function (event) {
             if (event.which == 13) {
@@ -183,6 +199,24 @@ End Code
         $('#txtEAddress2').val(dr.EAddress2);
         $('#txtPhone').val(dr.Phone);
         $('#txtFaxNumber').val(dr.FaxNumber);        
+        $('#txtLimitBalance').val(dr.LimitBalance);   
+        $.get(path + 'Master/GetBookBalance?code=' + dr.BookCode, function (r) {
+            if (r.bookaccount.data.length > 0) {
+                let tb = r.bookaccount.data[0].Table;
+                $('#tbBalance').DataTable({
+                    data: tb,
+                    columns: [
+                        { data: "SumCash" },
+                        { data: "SumCashInBank" },
+                        { data: "SumChqOnhand" },
+                        { data: "SumChqReturn" },
+                        { data: "SumCredit" },
+                        { data: "SumBal" }
+                    ],
+                    destroy:true
+                });
+            }
+        });
     }
     function SaveData(){
         var obj={
@@ -199,7 +233,8 @@ End Code
             EAddress1:$('#txtEAddress1').val(),
             EAddress2:$('#txtEAddress2').val(),
             Phone:$('#txtPhone').val(),
-            FaxNumber:$('#txtFaxNumber').val(),
+            FaxNumber: $('#txtFaxNumber').val(),
+            LimitBalance:$('#txtLimitBalance').val()   
         };
         if (obj.BookCode != "") {
             var ask = confirm("Do you need to Save " + obj.BookCode + "?");
@@ -242,5 +277,6 @@ End Code
         $('#txtPhone').val('');
         $('#txtFaxNumber').val('');
         $('#txtBookCode').focus();
+        $('#txtLimitBalance').val(0);   
     }
 </script>

@@ -14,12 +14,77 @@ Namespace Controllers
             Return GetView("ShowJob", "MODULE_CS")
         End Function
         Function FormJob() As ActionResult
+            ViewBag.User = Session("CurrUser").ToString()
+            Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_CS", "ShowJob")
+            If AuthorizeStr.IndexOf("P") < 0 Then
+                Return Content("You are not allow to print job", textContent)
+            End If
             Return GetView("FormJob")
+        End Function
+        Function FormJobSum() As ActionResult
+            Return GetView("FormJobSum")
+        End Function
+        Function FormQuotation() As ActionResult
+            Return GetView("FormQuotation")
+        End Function
+        Function Quotation() As ActionResult
+            'Return GetView("Quotation", "MODULE_SALES")
+            Return RedirectToAction("FormQuotation")
+        End Function
+        Function QuoApprove() As ActionResult
+            Return GetView("QuoApprove", "MODULE_SALES")
+        End Function
+        Function FormDelivery() As ActionResult
+            Return GetView("FormDelivery")
+        End Function
+        Function Transport() As ActionResult
+            'Return GetView("Transport", "MODULE_CS")
+            Return RedirectToAction("FormDelivery")
+        End Function
+        Function FormTransport() As ActionResult
+            Return GetView("FormTransport")
         End Function
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function
-
+        Function GetJobReport() As ActionResult
+            Try
+                Dim tSqlW As String = ""
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND j.JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlW &= " AND j.ShipBy=" & Request.QueryString("SBy") & ""
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlW &= " AND j.BranchCode='" & Request.QueryString("Branch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlW &= " AND j.JobStatus='" & Request.QueryString("Status") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("JNo")) Then
+                    tSqlW &= " AND j.JNo='" & Request.QueryString("JNo") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Year")) Then
+                    tSqlW &= " AND Year(j.DocDate)='" & Request.QueryString("Year") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Month")) Then
+                    tSqlW &= " AND Month(j.DocDate)='" & Request.QueryString("Month") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("CustCode")) Then
+                    tSqlW &= " AND j.CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlW &= " AND j.CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectJobReport() & " WHERE j.JNo<>'' " & tSqlW)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""job"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetJobSQL() As ActionResult
             Try
                 Dim oJob As New CJobOrder(jobWebConn)
@@ -47,6 +112,9 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("CustCode")) Then
                     tSqlW &= " AND CustCode='" & Request.QueryString("CustCode") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlW &= " AND CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
                 End If
                 Dim oData = oJob.GetData(" WHERE JNo<>'' " & tSqlW)
                 Dim json As String = JsonConvert.SerializeObject(oData)
@@ -125,8 +193,14 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     oJob.CustCode = "" & Request.QueryString("Cust").Split("|")(0)
                     oJob.CustBranch = "" & Request.QueryString("Cust").Split("|")(1)
+                    Dim oCust = New CCompany(jobWebConn).GetData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}'", oJob.CustCode, oJob.CustBranch))
+                    If oCust.Count > 0 Then
+                        oJob.Commission = oCust(0).CommRate
+                    Else
+                        Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""Customer '" + oJob.CustCode + "/" + oJob.CustBranch + "' Not Found!""}}", jsonContent)
+                    End If
                 End If
-                sql = sql + String.Format(" AND CustCode='{0}' And CustBranch='{1}' And InvNo='{2}'", oJob.CustCode, oJob.CustBranch, oJob.InvNo)
+                sql &= String.Format(" AND CustCode='{0}' And CustBranch='{1}' And InvNo='{2}'", oJob.CustCode, oJob.CustBranch, oJob.InvNo)
                 Dim FindJob = oJob.GetData(sql)
                 If FindJob.Count > 0 Then
                     Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""invoice '" + oJob.InvNo + "' has been opened for job '" + FindJob(0).JNo + "' ""}}", jsonContent)
@@ -164,6 +238,38 @@ Namespace Controllers
             Else
                 Return Content("No data to save", textContent)
             End If
+        End Function
+        Function UpdateJobStatus() As ActionResult
+            Dim tSqlW As String = ""
+            If Not IsNothing(Request.QueryString("JType")) Then
+                tSqlW &= " AND j.JobType=" & Request.QueryString("JType") & ""
+            End If
+            If Not IsNothing(Request.QueryString("SBy")) Then
+                tSqlW &= " AND j.ShipBy=" & Request.QueryString("SBy") & ""
+            End If
+            If Not IsNothing(Request.QueryString("Branch")) Then
+                tSqlW &= " AND j.BranchCode='" & Request.QueryString("Branch") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("Status")) Then
+                tSqlW &= " AND j.JobStatus='" & Request.QueryString("Status") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("JNo")) Then
+                tSqlW &= " AND j.JNo='" & Request.QueryString("JNo") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("Year")) Then
+                tSqlW &= " AND Year(j.DocDate)='" & Request.QueryString("Year") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("Month")) Then
+                tSqlW &= " AND Month(j.DocDate)='" & Request.QueryString("Month") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("CustCode")) Then
+                tSqlW &= " AND j.CustCode='" & Request.QueryString("CustCode") & "'"
+            End If
+            If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                tSqlW &= " AND j.CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
+            End If
+            Dim tResult = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(tSqlW))
+            Return Content(tResult, textContent)
         End Function
     End Class
 End Namespace

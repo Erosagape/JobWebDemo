@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.0.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -56,20 +56,20 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Provider=SQLOLEDB.1;Password=""9t;yogm8"";Persist Security Info=True;User ID=sa;Ini"& _ 
-            "tial Catalog=JOB_CSN;Data Source=.\DEVTEST")>  _
-        Public ReadOnly Property ConnectionStr() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("SELECT * FROM Job_Order")>  _
+        Public ReadOnly Property DefaultSQL() As String
             Get
-                Return CType(Me("ConnectionStr"),String)
+                Return CType(Me("DefaultSQL"),String)
             End Get
         End Property
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("SELECT * FROM Job_Order")>  _
-        Public ReadOnly Property DefaultSQL() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("Provider=SQLOLEDB.1;Persist security info=True;Integrated Security=SSPI;Initial C"& _ 
+            "atalog=JOB_WEB;Data Source=.\DEVTEST")>  _
+        Public ReadOnly Property ConnectionStr() As String
             Get
-                Return CType(Me("DefaultSQL"),String)
+                Return CType(Me("ConnectionStr"),String)
             End Get
         End Property
     End Class

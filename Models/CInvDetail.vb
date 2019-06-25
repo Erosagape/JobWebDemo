@@ -21,6 +21,15 @@ Public Class CInvDetail
             m_BranchCode = value
         End Set
     End Property
+    Private m_ClrNoList As String
+    Public Property ClrNoList As String
+        Get
+            Return m_ClrNoList
+        End Get
+        Set(value As String)
+            m_ClrNoList = value
+        End Set
+    End Property
     Private m_DocNo As String
     Public Property DocNo As String
         Get
@@ -93,12 +102,12 @@ Public Class CInvDetail
             m_ExchangeRate = value
         End Set
     End Property
-    Private m_Qty As Date
-    Public Property Qty As Date
+    Private m_Qty As Integer
+    Public Property Qty As Integer
         Get
             Return m_Qty
         End Get
-        Set(value As Date)
+        Set(value As Integer)
             m_Qty = value
         End Set
     End Property
@@ -129,12 +138,12 @@ Public Class CInvDetail
             m_FUnitPrice = value
         End Set
     End Property
-    Private m_Amt As Date
-    Public Property Amt As Date
+    Private m_Amt As Double
+    Public Property Amt As Double
         Get
             Return m_Amt
         End Get
-        Set(value As Date)
+        Set(value As Double)
             m_Amt = value
         End Set
     End Property
@@ -300,6 +309,15 @@ Public Class CInvDetail
             m_FAmtCredit = value
         End Set
     End Property
+    Private m_VATRate As Double
+    Public Property VATRate As Double
+        Get
+            Return m_VATRate
+        End Get
+        Set(value As Double)
+            m_VATRate = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -314,6 +332,7 @@ Public Class CInvDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("DocNo") = Me.DocNo
+                            If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("SICode") = Me.SICode
                             dr("SDescription") = Me.SDescription
@@ -321,11 +340,11 @@ Public Class CInvDetail
                             dr("SRemark") = Me.SRemark
                             dr("CurrencyCode") = Me.CurrencyCode
                             dr("ExchangeRate") = Me.ExchangeRate
-                            dr("Qty") = Main.GetDBDate(Me.Qty)
+                            dr("Qty") = Me.Qty
                             dr("QtyUnit") = Me.QtyUnit
                             dr("UnitPrice") = Me.UnitPrice
                             dr("FUnitPrice") = Me.FUnitPrice
-                            dr("Amt") = Main.GetDBDate(Me.Amt)
+                            dr("Amt") = Me.Amt
                             dr("FAmt") = Me.FAmt
                             dr("DiscountType") = Me.DiscountType
                             dr("DiscountPerc") = Me.DiscountPerc
@@ -340,12 +359,15 @@ Public Class CInvDetail
                             dr("FTotalAmt") = Me.FTotalAmt
                             dr("AmtAdvance") = Me.AmtAdvance
                             dr("AmtCharge") = Me.AmtCharge
+                            dr("VATRate") = Me.VATRate
                             dr("CurrencyCodeCredit") = Me.CurrencyCodeCredit
                             dr("ExchangeRateCredit") = Me.ExchangeRateCredit
                             dr("AmtCredit") = Me.AmtCredit
                             dr("FAmtCredit") = Me.FAmtCredit
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            da.Update(dt)
+                            If da.Update(dt) > 0 Then
+                                UpdateTotal(cn)
+                            End If
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -356,8 +378,26 @@ Public Class CInvDetail
         End Using
         Return msg
     End Function
+    Public Sub UpdateTotal(cn As SqlConnection)
+        Dim sql As String = SQLUpdateInvoiceHeader()
+        Using cm As New SqlCommand(sql, cn)
+            cm.CommandText = sql + " WHERE h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
+            cm.CommandType = CommandType.Text
+            cm.ExecuteNonQuery()
+            If Me.ClrNoList <> "" Then
+                If Me.DocNo <> "" And Me.ItemNo <> 0 Then
+                    sql = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}',LinkItem={1}", Me.DocNo, Me.ItemNo)
+                    sql &= String.Format(" WHERE ClrNo+'/'+Convert(varchar,ItemNo) IN('{0}')", Me.ClrNoList.Replace(",", "','"))
+                    cm.CommandText = sql
+                    cm.CommandType = CommandType.Text
+                    cm.ExecuteNonQuery()
+                End If
+            End If
+        End Using
+    End Sub
     Public Sub AddNew()
-
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_InvoiceDetail WHERE BranchCode='{0}' And DocNo ='{1}' ", m_BranchCode, m_DocNo), "____")
+        m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CInvDetail)
         Dim lst As New List(Of CInvDetail)
@@ -464,6 +504,9 @@ Public Class CInvDetail
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("FAmtCredit"))) = False Then
                         row.FAmtCredit = rd.GetDouble(rd.GetOrdinal("FAmtCredit"))
                     End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("VATRate"))) = False Then
+                        row.VATRate = rd.GetDouble(rd.GetOrdinal("VATRate"))
+                    End If
                     lst.Add(row)
                 End While
             Catch ex As Exception
@@ -481,8 +524,17 @@ Public Class CInvDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    If Me.DocNo <> "" And Me.ItemNo <> 0 Then
+                        Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo=null,LinkItem=0"
+                        Sql &= String.Format(" WHERE BranchCode='{0}' AND LinkBillNo='{1}' And LinkItem={2}", Me.BranchCode, Me.DocNo, Me.ItemNo)
+
+                        cm.CommandText = Sql
+                        cm.CommandType = CommandType.Text
+                        cm.ExecuteNonQuery()
+                    End If
                 End Using
-                cn.Close()
+                UpdateTotal(cn)
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message

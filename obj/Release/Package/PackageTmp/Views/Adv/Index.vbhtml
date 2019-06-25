@@ -21,7 +21,7 @@ End Code
                         <td>
                             <b><a onclick="SearchData('advance')">Advance No:</a></b>
                             <br />
-                            <input type="text" id="txtAdvNo" style="font-style:bold;font-size:20px;text-align:center" tabindex="0" />
+                            <input type="text" id="txtAdvNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
                         </td>
                     </tr>
                 </table>
@@ -71,7 +71,7 @@ End Code
                         <table>
                             <tr>
                                 <td>
-                                    WH-Tax No:
+                                    <a href="#" onclick="AutoGenWHTax()">WH-Tax No:</a>
                                 </td>
                                 <td>
                                     <input type="text" id="txtDoc50Tavi" style="width:200px" tabindex="6" />
@@ -179,7 +179,7 @@ End Code
                         <input type="text" id="txtApproveTime" style="width:80px" disabled />
                     </div>
                     <div class="col-sm-4" style="border-style:solid;border-width:1px">
-                        <input type="checkbox" id="chkPayment" />
+                        <input type="checkbox" id="chkPayment" disabled />
                         <label for="chkPayment">Payment By</label>
                         <input type="text" id="txtPaymentBy" style="width:250px" disabled />
                         <br />
@@ -217,12 +217,14 @@ End Code
                                     <th>SICode</th>
                                     <th>Description</th>
                                     <th>Job No</th>
+                                    <th>Currency</th>
+                                    <th>Rate</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
                                     <th>Amount</th>
                                     <th>Vat</th>
                                     <th>WH-Tax</th>
                                     <th>Net</th>
-                                    <th>Currency</th>
-                                    <th>Remark</th>
                                 </tr>
                             </thead>
                         </table>
@@ -236,6 +238,7 @@ End Code
                         <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
                         Exchange Rate:
                         <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
+                        <buttom id="btnGetExcRate" class="btn btn-success" onclick="GetExchangeRate()">Get Rate</buttom>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -261,13 +264,9 @@ End Code
                             <label for="txtItemNo">No :</label>
                             <input type="text" id="txtItemNo" style="width:40px" disabled />
                             <select id="cboSTCode" class="dropdown">
-                                <option value="ADV">N/A</option>
-                                <option value="STD">STD</option>
-                                <option value="INC">INC</option>
-                                <option value="EXP">EXP</option>
                             </select>
                             <input type="checkbox" id="chkDuplicate" />
-                            <label for="chkDuplicate">Additional Advance</label>
+                            <label for="chkDuplicate">Can Partial Clear</label>
                             <br />
                             <label for="txtSICode">Code :</label>
                             <input type="text" id="txtSICode" style="width:80px" tabindex="12" />
@@ -348,7 +347,7 @@ End Code
                                         <th>Inv No</th>
                                         <th>Status</th>
                                         <th>Amount</th>
-                                        <th>Currency</th>
+                                        <th>WT</th>
                                         <th>WTDoc</th>
                                         <th>APDoc</th>
                                         <th>Remark</th>
@@ -377,19 +376,20 @@ End Code
     var job = '';
     var isjobmode = false;
     var chkmode = false;
-    $(document).ready(function () {       
-        SetLOVs();
-        SetEvents();
-        SetEnterToTab();
-        CheckParam();
-    });
+    //$(document).ready(function () {       
+    SetLOVs();
+    SetEvents();
+    SetEnterToTab();
+    CheckParam();
+    //});
     function CheckParam() {
+        ClearHeader();
         //read query string parameters
-        var br = getQueryString('BranchCode');
-        if (br.length > 0) {
+        let br = getQueryString('BranchCode');
+        if (br.length>0) {
             $('#txtBranchCode').val(br);
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
-            var ano = getQueryString('AdvNo');
+            let ano = getQueryString('AdvNo');
             if (ano.length > 0) {
                 $('#txtAdvNo').val(ano);
                 ShowData(br, $('#txtAdvNo').val());
@@ -398,15 +398,18 @@ End Code
                 if (job.length > 0) {
                     isjobmode = true;
                     $('#txtAdvNo').attr('disabled', 'disabled');
-                    CallBackQueryJob(path, $('#txtBranchCode').val(), job, LoadJob);                    
+                    CallBackQueryJob(path, $('#txtBranchCode').val(), job, LoadJob);
                 }
             }
 
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
         }
     }
     function LoadJob(dt) {
         if (dt.length > 0) {
-            var dr = dt[0];
+            let dr = dt[0];
             $('#txtForJNo').val(dr.JNo);
             $('#txtCustCode').val(dr.CustCode);
             $('#txtCustBranch').val(dr.CustBranch);
@@ -436,8 +439,8 @@ End Code
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
             $(this).on("keypress", function (e) {
                 if (e.keyCode === 13) {
-                    var idx = (this.tabIndex + 1);
-                    var nextElement = $('[tabindex="' + idx + '"]');
+                    let idx = (this.tabIndex + 1);
+                    let nextElement = $('[tabindex="' + idx + '"]');
                     while (nextElement.length) {
                         if (nextElement.prop('disabled') == false) {
                             $('[tabindex="' + idx + '"]').focus();
@@ -465,25 +468,30 @@ End Code
             $('#txtSICode').focus();
         });
         $('#cboSTCode').on('change', function () {
-            if ($('#cboSTCode').val() == 'ADV') {
+            if ($('#cboSTCode').val() == '') {
+                $('#txtSICode').val('');
+                $('#txtSDescription').val('');
+
                 $('#txtSICode').attr('disabled', 'disabled');
                 $('#txtSDescription').attr('disabled', 'disabled');
                 $('#btnBrowseS').attr('disabled', 'disabled');
+                $('#chkDuplicate').prop('checked', true);
                 return;
             }
+            $('#chkDuplicate').prop('checked', false);
             $('#txtSICode').removeAttr('disabled');
             $('#txtSDescription').removeAttr('disabled');
             $('#btnBrowseS').removeAttr('disabled');
         });
         $('#chkCash,#chkChq,#chkChqCash,#chkCred').on('click', function () {
-            var id = this.id;
-            var chk = this.checked;
+            let id = this.id;
+            let chk = this.checked;
             if (this.checked == false) {
                 $('#txtAdv' + id.substr(3)).val(0);
                 $('#txtAdv' + id.substr(3)).attr('disabled', 'disabled');
                 return;
             }
-            var val = GetTotal();
+            let val = GetTotal();
             if (val <= 0) {
                 alert('Total not Balance,Please check');
                 $('#txtAdv' + id.substr(3)).val(0);
@@ -501,12 +509,12 @@ End Code
                     alert('Total not Balance,Please check');
                     $('#' + this.id).val(0);
                 }
-                var amt = $('#' + this.id).val();
+                let amt = $('#' + this.id).val();
                 $('#chk' + this.id.substr(6)).prop('checked', amt > 0 ? true : false);
             }
         });
         $('#txtAdvCash,#txtAdvChq,#txtAdvChqCash,#txtAdvCred').on('blur', function () {
-            var amt = $('#' + this.id).val();
+            let amt = $('#' + this.id).val();
             if (amt > 0) {
                 if ($('#chk' + this.id.substr(6)).prop('checked') == false) {
                     $('#' + this.id).val(0);
@@ -528,100 +536,102 @@ End Code
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Approve',(chkmode ? 'I':'D'), SetApprove);
         });
+        /*
         $('#chkPayment').on('click', function () {
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Payment', (chkmode ? 'I' : 'D'), SetPayment);
         });
+        */
         $('#chkCancel').on('click', function () {
             chkmode = this.checked;
             CallBackAuthorize(path, 'MODULE_ADV', 'Index', 'D', SetCancel);
         });
-        $('#txtCurrencyCode').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtCurrencyCode').focusout(function (event) {
+            if (true) {
                 ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');  
                 ShowCaption();
             }
         });
-        $('#txtBranchCode').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtBranchCode').focusout(function (event) {
+            if (true) {
                 ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
             }
         });
-        $('#txtAdvNo').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAdvNo').focusout(function (event) {
+            if (true) {
                 ShowData($('#txtBranchCode').val(),$('#txtAdvNo').val());
             }
         });
-        $('#txtAdvBy').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAdvBy').focusout(function (event) {
+            if (true) {
                 ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
             }
         });
-        $('#txtReqBy').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtReqBy').focusout(function (event) {
+            if (true) {
                 ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
             }
         });
-        $('#txtCustBranch').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtCustBranch').focusout(function (event) {
+            if (true) {
                 ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
         });
-        $('#txtSICode').keydown(function (event) {
-            if (event.which == 13) {
-                var dt = FindService($('#txtSICode').val())
+        $('#txtSICode').focusout(function (event) {
+            if (true) {
+                let dt = FindService($('#txtSICode').val())
                 ReadService(dt);
             }
         });
-        $('#txtAdvQty').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAdvQty').focusout(function (event) {
+            if (true) {
                 CalAmount();
             }
         });
-        $('#txtUnitPrice').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtUnitPrice').focusout(function (event) {
+            if (true) {
                 CalAmount();
             }
         });
-        $('#txtExcRate').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtExcRate').focusout(function (event) {
+            if (true) {
                 CalAmount();
             }
         });
-        $('#txtAMT').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtAMT').focusout(function (event) {
+            if (true) {
                 CalVATWHT();
             }
         });
-        $('#txtVATRate').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtVATRate').focusout(function (event) {
+            if (true) {
                 CalVATWHT();
             }
         });
-        $('#txtWHTRate').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtWHTRate').focusout(function (event) {
+            if (true) {                
                 CalVATWHT();
             }
         });
-        $('#txtVAT').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtVAT').focusout(function (event) {
+            if (true) {
                 CalTotal();
             }
         });
-        $('#txtWHT').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtWHT').focusout(function (event) {
+            if (true) {
                 CalTotal();
             }
         });
-        $('#txtForJNo').keydown(function (event) {
-            if (event.which == 13) {
+        $('#txtForJNo').focusout(function (event) {
+            if (true) {
                 ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
             }
         });
-        $('#txtNET').keydown(function (event) {
-            if (event.which == 13) {
-                var type = $('#txtVatType').val();
-                if (type == '') type = "1";
+        $('#txtNET').focusout(function (event) {
+            if (true) {
+                let type = $('#txtVatType').val();
+                if (type == '0'||type=='') type = "1";
                 if (type == "2") {
                     CalVATWHT();
                 } else {
@@ -632,6 +642,38 @@ End Code
     }
     function SetApprove(b) {
         if (b == true) {
+            if (chkmode) {
+                if ($('#cboDocStatus').val().substr(0, 2) == '01') {
+                    let dataApp = [];
+                    dataApp.push(user);
+                    dataApp.push($('#txtBranchCode').val() + '|' + $('#txtAdvNo').val());
+                    let jsonString = JSON.stringify({ data: dataApp });
+                    $.ajax({
+                        url: "@Url.Action("ApproveAdvance", "Adv")",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: jsonString,
+                        success: function (response) {
+                            if (response) {
+                                alert("Approve Completed!");
+                                ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
+                            } else {
+                                alert("Cannot Approve");
+                            }
+                            return;
+                        },
+                        error: function (e) {
+                            alert(e);
+                            return;
+                        }
+                    });
+                    return;
+                }
+            } else {
+                if ($('#cboDocStatus').val().substr(0, 2) == '02') {
+                    $('#cboDocStatus').val('01');
+                }
+            }
             $('#txtApproveBy').val(chkmode ? user : '');
             $('#txtApproveDate').val(chkmode ? CDateEN(GetToday()) : '');
             $('#txtApproveTime').val(chkmode ? ShowTime(GetTime()) : '');
@@ -640,21 +682,25 @@ End Code
         alert('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
         $('#chkApprove').prop('checked', !chkmode);
     }
-    function SetPayment(b) {
-        if (b == true) {
-            $('#txtPaymentBy').val(chkmode ? user : '');
-            $('#txtPaymentDate').val(chkmode ? CDateEN(GetToday()) : '');
-            $('#txtPaymentTime').val(chkmode ? ShowTime(GetTime()) : '');
-            return;
+    function GetStatus() {
+        let status = 1;
+        if ($('#txtPaymentBy').val() !== '') {
+            status = 3;
+        } else if ($('#txtApproveBy').val() !== '') {
+            status = 2;
         }
-        alert('You are not allow to ' + (b ? 'payment Advance!' : 'cancel payment!'));
-        $('#chkPayment').prop('checked', !chkmode);
+        return status;
     }
     function SetCancel(b) {
         if (b == true) {
-            $('#txtCancelProve').val(chkmode ? user : '');
-            $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
-            $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+            if (confirm("Do you want to " + (chkmode ? 'cancel' : 're-open') + "?") == true) {
+                $('#cboDocStatus').val(chkmode ? '99' : GetStatus());
+                $('#txtCancelProve').val(chkmode ? user : '');
+                $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
+                $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+                return;
+            }
+            $('#chkCancel').prop('checked', !chkmode);
             return;
         }
         alert('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
@@ -662,18 +708,18 @@ End Code
     }
     function SetLOVs() {
         //Combos
-        var lists = 'JOB_TYPE=#cboJobType';
+        let lists = 'JOB_TYPE=#cboJobType';
         lists += ',SHIP_BY=#cboShipBy';
         lists += ',ADV_STATUS=#cboDocStatus';
         lists += ',ADV_TYPE=#cboAdvType';
 
         loadCombos(path, lists);
-
+        loadServiceGroup(path, '#cboSTCode',true);
         LoadService();        
 
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var dv = document.getElementById("dvLOVs");
+            let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
             //Venders
@@ -694,11 +740,11 @@ End Code
     }
     function ShowData(branchcode, advno) {
         if (branchcode == '') {
-            alert('Please select branch');
+            //alert('Please select branch');
             return;
         }
         if (advno == '') {
-            alert('Please enter advance no');
+            //alert('Please enter advance no');
             return;
         }
         if (userRights.indexOf('R') < 0) {
@@ -706,9 +752,9 @@ End Code
             return;
         }
         $.get(path + 'adv/getadvance?branchcode='+branchcode+'&advno='+ advno, function (r) {
-            var h = r.adv.header[0];
+            let h = r.adv.header[0];
             ReadAdvHeader(h);
-            var d = r.adv.detail;
+            let d = r.adv.detail;
             ReadAdvDetail(d);
         });
     }
@@ -721,7 +767,7 @@ End Code
     }
     function SaveHeader() {
         if (hdr != undefined) {
-            var obj = GetDataHeader(hdr);
+            let obj = GetDataHeader(hdr);
             if (obj.AdvNo == '') {
                 if (userRights.indexOf('I') < 0) {
                     alert('you are not authorize to add');
@@ -732,7 +778,28 @@ End Code
                 alert('you are not authorize to save');
                 return;
             }
-            var jsonString = JSON.stringify({ data: obj });
+            if (Number($('#txtTotalAmount').val()) > 0) {
+                if (SumTotal() == 0) {
+                    alert('please select type of receive advancing money');
+                    return;
+                }
+            }
+            if ($('#cboJobType').val() == 0) {
+                alert('please select job type');
+                $('#cboJobType').focus();
+                return;
+            }
+            if ($('#cboShipBy').val() == 0) {
+                alert('please select ship by');
+                $('#cboShipBy').focus();
+                return;
+            }
+            if ($('#cboAdvType').val() == 0) {
+                alert('please select advance type');
+                $('#cboAdvType').focus();
+                return;
+            }
+            let jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
             $.ajax({
                 url: "@Url.Action("SaveAdvanceHeader", "Adv")",
@@ -755,7 +822,7 @@ End Code
         alert('No data to save');
     }
     function GetDataHeader() {
-        var dt = {
+        let dt = {
             BranchCode : $('#txtBranchCode').val(),
             AdvNo : $('#txtAdvNo').val(),
             AdvDate : CDateTH($('#txtAdvDate').val()),
@@ -786,7 +853,7 @@ End Code
             AdvChqCash : CNum($('#txtAdvChqCash').val()),
             AdvCred : CNum($('#txtAdvCred').val()),
 
-            TotalAdvance : CNum($('#txtAdvAmount').val()),
+            TotalAdvance : CNum($('#txtTotalAmount').val()),
             TotalVAT : CNum($('#txtVatAmount').val()),
             Total50Tavi : CNum($('#txtWhtAmount').val()),
 
@@ -847,10 +914,10 @@ End Code
             $('#txtAdvChqCash').val(CDbl(dt.AdvChqCash,4));
             $('#txtAdvCred').val(CDbl(dt.AdvCred,4));
 
-            $('#txtAdvAmount').val(CDbl(dt.TotalAdvance,4));
+            $('#txtAdvAmount').val(CDbl(dt.TotalAdvance-dt.TotalVAT+dt.Total50Tavi,4));
             $('#txtVatAmount').val(CDbl(dt.TotalVAT,4));
             $('#txtWhtAmount').val(CDbl(dt.Total50Tavi,4));
-            $('#txtTotalAmount').val(CDbl((dt.TotalAdvance+dt.TotalVAT-dt.Total50Tavi),4));
+            $('#txtTotalAmount').val(CDbl((dt.TotalAdvance),4));
 
             $('#chkCancel').prop('checked', $('#txtCancelProve').val() == '' ? false : true);
             $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
@@ -874,16 +941,48 @@ End Code
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
 
             if (dt.DocStatus > 2) {
-                //if document paymented/cancelled/cleared then disable save button
+                //if document is paymented/cancelled/cleared then disable save button
+                $('#chkApprove').attr('disabled', 'disabled');
+                $('#txtApproveDate').attr('disabled', 'disabled');
+                $('#txtApproveBy').attr('disabled', 'disabled');
+                $('#txtApproveTime').attr('disabled', 'disabled');
+
+                $('#chkPayment').attr('disabled', 'disabled');
+                $('#txtPaymentDate').attr('disabled', 'disabled');
+                $('#txtPaymentBy').attr('disabled', 'disabled');
+                $('#txtPaymentTime').attr('disabled', 'disabled');
+                $('#txtPaymentRef').attr('disabled', 'disabled');
+
+                $('#chkCancel').attr('disabled', 'disabled');
+                $('#txtCancelDate').attr('disabled', 'disabled');
+                $('#txtCancelBy').attr('disabled', 'disabled');
+                $('#txtCancelTime').attr('disabled', 'disabled');
+
                 $('#btnSave').attr('disabled', 'disabled');
+                $('#btnUpdate').attr('disabled', 'disabled');
+                $('#btnDel').attr('disabled', 'disabled');
             } else {
                 //if document approved by this user or not then check authorized to unlock 
                 if (dt.DocStatus == 2 && user == dt.ApproveBy && userRights.indexOf('E') >= 0) {
+                    $('#txtApproveDate').removeAttr('disabled');
+                    $('#txtApproveBy').removeAttr('disabled');
+                    $('#txtApproveTime').removeAttr('disabled');
+                    $('#chkApprove').removeAttr('disabled');
+
                     $('#btnSave').removeAttr('disabled');
+                    $('#btnDel').removeAttr('disabled');
+                    $('#btnUpdate').removeAttr('disabled');
                 } else {
                     if (dt.DocStatus == 2) {
+                        $('#chkApprove').attr('disabled', 'disabled');
+                        $('#txtApproveDate').attr('disabled', 'disabled');
+                        $('#txtApproveBy').attr('disabled', 'disabled');
+                        $('#txtApproveTime').attr('disabled', 'disabled');
+
                         $('#btnSave').attr('disabled', 'disabled');
-                    }
+                        $('#btnUpdate').attr('disabled', 'disabled');
+                        $('#btnDel').attr('disabled', 'disabled');
+                    } 
                 }
             }                
             return;
@@ -897,14 +996,14 @@ End Code
         }
         $('#txtAdvNo').val('');
         $.get(path + 'adv/getnewadvanceheader?branchcode=' + $('#txtBranchCode').val() , function (r) {
-            var h = r.adv.header;
+            let h = r.adv.header;
             ReadAdvHeader(h);
             if (isjobmode == false) {
                 $('#cboJobType').val('');
                 $('#cboShipBy').val('');
-                $('#cboDocStatus').val('01');
-                $('#cboAdvType').val('01');
             }
+            $('#cboDocStatus').val('01');
+            $('#cboAdvType').val('01');
             $('#txtAdvBy').val(user);
             $('#txtMainCurrency').val('@ViewBag.PROFILE_CURRENCY');
             $('#txtSubCurrency').val('@ViewBag.PROFILE_CURRENCY');
@@ -912,16 +1011,24 @@ End Code
             $('#txtExcRate').val(1);
 
             ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
-            var d = r.adv.detail;
+            let d = r.adv.detail;
             ReadAdvDetail(d);
             ClearDetail();
             $('#txtAdvNo').focus();
         });
     }
     function AddDetail() {
+        if ($('#txtAdvNo').val() == '') {
+            alert('Please save document before add detail');
+            return;
+        }
         $.get(path + 'adv/getnewadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
-            var d = r.adv.detail[0];
+            let d = r.adv.detail[0];
             LoadDetail(d);
+            $('#txtSICode').attr('disabled', 'disabled');
+            $('#txtSDescription').attr('disabled', 'disabled');
+            $('#btnBrowseS').attr('disabled', 'disabled');
+
             $('#frmDetail').modal('show');
             $('#txtCurrencyCode').val($('#txtSubCurrency').val());
             $('#txtExcRate').val($('#txtExchangeRate').val());
@@ -944,7 +1051,7 @@ End Code
     }
     function ClearHeader() {
         hdr = {};
-        $('#txtAdvDate').val('');
+        $('#txtAdvDate').val(GetToday());
         $('#txtAdvBy').val(user);
         $('#txtReqBy').val('');
         if (isjobmode == false) {
@@ -998,6 +1105,9 @@ End Code
         ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
         ShowUser(path, '', '#txtReqName');
 
+        $('#chkApprove').removeAttr('disabled');
+        $('#chkCancel').removeAttr('disabled');
+
         $('#btnPrint').attr('disabled', 'disabled');
         $('#txtAdvCash').attr('disabled', 'disabled');
         $('#txtAdvChq').attr('disabled', 'disabled');
@@ -1005,12 +1115,16 @@ End Code
         $('#txtAdvCred').attr('disabled', 'disabled');
         $('#btnAdd').attr('disabled', 'disabled');
         $('#btnDel').attr('disabled', 'disabled');
+        $('#btnSave').attr('disabled', 'disabled');
+        $('#btnUpdate').attr('disabled', 'disabled');
 
         if (userRights.indexOf('E') >= 0){
             $('#btnSave').removeAttr('disabled');
+            $('#btnUpdate').removeAttr('disabled');
         }
         if (userRights.indexOf('I') >= 0) {
             $('#btnSave').removeAttr('disabled');
+            $('#btnUpdate').removeAttr('disabled');
             $('#btnAdd').removeAttr('disabled');    
         }
         if (userRights.indexOf('D') >= 0) {
@@ -1031,7 +1145,7 @@ End Code
             return;
         }
         if (dtl != undefined) {
-            var obj = GetDataDetail();
+            let obj = GetDataDetail();
             if (obj.ItemNo == 0) {
                 if (userRights.indexOf('I') < 0) {
                     alert('you are not authorize to add');
@@ -1042,7 +1156,7 @@ End Code
                 alert('you are not authorize to edit');
                 return;
             }
-            var jsonString = JSON.stringify({ data: obj });
+            let jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
             $.ajax({
                 url: "@Url.Action("SaveAdvanceDetail", "Adv")",
@@ -1058,7 +1172,6 @@ End Code
         }
         alert('No data to save');
     }
-
     function ReadAdvDetail(dt) {
         $('#tbDetail').DataTable({
             data:dt,
@@ -1068,19 +1181,21 @@ End Code
                 { data: "SICode", title: "Service" },
                 { data: "SDescription", title: "Description" },
                 { data: "ForJNo", title: "Job" },
+                { data: "CurrencyCode", title: "Currency" },
+                { data: "ExchangeRate", title: "Rate" },
+                { data: "AdvQty", title: "Qty" },
+                { data: "UnitPrice", title: "Price" },
                 { data: "AdvAmount", title: "Amount" },
                 { data: "ChargeVAT", title: "VAT" },
                 { data: "Charge50Tavi", title: "WH-Tax" },
-                { data: "AdvNet", title: "Net" },
-                { data: "CurrencyCode", title: "Currency" },
-                { data: "TRemark", title: "Remark" }
+                { data: "AdvNet", title: "Net" }
             ],
             "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
                 {
                     "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                     "data": null,
                     "render": function (data, type, full, meta) {
-                        var html = "<button class='btn btn-warning'>Edit</button>";
+                        let html = "<button class='btn btn-warning'>Edit</button>";
                         return html;
                     }
                 }
@@ -1090,7 +1205,7 @@ End Code
         $('#tbDetail tbody').on('click', 'tr', function () {
             $('#tbDetail tbody > tr').removeClass('selected');
             $(this).addClass('selected');            
-            var data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
+            let data = $('#tbDetail').DataTable().row(this).data(); //read current row selected
             LoadDetail(data); //callback function from caller 
         });
         $('#tbDetail tbody').on('click', 'button', function () {
@@ -1099,7 +1214,7 @@ End Code
         });
     }
     function GetDataDetail() {
-        var dt = {
+        let dt = {
             BranchCode : $('#txtBranchCode').val(),
             AdvNo : $('#txtAdvNo').val(),
             ItemNo : $('#txtItemNo').val(),
@@ -1134,7 +1249,7 @@ End Code
             $('#txtItemNo').val(dt.ItemNo);
             $('#txtSICode').val(dt.SICode);
             $('#cboSTCode').val(dt.STCode);
-            var r = FindService($('#txtSICode').val())
+            let r = FindService($('#txtSICode').val())
             ReadService(r);
             if (isjobmode == false) {
                 $('#txtForJNo').val(dt.ForJNo);
@@ -1171,7 +1286,7 @@ End Code
         dtl = {};
         $('#txtItemNo').val('0');
         $('#txtSICode').val('');
-        $('#cboSTCode').val('STD');
+        $('#cboSTCode').val('');
         if (isjobmode == false) {
             $('#txtForJNo').val('');
             $('#txtInvNo').val('');
@@ -1197,7 +1312,7 @@ End Code
         $('#txtDetCurrency').val($('#txtMainCurrency').val());
         $('#txtVenCode').val('');
 
-        $('#chkDuplicate').prop('checked', false);
+        $('#chkDuplicate').prop('checked', true);
         $('#txtAMT').removeAttr('disabled');
         $('#txtVATRate').removeAttr('disabled');
         $('#txtWHTRate').removeAttr('disabled');
@@ -1215,27 +1330,28 @@ End Code
         }
     }
     function FindService(Code) {
-        var c = $.grep(serv, function (data) {
+        let c = $.grep(serv, function (data) {
             return data.SICode === Code;
         });
         return c[0];
     }
     function SetGridAdv() {
-        var w = $('#txtBranchCode').val();
+        let w = $('#txtBranchCode').val();
         if (job.length > 0) {
             w += '&jobno=' + job;
-        }
-        if ($('#txtCustCode').val()!=='') {
-            w += '&custcode=' + $('#txtCustCode').val();
-        }
-        if ($('#txtCustBranch').val() !== '') {
-            w += '&custbranch=' + $('#txtCustBranch').val();
-        }
-        if ($('#cboJobType').val() !== '') {
-            w += '&jtype=' + $('#cboJobType').val();
-        }
-        if ($('#cboShipBy').val() !== '') {
-            w += '&sby=' + $('#cboShipBy').val();
+        } else {
+            if ($('#txtCustCode').val()!=='') {
+                w += '&custcode=' + $('#txtCustCode').val();
+            }
+            if ($('#txtCustBranch').val() !== '') {
+                w += '&custbranch=' + $('#txtCustBranch').val();
+            }
+            if ($('#cboJobType').val() !== '') {
+                w += '&jtype=' + $('#cboJobType').val();
+            }
+            if ($('#cboShipBy').val() !== '') {
+                w += '&sby=' + $('#cboShipBy').val();
+            }
         }
         if ($('#txtReqBy').val() !== '') {
             w += '&reqby=' + $('#txtReqBy').val();
@@ -1245,7 +1361,7 @@ End Code
                 alert('data not found on this branch');
                 return;
             }
-            var h = r.adv.data[0].Table;
+            let h = r.adv.data[0].Table;
             $('#tbHeader').DataTable({
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
@@ -1263,17 +1379,22 @@ End Code
                     { data: "CustInvNo", title: "Cust Inv" },
                     { data: "DocStatus", title: "Status" },
                     { data: "TotalAdvance", title: "Total" },
-                    { data: "SubCurrency", title: "Currency" },
+                    { data: "Total50Tavi", title: "W/T" },
                     { data: "Doc50Tavi", title: "W/T No" },
                     { data: "PaymentNo", title: "A/P No" },
-                    { data: "TRemark", title: "Remark" },
+                    {
+                        data: null, title: "Request Amt",
+                        render: function (data) {
+                            return CDbl(Number(data.AdvCash) + Number(data.AdvChqCash) + Number(data.AdvChq) + Number(data.AdvCred), 2) + '' + data.SubCurrency;
+                        }
+                    },
                 ],
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
                 $('#tbHeader tbody > tr').removeClass('selected');
                 $(this).addClass('selected');
-                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 ShowData(data.BranchCode, data.AdvNo); //callback function from caller 
                 $('#frmHeader').modal('hide');
             });
@@ -1302,7 +1423,7 @@ End Code
                 SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
             case 'servicecode':
-                SetGridSICode(path, '#tbServ', "", '#frmSearchSICode', ReadService);
+                SetGridSICodeByGroup(path, '#tbServ', $('#cboSTCode').val(), '#frmSearchSICode', ReadService);
                 break;
             case 'job':
                 SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam(), ReadJob);
@@ -1319,7 +1440,7 @@ End Code
         }
     }
     function GetParam() {
-        var strParam = '?';
+        let strParam = '?';
         strParam += 'Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
@@ -1354,42 +1475,36 @@ End Code
     function ReadAdvBy(dt) {
         $('#txtAdvBy').val(dt.UserID);
         $('#txtAdvName').val(dt.TName);
-        $('#txtAdvBy').focus();
     }
     function ReadReqBy(dt) {
         $('#txtReqBy').val(dt.UserID);
         $('#txtReqName').val(dt.TName);
-        $('#txtReqBy').focus();
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
-        $('#txtBranchCode').focus();
     }
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
-        $('#txtCustCode').focus();
     }
     function ReadService(dt) {
-        $('#txtSICode').focus();
         if (dt != undefined) {
             $('#txtSICode').val(dt.SICode);
+            $('#cboSTCode').val(dt.GroupCode);
+
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
-            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "7");
-            $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
+            if ($('#txtVATRate').val() == '') $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "@ViewBag.PROFILE_VATRATE");
+            if ($('#txtWHTRate').val() == '') $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
+            if ($('#txtUnitPrice').val() == '') $('#txtUnitPrice').val(dt.StdPrice);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
-                $('#txtVATRate').attr('disabled', 'disabled');
-                $('#txtWHTRate').attr('disabled', 'disabled');
                 $('#txtVAT').attr('disabled', 'disabled');
                 $('#txtWHT').attr('disabled', 'disabled');
             } else {
                 $('#txtAMT').removeAttr('disabled');
-                $('#txtVATRate').removeAttr('disabled');
-                $('#txtWHTRate').removeAttr('disabled');
                 $('#txtVAT').removeAttr('disabled');
                 $('#txtWHT').removeAttr('disabled');
             }
@@ -1410,29 +1525,30 @@ End Code
     function ReadJob(dt) {
         $('#txtForJNo').val(dt.JNo);
         $('#txtInvNo').val(dt.InvNo);
-        $('#txtForJNo').focus();
     }
     function SumTotal() {
-        var cash = CDbl($('#txtAdvCash').val(),4);
-        var chq = CDbl($('#txtAdvChq').val(),4);
-        var chqcash = CDbl($('#txtAdvChqCash').val(),4);
-        var cred = CDbl($('#txtAdvCred').val(),4);
+        let cash = CDbl($('#txtAdvCash').val(),4);
+        let chq = CDbl($('#txtAdvChq').val(),4);
+        let chqcash = CDbl($('#txtAdvChqCash').val(),4);
+        let cred = CDbl($('#txtAdvCred').val(),4);
         return CDbl(Number(cash) + Number(chq) + Number(chqcash) + Number(cred),4);
     }
     function GetTotal() {
-        var total = SumTotal();
-        return CDbl(CNum($('#txtTotalAmount').val()) / CNum($('#txtExchangeRate').val()) - total,4);
+        let total = SumTotal();
+        let sum = CNum($('#txtTotalAmount').val());
+        return CDbl(sum / CNum($('#txtExchangeRate').val()) - total,4);
     }
     function CalAmount() {
-        var price = CDbl($('#txtUnitPrice').val(),4);
-        var qty = CDbl($('#txtAdvQty').val(),4);
-        var rate = CDbl($('#txtExcRate').val(),4); //rate ของ detail
-        var type = $('#txtVatType').val();
+        let price = CDbl($('#txtUnitPrice').val(),4);
+        let qty = CDbl($('#txtAdvQty').val(),4);
+        let rate = CDbl($('#txtExcRate').val(),4); //rate ของ detail
+        let type = $('#txtVatType').val();
         if (qty > 0) {
-            var amt = CNum(qty) * CNum(price);
+            let amt = CNum(qty) * CNum(price);
             $('#txtAMTCal').val(CDbl(CNum(amt), 4));
-            //var exc = CDbl($('#txtExchangeRate').val(), 4); //rate ของ header
-            //var total = CDbl(CNum(amt) / CNum(exc),4);
+            //let exc = CDbl($('#txtExchangeRate').val(), 4); //rate ของ header
+            //let total = CDbl(CNum(amt) / CNum(exc),4);
+            if (type == '0' || type == '') type = '1';
             if (type == '2') {
                 //$('#txtNET').val(CDbl(CNum(total),4));
                 $('#txtNET').val(CDbl(CNum(amt) * CNum(rate), 4));
@@ -1451,12 +1567,12 @@ End Code
         }
     }
     function CalTotal() {
-        var amt = CDbl($('#txtAMT').val(),4);
-        var vat = CDbl($('#txtVAT').val(),4);
-        var wht = CDbl($('#txtWHT').val(),4);
-        var net = CDbl($('#txtNET').val(),4);
-        var type = $('#txtVatType').val();
-        if (type == '') type = '1';
+        let amt = CDbl($('#txtAMT').val(),4);
+        let vat = CDbl($('#txtVAT').val(),4);
+        let wht = CDbl($('#txtWHT').val(),4);
+        let net = CDbl($('#txtNET').val(),4);
+        let type = $('#txtVatType').val();
+        if (type == '0'||type=='') type = '1';
         if (type == '2') {
             $('#txtAMT').val(CDbl(CNum(net) - CNum(vat) + CNum(wht),4));
             $('#txtNET').val(CDbl(net,4));
@@ -1467,18 +1583,21 @@ End Code
         }
     }
     function CalVATWHT() {
-        var type = $('#txtVatType').val();
-        if (type == '') type = '1';
-        var amt = CDbl($('#txtAMT').val(),4);
+        let type = $('#txtVatType').val();
+        if (type == '' || type == '0') {
+            type = '1';
+            $('#txtVatType').val(type);
+        }
+        let amt = CDbl($('#txtAMT').val(),4);
         if (type == '2') {
             amt = CDbl($('#txtNET').val(),4);
         }
-        var vatrate = CDbl($('#txtVATRate').val(),4);
-        var whtrate = CDbl($('#txtWHTRate').val(),4);
-        var vat = 0;
-        var wht = 0;
+        let vatrate = CDbl($('#txtVATRate').val(),4);
+        let whtrate = CDbl($('#txtWHTRate').val(),4);
+        let vat = 0;
+        let wht = 0;
         if (type == "2") {
-            var base = amt * 100 / (100 + (vatrate - whtrate));
+            let base = amt * 100 / (100 + (vatrate - whtrate));
             vat = base * vatrate * 0.01;
             wht = base * whtrate * 0.01;
         }
@@ -1489,5 +1608,141 @@ End Code
         $('#txtVAT').val(CDbl(vat,4));
         $('#txtWHT').val(CDbl(wht,4));
         CalTotal();
+    } 
+    function GetExchangeRate() {
+        $.get('https://free.currencyconverterapi.com/api/v6/convert?q=' + $('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val() + '&compact=ultra&apiKey=6210d55b79170a4a7da2', function (r) {
+            let rate = CDbl(r[$('#txtSubCurrency').val() + '_' + $('#txtMainCurrency').val()], 4);
+            $('#txtExchangeRate').val(rate);
+        });
+    }
+    function AutoGenWHTax() {
+        if ($('#txtDoc50Tavi').val() !== '') {
+            window.open(path + 'Acc/WHTax?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDoc50Tavi').val());
+            return;
+        }
+        $.get(path + 'master/getcompany?Code=' + $('#txtCustCode').val() + '&Branch' + $('#txtCustBranch').val()).done(function (r) {
+            let dr = r.company.data;
+            if (dr.length > 0) {
+                SaveWHTax(dr[0]);
+            }
+        });
+    }
+    function SaveWHTax(dt) {
+        if ($('#btnSave').attr('disabled') == 'disabled') {
+            alert('Cannot Save WH-Tax because document has been locked');
+            return;
+        }
+        let obj = GetWHTaxHeader(dt);
+        let jsonText = JSON.stringify({ data: obj });
+        //alert(jsonText);
+        $.ajax({
+            url: "@Url.Action("SetWHTaxHeader", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data != null) {
+                    SetWHTaxDetail(response.result.data);
+                    alert(response.result.msg);
+                    $('#txtDoc50Tavi').val(response.result.data);
+                    $('#txtDoc50Tavi').focus();
+                    return;
+                }
+                alert(response.result.msg);
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    }
+    function SetWHTaxDetail(docno) {
+        $.get(path + 'adv/getadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
+            let dt = r.adv.detail.filter(function (data) {
+                return data.Charge50Tavi > 0;
+            });
+            let i = 0;
+            let j = 0;
+            for (let d of dt) {
+                i += 1;
+                let obj={			
+                    BranchCode:$('#txtBranchCode').val(),
+                    DocNo:docno,
+                    ItemNo:i,
+                    IncType:14,
+                    PayDate:CDateTH($('#txtAdvDate').val()),
+                    PayAmount:d.AdvAmount,
+                    PayTax:d.Charge50Tavi,
+                    PayTaxDesc:d.SDescription,
+                    JNo:d.ForJNo,
+                    DocRefType:1,
+                    DocRefNo:$('#txtAdvNo').val(),
+                    PayRate:d.Rate50Tavi
+                };
+
+                SaveWHTaxDetail(obj);
+            }
+        });
+    }
+    function SaveWHTaxDetail(obj) {
+        let jsonText = JSON.stringify({ data: obj });
+        //alert(jsonText);
+        $.ajax({
+            url: "@Url.Action("SetWHTaxDetail", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data != null) {
+                    j = response.result.data;
+                    return;
+                }                                
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    }
+    function GetWHTaxHeader(dt) {
+        let obj = {
+            BranchCode: $('#txtBranchCode').val(),
+            DocNo: '',
+            DocDate: CDateTH($('#txtAdvDate').val()),
+            TaxNumber1: dt.TaxNumber,
+            TName1: dt.NameThai,
+            TAddress1: dt.TAddress1 + ' ' +dt.TAddress2,
+            TaxNumber2: '@ViewBag.PROFILE_TAXNUMBER',
+            TName2: '@ViewBag.PROFILE_COMPANY_NAME',
+            TAddress2: '@ViewBag.PROFILE_COMPANY_ADDR1' + '' + '@ViewBag.PROFILE_COMPANY_ADDR2',
+            TaxNumber3: '',
+            TName3: '',
+            TAddress3: '',
+            IDCard1: '',
+            IDCard2: '',
+            IDCard3: '',
+            SeqInForm: 0,
+            FormType: 7,
+            TaxLawNo: 5,
+            IncRate: 3,
+            IncOther: '',
+            UpdateBy: user,
+            TotalPayAmount: 0,
+            TotalPayTax: 0,
+            SoLicenseNo: '',
+            SoLicenseAmount: 0,
+            SoAccAmount: 0,
+            PayeeAccNo: '',
+            SoTaxNo: '',
+            PayTaxType: '',
+            PayTaxOther: '',
+            CancelProve: '',
+            CancelReason: '',
+            CancelDate: null,
+            LastUpdate: CDateTH(GetToday()),
+            TeacherAmt: 0,
+            Branch1: '',
+            Branch2: '',
+            Branch3: ''
+        };
+        return obj;
     }
 </script>

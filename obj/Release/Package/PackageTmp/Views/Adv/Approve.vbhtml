@@ -44,7 +44,7 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-2">
-                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv()">Show</button>
+                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
             </div>
             <div class="col-sm-10">
                 Approve Document : <input type="text" id="txtListApprove" class="form-control" value="" disabled/>
@@ -76,15 +76,15 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var arr = [];
-    $(document).ready(function () {
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    let arr = [];
+    //$(document).ready(function () {
         SetEvents();
-    });
+    //});
     function SetEvents() {
         //Combos
-        var lists = 'JOB_TYPE=#cboJobType';
+        let lists = 'JOB_TYPE=#cboJobType';
         lists += ',SHIP_BY=#cboShipBy';
         loadCombos(path, lists);
         //Events
@@ -109,19 +109,21 @@ End Code
 
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
-            var dv = document.getElementById("dvLOVs");
+            let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
             CreateLOV(dv, '#frmSearchReq', '#tbReq', 'Request By', response, 2);
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
         });
+        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
     }
-    function SetGridAdv() {
+    function SetGridAdv(isAlert) {
         arr = [];
         ShowSummary();
 
-        var w = '';
+        let w = '';
         if ($('#txtReqBy').val() !== "") {
             w = w + '&reqby=' + $('#txtReqBy').val();
         }
@@ -147,10 +149,10 @@ End Code
         $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.adv.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                alert('data not found');
+                if (isAlert==true) alert('data not found');
                 return;
             }
-            var h = r.adv.data[0].Table;
+            let h = r.adv.data[0].Table;
             $('#tbHeader').DataTable({
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
@@ -174,16 +176,16 @@ End Code
             $('#tbHeader tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected') == true) {
                     $(this).removeClass('selected');
-                    var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                    let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                     RemoveData(data); //callback function from caller 
                     return;
                 }
                 $(this).addClass('selected');
-                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 AddData(data); //callback function from caller 
             });
             $('#tbHeader tbody').on('dblclick', 'tr', function () {
-                var data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 window.open(path + 'adv/index?BranchCode=' + data.BranchCode + '&AdvNo=' + data.AdvNo,'','');
             });
         });        
@@ -193,7 +195,7 @@ End Code
         ShowSummary();
     }
     function RemoveData(o) {
-        var idx = arr.indexOf(o);
+        let idx = arr.indexOf(o);
         if (idx < 0) {
             return;
         }
@@ -201,10 +203,10 @@ End Code
         ShowSummary();
     }
     function ShowSummary() {
-        var tot = 0;
-        var doc = '';
-        for (var i = 0; i < arr.length; i++) {
-            var o = arr[i];
+        let tot = 0;
+        let doc = '';
+        for (let i = 0; i < arr.length; i++) {
+            let o = arr[i];
             tot += o.TotalAdvance;
             doc += (doc != '' ? ',' : '') + o.AdvNo;
         }
@@ -216,19 +218,19 @@ End Code
             alert('no data to approve');
             return;
         }
-        var dataApp = [];
+        let dataApp = [];
         dataApp.push(user);
-        for (var i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             dataApp.push(arr[i].BranchCode + '|' + arr[i].AdvNo);
         }
-        var jsonString = JSON.stringify({ data: dataApp });
+        let jsonString = JSON.stringify({ data: dataApp });
         $.ajax({
             url: "@Url.Action("ApproveAdvance", "Adv")",
             type: "POST",
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
-                SetGridAdv();
+                SetGridAdv(false);
                 response ? alert("Approve Completed!") : alert("Cannot Approve");
             },
             error: function (e) {

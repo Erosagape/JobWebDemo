@@ -66,7 +66,7 @@ Public Class CUserAuth
                             dr("Author") = Me.Author
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            msg = "Save Complete"
+                            msg = "Save Authorize of " & Me.MenuID & " For " & Me.UserID & " As '" & Me.Author & "' Complete"
                         End Using
                     End Using
                 End Using
@@ -122,7 +122,7 @@ Public Class CUserAuth
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-                cn.Close()
+
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = ex.Message

@@ -40,6 +40,7 @@ End Code
                 <thead>
                     <tr>
                         <th>JobNo</th>
+                        <th>JobType/ShipBy</th>
                         <th>InspectDate</th>
                         <th>Inv.Customer</th>
                         <th>Customer</th>
@@ -66,13 +67,15 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    $(document).ready(function () {
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    
+    //$(document).ready(function () {
         loadCombo();
         getJobdata();
         SetEvents();
-    });
+    //});    
+
     function SetEvents() {
         $('#txtJobNo').keydown(function (e) {
             if (e.which === 13) {
@@ -83,7 +86,7 @@ End Code
         });
     }
     function loadCombo() {
-        var lists = 'JOB_TYPE=#cboJobType';
+        let lists = 'JOB_TYPE=#cboJobType';
         lists += ',SHIP_BY=#cboShipBy';
         lists += ',JOB_STATUS=#cboStatus';
 
@@ -93,41 +96,48 @@ End Code
         loadMonth('#cboMonth');
     }
     function getJobdata() {
-        var strParam = GetCliteria();
-        var table = $('#tblJob').DataTable({
-            "ajax": {
-                //"url": "joborder/getjobjson" + strParam,
-                "url": path+"joborder/getjobsql" + strParam,
-                "dataSrc": "job.data"
-            },
-            "destroy": true,
-            "columns": [
-                { "data": "JNo", "title": "Job Number" },
-                {
-                    "data": "DutyDate", "title": "Clearance Date",
-                    "render" : function (data) {
-                        return CDateEN(data);
-                    }
+        $.get(path + 'joborder/updatejobstatus' + GetCliteria(), function (r) {
+            $('#tblJob').DataTable({
+                "ajax": {
+                    //"url": "joborder/getjobjson" + strParam,
+                    "url": path+"joborder/getjobreport" + GetCliteria(),
+                    "dataSrc": "job.data"
                 },
-                { "data": "InvNo", "title": "Customer Inv." },
-                { "data": "CustCode", "title": "Customer" },
-                { "data": "DeclareNumber", "title": "Declare No." },
-                { "data": "InvProduct", "title": "Commodity" }
-            ]
-        });
-        $('#tblJob tbody').on('click', 'tr', function () {
-            $('#tblJob tbody > tr').removeClass('selected');
-            $(this).addClass('selected');
+                "destroy": true,
+                "columns": [
+                    { "data": "JNo", "title": "Job Number" },
+                    {
+                        "data": null, "title": "JobType",
+                        "render": function (data) {
+                            return data.JobTypeName + '/' + data.ShipByName;
+                        }
+                    },
+                    {
+                        "data": "DutyDate", "title": "Clearance Date",
+                        "render" : function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    { "data": "InvNo", "title": "Customer Inv." },
+                    { "data": "CustCode", "title": "Customer" },
+                    { "data": "DeclareNumber", "title": "Declare No." },
+                    { "data": "InvProduct", "title": "Commodity" }
+                ]
+            });
+            $('#tblJob tbody').on('click', 'tr', function () {
+                $('#tblJob tbody > tr').removeClass('selected');
+                $(this).addClass('selected');
 
-            var data = $('#tblJob').DataTable().row(this).data();
-            $('#txtJobNo').val(data.JNo);
-        });
-        $('#tblJob tbody').on('dblclick', 'tr', function () {
-            OpenJob();
-        });
+                let data = $('#tblJob').DataTable().row(this).data();
+                $('#txtJobNo').val(data.JNo);
+            });
+            $('#tblJob tbody').on('dblclick', 'tr', function () {
+                OpenJob();
+            });
+        });            
     }
     function GetCliteria() {
-        var str = '';
+        let str = '';
         if ($('#cboJobType').val() > '') {
             if (str.length > 0) str += '&';
             str += 'JType=' + $('#cboJobType').val();
@@ -155,7 +165,10 @@ End Code
         return '?' + str;
     }
     function OpenJob() {
-        window.open(path +'joborder/showjob?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val());
+        $.get(path + 'joborder/updatejobstatus?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val(), function (r) {
+            //alert(r);
+            window.open(path + 'joborder/showjob?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val());
+        });
     }
     function PrintJob() {
         window.open(path +'joborder/formjob?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val());

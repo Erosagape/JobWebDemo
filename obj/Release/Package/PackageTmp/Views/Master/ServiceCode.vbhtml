@@ -77,7 +77,7 @@ End Code
                 <label for="chkIsShowPrice">Cannot Change Price</label>
                 <br />
                 <input type="checkbox" id="chkIsUsedCoSlip" />
-                <label for="chkIsUsedCoSlip">Used for Co-person</label>
+                <label for="chkIsUsedCoSlip">Used for Co-operation</label>
             </div>
         </div>
         <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>

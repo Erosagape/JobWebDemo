@@ -1,15 +1,17 @@
 ﻿//basic function tools for binding
 function CreateLOV(dv, frm, tb, name, html, c) {
+    if (c <= 4) html = html.replace('<th>desc2</th>', '');
+    if (c <= 3) html = html.replace('<th>desc1</th>', '');
     if (c <= 2) html = html.replace('<th>name</th>', '');
     if (c == 1) html = html.replace('<th>key</th>', '');
 
-    var lov = document.createElement("div");
+    let lov = document.createElement("div");
     lov.className = "modal fade";
     lov.setAttribute("role", "dialog");
     lov.id = frm.replace("#", "");
     dv.appendChild(lov);
 
-    var struct = html.replace('tbX', tb.replace("#", "")).replace('cpX', name);
+    let struct = html.replace('tbX', tb.replace("#", "")).replace('cpX', name);
     BindList(frm, tb, struct);
 }
 function BindList(d, t, l) {
@@ -22,7 +24,7 @@ function BindList(d, t, l) {
 function BindEvent(t, d, ev) {
     //use for bind event of popup when click some row and selected data
     $(t + ' tbody').on('click', 'button', function () {
-        var dt = GetSelect(t, this); //read current row selected
+        let dt = GetSelect(t, this); //read current row selected
         ev(dt); //callback function from caller 
         $(d).modal('hide');
     });
@@ -49,7 +51,7 @@ function SetGridConfigList(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -61,12 +63,13 @@ function SetGridConfigList(p, g, d, ev) {
 function SetGridConfigVal(p, g, t, d, ev) {
     $(g).DataTable({
         ajax: {
-            url: p + 'Config/GetConfig?Code=' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            url: p + 'Config/GetConfig?Prefix=' + t, //web service ที่จะ call ไปดึงข้อมูลมา
             dataSrc: 'config.data'
         },
         selected: true, //ให้สามารถเลือกแถวได้
         columns: [ //กำหนด property ของ header column
             { data: null, title: "#" },
+            { data: "ConfigCode", title: "Code" },
             { data: "ConfigKey", title: "Key" },
             { data: "ConfigValue", title: "Value" }
         ],
@@ -75,7 +78,7 @@ function SetGridConfigVal(p, g, t, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -101,7 +104,7 @@ function SetGridVender(p, g ,d ,ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -128,7 +131,34 @@ function SetGridSICode(p, g, t, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridSICodeFilter(p, g, t, d, ev) {
+    //popup for search data
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetServiceCode' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'servicecode.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "SICode", title: "Service Code" },
+            { data: "NameThai", title: "Description" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -155,7 +185,75 @@ function SetGridSICodeByGroup(p, g, t, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridDocument(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Acc/GetDocBalance' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'document.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "DocNo", title: "เลขที่" },
+            {
+                data: null, title: "วันที่เช็ค",
+                render: function (data) {
+                    return CDateTH(data.VoucherDate);
+                }
+            },
+            { data: "CreditAmount", title: "ยอดเงินที่ตั้งไว้" },
+            { data: "AmountUsed", title: "ยอดเงินที่ใช้" },
+            { data: "AmountRemain", title: "ยอดเงินคงเหลือ" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridCheque(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Acc/GetCheque' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'cheque.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "ChqNo", title: "เลขที่" },
+            {
+                data: null, title: "วันที่เช็ค",
+                render: function (data) {
+                    return CDateTH(data.ChqDate);
+                }
+            },
+            { data: "ChqAmount", title: "ยอดเงินหน้าเช็ค" },
+            { data: "AmountUsed", title: "ยอดเงินที่ใช้" },
+            { data: "AmountRemain", title: "ยอดเงินคงเหลือ" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -181,7 +279,7 @@ function SetGridCurrency(p, g , d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -207,7 +305,7 @@ function SetGridGroupCode(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -219,7 +317,7 @@ function SetGridGroupCode(p, g, d, ev) {
 function SetGridUnit(p, g ,d ,ev) {
     $.get(p + 'joborder/getjobdatadistinct?field=InvProductUnit')
         .done(function (r) {
-            var dr = r[0].Table;
+            let dr = r[0].Table;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
@@ -233,7 +331,7 @@ function SetGridUnit(p, g ,d ,ev) {
                             "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
+                                let html = "<button class='btn btn-warning'>Select</button>";
                                 return html;
                             }
                         }
@@ -262,7 +360,7 @@ function SetGridBranch(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -288,7 +386,7 @@ function SetGridUser(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -315,7 +413,7 @@ function SetGridCompany(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -327,7 +425,7 @@ function SetGridCompany(p, g, d, ev) {
 function SetGridContactName(p, g, d, ev) {
     $.get(p + 'joborder/getjobdatadistinct?field=CustContactName')
         .done(function (r) {
-            var dr = r[0].Table;
+            let dr = r[0].Table;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
@@ -341,7 +439,7 @@ function SetGridContactName(p, g, d, ev) {
                             "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
+                                let html = "<button class='btn btn-warning'>Select</button>";
                                 return html;
                             }
                         }
@@ -351,6 +449,33 @@ function SetGridContactName(p, g, d, ev) {
                 BindEvent(g, d, ev);
             }
         });
+}
+function SetGridInv(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'acc/getinvheader' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'invheader.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "DocNo", title: "Invoice No" },
+            { data: "CustCode", title: "Customer" },
+            { data: "TotalNet", title: "Total" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
 }
 function SetGridJob(p, g, d, t, ev) {
     $(g).DataTable({
@@ -370,7 +495,7 @@ function SetGridJob(p, g, d, t, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -397,7 +522,7 @@ function SetGridInterPort(p, g, d, t, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -423,7 +548,7 @@ function SetGridCountry(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -435,7 +560,7 @@ function SetGridCountry(p, g, d, ev) {
 function SetGridWeightUnit(p, g, d, ev) {
     $.get(p + 'joborder/getjobdatadistinct?field=GWUnit')
         .done(function (r) {
-            var dr = r[0].Table;
+            let dr = r[0].Table;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
@@ -449,7 +574,7 @@ function SetGridWeightUnit(p, g, d, ev) {
                             "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
+                                let html = "<button class='btn btn-warning'>Select</button>";
                                 return html;
                             }
                         }
@@ -464,7 +589,7 @@ function SetGridWeightUnit(p, g, d, ev) {
 function SetGridVessel(p, g, d, t, ev) {
     $.get(p + 'joborder/getjobdatadistinct?field='+ t +'VesselName')
         .done(function (r) {
-            var dr = r[0].Table;
+            let dr = r[0].Table;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
@@ -478,7 +603,7 @@ function SetGridVessel(p, g, d, t, ev) {
                             "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
+                                let html = "<button class='btn btn-warning'>Select</button>";
                                 return html;
                             }
                         }
@@ -506,7 +631,7 @@ function SetGridDeclareType(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -533,7 +658,7 @@ function SetGridCustomsPort(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -559,7 +684,7 @@ function SetGridServUnit(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -571,7 +696,7 @@ function SetGridServUnit(p, g, d, ev) {
 function SetGridProjectName(p, g, d, ev) {
     $.get(p + 'joborder/getjobdatadistinct?field=ProjectName')
         .done(function (r) {
-            var dr = r[0].Table;
+            let dr = r[0].Table;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
@@ -585,7 +710,7 @@ function SetGridProjectName(p, g, d, ev) {
                             "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
+                                let html = "<button class='btn btn-warning'>Select</button>";
                                 return html;
                             }
                         }
@@ -599,7 +724,7 @@ function SetGridProjectName(p, g, d, ev) {
 function SetGridInvProduct(p, g, d, ev) {
     $.get(p + 'joborder/getjobdatadistinct?field=InvProduct')
         .done(function (r) {
-            var dr = r[0].Table;
+            let dr = r[0].Table;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
@@ -613,7 +738,7 @@ function SetGridInvProduct(p, g, d, ev) {
                             "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                var html = "<button class='btn btn-warning'>Select</button>";
+                                let html = "<button class='btn btn-warning'>Select</button>";
                                 return html;
                             }
                         }
@@ -641,7 +766,7 @@ function SetGridBank(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }
@@ -667,7 +792,7 @@ function SetGridBookAccount(p, g, d, ev) {
                 "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
                 "data": null,
                 "render": function (data, type, full, meta) {
-                    var html = "<button class='btn btn-warning'>Select</button>";
+                    let html = "<button class='btn btn-warning'>Select</button>";
                     return html;
                 }
             }

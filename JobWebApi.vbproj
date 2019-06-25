@@ -383,6 +383,7 @@
     <Compile Include="Controllers\Main.vb" />
     <Compile Include="Controllers\MenuController.vb" />
     <Compile Include="Controllers\ReportController.vb" />
+    <Compile Include="Controllers\TrackingController.vb" />
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -408,6 +409,7 @@
     <Compile Include="Models\CJobOrder.vb" />
     <Compile Include="Models\CRcpDetail.vb" />
     <Compile Include="Models\CRcpHeader.vb" />
+    <Compile Include="Models\CRole.vb" />
     <Compile Include="Models\CServiceCode.vb" />
     <Compile Include="Models\CServiceGroup.vb" />
     <Compile Include="Models\CServUnit.vb" />
@@ -519,6 +521,46 @@
     <Content Include="Views\Acc\FormWHTax.vbhtml" />
     <Content Include="Views\Shared\_ReportNoHead.vbhtml" />
     <Content Include="Views\Master\ServiceGroup.vbhtml" />
+    <Content Include="Views\Acc\FormWTax3.vbhtml" />
+    <Content Include="Views\Acc\FormWTax3D.vbhtml" />
+    <Content Include="Views\Shared\_ReportNoHeadLandscape.vbhtml" />
+    <Content Include="Views\Acc\FormWTax53.vbhtml" />
+    <Content Include="Views\Acc\FormWTax53D.vbhtml" />
+    <Content Include="Views\Acc\FormInv.vbhtml" />
+    <Content Include="Views\Acc\FormBill.vbhtml" />
+    <Content Include="Views\Acc\FormRcp.vbhtml" />
+    <Content Include="Views\Acc\FormTaxinv.vbhtml" />
+    <Content Include="Views\Acc\Invoice.vbhtml" />
+    <Content Include="Views\Acc\Billing.vbhtml" />
+    <Content Include="Views\Acc\Receipt.vbhtml" />
+    <Content Include="Views\Acc\Taxinvoice.vbhtml" />
+    <Content Include="Views\Acc\Expense.vbhtml" />
+    <Content Include="Views\Tracking\Index.vbhtml" />
+    <Content Include="Views\JobOrder\Quotation.vbhtml" />
+    <Content Include="Views\Acc\CreditNote.vbhtml" />
+    <Content Include="Views\JobOrder\Transport.vbhtml" />
+    <Content Include="Views\JobOrder\FormDelivery.vbhtml" />
+    <Content Include="Views\Adv\CreditAdv.vbhtml" />
+    <Content Include="Views\Adv\FormCreditAdv.vbhtml" />
+    <Content Include="Views\Acc\FormCreditNote.vbhtml" />
+    <Content Include="Views\Tracking\Document.vbhtml" />
+    <Content Include="Views\Adv\EstimateCost.vbhtml" />
+    <Content Include="Views\Clr\Costing.vbhtml" />
+    <Content Include="Views\Clr\GenerateInv.vbhtml" />
+    <Content Include="Views\Acc\Cheque.vbhtml" />
+    <Content Include="Views\Clr\Earnest.vbhtml" />
+    <Content Include="Views\Acc\PettyCash.vbhtml" />
+    <Content Include="Views\Clr\FormClr.vbhtml" />
+    <Content Include="Views\JobOrder\QuoApprove.vbhtml" />
+    <Content Include="Views\Acc\RecvInv.vbhtml" />
+    <Content Include="Views\Acc\GLNote.vbhtml" />
+    <Content Include="Views\Config\Role.vbhtml" />
+    <Content Include="Views\JobOrder\FormJobSum.vbhtml" />
+    <Content Include="Views\JobOrder\FormQuotation.vbhtml" />
+    <Content Include="Views\Acc\FormGL.vbhtml" />
+    <Content Include="Views\JobOrder\FormTransport.vbhtml" />
+    <Content Include="Views\Acc\FormExpense.vbhtml" />
+    <Content Include="Views\Acc\GenerateBilling.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
