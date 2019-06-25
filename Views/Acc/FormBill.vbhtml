@@ -155,8 +155,8 @@ End Code
                 serv += Number(dr.AmtChargeVAT) + Number(dr.AmtChargeNonVAT);
                 adv += Number(dr.AmtAdvance);
                 vat += Number(dr.AmtVAT);
-                wh1 += (dr.AmtWHRate == 1 ? ShowNumber(dr.AmtWH, 2) : 0);
-                wh3 += (dr.AmtWHRate !== 1 ? ShowNumber(dr.AmtWH, 2) : 0);
+                wh1 += Number(dr.AmtWHRate == 1 ? ShowNumber(dr.AmtWH, 2) : 0);
+                wh3 += Number(dr.AmtWHRate !== 1 ? ShowNumber(dr.AmtWH, 2) : 0);
             }
             dv.html(html);
             $('#lblSumAdv').text(ShowNumber(adv, 2));

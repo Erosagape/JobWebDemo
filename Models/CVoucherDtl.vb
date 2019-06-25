@@ -272,6 +272,9 @@ Public Class CVoucherDoc
                         msg = "Cannot Cancel Document Status=" + row.DocStatus
                     End If
                 End If
+            Case "INV"
+                Me.DocNo = If(Me.DocNo.Substring(0, 1) = "*", Me.DocNo, "*" & Me.DocNo)
+                Me.SaveData(String.Format(" WHERE BranchCode='{0}' And ControlNo='{1}' And ItemNo='{2}'", Me.BranchCode, Me.ControlNo, Me.ItemNo))
         End Select
         Return msg
     End Function

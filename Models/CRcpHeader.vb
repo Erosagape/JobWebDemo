@@ -255,6 +255,15 @@ Public Class CRcpHeader
             m_TotalNet = value
         End Set
     End Property
+    Private m_FTotalNet As Double
+    Public Property FTotalNet As Double
+        Get
+            Return m_FTotalNet
+        End Get
+        Set(value As Double)
+            m_FTotalNet = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -294,6 +303,7 @@ Public Class CRcpHeader
                             dr("TotalVAT") = Me.TotalVAT
                             dr("Total50Tavi") = Me.Total50Tavi
                             dr("TotalNet") = Me.TotalNet
+                            dr("FTotalNet") = Me.FTotalNet
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -403,6 +413,9 @@ Public Class CRcpHeader
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("TotalNet"))) = False Then
                         row.TotalNet = rd.GetDouble(rd.GetOrdinal("TotalNet"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("FTotalNet"))) = False Then
+                        row.FTotalNet = rd.GetDouble(rd.GetOrdinal("FTotalNet"))
                     End If
                     lst.Add(row)
                 End While

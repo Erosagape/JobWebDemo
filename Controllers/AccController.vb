@@ -1220,6 +1220,104 @@ Namespace Controllers
                 Return Content("{""invdetail"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function GetInvReport() As ActionResult
+            Try
+                Dim tSqlw As String = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString = "NOPAY" Then
+                        tSqlw &= " AND ISNULL(r.ReceivedNet,0)=0 "
+                    End If
+                    If Request.QueryString("Show").ToString = "RECEIVED" Then
+                        tSqlw = " AND ISNULL(r.ReceivedNet,0)>0 "
+                    End If
+                    If Request.QueryString("Show").ToString = "CLEARED" Then
+                        tSqlw = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)<=0 "
+                    End If
+                    If Request.QueryString("Show").ToString = "ALL" Then
+                        tSqlw = ""
+                    End If
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND ih.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND ih.DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND ih.DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND ih.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("BillDateFrom")) Then
+                    tSqlw &= " AND ih.BillIssueDate>='" & Request.QueryString("BillDateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("BillDateTo")) Then
+                    tSqlw &= " AND ih.BillIssueDate<='" & Request.QueryString("BillDateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("BillTo")) Then
+                    tSqlw &= String.Format(" AND ih.BillToCustCode='{0}' ", Request.QueryString("BillTo").ToString)
+                End If
+                Dim isSummary As Boolean = False
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    If Request.QueryString("Type").ToString = "SUM" Then
+                        isSummary = True
+                    End If
+                End If
+                Dim oData = If(isSummary, New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvSummary(tSqlw)), New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvReport(tSqlw)))
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""inv"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""inv"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
+        Function GetInvForReceive() As ActionResult
+            Try
+                Dim tSqlw As String = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString = "NOPAY" Then
+                        tSqlw &= " AND ISNULL(r.ReceivedNet,0)=0 "
+                    End If
+                    If Request.QueryString("Show").ToString = "RECEIVED" Then
+                        tSqlw = " AND ISNULL(r.ReceivedNet,0)>0 "
+                    End If
+                    If Request.QueryString("Show").ToString = "CLEARED" Then
+                        tSqlw = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)<=0 "
+                    End If
+                    If Request.QueryString("Show").ToString = "ALL" Then
+                        tSqlw = ""
+                    End If
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND ih.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND ih.DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND ih.DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND ih.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("BillDateFrom")) Then
+                    tSqlw &= " AND ih.BillIssueDate>='" & Request.QueryString("BillDateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("BillDateTo")) Then
+                    tSqlw &= " AND ih.BillIssueDate<='" & Request.QueryString("BillDateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("BillTo")) Then
+                    tSqlw &= String.Format(" AND ih.BillToCustCode='{0}' ", Request.QueryString("BillTo").ToString)
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvForReceive() & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""invdetail"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
         Function GetInvForBill() As ActionResult
             Try
                 Dim tSqlw As String = " AND a.TotalNet>0 "

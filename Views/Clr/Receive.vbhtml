@@ -206,14 +206,17 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var arr = [];
-    var list = [];
-    var docno = '';
-    $(document).ready(function () {
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    let arr = [];
+    let list = [];
+    let docno = '';
+    //$(document).ready(function () {
+        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+
         SetEvents();
-    });
+    //});
     function SetEvents() {
         //Combos
         let lists = 'JOB_TYPE=#cboJobType';

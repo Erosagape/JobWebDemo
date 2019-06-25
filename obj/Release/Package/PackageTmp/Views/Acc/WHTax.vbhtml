@@ -432,21 +432,24 @@ End Code
     const path = '@Url.Content("~")';
     const user = '@ViewBag.User';
     const userRights = '@ViewBag.UserRights';
-    var docSel = null;
-    $(document).ready(function () {
+    let docSel = null;
+    //$(document).ready(function () {
         SetEvents();
         SetLOVs();
         SetEnterToTab();
         ClearData();
         CheckParams();
-    });
+    //});
     function CheckParams() {
         let branch = getQueryString('Branch');
         let code = getQueryString('Code');
         if (branch !== '' && code !== '') {
             $('#txtBranchCode').val(branch);
-            $('#txtDocNo').val(code);                
+            $('#txtDocNo').val(code);
             CallBackQueryWHTax(path, branch, code, ReadData);
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
         }
     }
     function SetEvents() {

@@ -609,7 +609,7 @@ LEFT JOIN (
     " & If(pType = "CU", "h.RecvBank,h.RecvBranch", "h.BankCode,h.BankBranch") & "
     FROM Job_CashControlSub h INNER JOIN Job_CashControlDoc d
     ON h.BranchCode=d.BranchCode AND h.ControlNo=d.ControlNo
-    WHERE h.PRType='P' AND NOT EXISTS(
+    WHERE NOT EXISTS(
         select ControlNo from Job_CashControl
         where BranchCode=h.BranchCode AND ControlNo=h.ControlNo AND ISNULL(CancelProve,'')<>''
     )
@@ -733,8 +733,8 @@ b.BNet as TotalAmt,
 b.BNet/b.CurRate as FTotalAmt,
 CASE WHEN ISNULL(b.SlipNO,'')<>'' AND b.BPrice>0 THEN b.BNet ELSE 0 END as AmtAdvance,
 CASE WHEN ISNULL(b.SlipNO,'')='' AND b.BPrice>0 THEN b.UsedAmount ELSE 0 END as AmtCharge,
-'' as CurrencyCodeCredit,
-1 as ExchangeRateCredit,
+b.CurrencyCode as CurrencyCodeCredit,
+b.CurRate as ExchangeRateCredit,
 0 as AmtCredit,
 0 as FAmtCredit,
 b.VATRate,
@@ -951,5 +951,101 @@ WHERE j.JobStatus<> c.JobStatus
 {0}
 "
         Return String.Format(sql, sqlwhere)
+    End Function
+    Function SQLSelectInvSummary(pSqlw As String) As String
+        Dim sqlGroup As String = "
+h.BranchCode,h.DocNo,h.Docdate,h.CustCode,h.CustBranch,h.CustTName,h.CustEName,
+h.BillToCustCode,h.BillToCustBranch,h.BillTName,h.BillEName,h.ContactName,h.EmpCode,
+h.RefNo,h.VATRate,h.TotalAdvance,h.TotalCharge,h.TotalIsTaxCharge,h.TotalIs50Tavi,
+h.TotalVAT,h.Total50Tavi,h.TotalCustAdv,h.TotalNet,h.CurrencyCode,h.ExchangeRate,
+h.ForeignNet,h.BillAcceptDate,h.BillIssueDate,h.BillAcceptNo,
+h.Remark1,h.Remark2,h.Remark3,h.Remark4,h.Remark5,h.Remark6,h.Remark7,h.Remark8,h.Remark9,h.Remark10,
+h.CancelReson,h.CancelProve,h.CancelDate,h.CancelTime,h.ShippingRemark,h.SumDiscount,
+h.DiscountRate,h.DiscountCal,h.TotalDiscount
+"
+
+        Dim sql As String = SQLSelectInvReport(pSqlw)
+        sql = "
+SELECT " & sqlGroup & "
+,sum(h.TotalNet) as TotalInv,sum(h.ReceivedNet) as TotalReceive
+,sum(h.TotalNet-h.ReceivedNet) as TotalBalance
+,max(h.ControlLink) as ControlLink
+FROM (
+" & sql & "
+) as h
+GROUP BY " & sqlGroup
+        Return sql
+    End Function
+    Function SQLSelectInvReport(Optional psqlW As String = "") As String
+        Dim sql As String = "
+select ih.*,id.ItemNo,id.SICode,id.SDescription,id.ExpSlipNO,id.SRemark,
+id.Amt,id.AmtDiscount,id.AmtCredit,
+id.AmtCharge,id.AmtAdvance,id.AmtVat,id.Amt50Tavi,
+id.TotalAmt,id.TotalAmt-id.AmtCredit as TotalNet,
+r.ReceivedAmt,r.ReceivedVat,r.ReceivedWht,r.ReceivedNet,
+r.ReceiptNo,r.ControlLink,v.PRVoucher,v.PRType,v.acType,v.ChqNo,v.ChqDate,
+v.RecvBank,v.RecvBranch,v.BookCode,v.BankCode,v.BankBranch,
+c1.NameThai as CustTName,c2.NameThai as BillTName,
+c1.NameEng as CustEName,c2.NameEng as BillEName
+from Job_InvoiceDetail id inner join Job_InvoiceHeader ih
+on id.BranchCode=ih.BranchCode
+and id.DocNo=ih.DocNo
+left join (
+	select rd.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo,
+    max(rd.ReceiptNo) as ReceiptNo,
+    max(rd.ControlNo + '-' +Convert(varchar,rd.ControlItemNo)) as ControlLink,
+	sum(rd.Amt) as ReceivedAmt,
+	sum(rd.AmtVAT) as ReceivedVat,
+	sum(rd.Amt50Tavi) as ReceivedWht,
+	sum(rd.Net) as ReceivedNet
+	from Job_ReceiptDetail rd inner join Job_ReceiptHeader rh
+	on rd.BranchCode=rh.BranchCode AND rd.ReceiptNo=rh.ReceiptNo
+	and ISNULL(rh.CancelProve,'')=''
+	group by rd.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo
+) r
+on id.BranchCode=r.BranchCode AND id.DocNo=r.InvoiceNo AND id.ItemNo=r.InvoiceItemNo
+left join Job_CashControlSub v ON r.BranchCode=v.BranchCode AND r.ControlLink=(v.ControlNo+'-'+Convert(varchar,v.ItemNo)) 
+left join Mas_Company c1 on ih.CustCode=c1.CustCode AND ih.CustBranch=c1.Branch
+left join Mas_Company c2 on ih.BillToCustCode=c2.CustCode AND ih.BillToCustBranch=c2.Branch
+where ISNULL(ih.CancelProve,'')='' {0}
+"
+        Return String.Format(sql, psqlW)
+    End Function
+    Function SQLSelectInvForReceive() As String
+        Return "
+select id.BranchCode,'' as ReceiptNo,
+0 as ItemNo,0 as CreditAmount,
+id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0) as TransferAmount,
+0 as CashAmount,0 as ChequeAmount,'' as ControlNo,'' as VoucherNo,0 as ControlItemNo,
+ih.DocNo as InvoiceNo,id.ItemNo as InvoiceItemNo,
+id.SICode,id.SDescription,id.VATRate,id.Rate50Tavi,
+id.Amt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedAmt,0) as Amt,
+id.AmtVat-ISNULL(r.ReceivedVat,0) as AmtVAT,
+id.Amt50Tavi-ISNULL(r.ReceivedWht,0) as Amt50Tavi,
+id.TotalAmt-ISNULL(id.AmtDiscount,0)-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0) as Net,
+id.CurrencyCode as DCurrencyCode,id.ExchangeRate as DExchangeRate,
+(id.Amt-ISNULL(id.AmtDiscount,0)-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedAmt,0))/id.ExchangeRate as FAmt,
+(id.AmtVat-ISNULL(r.ReceivedVat,0))/id.ExchangeRate as FAmtVAT,
+(id.Amt50Tavi-ISNULL(r.ReceivedWht,0))/id.ExchangeRate as FAmt50Tavi,
+(id.TotalAmt-ISNULL(r.ReceivedNet,0))/id.ExchangeRate as FNet
+from Job_InvoiceDetail id inner join Job_InvoiceHeader ih
+on id.BranchCode=ih.BranchCode
+and id.DocNo=ih.DocNo
+left join (
+	select rd.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo,
+	sum(rd.Amt) as ReceivedAmt,
+	sum(rd.AmtVAT) as ReceivedVat,
+	sum(rd.Amt50Tavi) as ReceivedWht,
+	sum(rd.Net) as ReceivedNet
+	from Job_ReceiptDetail rd inner join Job_ReceiptHeader rh
+	on rd.BranchCode=rh.BranchCode AND rd.ReceiptNo=rh.ReceiptNo
+	and ISNULL(rh.CancelProve,'')=''
+	group by rd.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo
+) r
+on id.BranchCode=r.BranchCode AND id.DocNo=r.InvoiceNo AND id.ItemNo=r.InvoiceItemNo
+where ISNULL(ih.CancelProve,'')=''
+"
+
+
     End Function
 End Module

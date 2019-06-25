@@ -259,14 +259,16 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var userRights = '@ViewBag.UserRights';
-    $(document).ready(function () {
-        SetEvents();
-        SetLOVs();
-        SetEnterToTab();
-    });
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    //$(document).ready(function () {
+    SetEvents();
+    SetLOVs();
+    SetEnterToTab();
+    $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+    $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+    //});
     function SetEvents() {
         $('#txtControlNo').keydown(function (event) {
             if (event.which == 13) {

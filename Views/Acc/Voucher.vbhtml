@@ -429,15 +429,18 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var userRights = '@ViewBag.UserRights';
-    var chkmode = false;
-    $(document).ready(function () {
-        SetEvents();
-        SetLOVs();
-        SetEnterToTab();
-    });
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    let chkmode = false;
+    //$(document).ready(function () {
+    SetEvents();
+    SetLOVs();
+    SetEnterToTab();
+    $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+    $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+
+    //});
     function SetIsLocal() {
         $('#txtIsLocal').val($('#chkIsLocal').prop('checked') ? '1' : '0');
     }

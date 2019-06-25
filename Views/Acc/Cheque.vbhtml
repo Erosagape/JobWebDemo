@@ -328,21 +328,24 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var userRights = '@ViewBag.UserRights';
-    var job = '';
-    $(document).ready(function () {
-        SetEvents();
-        SetLOVs();
-        SetEnterToTab();
-        let branch = getQueryString("BranchCode");
-        job = getQueryString("JNo");
-        if (branch !== null && job !== null) {
-            $('#txtBranchCode').val(branch);
-            ShowBranch(path, branch, '#txtBranchName');
-        }
-    });
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    let job = '';
+    //$(document).ready(function () {
+    SetEvents();
+    SetLOVs();
+    SetEnterToTab();
+    let branch = getQueryString("BranchCode");
+    job = getQueryString("JNo");
+    if (branch !== '' && job !== '') {
+        $('#txtBranchCode').val(branch);
+        ShowBranch(path, branch, '#txtBranchName');
+    } else {
+        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+    }
+    //});
     function SetIsLocal() {
         $('#txtIsLocal').val($('#chkIsLocal').prop('checked') ? '1' : '0');
     }
