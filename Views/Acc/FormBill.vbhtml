@@ -109,7 +109,7 @@ End Code
         </div>
 <script type="text/javascript">
     let path = '@Url.Content("~")';
-    ShowCompany('#divCompany');
+    
     let branch = getQueryString('branch');
     let billno = getQueryString('code');
     $.get(path + 'acc/getbilling?branch=' + branch + '&code=' + billno, function (r) {

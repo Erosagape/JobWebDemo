@@ -86,7 +86,6 @@ End Code
     var path = '@Url.Content("~")';
     var serv = [];    
     $(document).ready(function () {
-        ShowCompany('#divCompany');
         let branch = getQueryString('branch');
         let controlno = getQueryString('code');
         $.get(path + 'acc/getvoucher?branch=' + branch + '&code=' + controlno, function (r) {

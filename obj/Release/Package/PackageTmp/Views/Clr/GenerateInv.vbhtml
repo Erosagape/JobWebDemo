@@ -86,8 +86,10 @@ End Code
                                     <input type="button" onclick="PrintInvoice()" class="btn btn-success" value="Print Invoice" />
                                 </td>
                                 <td>
-                                    Discount :<input type="number" id="txtDiscountRate" onchange="SetDiscount()" />%<br/>
-                                    <input type="number" id="txtCalDiscount" onchange="SumDiscount()" />
+                                    Discount Rate:<br /><input type="number" id="txtDiscountRate" onchange="SetDiscount()" />%
+                                </td>
+                                <td>
+                                    Discount Amt:<br/><input type="number" id="txtCalDiscount" onchange="SumDiscount()" />
                                 </td>
                             </tr>
                         </table>
@@ -149,14 +151,14 @@ End Code
                                                        <table style="width:100%">
                                                            <tr><td>Advance </td><td><input type="text" id="txtTotalAdvance" disabled /></td></tr>
                                                            <tr><td>Charge</td><td><input type="text" id="txtTotalCharge" disabled /></td></tr>
-                                                           <tr><td>Line Discount</td><td><input type="text" id="txtSumDiscount" /></td></tr>
+                                                           <tr><td>Line Discount</td><td><input type="text" id="txtSumDiscount" disabled /></td></tr>
                                                            <tr><td>Vatable</td><td><input type="text" id="txtTotalIsTaxCharge" disabled /></td></tr>
                                                            <tr><td>Taxable</td><td><input type="text" id="txtTotalIs50Tavi" disabled /></td></tr>
                                                            <tr><td>VAT</td><td><input type="text" id="txtTotalVat" disabled /></td></tr>
                                                            <tr><td>After VAT</td><td><input type="text" id="txtTotalAfter" disabled /></td></tr>
                                                            <tr><td>WHT</td><td><input type="text" id="txtTotal50Tavi" disabled /></td></tr>
                                                            <tr><td>After WHT</td><td><input type="text" id="txtTotalService" disabled /></td></tr>
-                                                           <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" onchange="CalTotal()" /></td></tr>
+                                                           <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" disabled /></td></tr>
                                                            <tr><td>Sum Discount</td><td><input type="text" id="txtTotalDiscount" disabled /></td></tr>
                                                            <tr><td>NET</td><td><input type="text" id="txtTotalNet" disabled /></td></tr>
                                                            <tr><td>Currency</td><td><input type="text" id="txtCurrencyCode" disabled /></td></tr>
@@ -182,6 +184,7 @@ End Code
                                             <th>Charge</th>
                                             <th>VAT</th>
                                             <th>WH-Tax</th>
+                                            <th>Net</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -215,25 +218,42 @@ End Code
                                         Charges :<br />
                                         <input type="text" class="form-control" id="txtAmtCharge" onchange="CalVATWHT(0)" />
                                     </td>
+                                    <td style="width:10%">
+                                        Disc (%)<br />
+                                        <input type="number" id="txtAmtDiscountPerc" class="form-control" value="0" onchange="CalDiscount()">
+                                    </td>
                                     <td style="width:15%">
-                                        VAT :<input type="number" id="txtAmtVATRate" value="0" onchange="CalVATWHT(0)"><br />
+                                        Discount:<br/>
+                                        <input type="text" id="txtAmtDiscount" value="0" class="form-control" onchange="CalNetAmount()">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:5%">
+                                        VAT Rate:<br /><input type="number" id="txtAmtVATRate" class="form-control" value="0" onchange="CalVATWHT(0)">
+                                    </td>
+                                    <td style="width:10%">
+                                        VAT:<br />
                                         <input type="text" class="form-control" id="txtAmtVAT" onchange="CalNetAmount()" />
                                     </td>
-                                    <td style="width:15%">
-                                        W/T :<input type="number" id="txtAmtWHTRate" value="0" onchange="CalVATWHT(1)"><br />
+                                    <td style="width:5%">
+                                        W/T :<br /><input type="number" id="txtAmtWHTRate" class="form-control" value="0" onchange="CalVATWHT(1)">
+                                    </td>
+                                    <td style="width:10%">
+                                        WH-Tax:<br />
                                         <input type="text" class="form-control" id="txtAmtWHT" onchange="CalNetAmount()" />
                                     </td>
+                                </tr>
+                                <tr>                                    
                                     <td style="width:20%">
                                         NET :<br />
                                         <input type="text" class="form-control" id="txtAmtNET" onchange="CalNetAmount()" />
                                     </td>
                                     <td style="width:10%">
-                                        Disc (%)<input type="number" id="txtAmtDiscountPerc" value="0" onchange="CalDiscount()"><br />
-                                        <input type="text" id="txtAmtDiscount" value="0" onchange="CalNetAmount()"><br />
+                                        <br/>
+                                        <input type="button" class="btn btn-default" value="Update" onclick="UpdateData()" id="btnSplit" />
                                     </td>
                                 </tr>
                             </table>
-                            <input type="button" class="btn btn-default" value="Update" onclick="UpdateData()" id="btnSplit" />
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -252,20 +272,23 @@ End Code
     let arr_clr = [];
     let chq = [];
     //$(document).ready(function () {
-        SetEvents();
-        //Load params
-        let branch = getQueryString("branch");
-        let code = getQueryString("code");
-        if (branch !=='' && code !== '') {
-            $('#txtBranchCode').val(branch);
-            ShowBranch(path, branch, '#txtBranchName');
-            $('#txtJobNo').val(code.toUpperCase());
-            $.get(path + 'JobOrder/GetJobSQL?Branch=' + branch + '&JNo=' + code.toUpperCase(), function (dr) {
-                if (dr.job.data.length > 0) {
-                    ReadJob(dr.job.data[0]);
-                }
-            });
-        }
+    SetEvents();
+    //Load params
+    let branch = getQueryString("branch");
+    let code = getQueryString("code");
+    if (branch !== '' && code !== '') {
+        $('#txtBranchCode').val(branch);
+        ShowBranch(path, branch, '#txtBranchName');
+        $('#txtJobNo').val(code.toUpperCase());
+        $.get(path + 'JobOrder/GetJobSQL?Branch=' + branch + '&JNo=' + code.toUpperCase(), function (dr) {
+            if (dr.job.data.length > 0) {
+                ReadJob(dr.job.data[0]);
+            }
+        });
+    } else {
+        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+    }
     //});
     function SetEvents() {
         //Combos
@@ -391,7 +414,7 @@ End Code
         }
         $('#txtTotalAdvance').val(CDbl(totaladv, 2));
         $('#txtTotalCharge').val(CDbl(totalcharge, 2));
-        $('#txtSumDiscount').val(CDbl(totallinedisc, 2));
+        $('#txtSumDiscount').val(CDbl(totalsumdisc, 2));
         $('#txtTotalIsTaxCharge').val(CDbl(totalistaxcharge, 2));
         $('#txtTotalIs50Tavi').val(CDbl(totalis50tavi, 2));
         $('#txtTotalVat').val(CDbl(totalvat, 2));
@@ -447,7 +470,8 @@ End Code
                 { data: "AmtAdvance", title: "Advance" },
                 { data: "AmtCharge", title: "Charge" },
                 { data: "AmtVat", title: "VAT" },
-                { data: "Amt50Tavi", title: "WHT" }
+                { data: "Amt50Tavi", title: "WHT" },
+                { data: "TotalAmt", title: "NET" }
             ],
             destroy: true, //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             columnDefs: [ //กำหนด control เพิ่มเติมในแต่ละแถว
@@ -463,9 +487,9 @@ End Code
         });
         $('#tbDetail tbody').on('click','button', function () {
             let data = GetSelect('#tbDetail',this); //read current row selected
-            if (data.ClrNo !== '') {
+            //if (data.ClrNo !== '') {
                 LoadClearDetail(data);
-            }
+            //}
         });
         let arr_cost = arr.filter(function (d) {
             return d.AmtCost > 0;
@@ -493,14 +517,14 @@ End Code
 
     function UpdateData() {
         let arr_new = JSON.parse(JSON.stringify(arr_split));
-        let old_amt = ShowNumber(Number(arr_new.AmtAdvance) + Number(arr_new.AmtCharge), 2);
+        let old_amt = ShowNumber(Number(arr_new.AmtAdvance) + Number(arr_new.AmtCharge)+ Number(arr_new.AmtDiscount), 2);
         //if amount changed
         if (ShowNumber(Number($('#txtAmtAdvance').val()) + Number($('#txtAmtCharge').val()), 2) !== old_amt) {
             arr_new.ClrItemNo = 0;
             arr_new.AmtDiscount = Number($('#txtAmtDiscount').val());
             arr_new.DiscountPerc = Number($('#txtAmtDiscountPerc').val());
             if (arr_new.AmtCharge > 0) {
-                arr_new.AmtCharge = Number($('#txtAmtCharge').val()) - Number($('#txtAmtDiscount').val());
+                arr_new.AmtCharge = Number($('#txtAmtCharge').val())-Number($('#txtAmtDiscount').val());
                 arr_new.IsTaxCharge = Number($('#txtAmtVATRate').val()) > 0 ? 1 : 0;
                 arr_new.Is50Tavi = Number($('#txtAmtWHTRate').val()) > 0 ? 1 : 0;
                 arr_new.VATRate = Number($('#txtAmtVATRate').val());
@@ -509,17 +533,18 @@ End Code
                 arr_new.Amt50Tavi = Number($('#txtAmtWHT').val());
             }
             if (arr_new.AmtAdvance > 0) {
-                arr_new.AmtAdvance = Number($('#txtAmtAdvance').val()) - Number($('#txtAmtDiscount').val());
+                arr_new.AmtAdvance = Number($('#txtAmtAdvance').val())-Number($('#txtAmtDiscount').val());
             }
+            arr_new.TotalAmt = Number($('#txtAmtNET').val());
             SaveClearDetail(arr_new);
         } else {
             arr_split.AmtDiscount = Number($('#txtAmtDiscount').val());
             arr_split.DiscountPerc = Number($('#txtAmtDiscountPerc').val());
             if (arr_split.AmtAdvance > 0) {
-                arr_split.AmtAdvance = Number($('#txtAmtAdvance').val()) - Number($('#txtAmtDiscount').val());
+                arr_split.AmtAdvance = Number($('#txtAmtAdvance').val())-Number($('#txtAmtDiscount').val());
             }
             if (arr_split.AmtCharge > 0) {
-                arr_split.AmtCharge = Number($('#txtAmtCharge').val()) - Number($('#txtAmtDiscount').val());
+                arr_split.AmtCharge = Number($('#txtAmtCharge').val())-Number($('#txtAmtDiscount').val());
                 arr_split.IsTaxCharge = Number($('#txtAmtVATRate').val()) > 0 ? 1 : 0;
                 arr_split.Is50Tavi = Number($('#txtAmtWHTRate').val()) > 0 ? 1 : 0;
                 arr_split.VATRate = Number($('#txtAmtVATRate').val());
@@ -527,6 +552,9 @@ End Code
                 arr_split.AmtVat = Number($('#txtAmtVAT').val());
                 arr_split.Amt50Tavi = Number($('#txtAmtWHT').val());
             }
+            arr_split.TotalAmt = Number($('#txtAmtNET').val());
+            CalSummary();
+            $('#dvEditor').modal('hide');
         }
     }
     function SaveClearDetail(dr) {
@@ -603,7 +631,6 @@ End Code
     function LoadClearDetail(dr) {
         arr_split = dr;
         arr_clr = [];
-        if (dr.ClrNo !== '') {
             $('#lblClrNo').text(dr.ClrNoList);
             $('#lblJobNo').text(dr.JobNo);
             $('#lblSICode').text(dr.SICode);
@@ -618,6 +645,7 @@ End Code
                 $('#txtAmtWHT').attr('disabled', 'disabled');
                 $('#txtAmtVATRate').attr('disabled', 'disabled');
                 $('#txtAmtWHTRate').attr('disabled', 'disabled');
+                $('#txtAmtAdvance').val(dr.AmtAdvance+dr.AmtDiscount);
             } else {
                 $('#txtAmtAdvance').attr('disabled', 'disabled');
                 $('#txtAmtCharge').removeAttr('disabled');
@@ -625,14 +653,15 @@ End Code
                 $('#txtAmtWHT').removeAttr('disabled');
                 $('#txtAmtVATRate').removeAttr('disabled');
                 $('#txtAmtWHTRate').removeAttr('disabled');
+                $('#txtAmtCharge').val(dr.AmtCharge+dr.AmtDiscount);
             }
-            $('#txtAmtAdvance').val(dr.AmtAdvance);
-            $('#txtAmtCharge').val(dr.AmtCharge);
             $('#txtAmtVAT').val(dr.AmtVat);
             $('#txtAmtWHT').val(dr.Amt50Tavi);
-            $('#txtAmtNET').val(dr.AmtNet);
+            $('#txtAmtNET').val(dr.TotalAmt);
             $('#txtAmtDiscountPerc').val(dr.DiscountPerc);
             $('#txtAmtDiscount').val(dr.AmtDiscount);
+            //CalVATWHT(0);
+        if (dr.ClrNo !== '') {
             $('#btnSplit').attr('disabled', 'disabled');
             $.get(path + 'Clr/GetClrDetail?Branch=' + dr.BranchCode + '&Code=' + dr.ClrNo + '&Item=' + dr.ClrItemNo, function (res) {
                 if (res.clr.detail.length > 0) {
@@ -642,11 +671,18 @@ End Code
                     $('#btnSplit').removeAttr('disabled');
                     $('#dvEditor').modal('show');
                 }
-            });           
+            });
+        } else {
+            $('#txtAmtAdvance').attr('disabled', 'disabled');
+            $('#txtAmtCharge').attr('disabled', 'disabled');
+            $('#dvEditor').modal('show');
         }
     }
     function AddData(o) {
-        arr.push(o);
+        let idx = arr.indexOf(o);
+        if (idx < 0) {
+            arr.push(o);
+        }
     }
     function RemoveData(o) {
         let idx = arr.indexOf(o);
@@ -912,8 +948,8 @@ End Code
                     AmtVat: obj.AmtVat,
                     TotalAmt: obj.TotalAmt,
                     FTotalAmt: CDbl(obj.TotalAmt / CNum($('#txtExchangeRate').val()), 2),
-                    AmtAdvance: obj.AmtAdvance,
-                    AmtCharge: obj.AmtCharge,
+                    AmtAdvance: (obj.AmtAdvance > 0 ? obj.AmtAdvance - Number(obj.AmtDiscount) : 0),
+                    AmtCharge: (obj.AmtCharge > 0 ? obj.AmtCharge - Number(obj.AmtDiscount) : 0),
                     CurrencyCodeCredit: $('#txtCurrencyCode').val(),
                     ExchangeRateCredit: $('#txtExchangeRate').val(),
                     AmtCredit: creditamt,
@@ -1119,38 +1155,38 @@ End Code
     function CalDiscount() {
         let amt = Number($('#txtAmtAdvance').val()) + Number($('#txtAmtCharge').val());
         let disc = amt * Number($('#txtAmtDiscountPerc').val()) * 0.01;
-        $('#txtAmtDiscount').val(disc);
+        $('#txtAmtDiscount').val(CDbl(disc,2));
         CalVATWHT(0);
     }
     function SetDiscount() {
         let amt = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val()) - CNum($('#txtSumDiscount').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
         let disc = amt * Number($('#txtDiscountRate').val()) * 0.01;
-        $('#txtCalDiscount').val(disc);
+        $('#txtCalDiscount').val(CDbl(disc,2));
         SumDiscount();
     }
     function SumDiscount() {
         let totaldisc = CNum($('#txtSumDiscount').val()) + CNum($('#txtCalDiscount').val());
-        $('#txtTotalDiscount').val(totaldisc);
+        $('#txtTotalDiscount').val(CDbl(totaldisc,2));
         CalTotal();
     }
     function CalTotal() {
         let totalnet = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val())- CNum($('#txtTotalDiscount').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
-        $('#txtTotalNet').val(totalnet);
+        $('#txtTotalNet').val(CDbl(totalnet,2));
         $('#txtTotalProfit').val(CDbl(totalnet - CNum($('#txtTotalCost').val()), 2));
 
         CalForeign();
     }
     function CalForeign() {
         let totalforeign = CDbl(CNum($('#txtTotalNet').val()) / CNum($('#txtExchangeRate').val()), 2);
-        $('#txtForeignNet').val(totalforeign);
+        $('#txtForeignNet').val(CDbl(totalforeign,2));
     }
     function CalNetAmount() {
         let amt = Number($('#txtAmtAdvance').val()) + Number($('#txtAmtCharge').val());
         let vat = Number($('#txtAmtVAT').val());
         let wht = Number($('#txtAmtWHT').val());
         let disc = Number($('#txtAmtDiscount').val());
-        let net = amt - disc + vat - wht;
+        let net = amt-disc+ vat - wht;
 
-        $('#txtAmtNET').val(net);
+        $('#txtAmtNET').val(CDbl(net,2));
     }
 </script>

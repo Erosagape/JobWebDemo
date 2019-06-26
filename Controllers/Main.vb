@@ -1017,17 +1017,19 @@ select id.BranchCode,'' as ReceiptNo,
 0 as ItemNo,0 as CreditAmount,
 id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0) as TransferAmount,
 0 as CashAmount,0 as ChequeAmount,'' as ControlNo,'' as VoucherNo,0 as ControlItemNo,
-ih.DocNo as InvoiceNo,id.ItemNo as InvoiceItemNo,
+ih.DocNo as InvoiceNo,ih.DocDate as InvoiceDate,id.ItemNo as InvoiceItemNo,
 id.SICode,id.SDescription,id.VATRate,id.Rate50Tavi,
-id.Amt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedAmt,0) as Amt,
-id.AmtVat-ISNULL(r.ReceivedVat,0) as AmtVAT,
-id.Amt50Tavi-ISNULL(r.ReceivedWht,0) as Amt50Tavi,
-id.TotalAmt-ISNULL(id.AmtDiscount,0)-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0) as Net,
+(id.Amt-ISNULL(id.AmtDiscount,0)-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedAmt,0)) as Amt,
+(id.AmtVat-ISNULL(r.ReceivedVat,0)) as AmtVAT,
+(id.Amt50Tavi-ISNULL(r.ReceivedWht,0)) as Amt50Tavi,
+(id.TotalAmt-ISNULL(id.AmtDiscount,0)-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)) as Net,
 id.CurrencyCode as DCurrencyCode,id.ExchangeRate as DExchangeRate,
 (id.Amt-ISNULL(id.AmtDiscount,0)-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedAmt,0))/id.ExchangeRate as FAmt,
 (id.AmtVat-ISNULL(r.ReceivedVat,0))/id.ExchangeRate as FAmtVAT,
 (id.Amt50Tavi-ISNULL(r.ReceivedWht,0))/id.ExchangeRate as FAmt50Tavi,
-(id.TotalAmt-ISNULL(r.ReceivedNet,0))/id.ExchangeRate as FNet
+(id.TotalAmt-ISNULL(r.ReceivedNet,0))/id.ExchangeRate as FNet,
+ih.Custcode,ih.CustBranch,ih.BillToCustCode,ih.BillToCustBranch,ih.RefNo,
+id.AmtAdvance,id.AmtCharge
 from Job_InvoiceDetail id inner join Job_InvoiceHeader ih
 on id.BranchCode=ih.BranchCode
 and id.DocNo=ih.DocNo

@@ -185,7 +185,6 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     $(document).ready(function () {
-        ShowCompany('#divCompany');
         var br = getQueryString('BranchCode');
         var jno = getQueryString('JNo');
         if (br != "" && jno != "") {

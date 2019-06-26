@@ -175,6 +175,6 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     $(document).ready(function () {
-        ShowCompany('#divCompany');
+
     });
 </script>

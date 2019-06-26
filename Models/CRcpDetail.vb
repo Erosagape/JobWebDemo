@@ -156,12 +156,12 @@ Public Class CRcpDetail
             m_Rate50Tavi = value
         End Set
     End Property
-    Private m_Amt As Date
-    Public Property Amt As Date
+    Private m_Amt As Double
+    Public Property Amt As Double
         Get
             Return m_Amt
         End Get
-        Set(value As Date)
+        Set(value As Double)
             m_Amt = value
         End Set
     End Property
@@ -183,12 +183,12 @@ Public Class CRcpDetail
             m_Amt50Tavi = value
         End Set
     End Property
-    Private m_Net As Date
-    Public Property Net As Date
+    Private m_Net As Double
+    Public Property Net As Double
         Get
             Return m_Net
         End Get
-        Set(value As Date)
+        Set(value As Double)
             m_Net = value
         End Set
     End Property
@@ -275,10 +275,10 @@ Public Class CRcpDetail
                             dr("SDescription") = Me.SDescription
                             dr("VATRate") = Me.VATRate
                             dr("Rate50Tavi") = Me.Rate50Tavi
-                            dr("Amt") = Main.GetDBDate(Me.Amt)
+                            dr("Amt") = Me.Amt
                             dr("AmtVAT") = Me.AmtVAT
                             dr("Amt50Tavi") = Me.Amt50Tavi
-                            dr("Net") = Main.GetDBDate(Me.Net)
+                            dr("Net") = Me.Net
                             dr("DCurrencyCode") = Me.DCurrencyCode
                             dr("DExchangeRate") = Me.DExchangeRate
                             dr("FAmt") = Me.FAmt
@@ -286,9 +286,8 @@ Public Class CRcpDetail
                             dr("FAmt50Tavi") = Me.FAmt50Tavi
                             dr("FNet") = Me.FNet
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
-                            If da.Update(dt) > 0 Then
-                                UpdateTotal(cn)
-                            End If
+                            da.Update(dt)
+                            UpdateTotal(cn)
                             msg = "Save Complete"
                         End Using
                     End Using
@@ -420,10 +419,11 @@ Public Class CRcpDetail
     Public Sub UpdateTotal(cn As SqlConnection)
         Dim sql As String = "
 update h
-set h.TotalCharge=d.TotalCharge,
-h.TotalVAT =d.TotalVAT,
-h.Total50Tavi =d.Total50Tavi,
-h.TotalNet=d.TotalNet
+set h.TotalCharge=ISNULL(d.TotalCharge,0),
+h.TotalVAT =ISNULL(d.TotalVAT,0),
+h.Total50Tavi =ISNULL(d.Total50Tavi,0),
+h.TotalNet=ISNULL(d.TotalNet,0),
+h.FTotalNet=ISNULL(d.TotalNet,0)/h.ExchangeRate
 from Job_ReceiptHeader h
 inner join (
 	select BranchCode,ReceiptNo,

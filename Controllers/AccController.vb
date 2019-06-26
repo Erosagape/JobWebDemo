@@ -62,6 +62,9 @@ Namespace Controllers
         Function GenerateBilling() As ActionResult
             Return GetView("GenerateBilling")
         End Function
+        Function GenerateReceipt() As ActionResult
+            Return GetView("GenerateReceipt")
+        End Function
         Function PettyCash() As ActionResult
             Return GetView("PettyCash", "MODULE_ACC")
         End Function
@@ -935,6 +938,58 @@ Namespace Controllers
                 Return Content("{""billheader"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function GetReceipt() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ReceiptNo<>'' "
+                Dim docNo As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ReceiptNo='{0}' ", Request.QueryString("Code").ToString)
+                    docNo = Request.QueryString("Code").ToString
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format("AND CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    Select Case Request.QueryString("Type").ToString()
+                        Case "RCP"
+                            tSqlw &= " AND ReceiptNo like 'RC%' "
+                        Case "TAX"
+                            tSqlw &= " AND ReceiptNo like 'TX%' "
+                        Case "REC"
+                            tSqlw &= " AND ReceiptNo like 'RV%' "
+                        Case "ADV"
+                            tSqlw &= " AND ReceiptNo like 'AV%' "
+                        Case Else
+                            Return Content("{""result"":{""data"":null,""msg"":""Please Enter Receipt Type""}}", jsonContent)
+                    End Select
+                End If
+                Dim oHead = New CRcpHeader(jobWebConn).GetData(tSqlw)
+                Dim oDet = New CRcpDetail(jobWebConn).GetData(tSqlw)
+
+                Dim jsonH As String = ""
+                Dim jsonD As String = ""
+                Dim jsonC As String = ""
+
+                If oHead.Count > 0 Then
+                    jsonH = JsonConvert.SerializeObject(oHead)
+                    If oDet.Count > 0 Then
+                        jsonD = JsonConvert.SerializeObject(oDet)
+                    End If
+
+                    Dim oCust = New CCompany(jobWebConn).GetData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}'", oHead(0).CustCode, oHead(0).CustBranch))
+                    If oCust.Count > 0 Then
+                        jsonC = JsonConvert.SerializeObject(oCust)
+                    End If
+                End If
+
+                Return Content("{""receipt"":{""msg"":""" & docNo & """,""header"":[" & jsonH & "],""detail"":[" & jsonD & "],""customer"":[" & jsonC & "]}}", jsonContent)
+            Catch ex As Exception
+                Return Content("{""receipt"":{""msg"":""" & ex.Message & """,""header"":[],""detail"":[],""customer"":[]}}", jsonContent)
+            End Try
+        End Function
         Function GetRcpHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ReceiptNo<>'' "
@@ -966,13 +1021,13 @@ Namespace Controllers
                         End If
                         Select Case data.ReceiptType
                             Case "RCP"
-                                data.AddNew("RC" & data.ReceiptDate.ToString("yyMM") & "___")
+                                data.AddNew("RC-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "TAX"
-                                data.AddNew("TX" & data.ReceiptDate.ToString("yyMM") & "___")
+                                data.AddNew("TX-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "REC"
-                                data.AddNew("RV" & data.ReceiptDate.ToString("yyMM") & "___")
+                                data.AddNew("RV-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "ADV"
-                                data.AddNew("AV" & data.ReceiptDate.ToString("yyMM") & "___")
+                                data.AddNew("AV-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case Else
                                 Return Content("{""result"":{""data"":null,""msg"":""Please Enter Receipt Type""}}", jsonContent)
                         End Select
@@ -1310,6 +1365,20 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("BillTo")) Then
                     tSqlw &= String.Format(" AND ih.BillToCustCode='{0}' ", Request.QueryString("BillTo").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    If Request.QueryString("Type").ToString = "ADV" Then
+                        tSqlw &= " AND ISNULL(id.AmtAdvance,0)>0 "
+                    End If
+                    If Request.QueryString("Type").ToString = "SRV" Then
+                        tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 "
+                    End If
+                    If Request.QueryString("Type").ToString = "VAT" Then
+                        tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)>0 "
+                    End If
+                    If Request.QueryString("Type").ToString = "NONVAT" Then
+                        tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0 "
+                    End If
+                End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvForReceive() & tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""invdetail"":{""data"":" & json & "}}"
@@ -1484,6 +1553,40 @@ Namespace Controllers
                 Return Content("{""rcpdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function SaveRcpDetail(<FromBody()> data As List(Of CRcpDetail)) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data(0).BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    If "" & data(0).ReceiptNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    Dim i As Integer = 0
+                    Dim msg As String = ""
+                    For Each dt In data
+                        'Invoice's Service+Advance
+                        dt.SetConnect(jobWebConn)
+                        Dim result = dt.SaveData(String.Format(" WHERE BranchCode='{0}' AND ReceiptNo='{1}' AND ItemNo={2}", dt.BranchCode, dt.ReceiptNo, dt.ItemNo))
+                        If result.Substring(0, 1) = "S" Then
+                            i += 1
+                            msg &= i & " row(s) saved!\n"
+                        Else
+                            msg &= i & " Error: " & result & "\n"
+                        End If
+                    Next
+                    Dim json = "{""result"":{""data"":""" & data(0).ReceiptNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+
         Function SetRcpDetail(<FromBody()> data As CRcpDetail) As ActionResult
             Try
                 If Not IsNothing(data) Then

@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>06/25/2019 13:41:46</publishTime>
+      <publishTime>06/26/2019 18:28:33</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>06/25/2019 13:41:46</publishTime>
+      <publishTime>06/26/2019 18:28:33</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>06/25/2019 13:41:45</publishTime>
+      <publishTime>06/26/2019 18:28:32</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -983,7 +983,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/FormBill.vbhtml">
-      <publishTime>06/25/2019 14:33:27</publishTime>
+      <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/Acc/FormCreditNote.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -995,16 +995,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/FormInv.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:18</publishTime>
     </File>
     <File Include="Views/Acc/FormRcp.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:18</publishTime>
     </File>
     <File Include="Views/Acc/FormTaxinv.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/Acc/FormVoucher.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/Acc/FormWHTax.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1024,6 +1024,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Acc/GenerateBilling.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
+    <File Include="Views/Acc/GenerateReceipt.vbhtml">
+      <publishTime>06/26/2019 17:42:34</publishTime>
+    </File>
     <File Include="Views/Acc/GLNote.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
@@ -1037,7 +1040,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 14:43:04</publishTime>
     </File>
     <File Include="Views/Acc/Receipt.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 17:42:34</publishTime>
     </File>
     <File Include="Views/Acc/RecvInv.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1061,10 +1064,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Adv/FormAdv.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:18</publishTime>
     </File>
     <File Include="Views/Adv/FormCreditAdv.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1127,10 +1130,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/JobOrder/FormJob.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/JobOrder/FormJobSum.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/JobOrder/FormQuotation.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>

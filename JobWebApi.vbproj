@@ -561,6 +561,7 @@
     <Content Include="Views\JobOrder\FormTransport.vbhtml" />
     <Content Include="Views\Acc\FormExpense.vbhtml" />
     <Content Include="Views\Acc\GenerateBilling.vbhtml" />
+    <Content Include="Views\Acc\GenerateReceipt.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

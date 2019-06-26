@@ -150,7 +150,6 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
     var path = '@Url.Content("~")';
     var serv = [];
     $(document).ready(function () {
-        ShowCompany('#divCompany');
         let branch = getQueryString('branch');
         let advno = getQueryString('advno');
         if (branch != "" && advno != "") {

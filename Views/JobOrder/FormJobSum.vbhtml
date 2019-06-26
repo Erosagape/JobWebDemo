@@ -226,7 +226,6 @@ End Code
 </table>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
-    ShowCompany('#divCompany');
     let br = getQueryString('BranchCode');
     let jno = getQueryString('JNo');
     if (br != "" && jno != "") {

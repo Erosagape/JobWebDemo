@@ -174,7 +174,7 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     $(document).ready(function () {
-        ShowCompany('#divCompany');
+
         let branch = getQueryString('branch');
         let invno = getQueryString('code');
         $.get(path + 'acc/getinvoice?branch=' + branch + '&code=' + invno, function (r) {
