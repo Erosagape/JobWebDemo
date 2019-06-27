@@ -9,6 +9,8 @@ End Code
                 <input type="text" id="txtBranchCode" style="width:50px" />
                 <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
                 <input type="text" id="txtBranchName" style="width:200px" disabled />
+                <br/>
+                <div id="dvJob"></div>
             </div>
             <div class="col-sm-3">
                 Document Date :
@@ -18,9 +20,10 @@ End Code
                 <table border="1">
                     <tr>
                         <td>
-                            <b><a onclick="SearchData('clearing')">Clearing No:</a></b>
+                            <b>Clearing No:</b>
                             <br />
                             <input type="text" id="txtClrNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
+                            <input type="button" value="..." style="font-size:20px" onclick="SearchData('clearing')" />
                         </td>
                     </tr>
                 </table>
@@ -409,6 +412,7 @@ End Code
                 ShowData(br, $('#txtClrNo').val());
             } else {
                 job = getQueryString('JNo');
+                $('#dvJob').html('<h4>***For Job ' + job.toUpperCase() + '***</h4>');
                 if (job.length > 0) {
                     isjobmode = true;
                     $('#txtClrNo').attr('disabled', 'disabled');

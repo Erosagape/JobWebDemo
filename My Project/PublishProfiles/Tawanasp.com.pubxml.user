@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>06/26/2019 18:28:33</publishTime>
+      <publishTime>06/27/2019 18:04:25</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>06/26/2019 18:28:33</publishTime>
+      <publishTime>06/27/2019 18:04:25</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>06/26/2019 18:28:32</publishTime>
+      <publishTime>06/27/2019 18:04:24</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -1007,7 +1007,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/Acc/FormWHTax.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/27/2019 17:16:25</publishTime>
     </File>
     <File Include="Views/Acc/FormWTax3.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1025,7 +1025,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/GenerateReceipt.vbhtml">
-      <publishTime>06/26/2019 17:42:34</publishTime>
+      <publishTime>06/27/2019 14:51:57</publishTime>
+    </File>
+    <File Include="Views/Acc/GenerateTaxInv.vbhtml">
+      <publishTime>06/27/2019 18:02:40</publishTime>
     </File>
     <File Include="Views/Acc/GLNote.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1046,7 +1049,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/Taxinvoice.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/27/2019 18:02:56</publishTime>
     </File>
     <File Include="Views/Acc/Voucher.vbhtml">
       <publishTime>06/25/2019 14:47:27</publishTime>
@@ -1070,10 +1073,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/26/2019 16:42:17</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/27/2019 17:35:12</publishTime>
     </File>
     <File Include="Views/Adv/Payment.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/27/2019 16:17:59</publishTime>
     </File>
     <File Include="Views/Adv/_FormAdv.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1100,7 +1103,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 18:19:29</publishTime>
     </File>
     <File Include="Views/Clr/Index.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/27/2019 16:27:57</publishTime>
     </File>
     <File Include="Views/Clr/Receive.vbhtml">
       <publishTime>06/25/2019 14:38:00</publishTime>
@@ -1154,7 +1157,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/JobOrder/ShowJob.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/27/2019 16:22:22</publishTime>
     </File>
     <File Include="Views/JobOrder/Transport.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1211,7 +1214,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/Menu/Index.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>06/27/2019 16:31:39</publishTime>
     </File>
     <File Include="Views/Report/Index.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>

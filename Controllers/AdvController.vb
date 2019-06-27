@@ -201,9 +201,14 @@ Namespace Controllers
                     End If
 
                     If AuthorizeStr.IndexOf("E") < 0 Then
-                        Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
+                        Return Content("{""result"":{""data"":null,""msg"":""You are not allow to edit advance""}}", jsonContent)
                     End If
-
+                    If data.ForJNo <> "" Then
+                        Dim chkDupRows = New CAdvDetail(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND ForJNo='{1}' AND SICode='{2}' AND AdvNo<>'{3}' ", data.BranchCode, data.ForJNo, data.SICode, data.AdvNo))
+                        If chkDupRows.Count > 0 Then
+                            Return Content("{""result"":{""data"":null,""msg"":""This expense for " & chkDupRows(0).ForJNo & " is duplicate from " & chkDupRows(0).AdvNo & " ""}}", jsonContent)
+                        End If
+                    End If
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}' AND ItemNo={2} ", data.BranchCode, data.AdvNo, data.ItemNo))
                     'Dim msg = JsonConvert.SerializeObject(data)
                     Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"

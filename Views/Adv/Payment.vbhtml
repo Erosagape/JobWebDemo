@@ -109,7 +109,7 @@ End Code
                         <br />
                         Trans.No:<input type="text" id="txtRefNoCash" class="form-control" value="" />
                         <br />
-                        Trans.Date:<input type="date" id="txtCashTranDate" class="form-control" />
+                        Trans.Date:<input type="date" id="txtCashTranDate" class="form-control" disabled/>
                         Trans.Time:<input type="text" id="txtCashTranTime" class="form-control" value="" />
                         <br />
                         To Bank:<select id="cboBankCash" class="form-control"></select>
@@ -330,7 +330,7 @@ End Code
         $('#txtAdvCash').val('');
         $('#txtBookCash').val('');
         $('#txtRefNoCash').val('');
-        $('#txtCashTranDate').val('');
+        $('#txtCashTranDate').val(CDateEN(GetToday()));
         $('#txtCashTranTime').val('');
         $('#cboBankCash').val('');
         $('#txtBankBranchCash').val('');

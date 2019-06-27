@@ -190,7 +190,7 @@ End Code
                     { data: "BillToCustCode", title: "Billing To" },
                     { data: "RefNo", title: "Reference Number" },
                     { data: "SDescription", title: "Expenses" },
-                    { data: "AmtAdvance", title: "Advance" }
+                    { data: "Amt", title: "Advance" }
                 ],
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
@@ -221,7 +221,7 @@ End Code
 
 
         for (let obj of arr) {
-            totaladv += obj.AmtAdvance;
+            totaladv += obj.Amt;
         }
         $('#txtTotalAdvance').val(CDbl(totaladv, 2));;
 
@@ -245,7 +245,7 @@ End Code
                 { data: "ItemNo", title: "Item No" },
                 { data: "SICode", title: "Code" },
                 { data: "SDescription", title: "Description" },
-                { data: "AmtAdvance", title: "Advance" }
+                { data: "Amt", title: "Advance" }
             ],
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });

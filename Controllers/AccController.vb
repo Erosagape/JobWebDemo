@@ -65,6 +65,9 @@ Namespace Controllers
         Function GenerateReceipt() As ActionResult
             Return GetView("GenerateReceipt")
         End Function
+        Function GenerateTaxInv() As ActionResult
+            Return GetView("GenerateTaxInv")
+        End Function
         Function PettyCash() As ActionResult
             Return GetView("PettyCash", "MODULE_ACC")
         End Function
@@ -1372,12 +1375,16 @@ Namespace Controllers
                     If Request.QueryString("Type").ToString = "SRV" Then
                         tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 "
                     End If
-                    If Request.QueryString("Type").ToString = "VAT" Then
-                        tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)>0 "
+                    If Request.QueryString("Type").ToString = "TAX" Then
+                        tSqlw &= " AND ((ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)>0) OR ISNULL(id.AmtAdvance,0)>0) "
                     End If
-                    If Request.QueryString("Type").ToString = "NONVAT" Then
+                    If Request.QueryString("Type").ToString = "REC" Then
                         tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0 "
                     End If
+                    If Request.QueryString("Type").ToString = "RCV" Then
+                        tSqlw &= " AND ((ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0) OR ISNULL(id.AmtAdvance,0)>0)) "
+                    End If
+
                 End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvForReceive() & tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)

@@ -10,6 +10,7 @@ End Code
                 <input type="text" id="txtBranchCode" style="width:50px" />
                 <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
                 <input type="text" id="txtBranchName" style="width:200px" disabled />
+                <div id="dvJob"></div>
             </div>
             <div class="col-sm-3">
                 Request Date :
@@ -19,9 +20,10 @@ End Code
                 <table border="1">
                     <tr>
                         <td>
-                            <b><a onclick="SearchData('advance')">Advance No:</a></b>
+                            <b>Advance No:</b>
                             <br />
                             <input type="text" id="txtAdvNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
+                            <input type="button" value="..." style="font-size:20px" onclick="SearchData('advance')" />
                         </td>
                     </tr>
                 </table>
@@ -397,6 +399,7 @@ End Code
                 job = getQueryString('JNo');
                 if (job.length > 0) {
                     isjobmode = true;
+                    $('#dvJob').html('<h4>***For Job ' + job.toUpperCase() + '***</h4>');
                     $('#txtAdvNo').attr('disabled', 'disabled');
                     CallBackQueryJob(path, $('#txtBranchCode').val(), job, LoadJob);
                 }
@@ -474,14 +477,12 @@ End Code
 
                 $('#txtSICode').attr('disabled', 'disabled');
                 $('#txtSDescription').attr('disabled', 'disabled');
-                $('#btnBrowseS').attr('disabled', 'disabled');
                 $('#chkDuplicate').prop('checked', true);
                 return;
             }
             $('#chkDuplicate').prop('checked', false);
             $('#txtSICode').removeAttr('disabled');
             $('#txtSDescription').removeAttr('disabled');
-            $('#btnBrowseS').removeAttr('disabled');
         });
         $('#chkCash,#chkChq,#chkChqCash,#chkCred').on('click', function () {
             let id = this.id;
@@ -1027,7 +1028,6 @@ End Code
             LoadDetail(d);
             $('#txtSICode').attr('disabled', 'disabled');
             $('#txtSDescription').attr('disabled', 'disabled');
-            $('#btnBrowseS').attr('disabled', 'disabled');
 
             $('#frmDetail').modal('show');
             $('#txtCurrencyCode').val($('#txtSubCurrency').val());
@@ -1156,6 +1156,10 @@ End Code
                 alert('you are not authorize to edit');
                 return;
             }
+            if (CheckDuplicate(obj) == true) {
+                alert('This data is duplicate!');
+                return;
+            }
             let jsonString = JSON.stringify({ data: obj });
             //alert(jsonString);
             $.ajax({
@@ -1171,6 +1175,13 @@ End Code
             return;
         }
         alert('No data to save');
+    }
+    function CheckDuplicate(o) {
+        let rows = $('#tbDetail').DataTable().rows().data();
+        let filter = rows.filter(function (row) {
+            return row.ForJNo == o.ForJNo && row.SICode == o.SICode && row.ForJNo !== '';
+        });        
+        return (filter.length > 0);
     }
     function ReadAdvDetail(dt) {
         $('#tbDetail').DataTable({
@@ -1296,8 +1307,8 @@ End Code
         $('#txtPayChqTo').val('');
         $('#txtSDescription').val('');
         $('#txtVatType').val('1');
-        $('#txtVATRate').val(0);
-        $('#txtWHTRate').val(0);
+        $('#txtVATRate').val('');
+        $('#txtWHTRate').val('');
         $('#txtAMT').val(0);
         $('#txtVAT').val(0);
         $('#txtWHT').val(0);
@@ -1305,7 +1316,7 @@ End Code
         $('#txtAMTCal').val(0);
         $('#txtAdvQty').val(1);
         $('#txtExcRate').val($('#txtExchangeRate').val());
-        $('#txtUnitPrice').val(0);
+        $('#txtUnitPrice').val('');
         $('#txtCurrencyCode').val($('#txtSubCurrency').val());
         ShowCurrency(path, $('#txtSubCurrency').val(), '#txtCurrencyName');
         ShowCaption();
@@ -1496,9 +1507,9 @@ End Code
 
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
-            if ($('#txtVATRate').val() == '') $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : "@ViewBag.PROFILE_VATRATE");
-            if ($('#txtWHTRate').val() == '') $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
-            if ($('#txtUnitPrice').val() == '') $('#txtUnitPrice').val(dt.StdPrice);
+            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : CDbl(@ViewBag.PROFILE_VATRATE*100,0));
+            $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
+            $('#txtUnitPrice').val(dt.StdPrice);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
                 $('#txtVAT').attr('disabled', 'disabled');

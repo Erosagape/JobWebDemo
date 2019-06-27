@@ -218,12 +218,12 @@ End Code
                     <div class="row">
                         <div class="col-sm-6">
                             <button class="btn btn-default btn-block" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Role')">กลุ่มผู้ใช้งาน</button>
-                        </div>
-                        <div class="col-sm-6">
                             <button class="btn btn-default btn-block" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Role')">กลุ่มผู้ใช้งาน</button>
                         </div>
                     </div>
                     

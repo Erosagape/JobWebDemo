@@ -562,6 +562,7 @@
     <Content Include="Views\Acc\FormExpense.vbhtml" />
     <Content Include="Views\Acc\GenerateBilling.vbhtml" />
     <Content Include="Views\Acc\GenerateReceipt.vbhtml" />
+    <Content Include="Views\Acc\GenerateTaxInv.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

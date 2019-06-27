@@ -113,8 +113,6 @@ End Code
                         <br />
                         <label for="txtInvTotal">Inv.Total :</label>
                         <input type="text" id="txtInvTotal" style="width:130px" tabindex="15" />
-                        <label for="txtMeasurement">Measurement(M3) :</label>
-                        <input type="text" id="txtMeasurement" style="width:40px" tabindex="16" />
                         <br />
                         <label for="txtInvCurrency" onclick="window.open('/Master/Currency');">Currency :</label>
                         <input type="text" id="txtInvCurrency" style="width:40px" tabindex="17" />
@@ -157,6 +155,8 @@ End Code
                         <label for="txtInvPackQty">Package.Total :</label>
                         <input type="text" id="txtInvPackQty" style="width:130px" tabindex="27" />
                         <br />
+                        <label for="txtMeasurement">Measurement(M3) :</label>
+                        <input type="text" id="txtMeasurement" style="width:40px" tabindex="16" />
                         <label for="txtNetWeight">Net Weight :</label>
                         <input type="text" id="txtNetWeight" style="width:60px" tabindex="28" />
                         <label for="txtGrossWeight">Gross Weight :</label>
@@ -466,13 +466,13 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="button" class="btn btn-primary" id="btnLinkDoc" value="Document Files" onclick="OpenDocument()"/>
-                        <input type="button" class="btn btn-primary" id="btnLinkLoad" value="Transport Info" onclick="OpenTransport()" />
-                        <input type="button" class="btn btn-primary" id="btnLinkExp" value="Estimate Expenses" onclick="OpenExpense()" />
-                        <input type="button" class="btn btn-primary" id="btnLinkTAdv" value="Credit Advance" onclick="OpenCreditAdv()" />
-                        <input type="button" class="btn btn-primary" id="btnLinkAdv" value="Advance Request" onclick="OpenAdvance()" />
-                        <input type="button" class="btn btn-primary" id="btnLinkClr" value="Advance Clearing" onclick="OpenClearing()" />
-                        <input type="button" class="btn btn-primary" id="btnLinkCost" value="Cost & Profit" onclick="OpenCosting()"/>
+                        <input type="button" class="btn btn-default" id="btnLinkDoc" value="Document Files" onclick="OpenDocument()"/>
+                        <input type="button" class="btn btn-default" id="btnLinkLoad" value="Transport Info" onclick="OpenTransport()" />
+                        <input type="button" class="btn btn-default" id="btnLinkExp" value="Estimate Expenses" onclick="OpenExpense()" />
+                        <input type="button" class="btn btn-default" id="btnLinkTAdv" value="Credit Advance" onclick="OpenCreditAdv()" />
+                        <input type="button" class="btn btn-warning" id="btnLinkAdv" value="Advance Request" onclick="OpenAdvance()" />
+                        <input type="button" class="btn btn-success" id="btnLinkClr" value="Advance Clearing" onclick="OpenClearing()" />
+                        <input type="button" class="btn btn-danger" id="btnLinkCost" value="Cost & Profit" onclick="OpenCosting()"/>
                     </div>
                 </div>
             </div>

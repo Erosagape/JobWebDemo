@@ -361,8 +361,8 @@ End Code
                             totalamt += Number(d[i].PayAmount);
                             totaltax += Number(d[i].PayTax);
 
-                            $('#txtPayAmount' + incType).text(CCurrency(CDbl(amt,2)));
-                            $('#txtPayTax' + incType).text(CCurrency(CDbl(tax,2)));
+                            $('#txtPayAmount' + incType).text(CDbl(amt,2));
+                            $('#txtPayTax' + incType).text(CDbl(tax,2));
 
                             switch (incType) {
                                 case 8:
