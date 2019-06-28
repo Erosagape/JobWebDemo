@@ -324,6 +324,9 @@ End Code
                             <textarea id="txtRemark" style="width:100%;height:80px" tabindex="28"></textarea>
                         </div>
                         <div class="modal-footer">
+                            <div style="float:left">
+                                <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">New</button>
+                            </div>
                             <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
                             <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
@@ -563,73 +566,73 @@ End Code
                 ShowData($('#txtBranchCode').val(),$('#txtAdvNo').val());
             }
         });
-        $('#txtAdvBy').focusout(function (event) {
+        $('#txtAdvBy').change(function (event) {
             if (true) {
                 ShowUser(path, $('#txtAdvBy').val(), '#txtAdvName');
             }
         });
-        $('#txtReqBy').focusout(function (event) {
+        $('#txtReqBy').change(function (event) {
             if (true) {
                 ShowUser(path, $('#txtReqBy').val(), '#txtReqName');
             }
         });
-        $('#txtCustBranch').focusout(function (event) {
+        $('#txtCustBranch').change(function (event) {
             if (true) {
                 ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
         });
-        $('#txtSICode').focusout(function (event) {
+        $('#txtSICode').change(function (event) {
             if (true) {
                 let dt = FindService($('#txtSICode').val())
                 ReadService(dt);
             }
         });
-        $('#txtAdvQty').focusout(function (event) {
+        $('#txtAdvQty').change(function (event) {
             if (true) {
                 CalAmount();
             }
         });
-        $('#txtUnitPrice').focusout(function (event) {
+        $('#txtUnitPrice').change(function (event) {
             if (true) {
                 CalAmount();
             }
         });
-        $('#txtExcRate').focusout(function (event) {
+        $('#txtExcRate').change(function (event) {
             if (true) {
                 CalAmount();
             }
         });
-        $('#txtAMT').focusout(function (event) {
+        $('#txtAMT').change(function (event) {
             if (true) {
                 CalVATWHT();
             }
         });
-        $('#txtVATRate').focusout(function (event) {
+        $('#txtVATRate').change(function (event) {
             if (true) {
                 CalVATWHT();
             }
         });
-        $('#txtWHTRate').focusout(function (event) {
+        $('#txtWHTRate').change(function (event) {
             if (true) {                
                 CalVATWHT();
             }
         });
-        $('#txtVAT').focusout(function (event) {
+        $('#txtVAT').change(function (event) {
             if (true) {
                 CalTotal();
             }
         });
-        $('#txtWHT').focusout(function (event) {
+        $('#txtWHT').change(function (event) {
             if (true) {
                 CalTotal();
             }
         });
-        $('#txtForJNo').focusout(function (event) {
+        $('#txtForJNo').change(function (event) {
             if (true) {
                 ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
             }
         });
-        $('#txtNET').focusout(function (event) {
+        $('#txtNET').change(function (event) {
             if (true) {
                 let type = $('#txtVatType').val();
                 if (type == '0'||type=='') type = "1";
@@ -1179,8 +1182,8 @@ End Code
     function CheckDuplicate(o) {
         let rows = $('#tbDetail').DataTable().rows().data();
         let filter = rows.filter(function (row) {
-            return row.ForJNo == o.ForJNo && row.SICode == o.SICode && row.ForJNo !== '';
-        });        
+            return CStr(row.ForJNo) == o.ForJNo && row.SICode == o.SICode && Number(row.ItemNo)!==Number(o.ItemNo);
+        });
         return (filter.length > 0);
     }
     function ReadAdvDetail(dt) {
@@ -1260,8 +1263,10 @@ End Code
             $('#txtItemNo').val(dt.ItemNo);
             $('#txtSICode').val(dt.SICode);
             $('#cboSTCode').val(dt.STCode);
-            let r = FindService($('#txtSICode').val())
-            ReadService(r);
+            $('#cboSTCode').change();
+            //let r = FindService($('#txtSICode').val())
+            //ReadService(r);
+            $('#txtSDescription').val(dt.SDescription);
             if (isjobmode == false) {
                 $('#txtForJNo').val(dt.ForJNo);
                 $('#txtInvNo').val('');
@@ -1298,6 +1303,7 @@ End Code
         $('#txtItemNo').val('0');
         $('#txtSICode').val('');
         $('#cboSTCode').val('');
+        $('#chkDuplicate').prop('checked', true);
         if (isjobmode == false) {
             $('#txtForJNo').val('');
             $('#txtInvNo').val('');
@@ -1504,12 +1510,15 @@ End Code
         if (dt != undefined) {
             $('#txtSICode').val(dt.SICode);
             $('#cboSTCode').val(dt.GroupCode);
-
+            $('#cboSTCode').change();
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
             $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : CDbl(@ViewBag.PROFILE_VATRATE*100,0));
             $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
-            $('#txtUnitPrice').val(dt.StdPrice);
+            if (CNum($('#txtUnitPrice').val) == 0) {
+                $('#txtUnitPrice').val(dt.StdPrice);
+                CalAmount();            
+            }
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
                 $('#txtVAT').attr('disabled', 'disabled');

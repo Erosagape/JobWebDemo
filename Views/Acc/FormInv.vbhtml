@@ -172,17 +172,17 @@ End Code
     </div>
 </div>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    $(document).ready(function () {
+    const path = '@Url.Content("~")';
+    //$(document).ready(function () {
 
-        let branch = getQueryString('branch');
-        let invno = getQueryString('code');
-        $.get(path + 'acc/getinvoice?branch=' + branch + '&code=' + invno, function (r) {
-            if (r.invoice.header !== null) {
-                ShowData(r.invoice);
-            }
-        });
+    let branch = getQueryString('branch');
+    let invno = getQueryString('code');
+    $.get(path + 'acc/getinvoice?branch=' + branch + '&code=' + invno, function (r) {
+        if (r.invoice.header !== null) {
+            ShowData(r.invoice);
+        }
     });
+    //});
     function ShowData(dr) {
         
         if (dr.header[0].length > 0) {

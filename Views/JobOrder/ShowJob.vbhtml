@@ -156,12 +156,12 @@ End Code
                         <input type="text" id="txtInvPackQty" style="width:130px" tabindex="27" />
                         <br />
                         <label for="txtMeasurement">Measurement(M3) :</label>
-                        <input type="text" id="txtMeasurement" style="width:40px" tabindex="16" />
+                        <input type="text" id="txtMeasurement" style="width:80px" tabindex="16" />
                         <label for="txtNetWeight">Net Weight :</label>
-                        <input type="text" id="txtNetWeight" style="width:60px" tabindex="28" />
+                        <input type="text" id="txtNetWeight" style="width:80px" tabindex="28" />
                         <label for="txtGrossWeight">Gross Weight :</label>
-                        <input type="text" id="txtGrossWeight" style="width:60px" tabindex="29" />
-                        <input type="text" id="txtWeightUnit" style="width:40px" tabindex="30" />
+                        <input type="text" id="txtGrossWeight" style="width:80px" tabindex="29" />
+                        <input type="text" id="txtWeightUnit" style="width:60px" tabindex="30" />
                         <input type="button" id="btnBrowseMeas" value="..." onclick="SearchData('GWUnit')" />
                         <br />
                         <label for="txtInvFCountry">From Country :</label>
@@ -426,7 +426,7 @@ End Code
                 </div>
             </div>
             <div id="tabtracking" class="tab-pane fade">
-                <table class="table table-responsive">
+                <table id="tbTracking" class="table table-responsive">
                     <thead>
                         <tr>
                             <th>
@@ -439,6 +439,13 @@ End Code
                                 Document No
                             </th>
                             <th>
+                                Expenses
+                            </th>
+                            <th>
+                                Amount
+                            </th>
+                            <th>
+                                Status
                             </th>
                         </tr>
                     </thead>
@@ -448,7 +455,7 @@ End Code
             <div id="tabremark" class="tab-pane fade">
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-responsive">
+                        <table id="tbLog" class="table table-responsive">
                             <thead>
                                 <tr>
                                     <th>
@@ -456,6 +463,9 @@ End Code
                                     </th>
                                     <th>
                                         Action
+                                    </th>
+                                    <th>
+                                        User
                                     </th>
                                 </tr>
                             </thead>
@@ -933,6 +943,31 @@ End Code
                     if (dr.JobStatus >= 3) {
                         $('#btnSave').attr('disabled', 'disabled');
                     } 
+                }
+            });
+
+        $.get(path + 'joborder/getjobdocument?branch=' + Branch + '&job=' + Job)
+            .done(function (r) {
+                if (r.job.data.length > 0) {
+                    let d = r.job.data[0];
+                    $('#tbTracking').DataTable({
+                        data: d,
+                        selected: true, //ให้สามารถเลือกแถวได้
+                        columns: [ //กำหนด property ของ header column
+                            {
+                                data: "DocDate", title: "Doc Date",
+                                render: function (data) {
+                                    return CDateEN(data);
+                                }
+                            },
+                            { data: "DocType", title: "Type" },
+                            { data: "DocNo", title: "Doc No" },
+                            { data: "Expense", title: "Description" },
+                            { data: "Amount", title: "Amount" },
+                            { data: "DocStatus", title: "Status" }
+                        ],
+                        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                    });
                 }
             });
     }

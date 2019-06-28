@@ -941,6 +941,48 @@ Namespace Controllers
                 Return Content("{""billheader"":{""result"":""" & ex.Message & """,""data"":[]}}", jsonContent)
             End Try
         End Function
+        Function GetReceiveReport() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ISNULL(rh.CancelProve,'')='' "
+
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND rh.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND rh.ReceiptNo ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND rh.ReceiptDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND rh.ReceiptDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND rh.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("InvDateFrom")) Then
+                    tSqlw &= " AND ih.DocDate>='" & Request.QueryString("InvDateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("InvDateTo")) Then
+                    tSqlw &= " AND ih.DocDate<='" & Request.QueryString("InvDateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("BillTo")) Then
+                    tSqlw &= String.Format(" AND rh.BillToCustCode='{0}' ", Request.QueryString("BillTo").ToString)
+                End If
+                Dim isSummary As Boolean = False
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    If Request.QueryString("Type").ToString = "SUM" Then
+                        isSummary = True
+                    End If
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectReceiptReport() & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""receipt"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""receipt"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
         Function GetReceipt() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ReceiptNo<>'' "
@@ -961,6 +1003,8 @@ Namespace Controllers
                             tSqlw &= " AND ReceiptNo like 'RC%' "
                         Case "TAX"
                             tSqlw &= " AND ReceiptNo like 'TX%' "
+                        Case "SRV"
+                            tSqlw &= " AND ReceiptNo like 'SV%' "
                         Case "REC"
                             tSqlw &= " AND ReceiptNo like 'RV%' "
                         Case "ADV"
@@ -1027,6 +1071,8 @@ Namespace Controllers
                                 data.AddNew("RC-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "TAX"
                                 data.AddNew("TX-" & data.ReceiptDate.ToString("yyMM") & "___")
+                            Case "SRV"
+                                data.AddNew("SV-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "REC"
                                 data.AddNew("RV-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "ADV"
@@ -1381,7 +1427,7 @@ Namespace Controllers
                     If Request.QueryString("Type").ToString = "REC" Then
                         tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0 "
                     End If
-                    If Request.QueryString("Type").ToString = "RCV" Then
+                    If Request.QueryString("Type").ToString = "RCP" Then
                         tSqlw &= " AND ((ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0) OR ISNULL(id.AmtAdvance,0)>0)) "
                     End If
 

@@ -356,13 +356,26 @@ Namespace Controllers
             End Try
         End Function
         Function GetAdvForClear() As ActionResult
-            Dim Branch As String = ""
 
-            If Not IsNothing(Request.QueryString("BranchCode")) Then
-                Branch = Request.QueryString("BranchCode")
+            Dim tSqlW As String = " WHERE (a.AdvNet-ISNULL(d.TotalCleared,0))>0 AND c.DocStatus IN('3','4') "
+            If Not IsNothing(Request.QueryString("Show")) Then
+                If Request.QueryString("Show").ToString = "NOCLR" Then
+                    tSqlW = " WHERE d.AdvNo IS NULL AND c.DocStatus IN('2','3') "
+                End If
+                If Request.QueryString("Show").ToString = "CLR" Then
+                    tSqlW = " WHERE d.AdvNo IS NOT NULL AND c.DocStatus IN('4','5') "
+                End If
+                If Request.QueryString("Show").ToString = "ALL" Then
+                    tSqlW = " WHERE c.DocStatus>0 "
+                End If
             End If
 
-            Dim tSqlW As String = String.Format(" AND a.BranchCode='{0}'", Branch)
+            Dim Branch As String = ""
+            If Not IsNothing(Request.QueryString("BranchCode")) Then
+                Branch = Request.QueryString("BranchCode")
+                tSqlW &= String.Format(" AND c.BranchCode='{0}'", Branch)
+            End If
+
             If Not IsNothing(Request.QueryString("JobNo")) Then
                 tSqlW &= " AND a.ForJNo='" & Request.QueryString("JobNo") & "' "
             End If
@@ -370,7 +383,7 @@ Namespace Controllers
                 tSqlW &= " AND c.JobType=" & Request.QueryString("JType") & ""
             End If
             If Not IsNothing(Request.QueryString("CFrom")) Then
-                tSqlW &= " AND c.ReqBy IN(SELECT UserID FROM Mas_User WHERE DeptID='" & Request.QueryString("CFrom") & "')"
+                tSqlW &= " AND c.EmpCode IN(SELECT UserID FROM Mas_User WHERE DeptID='" & Request.QueryString("CFrom") & "')"
             End If
             If Not IsNothing(Request.QueryString("ReqBy")) Then
                 tSqlW &= " AND c.EmpCode='" & Request.QueryString("ReqBy") & "'"

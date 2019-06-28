@@ -4,11 +4,12 @@ End Code
     <div>
         <br />
         Branch : <input type="text" id="txtBranchCode" />
-        <select id="cboType" class="dropdown">
-            <option value="TAX" selected>Tax-Invoice (Vatable+Advance)</option>
-            <option value="REC">Receipt (Non-Vat only)</option>
-            <option value="RCV">Receipt (Non-Vat+Advance)</option>
-        </select>
+                 <select id="cboType" class="dropdown">
+                     <option value="TAX" selected>Tax-Invoice (Vatable+Advance)</option>
+                     <option value="SRV" selected>Tax-Invoice (Vatable only)</option>
+                     <option value="REC">Receipt (Non-Vat only)</option>
+                     <option value="RCV">Receipt (Non-Vat+Advance)</option>
+                 </select>
         <input type="button" value="Show" id="btnShow" />
         <a href="/Acc/GenerateTaxInv">Create Tax-Invoice</a>
 

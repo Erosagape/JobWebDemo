@@ -3,10 +3,11 @@
     ViewBag.Title = "Advance Slip"
     ViewBag.ReportName = ""
 End Code
-<table id="tbAdvInfo" width="100%">
+<table id="tbAdvInfo" style="width:100%">
     <tr>
         <td colspan="3" style="font-size:11px">
-            <b>Advance No : </b><label id="lblAdvNo" style="text-decoration-line:underline"></label>
+            <b>Advance No : </b>
+            <label id="lblAdvNo" style="text-decoration-line:underline"></label>
         </td>
         <td align="right" style="font-size:11px">
             <input type="text" value="ADVANCE" style="text-align:center;background-color:yellow;font:bold;font-size:large;" disabled />
@@ -14,20 +15,26 @@ End Code
     </tr>
     <tr>
         <td colspan="3" style="font-size:11px">
-            <b>Customer : </b><label id="lblCustCode" style="text-decoration-line:underline;"></label>
-            <br /><label id="lblCustName" style="text-decoration-line:underline;"></label>
+            <b>Customer : </b>
+            <label id="lblCustCode" style="text-decoration-line:underline;"></label>
+            <br />
+            <label id="lblCustName" style="text-decoration-line:underline;"></label>
         </td>
         <td align="right" style="font-size:11px">
-            <b>Advance Date : </b><label id="lblAdvDate" style="text-decoration-line:underline;"></label>
+            <b>Advance Date : </b>
+            <label id="lblAdvDate" style="text-decoration-line:underline;"></label>
         </td>
     </tr>
     <tr>
         <td colspan="2" style="font-size:11px">
-            <b>Job Type : </b><label id="lblJobType" style="text-decoration-line:underline;"></label>
-            <b>Ship By : </b><label id="lblShipBy" style="text-decoration-line:underline;"></label>
+            <b>Job Type : </b>
+            <label id="lblJobType" style="text-decoration-line:underline;"></label>
+            <b>Ship By : </b>
+            <label id="lblShipBy" style="text-decoration-line:underline;"></label>
         </td>
         <td align="right" colspan="2" style="font-size:11px">
-            <b>Advance Type : </b><label id="lblAdvType" style="text-decoration-line:underline;"></label>
+            <b>Advance Type : </b>
+            <label id="lblAdvType" style="text-decoration-line:underline;"></label>
         </td>
     </tr>
     <tr>
@@ -36,18 +43,23 @@ End Code
             <label id="lblRemark" style="text-decoration-line:underline;"></label>
         </td>
         <td align="right" style="font-size:11px">
-            <b>Request Date : </b><label id="lblReqDate" style="text-decoration-line:underline;"></label>
+            <b>Request Date : </b>
+            <label id="lblReqDate" style="text-decoration-line:underline;"></label>
         </td>
     </tr>
 </table>
 <br />
-<table width="100%" style="border-collapse:collapse;">
+<table style="border-collapse:collapse;width:100%">
     <tr style="text-align:center;">
         <td style="border-style:solid;border-width:thin;font-size:11px">
             <b>Advance Expenses</b>
         </td>
-        <td style="border-style:solid;border-width:thin;font-size:11px"><b>Job Number</b></td>
-        <td style="border-style:solid;border-width:thin;font-size:11px"><b>Amount</b></td>
+        <td style="border-style:solid;border-width:thin;font-size:11px">
+            <b>Job Number</b>
+        </td>
+        <td style="border-style:solid;border-width:thin;font-size:11px">
+            <b>Amount</b>
+        </td>
     </tr>
     <tr style="height:450px;vertical-align:top">
         <td style="border-style:solid;border-width:thin;text-align:left">
@@ -62,7 +74,8 @@ End Code
     </tr>
     <tr>
         <td style="text-align:left;font-size:11px">
-            <input type="checkbox" id="chkCash" /> CASH/TRANSFER : <label id="lblAccNo">______________</label>
+            <input type="checkbox" id="chkCash" /> CASH/TRANSFER :
+            <label id="lblAccNo">______________</label>
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Net Amount</td>
         <td style="border-style:solid;border-width:thin" width="150px">
@@ -71,7 +84,9 @@ End Code
     </tr>
     <tr>
         <td style="text-align:left;font-size:11px">
-            <input type="checkbox" id="chkCustChq" /> CUST.CHQ NO : <label id="lblcustChqNo">__________</label> DEP.DATE : <label id="lblDepDate">________</label>
+            <input type="checkbox" id="chkCustChq" /> CUST.CHQ NO :
+            <label id="lblcustChqNo">__________</label> DEP.DATE :
+            <label id="lblDepDate">________</label>
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">
             VAT
@@ -82,7 +97,9 @@ End Code
     </tr>
     <tr>
         <td style="text-align:left;font-size:11px">
-            <input type="checkbox" id="chkCompChq" /> CHQ NO : <label id="lblCompChqNo">__________</label> CHQ.DATE : <label id="lblChqDate">________</label>
+            <input type="checkbox" id="chkCompChq" /> CHQ NO :
+            <label id="lblCompChqNo">__________</label> CHQ.DATE :
+            <label id="lblChqDate">________</label>
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">WH-Tax</td>
         <td style="border-style:solid;border-width:thin" width="150px">
@@ -91,7 +108,7 @@ End Code
     </tr>
     <tr>
         <td style="text-align:left;font-size:11px;">
-            <input type="checkbox" id="chkCredit" /> ACCOUNT PAYABLES :
+            <input type="checkbox" id="chkCredit" /> ACCOUNT PAYABLES :__________________
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Total</td>
         <td style="border-style:solid;border-width:thin" width="150px">
@@ -99,63 +116,69 @@ End Code
         </td>
     </tr>
 </table>
-<br />
-TOTAL : <input type="text" id="txtTotalText" value="ZERO BAHT ONLY" style="font-size:11px;background-color:burlywood;font:bold;text-align:center;width:90%;" disabled />
-<br />
-PAY TO : <label id="lblPayTo" style="font-size:11px">________________________________________________________________________</label>
-<br />
-<br />
-<table width="100%" style="border-collapse:collapse;">
-    <tr>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-            REQUEST.BY
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-            APPROVE.BY
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-            PAYMENT.BY
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-            POSTED.BY
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
-            CLEARED.BY
-        </td>
-    </tr>
-    <tr>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom" height="100px">
-            <label id="lblReqBy" style="font-size:10px">(__________________)</label><br />
-            <label id="lblRequestDate" style="font-size:9px">__/__/____</label>
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-            <label id="lblAppBy" style="font-size:10px">(__________________)</label><br />
-            <label id="lblAppDate" style="font-size:9px">__/__/____</label>
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-            <label id="lblPayBy" style="font-size:10px">(__________________)</label><br />
-            <label id="lblPayDate" style="font-size:9px">__/__/____</label>
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-            <label id="lblPostBy" style="font-size:9px">(__________________)</label><br />
-            <label id="lblPostDate" style="font-size:9px">__/__/____</label>
-        </td>
-        <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
-            <label id="lblClrBy" style="font-size:9px">(__________________)</label><br />
-            <label id="lblClrDate" style="font-size:9px">__/__/____</label>
-        </td>
-    </tr>
-</table>    
-<script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var serv = [];
-    $(document).ready(function () {
+            **ADVANCE WAIT FOR CLEAR AT @DateTime.Now IS
+            <label id="lblPendingAmount">0.00</label>**
+            <br />
+            TOTAL : <input type="text" id="txtTotalText" value="ZERO BAHT ONLY" style="font-size:11px;background-color:burlywood;font:bold;text-align:center;width:90%;" disabled />
+            <br />
+            PAY TO : <label id="lblPayTo" style="font-size:11px">________________________________________________________________________</label>
+            <br />
+            <table style="border-collapse:collapse;width:100%">
+                <tr>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+                        REQUEST.BY
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+                        APPROVE.BY
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+                        PAYMENT.BY
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+                        POSTED.BY
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:top">
+                        CLEARED.BY
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom" height="100px">
+                        <label id="lblReqBy" style="font-size:10px">(__________________)</label>
+                        <br />
+                        <label id="lblRequestDate" style="font-size:9px">__/__/____</label>
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+                        <label id="lblAppBy" style="font-size:10px">(__________________)</label>
+                        <br />
+                        <label id="lblAppDate" style="font-size:9px">__/__/____</label>
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+                        <label id="lblPayBy" style="font-size:10px">(__________________)</label>
+                        <br />
+                        <label id="lblPayDate" style="font-size:9px">__/__/____</label>
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+                        <label id="lblPostBy" style="font-size:9px">(__________________)</label>
+                        <br />
+                        <label id="lblPostDate" style="font-size:9px">__/__/____</label>
+                    </td>
+                    <td style="border-style:solid;border-width:thin;text-align:center;vertical-align:bottom">
+                        <label id="lblClrBy" style="font-size:9px">(__________________)</label>
+                        <br />
+                        <label id="lblClrDate" style="font-size:9px">__/__/____</label>
+                    </td>
+                </tr>
+            </table>
+            <script type="text/javascript">
+    const path = '@Url.Content("~")';
+    let serv = [];
+    //$(document).ready(function () {
         let branch = getQueryString('branch');
         let advno = getQueryString('advno');
         if (branch != "" && advno != "") {
             GetAdv(branch, advno);
         }
-    });
+    //});
     function GetAdv(Branch, Doc) {
         $.get(path +'adv/getadvance?branchcode=' + Branch + '&advno=' + Doc)
             .done(function (r) {
@@ -172,7 +195,16 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
                 ShowDetail(d,h);
             });
     }
-    
+                function ShowPendingAmount(branch, reqby) {
+                    $.get(path + 'Clr/GetAdvForClear?show=NOCLR&branchcode=' + branch + '&reqby=' + reqby)
+                        .done(function (r) {
+                            if (r.clr.data.length > 0) {
+                                let d = r.clr.data[0].Table;
+                                let sum = d.map(item => item.AdvBalance).reduce((prev, next) => prev + next);
+                                $('#lblPendingAmount').text(ShowNumber(sum, 2));
+                            }
+                        });
+                }
     function ShowData(data) {
         //show headers
         let h = data.adv.header[0];
@@ -182,7 +214,7 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
         $('#lblRemark').text(h.TRemark);
         $('#lblAdvDate').text(ShowDate(h.AdvDate));
         $('#lblPayTo').text(h.PayChqTo);
-
+        ShowPendingAmount(h.BranchCode, h.EmpCode);
         ShowCustomer(h.CustCode, h.CustBranch);
 
         ShowUserSign(path,h.EmpCode, '#lblReqBy');
@@ -235,7 +267,7 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
                     }
                 });
         }
-    }    
+    }
     function ShowDetail(r,h) {
         //Dummy Data
         let strDesc = '';
@@ -251,14 +283,14 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
                     return data.SICode === d.SICode;
                 });
                 if (c.length > 0) {
-                    strDesc = strDesc + (d.SICode + '-' + c[0].NameThai + '<br/>');
+                    strDesc = strDesc + (d.SICode + '-' + d.SDescription + '<br/>');
                 } else {
                     strDesc = strDesc + 'Not Assign Expenses<br/>';
                 }
             } else {
                 strDesc = strDesc + (d.SICode + '<br/>');
             }
-            strJob = strJob + (d.ForJNo + '<br/>');
+            strJob = strJob + ((d.ForJNo == null||d.ForJNo=='' ? '' : d.ForJNo) + '<br/>');
             strAmt = strAmt + (CCurrency((d.AdvAmount).toFixed(2)) + '<br/>');
             totAmt += d.AdvAmount;
             //vat += d.ChargeVAT;
@@ -269,4 +301,4 @@ PAY TO : <label id="lblPayTo" style="font-size:11px">___________________________
         $('#divAmt').html(strAmt);
     }
 
-</script>
+            </script>

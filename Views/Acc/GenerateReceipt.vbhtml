@@ -80,7 +80,7 @@ End Code
                     Total Advance:<input type="text" id="txtTotalAdvance" disabled />
                     <div class="row">
                         <div class="col-sm-3">
-                            <input type="checkbox" id="chkMerge" checked /> Generate One Receipt Per Invoice<br />
+                            <input type="checkbox" id="chkMerge" checked /> Generate One Receipt<br />
                             <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Receipt</button><br />
                         </div>
                         <div class="col-sm-9">

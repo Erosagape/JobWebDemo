@@ -47,6 +47,25 @@ Namespace Controllers
         Function CheckAPI() As ActionResult
             Return Content("Hi API is Running")
         End Function
+        Function GetJobDocument() As ActionResult
+            Try
+                Dim branch As String = ""
+                Dim job As String = ""
+
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    branch = Request.QueryString("Branch").ToString()
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    job = Request.QueryString("Job").ToString
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectDocumentByJob(branch, job))
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""job"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""job"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
         Function GetJobReport() As ActionResult
             Try
                 Dim tSqlW As String = ""

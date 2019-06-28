@@ -32,8 +32,9 @@ End Code
         Type :
         <select id="cboType">
             <option value="TAX" selected>Tax-Invoice (Vatable+Advance)</option>
+            <option value="SRV" selected>Tax-Invoice (Vatable only)</option>
             <option value="REC">Receipt (Non-Vat only)</option>
-            <option value="RCV">Receipt (Non-Vat+Advance)</option>
+            <option value="RCP">Receipt (Non-Vat+Advance)</option>
         </select>
         <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
         <div class="row">
@@ -93,7 +94,7 @@ End Code
                     Receive Total:<input type="text" id="txtTotalNet" disabled />
                     <div class="row">
                         <div class="col-sm-3">
-                            <input type="checkbox" id="chkMerge" checked /> Generate One Tax-Invoice Per Invoice<br />
+                            <input type="checkbox" id="chkMerge" checked /> Generate One Tax-Invoice<br />
                             <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Tax-Invoice</button><br />
                         </div>
                         <div class="col-sm-9">
