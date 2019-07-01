@@ -96,7 +96,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("TaxNumber")) Then
                     tSqlW &= " AND j.CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
                 End If
-                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectJobReport() & " WHERE j.JNo<>'' " & tSqlW)
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectJobReport() & " WHERE j.JNo<>'' " & tSqlW & " ORDER BY j.BranchCode,j.JNo")
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""job"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
@@ -135,7 +135,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("TaxNumber")) Then
                     tSqlW &= " AND CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
                 End If
-                Dim oData = oJob.GetData(" WHERE JNo<>'' " & tSqlW)
+                Dim oData = oJob.GetData(" WHERE JNo<>'' " & tSqlW & " ORDER BY BranchCode,JNo")
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""job"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)

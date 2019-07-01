@@ -96,6 +96,7 @@ End Code
                         <div class="col-sm-3">
                             <input type="checkbox" id="chkMerge" checked /> Generate One Tax-Invoice<br />
                             <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Tax-Invoice</button><br />
+                            <div id="dvMsg"></div>
                         </div>
                         <div class="col-sm-9">
                             <b>Invoice Detail:</b><br />
@@ -129,12 +130,17 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var arr = [];
-    $(document).ready(function () {
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    let arr = [];
+    let dtl_list = [];
+    let resp_count = 0;
+    //$(document).ready(function () {
         SetEvents();
-    });
+    //});
+    function ShowMessage(str) {
+        $('#dvMsg').append('<br/>' + str);
+    }
     function SetEvents() {
         //Events
         $('#txtBranchCode').keydown(function (event) {
@@ -329,7 +335,7 @@ End Code
                 ExchangeRate: 1,
                 TotalCharge: $('#txtTotalAdvance').val(),
                 TotalVAT: $('#txtTotalVAT').val(),
-                Total50Tavi:$('#txtTotal50Tavi').val(),
+                Total50Tavi: $('#txtTotal50Tavi').val(),
                 TotalNet: $('#txtTotalNet').val(),
                 FTotalNet: $('#txtTotalNet').val()
             };
@@ -351,8 +357,85 @@ End Code
                 }
             });
 
+        } else {
+            sortData(arr, 'InvoiceNo', 'asc');
+            let rowProcess = 0;
+            let currInv = '';
+            let dtl = [];
+            dtl_list = [];
+            resp_count = 0;
+            $('#dvMsg').html('');
+            for (let obj of arr) {
+                rowProcess += 1;
+                if (currInv !== obj.InvoiceNo) {
+                    if (dtl.length > 0) {
+                        let data = JSON.parse(JSON.stringify(dtl));
+                        SaveHeaderByInv(data,currInv);
+                    }
+                    currInv = obj.InvoiceNo;
+                    dtl = [];
+                }
+                dtl.push(obj);
+                if (rowProcess == arr.length) {
+                    let data = JSON.parse(JSON.stringify(dtl));
+                    SaveHeaderByInv(data,currInv);
+                }
+            }
         }
         return;
+    }
+function SaveHeaderByInv(dt,inv) {
+        dtl_list.push({
+            docno:inv,
+            data: dt
+        });
+        let dataInv = {
+            BranchCode: $('#txtBranchCode').val(),
+            ReceiptNo: $('#txtDocNo').val(),
+            ReceiptDate: CDateEN($('#txtDocDate').val()),
+            ReceiptType: $('#cboType').val(),
+            CustCode: $('#txtCustCode').val(),
+            CustBranch: $('#txtCustBranch').val(),
+            BillToCustCode: $('#txtBillToCustCode').val(),
+            BillToCustBranch: $('#txtBillToCustBranch').val(),
+            TRemark: '',
+            EmpCode: user,
+            PrintedBy: '',
+            PrintedDate: null,
+            PrintedTime: null,
+            ReceiveBy: '',
+            ReceiveDate: null,
+            ReceiveRef: '',
+            CancelReson: '',
+            CancelProve: '',
+            CancelDate: null,
+            CancelTime: null,
+            CurrencyCode: '@ViewBag.PROFILE_CURRENCY',
+            ExchangeRate: 1,
+            TotalCharge: $('#txtTotalAdvance').val(),
+            TotalVAT: $('#txtTotalVAT').val(),
+            Total50Tavi: $('#txtTotal50Tavi').val(),
+            TotalNet: $('#txtTotalNet').val(),
+            FTotalNet: $('#txtTotalNet').val()
+        };
+        let jsonString = JSON.stringify({ data: dataInv });
+        $.ajax({
+            url: "@Url.Action("SetRcpHeader", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonString,
+            success: function (response) {
+                if (response.result.data !== null) {
+                    SaveDetailFromArray(response.result.data, resp_count);
+                    resp_count +=1;
+                    return;
+                }
+                ShowMessage(response.result.msg);
+            },
+            error: function (e) {
+                ShowMessage(e);
+            }
+        });
     }
     function SaveDetail(docno) {
         $('#txtDocNo').val(docno);
@@ -377,6 +460,26 @@ End Code
                     alert(e);
                 }
             });
+    }
+    function SaveDetailFromArray(docno) {
+        let list = GetDataDetail(dtl_list[resp_count].data,docno);
+        let jsonText = JSON.stringify({ data: list });
+        $.ajax({
+            url: "@Url.Action("SaveRcpDetail", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data !== null) {
+                    ShowMessage(response.result.msg + '=>' + response.result.data);
+                    return;
+                }
+                ShowMessage(response.result.msg);
+            },
+            error: function (e) {
+                ShowMessage(e);
+            }
+        });
     }
     function SearchData(type) {
         switch (type) {

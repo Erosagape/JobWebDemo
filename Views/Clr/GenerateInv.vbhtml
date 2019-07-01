@@ -415,6 +415,7 @@ End Code
         $('#txtTotalAdvance').val(CDbl(totaladv, 2));
         $('#txtTotalCharge').val(CDbl(totalcharge, 2));
         $('#txtSumDiscount').val(CDbl(totalsumdisc, 2));
+        SetDiscount();
         $('#txtTotalIsTaxCharge').val(CDbl(totalistaxcharge, 2));
         $('#txtTotalIs50Tavi').val(CDbl(totalis50tavi, 2));
         $('#txtTotalVat').val(CDbl(totalvat, 2));
@@ -1010,7 +1011,7 @@ End Code
         });
         let arr_new = [];
         if (arr_cost.length > 0) {
-            arr_new.push(arr_cost);
+            arr_new=arr_cost;
         }
 
         let arr_sel = arr.filter(function (d) {
