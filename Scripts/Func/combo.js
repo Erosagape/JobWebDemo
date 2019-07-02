@@ -168,6 +168,20 @@ function ShowCustomer(path, Code, Branch, ControlID) {
             });
     }
 }
+function ShowCustomerAddress(path, Code, Branch, ControlIDName,ControlIDAddr) {
+    $(ControlIDName).val('');
+    $(ControlIDAddr).val('');
+    if ((Code + Branch).length > 0) {
+        $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
+            .done(function (r) {
+                if (r.company.data.length > 0) {
+                    let c = r.company.data[0];
+                    $(ControlIDName).val(c.NameThai);
+                    $(ControlIDAddr).val(c.TAddress1+ ' '+c.TAddress2);
+                }
+            });
+    }
+}
 function ShowCustomerFull(path, Code, Branch, CustNameID,NameThaiID,NameEngID,PhoneFaxID) {
     if (PhoneFaxID == '') {
         $(CustNameID).val('');

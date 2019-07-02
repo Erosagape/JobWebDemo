@@ -474,7 +474,7 @@ h.CancelProve,h.CancelReson,h.CancelDate
 from Job_ClearHeader h left join Mas_Branch b on h.BranchCode=b.Code 
 left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
 left join (
-  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.EmpCode,ah.AdvDate,ad.AdvAmount,ad.ChargeVAT,
+  select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.EmpCode,ad.AdvAmount,ad.ChargeVAT,
   ad.IsDuplicate,ad.AdvNet,ah.AdvDate,ah.DocStatus
   from Job_AdvHeader ah inner join Job_AdvDetail ad
   on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
@@ -675,22 +675,22 @@ left join (select VenCode,TName as ForwarderName from Mas_Vender) v2 on j.Forwar
     Function SQLUpdateInvoiceHeader() As String
         Return "
 update h
-set h.TotalAdvance=d.TotalAdvance,
-h.TotalCharge=d.TotalCharge,
-h.TotalIsTaxCharge=d.TotalIsTaxCharge,
-h.TotalIs50Tavi=d.TotalIs50Tavi,
-h.TotalVAT=d.TotalVAT,
-h.Total50Tavi=d.Total50Tavi,
-h.SumDiscount=d.SumDiscount,
-h.DiscountCal=d.TotalNet*(h.DiscountRate/100),
-h.TotalDiscount=d.SumDiscount+(d.TotalNet*(h.DiscountRate/100)),
-h.TotalNet=d.TotalNet-(d.SumDiscount+(d.TotalNet*(h.DiscountRate/100))),
-h.ForeignNet=d.TotalNet-(d.SumDiscount+(d.TotalNet*(h.DiscountRate/100)))/h.ExchangeRate
+set h.TotalAdvance=ROUND(d.TotalAdvance,2),
+h.TotalCharge=ROUND(d.TotalCharge,2),
+h.TotalIsTaxCharge=ROUND(d.TotalIsTaxCharge,2),
+h.TotalIs50Tavi=ROUND(d.TotalIs50Tavi,2),
+h.TotalVAT=ROUND(d.TotalVAT,2),
+h.Total50Tavi=ROUND(d.Total50Tavi,2),
+h.SumDiscount=ROUND(d.SumDiscount,2),
+h.DiscountCal=ROUND((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100),2),
+h.TotalDiscount=ROUND(d.SumDiscount+((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100)),2),
+h.TotalNet=ROUND((d.TotalNet-h.TotalCustAdv)-(d.SumDiscount+((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100))),2),
+h.ForeignNet=ROUND((d.TotalNet-h.TotalCustAdv)-(d.SumDiscount+((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100)))/h.ExchangeRate,2)
 from Job_InvoiceHeader h
 inner join (
 	select BranchCode,DocNo,
-	sum(AmtCharge) as TotalCharge,
-	sum(AmtAdvance) as TotalAdvance,
+	sum((CASE WHEN AmtCharge>0 THEN Amt+AmtDiscount ELSE 0 END)) as TotalCharge,
+	sum((CASE WHEN AmtAdvance>0 THEN Amt+AmtDiscount ELSE 0 END)) as TotalAdvance,
 	sum(case when IsTaxCharge=1 And AmtCharge>0 then Amt else 0 end) as TotalIsTaxCharge, 
 	sum(case when Is50Tavi=1 And AmtCharge>0 then Amt else 0 end) as TotalIs50Tavi,
 	sum(case when AmtCharge>0 then AmtVat else 0 end) as TotalVAT,

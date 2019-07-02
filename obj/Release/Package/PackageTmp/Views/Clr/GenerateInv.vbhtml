@@ -267,6 +267,7 @@ End Code
 <script type="text/javascript">
     const path = '@Url.Content("~")';
     const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
     let arr = [];
     let arr_split = {};
     let arr_clr = [];
@@ -415,6 +416,7 @@ End Code
         $('#txtTotalAdvance').val(CDbl(totaladv, 2));
         $('#txtTotalCharge').val(CDbl(totalcharge, 2));
         $('#txtSumDiscount').val(CDbl(totalsumdisc, 2));
+        SetDiscount();
         $('#txtTotalIsTaxCharge').val(CDbl(totalistaxcharge, 2));
         $('#txtTotalIs50Tavi').val(CDbl(totalis50tavi, 2));
         $('#txtTotalVat').val(CDbl(totalvat, 2));
@@ -692,6 +694,10 @@ End Code
         arr.splice(idx, 1);
     }
     function ApproveData() {
+        if (userRights.indexOf('I') < 0) {
+            alert('you are not authorize to create invoice');
+            return;
+        }
         if (arr.length==0) {
             alert('no data to approve');
             return;
@@ -935,26 +941,26 @@ End Code
                     QtyUnit: obj.QtyUnit,
                     UnitPrice: obj.UnitPrice,
                     FUnitPrice: CDbl(obj.UnitPrice / CNum($('#txtExchangeRate').val()), 2),
-                    Amt: obj.Amt,
+                    Amt: CDbl(obj.Amt,2),
                     FAmt: CDbl(obj.Amt / CNum($('#txtExchangeRate').val()), 2),
                     DiscountType: obj.DiscountType,
                     DiscountPerc: obj.DiscountPerc,
-                    AmtDiscount: obj.AmtDiscount,
+                    AmtDiscount: CDbl(obj.AmtDiscount,2),
                     FAmtDiscount: CDbl(obj.AmtDiscount / CNum($('#txtExchangeRate').val()), 2),
                     Is50Tavi: obj.Is50Tavi,
                     Rate50Tavi: obj.Rate50Tavi,
-                    Amt50Tavi: obj.Amt50Tavi,
+                    Amt50Tavi: CDbl(obj.Amt50Tavi,2),
                     IsTaxCharge: obj.IsTaxCharge,
-                    AmtVat: obj.AmtVat,
-                    TotalAmt: obj.TotalAmt,
+                    AmtVat: CDbl(obj.AmtVat,2),
+                    TotalAmt: CDbl(obj.TotalAmt,2),
                     FTotalAmt: CDbl(obj.TotalAmt / CNum($('#txtExchangeRate').val()), 2),
-                    AmtAdvance: (obj.AmtAdvance > 0 ? obj.AmtAdvance - Number(obj.AmtDiscount) : 0),
-                    AmtCharge: (obj.AmtCharge > 0 ? obj.AmtCharge - Number(obj.AmtDiscount) : 0),
+                    AmtAdvance: (obj.AmtAdvance > 0 ? CDbl(obj.AmtAdvance - Number(obj.AmtDiscount),2) : 0),
+                    AmtCharge: (obj.AmtCharge > 0 ? CDbl(obj.AmtCharge - Number(obj.AmtDiscount),2) : 0),
                     CurrencyCodeCredit: $('#txtCurrencyCode').val(),
                     ExchangeRateCredit: $('#txtExchangeRate').val(),
-                    AmtCredit: creditamt,
+                    AmtCredit: CDbl(creditamt,2),
                     FAmtCredit: CDbl(creditamt / CNum($('#txtExchangeRate').val()), 2),
-                    VATRate: obj.VATRate
+                    VATRate: CDbl(obj.VATRate,0)
                 });
             } else {
                 data.push({
@@ -1010,7 +1016,7 @@ End Code
         });
         let arr_new = [];
         if (arr_cost.length > 0) {
-            arr_new.push(arr_cost);
+            arr_new=arr_cost;
         }
 
         let arr_sel = arr.filter(function (d) {

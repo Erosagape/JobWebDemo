@@ -4,6 +4,10 @@ function GetSelect(tb, e) {
     let indexRow = $(e).parents('tr');
     return $(tb).DataTable().row(indexRow).data();
 }
+function SetSelect(tb, that) {
+    $(tb+' tbody > tr').removeClass('selected');
+    $(that).addClass('selected');
+}
 function GetToday() {
     let d = new Date(),
         month = '' + (d.getMonth() + 1),
@@ -102,7 +106,8 @@ function CNum(data) {
     if ((''+data).length==0) {
         return 0;
     } else {
-        return Number(data);
+        let num = data.toString().replace(',', '');
+        return Number(num);
     }
 }
 function CNumThai(Number) {

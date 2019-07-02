@@ -160,7 +160,7 @@ Namespace Controllers
             If Not Request.QueryString("Branch") Is Nothing Then
                 branch = Request.QueryString("Branch").ToString
             End If
-            Dim sql As String = SQLSelectClrDetail() & " WHERE h.BranchCode='{0}'"
+            Dim sql As String = SQLSelectClrDetail() & String.Format(" WHERE h.BranchCode='{0}' ", branch)
             Try
                 If Not Request.QueryString("Code") Is Nothing Then
                     sql &= " AND h.ClrNo='" & Request.QueryString("Code").ToString & "' "
@@ -213,7 +213,7 @@ Namespace Controllers
                 End If
                 sql &= " ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo "
 
-                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, branch))
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sql)
                 Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & "}"
                 Return Content(json, jsonContent)
             Catch ex As Exception

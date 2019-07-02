@@ -664,8 +664,6 @@ End Code
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             let dv = document.getElementById("dvLOVs");
-            //Customers
-            CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
             //Venders
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response,4);
             //Job
@@ -1349,9 +1347,6 @@ End Code
                 break;
             case 'clrby':
                 SetGridUser(path, '#tbClr', '#frmSearchClr', ReadClrBy);
-                break;
-            case 'customer':
-                SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
             case 'servicecode':
                 let q = GetClrType($('#cboClrType').val());

@@ -949,7 +949,7 @@ End Code
         $.get(path + 'joborder/getjobdocument?branch=' + Branch + '&job=' + Job)
             .done(function (r) {
                 if (r.job.data.length > 0) {
-                    let d = r.job.data[0];
+                    let d = r.job.data;
                     $('#tbTracking').DataTable({
                         data: d,
                         selected: true, //ให้สามารถเลือกแถวได้

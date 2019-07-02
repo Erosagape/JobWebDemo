@@ -310,7 +310,7 @@ Namespace Controllers
                 Dim docno As String = ""
 
                 For Each o As CVoucherSub In data
-                    i = i + 1
+                    i += 1
                     branchcode = o.BranchCode
                     docno = o.ControlNo
                     o.SetConnect(jobWebConn)
@@ -380,7 +380,7 @@ Namespace Controllers
                 Dim docno As String = ""
 
                 For Each o As CVoucherDoc In data
-                    i = i + 1
+                    i += 1
                     branchcode = o.BranchCode
                     docno = o.ControlNo
                     o.SetConnect(jobWebConn)
@@ -855,9 +855,11 @@ Namespace Controllers
                 Else
                     Return Content("{""invheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
-                Dim oData As New CInvHeader(jobWebConn)
-                oData.BranchCode = Branch
-                oData.DocNo = DocNo
+
+                Dim oData As New CInvHeader(jobWebConn) With {
+                    .BranchCode = Branch,
+                    .DocNo = DocNo
+                }
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim oDet As New CInvDetail(jobWebConn)
@@ -927,9 +929,10 @@ Namespace Controllers
                 Dim Branch As String = Request.QueryString("Branch").ToString
                 Dim Code As String = Request.QueryString("Code").ToString
 
-                Dim oData As New CBillHeader(jobWebConn)
-                oData.BranchCode = Branch
-                oData.BillAcceptNo = Code
+                Dim oData As New CBillHeader(jobWebConn) With {
+                    .BranchCode = Branch,
+                    .BillAcceptNo = Code
+                }
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim oDet As New CBillDetail(jobWebConn)
@@ -1110,9 +1113,10 @@ Namespace Controllers
                 Dim oData As New CRcpHeader(jobWebConn)
                 Dim msg = oData.DeleteData(tSqlw)
 
-                Dim oDetail As New CRcpDetail(jobWebConn)
-                oDetail.BranchCode = Request.QueryString("Branch").ToString
-                oDetail.ReceiptNo = Request.QueryString("Code").ToString
+                Dim oDetail As New CRcpDetail(jobWebConn) With {
+                    .BranchCode = Request.QueryString("Branch").ToString,
+                    .ReceiptNo = Request.QueryString("Code").ToString
+                }
                 oDetail.DeleteData(tSqlw)
 
                 Dim json = "{""rcpheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
@@ -1532,9 +1536,10 @@ Namespace Controllers
                     If "" & data(0).BillAcceptNo = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     Else
-                        Dim o = New CBillDetail(jobWebConn)
-                        o.BranchCode = data(0).BranchCode
-                        o.BillAcceptNo = data(0).BillAcceptNo
+                        Dim o = New CBillDetail(jobWebConn) With {
+                            .BranchCode = data(0).BranchCode,
+                            .BillAcceptNo = data(0).BillAcceptNo
+                        }
                         o.DeleteData(String.Format(" WHERE BranchCode='{0}' And BillAcceptNo='{1}'", data(0).BranchCode, data(0).BillAcceptNo))
                     End If
                     Dim msg = ""
@@ -1682,9 +1687,11 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Item")) Then
                     tSqlw &= String.Format("AND ItemNo='{0}' ", Request.QueryString("Item").ToString)
                 End If
-                Dim oData As New CRcpDetail(jobWebConn)
-                oData.BranchCode = Branch
-                oData.ReceiptNo = DocNo
+
+                Dim oData As New CRcpDetail(jobWebConn) With {
+                    .BranchCode = Branch,
+                    .ReceiptNo = DocNo
+                }
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""rcpdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
