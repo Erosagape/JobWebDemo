@@ -76,10 +76,11 @@ End Code
         <td style="text-align:left;font-size:11px">
             <input type="checkbox" id="chkCash" /> CASH/TRANSFER :
             <label id="lblAccNo">______________</label>
+            <label id="txtAdvCash"></label>
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Net Amount</td>
         <td style="border-style:solid;border-width:thin" width="150px">
-            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtNetAmt" />
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtTotalAmt" />
         </td>
     </tr>
     <tr>
@@ -87,6 +88,7 @@ End Code
             <input type="checkbox" id="chkCustChq" /> CUST.CHQ NO :
             <label id="lblcustChqNo">__________</label> DEP.DATE :
             <label id="lblDepDate">________</label>
+            <label id="txtAdvChqCash"></label>
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">
             VAT
@@ -100,6 +102,7 @@ End Code
             <input type="checkbox" id="chkCompChq" /> CHQ NO :
             <label id="lblCompChqNo">__________</label> CHQ.DATE :
             <label id="lblChqDate">________</label>
+            <label id="txtAdvChq"></label>
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">WH-Tax</td>
         <td style="border-style:solid;border-width:thin" width="150px">
@@ -108,11 +111,11 @@ End Code
     </tr>
     <tr>
         <td style="text-align:left;font-size:11px;">
-            <input type="checkbox" id="chkCredit" /> ACCOUNT PAYABLES :__________________
+            <input type="checkbox" id="chkCredit" /> ACCOUNT PAYABLES :__________________ <label id="txtAdvCred"></label>
         </td>
         <td style="border-style:solid;border-width:thin;text-align:right;font-size:11px" width="130px">Total</td>
         <td style="border-style:solid;border-width:thin" width="150px">
-            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtTotalAmt" />
+            <input type="text" style="border:none;text-align:right;font-size:11px" id="txtNetAmt" />
         </td>
     </tr>
 </table>
@@ -236,15 +239,19 @@ End Code
         ShowConfig(path,'ADV_TYPE', at, '#lblAdvType');
         if (h.AdvCash > 0) {
             $('#chkCash').prop('checked', true);
+            $('#txtAdvCash').text(ShowNumber(h.AdvCash, 2) + ' ' + h.SubCurrency);
         }
         if (h.AdvChq > 0) {
             $('#chkCustChq').prop('checked', true);
+            $('#txtAdvChq').text(ShowNumber(h.AdvChq, 2) + ' ' + h.SubCurrency);
         }
         if (h.AdvChqCash > 0) {
             $('#chkCompChq').prop('checked', true);
+            $('#txtAdvChqCash').text(ShowNumber(h.AdvChqCash, 2) + ' ' + h.SubCurrency);
         }
         if (h.AdvCred > 0) {
             $('#chkCredit').prop('checked', true);
+            $('#txtAdvCred').text(ShowNumber(h.AdvCred, 2) + ' ' + h.SubCurrency);
         }
         $('#txtNetAmt').val(CCurrency(h.TotalAdvance.toFixed(2)));
         $('#txtVATAmt').val(CCurrency(h.TotalVAT.toFixed(2)));

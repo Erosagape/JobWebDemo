@@ -398,20 +398,20 @@ End Code
         let totalsumdisc = 0;
 
         for (let obj of arr) {
-            totaladv += (obj.AmtAdvance > 0 ? Number(obj.AmtAdvance) : 0);
-            totalcharge += (obj.AmtCharge > 0 ? Number(obj.AmtCharge) : 0);
-            totalcost += Number(obj.AmtCost);
-            if (Number(obj.AmtCharge) > 0) {
-                totalistaxcharge += (obj.AmtVat > 0 ? Number(obj.AmtCharge) : 0);
-                totalis50tavi += (obj.Amt50Tavi > 0 ? Number(obj.AmtCharge) : 0);
-                totalvat += Number(obj.AmtVat);
-                total50tavi += Number(obj.Amt50Tavi);
+            totaladv += (obj.AmtAdvance > 0 ? CNum(obj.AmtAdvance) : 0);
+            totalcharge += (obj.AmtCharge > 0 ? CNum(obj.AmtCharge) : 0);
+            totalcost += CNum(obj.AmtCost);
+            if (CNum(obj.AmtCharge) > 0) {
+                totalistaxcharge += (obj.AmtVat > 0 ? CNum(obj.AmtCharge) : 0);
+                totalis50tavi += (obj.Amt50Tavi > 0 ? CNum(obj.AmtCharge) : 0);
+                totalvat += CNum(obj.AmtVat);
+                total50tavi += CNum(obj.Amt50Tavi);
             }
-            totalnet += Number(obj.AmtNet);
-            totalsumdisc += Number(obj.AmtDiscount);
+            totalnet += CNum(obj.AmtNet);
+            totalsumdisc += CNum(obj.AmtDiscount);
         }
         for (let c of chq) {
-            totalcustadv += Number(c.ChqAmount);
+            totalcustadv += CNum(c.ChqAmount);
         }
         $('#txtTotalAdvance').val(CDbl(totaladv, 2));
         $('#txtTotalCharge').val(CDbl(totalcharge, 2));
@@ -519,42 +519,42 @@ End Code
 
     function UpdateData() {
         let arr_new = JSON.parse(JSON.stringify(arr_split));
-        let old_amt = ShowNumber(Number(arr_new.AmtAdvance) + Number(arr_new.AmtCharge)+ Number(arr_new.AmtDiscount), 2);
+        let old_amt = ShowNumber(CNum(arr_new.AmtAdvance) + CNum(arr_new.AmtCharge)+ CNum(arr_new.AmtDiscount), 2);
         //if amount changed
-        if (ShowNumber(Number($('#txtAmtAdvance').val()) + Number($('#txtAmtCharge').val()), 2) !== old_amt) {
+        if (ShowNumber(CNum($('#txtAmtAdvance').val()) + CNum($('#txtAmtCharge').val()), 2) !== old_amt) {
             arr_new.ClrItemNo = 0;
-            arr_new.AmtDiscount = Number($('#txtAmtDiscount').val());
-            arr_new.DiscountPerc = Number($('#txtAmtDiscountPerc').val());
+            arr_new.AmtDiscount = CNum($('#txtAmtDiscount').val());
+            arr_new.DiscountPerc = CNum($('#txtAmtDiscountPerc').val());
             if (arr_new.AmtCharge > 0) {
-                arr_new.AmtCharge = Number($('#txtAmtCharge').val())-Number($('#txtAmtDiscount').val());
-                arr_new.IsTaxCharge = Number($('#txtAmtVATRate').val()) > 0 ? 1 : 0;
-                arr_new.Is50Tavi = Number($('#txtAmtWHTRate').val()) > 0 ? 1 : 0;
-                arr_new.VATRate = Number($('#txtAmtVATRate').val());
-                arr_new.Rate50Tavi = Number($('#txtAmtWHTRate').val());
-                arr_new.AmtVat = Number($('#txtAmtVAT').val());
-                arr_new.Amt50Tavi = Number($('#txtAmtWHT').val());
+                arr_new.AmtCharge = CNum($('#txtAmtCharge').val())-CNum($('#txtAmtDiscount').val());
+                arr_new.IsTaxCharge = CNum($('#txtAmtVATRate').val()) > 0 ? 1 : 0;
+                arr_new.Is50Tavi = CNum($('#txtAmtWHTRate').val()) > 0 ? 1 : 0;
+                arr_new.VATRate = CNum($('#txtAmtVATRate').val());
+                arr_new.Rate50Tavi = CNum($('#txtAmtWHTRate').val());
+                arr_new.AmtVat = CNum($('#txtAmtVAT').val());
+                arr_new.Amt50Tavi = CNum($('#txtAmtWHT').val());
             }
             if (arr_new.AmtAdvance > 0) {
-                arr_new.AmtAdvance = Number($('#txtAmtAdvance').val())-Number($('#txtAmtDiscount').val());
+                arr_new.AmtAdvance = CNum($('#txtAmtAdvance').val())-CNum($('#txtAmtDiscount').val());
             }
-            arr_new.TotalAmt = Number($('#txtAmtNET').val());
+            arr_new.TotalAmt = CNum($('#txtAmtNET').val());
             SaveClearDetail(arr_new);
         } else {
-            arr_split.AmtDiscount = Number($('#txtAmtDiscount').val());
-            arr_split.DiscountPerc = Number($('#txtAmtDiscountPerc').val());
+            arr_split.AmtDiscount = CNum($('#txtAmtDiscount').val());
+            arr_split.DiscountPerc = CNum($('#txtAmtDiscountPerc').val());
             if (arr_split.AmtAdvance > 0) {
-                arr_split.AmtAdvance = Number($('#txtAmtAdvance').val())-Number($('#txtAmtDiscount').val());
+                arr_split.AmtAdvance = CNum($('#txtAmtAdvance').val())-CNum($('#txtAmtDiscount').val());
             }
             if (arr_split.AmtCharge > 0) {
-                arr_split.AmtCharge = Number($('#txtAmtCharge').val())-Number($('#txtAmtDiscount').val());
-                arr_split.IsTaxCharge = Number($('#txtAmtVATRate').val()) > 0 ? 1 : 0;
-                arr_split.Is50Tavi = Number($('#txtAmtWHTRate').val()) > 0 ? 1 : 0;
-                arr_split.VATRate = Number($('#txtAmtVATRate').val());
-                arr_split.Rate50Tavi = Number($('#txtAmtWHTRate').val());
-                arr_split.AmtVat = Number($('#txtAmtVAT').val());
-                arr_split.Amt50Tavi = Number($('#txtAmtWHT').val());
+                arr_split.AmtCharge = CNum($('#txtAmtCharge').val())-CNum($('#txtAmtDiscount').val());
+                arr_split.IsTaxCharge = CNum($('#txtAmtVATRate').val()) > 0 ? 1 : 0;
+                arr_split.Is50Tavi = CNum($('#txtAmtWHTRate').val()) > 0 ? 1 : 0;
+                arr_split.VATRate = CNum($('#txtAmtVATRate').val());
+                arr_split.Rate50Tavi = CNum($('#txtAmtWHTRate').val());
+                arr_split.AmtVat = CNum($('#txtAmtVAT').val());
+                arr_split.Amt50Tavi = CNum($('#txtAmtWHT').val());
             }
-            arr_split.TotalAmt = Number($('#txtAmtNET').val());
+            arr_split.TotalAmt = CNum($('#txtAmtNET').val());
             CalSummary();
             $('#dvEditor').modal('hide');
         }
@@ -562,7 +562,7 @@ End Code
     function SaveClearDetail(dr) {
         //process old clear data
         if (dr.AmtAdvance > 0) {
-            arr_clr[0].BNet -= Number(dr.AmtAdvance);
+            arr_clr[0].BNet -= CNum(dr.AmtAdvance);
             arr_clr[0].FNet -= CDbl((dr.AmtAdvance / dr.ExchangeRate),4);
             arr_clr[0].UsedAmount -= CDbl((dr.AmtAdvance * (100 / (100 + dr.VATRate - dr.Rate50Tavi))),4);
             if (dr.IsTaxCharge > 0) {
@@ -576,34 +576,34 @@ End Code
                 arr_clr[0].Tax50Tavi = 0;
             }
         } else {
-            arr_clr[0].UsedAmount -= Number(dr.AmtCharge);
-            arr_clr[0].ChargeVAT -= Number(dr.AmtVat);
-            arr_clr[0].Tax50Tavi -= Number(dr.Amt50Tavi);
-            arr_clr[0].BNet -= CDbl((Number(dr.AmtCharge) + Number(dr.AmtVat) - Number(dr.Amt50Tavi)),4);
+            arr_clr[0].UsedAmount -= CNum(dr.AmtCharge);
+            arr_clr[0].ChargeVAT -= CNum(dr.AmtVat);
+            arr_clr[0].Tax50Tavi -= CNum(dr.Amt50Tavi);
+            arr_clr[0].BNet -= CDbl((CNum(dr.AmtCharge) + CNum(dr.AmtVat) - CNum(dr.Amt50Tavi)),4);
             arr_clr[0].FNet = CDbl((arr_clr[0].BNet / dr.ExchangeRate),4);
         }
         //create new clear data
         let cl = JSON.parse(JSON.stringify(arr_clr[0]));
         cl.ItemNo = 0;
         if (dr.AmtAdvance > 0) {
-            cl.BNet = Number(dr.AmtAdvance);
+            cl.BNet = CNum(dr.AmtAdvance);
             cl.FNet = CDbl((dr.AmtAdvance / dr.ExchangeRate),4);
-            cl.UsedAmount = CDbl((cl.BNet * (100 / (100 + Number(dr.VATRate)-Number(dr.Rate50Tavi)))),4);
+            cl.UsedAmount = CDbl((cl.BNet * (100 / (100 + CNum(dr.VATRate)-CNum(dr.Rate50Tavi)))),4);
             if (dr.IsTaxCharge > 0) {
-                cl.ChargeVAT = CDbl((Number(cl.UsedAmount) * (dr.VATRate*0.01)),4);
+                cl.ChargeVAT = CDbl((CNum(cl.UsedAmount) * (dr.VATRate*0.01)),4);
             } else {
                 cl.ChargeVAT = 0;
             }
             if (dr.Is50Tavi > 0) {
-                cl.Tax50Tavi= CDbl((Number(cl.UsedAmount) * (dr.Rate50Tavi*0.01)),4);
+                cl.Tax50Tavi= CDbl((CNum(cl.UsedAmount) * (dr.Rate50Tavi*0.01)),4);
             } else {
                 cl.Tax50Tavi = 0;
             }
         } else {
-            cl.UsedAmount = Number(dr.AmtCharge);
-            cl.ChargeVAT = Number(dr.AmtVat);
-            cl.Tax50Tavi = Number(dr.Amt50Tavi);
-            cl.BNet = CDbl((Number(dr.AmtCharge) + Number(dr.AmtVat) - Number(dr.Amt50Tavi)),4);
+            cl.UsedAmount = CNum(dr.AmtCharge);
+            cl.ChargeVAT = CNum(dr.AmtVat);
+            cl.Tax50Tavi = CNum(dr.Amt50Tavi);
+            cl.BNet = CDbl((CNum(dr.AmtCharge) + CNum(dr.AmtVat) - CNum(dr.Amt50Tavi)),4);
             cl.FNet = CDbl((cl.BNet / dr.ExchangeRate),4);
         }
         arr_clr.push(cl);
@@ -640,7 +640,8 @@ End Code
             $('#txtAmtVATRate').val(CNum(dr.VATRate));
             $('#txtAmtWHTRate').val(CNum(dr.Rate50Tavi));
 
-            if (dr.AmtAdvance > 0) {
+        if (dr.AmtAdvance > 0) {
+            $('#txtAmtCharge').val(0);
                 $('#txtAmtCharge').attr('disabled', 'disabled');
                 $('#txtAmtAdvance').removeAttr('disabled');
                 $('#txtAmtVAT').attr('disabled', 'disabled');
@@ -648,7 +649,8 @@ End Code
                 $('#txtAmtVATRate').attr('disabled', 'disabled');
                 $('#txtAmtWHTRate').attr('disabled', 'disabled');
                 $('#txtAmtAdvance').val(dr.AmtAdvance+dr.AmtDiscount);
-            } else {
+        } else {
+            $('#txtAmtAdvance').val(0);
                 $('#txtAmtAdvance').attr('disabled', 'disabled');
                 $('#txtAmtCharge').removeAttr('disabled');
                 $('#txtAmtVAT').removeAttr('disabled');
@@ -721,7 +723,7 @@ End Code
             PrintedDate:null,
             PrintedTime:null,
             RefNo: GetRefNo(),
-            VATRate:CNum(Number(@ViewBag.PROFILE_VATRATE)*100),
+            VATRate:CNum(CNum(@ViewBag.PROFILE_VATRATE)*100),
             TotalAdvance:CNum($('#txtTotalAdvance').val()),
             TotalCharge:CNum($('#txtTotalCharge').val()),
             TotalIsTaxCharge:CNum($('#txtTotalIsTaxCharge').val()),
@@ -888,7 +890,7 @@ End Code
     function ReadCheque(dt) {        
         if (dt.AmountRemain > 0) {
             $('#txtChqNo').val(dt.ChqNo);
-            if (dt.AmountRemain <= Number($('#txtTotalNet').val())) {
+            if (dt.AmountRemain <= CNum($('#txtTotalNet').val())) {
                 $('#txtChqAmount').val(dt.AmountRemain);
             } else {
                 $('#txtChqAmount').val($('#txtTotalNet').val());
@@ -913,17 +915,19 @@ End Code
     function GetDataDetail(o, no) {
         let data = [];
         let i = 0;
-        let custadv = Number($('#txtTotalCustAdv').val());
+        let custadv = CNum($('#txtTotalCustAdv').val());
         for (let obj of o) {
             if (obj.AmtCharge > 0 || obj.AmtAdvance > 0) {
                 let creditamt = 0;
                 if (custadv > 0) {
-                    if (custadv - (Number(obj.AmtCharge) + Number(obj.AmtAdvance)) < 0) {
+                    if (custadv - (CNum(obj.AmtCharge) + CNum(obj.AmtAdvance)) < 0) {
                         creditamt = custadv;
                     } else {
-                        creditamt = (Number(obj.AmtCharge) + Number(obj.AmtAdvance));
+                        creditamt = (CNum(obj.AmtCharge) + CNum(obj.AmtAdvance));
                     }
                     custadv -= creditamt;
+                } else {
+                    custadv=0
                 }
                 i = i + 1;
                 data.push({
@@ -954,8 +958,8 @@ End Code
                     AmtVat: CDbl(obj.AmtVat,2),
                     TotalAmt: CDbl(obj.TotalAmt,2),
                     FTotalAmt: CDbl(obj.TotalAmt / CNum($('#txtExchangeRate').val()), 2),
-                    AmtAdvance: (obj.AmtAdvance > 0 ? CDbl(obj.AmtAdvance - Number(obj.AmtDiscount),2) : 0),
-                    AmtCharge: (obj.AmtCharge > 0 ? CDbl(obj.AmtCharge - Number(obj.AmtDiscount),2) : 0),
+                    AmtAdvance: (obj.AmtAdvance > 0 ? CDbl(obj.AmtAdvance ,2) : 0),
+                    AmtCharge: (obj.AmtCharge > 0 ? CDbl(obj.AmtCharge ,2) : 0),
                     CurrencyCodeCredit: $('#txtCurrencyCode').val(),
                     ExchangeRateCredit: $('#txtExchangeRate').val(),
                     AmtCredit: CDbl(creditamt,2),
@@ -1038,8 +1042,8 @@ End Code
                     key.ClrItemNo = 0;
                     key.ClrNoList = clearList;
                     key.ExpSlipNO = slipList;
-                    key.UnitPrice = Number(key.Amt) / Number(key.Qty);
-                    key.FUnitPrice = CDbl(Number(key.UnitPrice) / Number(obj.ExchangeRate), 2);
+                    key.UnitPrice = CNum(key.Amt) / CNum(key.Qty);
+                    key.FUnitPrice = CDbl(CNum(key.UnitPrice) / CNum(obj.ExchangeRate), 2);
                     arr_new.push(key);
                 }
                 currCode = obj.SICode;
@@ -1049,19 +1053,19 @@ End Code
                 slipList = '';
                 clearList = '';
             } else {
-                key.Qty+= Number(obj.Qty);
-                key.Amt+= Number(obj.Amt);
-                key.FAmt= Number(key.Amt) / Number(obj.ExchangeRate);
-                key.AmtDiscount+= Number(obj.AmtDiscount);
-                key.FAmtDiscount+= Number(key.AmtDiscount) / Number(obj.ExchangeRate);
-                key.Amt50Tavi += Number(obj.Amt50Tavi);
-                key.AmtVat+= Number(obj.AmtVat);
-                key.TotalAmt+= Number(obj.TotalAmt);
-                key.FTotalAmt= CDbl(Number(key.TotalAmt) / Number(obj.ExchangeRate), 2);
-                key.AmtAdvance+= Number(obj.AmtAdvance);
-                key.AmtCharge+= Number(obj.AmtCharge);
-                key.AmtCredit+= Number(obj.AmtCredit);
-                key.FAmtCredit= CDbl(Number(key.FAmtCredit) / Number(obj.ExchangeRate), 2);
+                key.Qty+= CNum(obj.Qty);
+                key.Amt+= CNum(obj.Amt);
+                key.FAmt= CNum(key.Amt) / CNum(obj.ExchangeRate);
+                key.AmtDiscount+= CNum(obj.AmtDiscount);
+                key.FAmtDiscount+= CNum(key.AmtDiscount) / CNum(obj.ExchangeRate);
+                key.Amt50Tavi += CNum(obj.Amt50Tavi);
+                key.AmtVat+= CNum(obj.AmtVat);
+                key.TotalAmt+= CNum(obj.TotalAmt);
+                key.FTotalAmt= CDbl(CNum(key.TotalAmt) / CNum(obj.ExchangeRate), 2);
+                key.AmtAdvance+= CNum(obj.AmtAdvance);
+                key.AmtCharge+= CNum(obj.AmtCharge);
+                key.AmtCredit+= CNum(obj.AmtCredit);
+                key.FAmtCredit= CDbl(CNum(key.FAmtCredit) / CNum(obj.ExchangeRate), 2);
             }
             if (clearList.indexOf((obj.ClrNo + '/' + obj.ClrItemNo)) < 0) {
                 clearList += (clearList !== '' ? ',' : '') + (obj.ClrNo + '/' + obj.ClrItemNo);
@@ -1076,8 +1080,8 @@ End Code
                 key.ClrItemNo = 0;
                 key.ClrNoList = clearList;
                 key.ExpSlipNO = slipList;
-                key.UnitPrice = Number(key.Amt) / Number(key.Qty);
-                key.FUnitPrice = CDbl(Number(key.UnitPrice) / Number(obj.ExchangeRate), 2);
+                key.UnitPrice = CNum(key.Amt) / CNum(key.Qty);
+                key.FUnitPrice = CDbl(CNum(key.UnitPrice) / CNum(obj.ExchangeRate), 2);
                 arr_new.push(key);
             }
         }
@@ -1100,7 +1104,7 @@ End Code
             ChqNo: $('#txtChqNo').val(),
             ChqAmount: $('#txtChqAmount').val()
         };
-        if (c.ChqAmount <= Number($('#txtTotalNet').val())) {
+        if (c.ChqAmount <= CNum($('#txtTotalNet').val())) {
             $('#txtChqAmount').val(c.ChqAmount);
         } else {
             alert('Cheque Amount is more than total invoices');
@@ -1149,50 +1153,50 @@ End Code
         });
     }
     function CalVATWHT(step = 0) {
-        let amt = Number($('#txtAmtCharge').val())-Number($('#txtAmtDiscount').val());
+        let amt = CNum($('#txtAmtCharge').val())-CNum($('#txtAmtDiscount').val());
         if (step == 0) {
-            let vat = amt * Number($('#txtAmtVATRate').val()) * 0.01;
+            let vat = amt * CNum($('#txtAmtVATRate').val()) * 0.01;
             $('#txtAmtVAT').val(ShowNumber(vat,2));
         }
-        let wht = amt * Number($('#txtAmtWHTRate').val()) * 0.01;
+        let wht = amt * CNum($('#txtAmtWHTRate').val()) * 0.01;
         $('#txtAmtWHT').val(ShowNumber(wht, 2));
         CalNetAmount();
     }
     function CalDiscount() {
-        let amt = Number($('#txtAmtAdvance').val()) + Number($('#txtAmtCharge').val());
-        let disc = amt * Number($('#txtAmtDiscountPerc').val()) * 0.01;
-        $('#txtAmtDiscount').val(CDbl(disc,2));
+        let amt = CNum($('#txtAmtAdvance').val()) + CNum($('#txtAmtCharge').val());
+        let disc = amt * CNum($('#txtAmtDiscountPerc').val()) * 0.01;
+        $('#txtAmtDiscount').val(ShowNumber(disc,2));
         CalVATWHT(0);
     }
     function SetDiscount() {
-        let amt = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val()) - CNum($('#txtSumDiscount').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
-        let disc = amt * Number($('#txtDiscountRate').val()) * 0.01;
-        $('#txtCalDiscount').val(CDbl(disc,2));
+        let amt = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
+        let disc = amt * CNum($('#txtDiscountRate').val()) * 0.01;
+        $('#txtCalDiscount').val(Number(disc));
         SumDiscount();
     }
     function SumDiscount() {
-        let totaldisc = CNum($('#txtSumDiscount').val()) + CNum($('#txtCalDiscount').val());
-        $('#txtTotalDiscount').val(CDbl(totaldisc,2));
+        let totaldisc = CNum($('#txtCalDiscount').val());
+        $('#txtTotalDiscount').val(ShowNumber(totaldisc,2));
         CalTotal();
     }
     function CalTotal() {
-        let totalnet = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val())- CNum($('#txtTotalDiscount').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
-        $('#txtTotalNet').val(CDbl(totalnet,2));
-        $('#txtTotalProfit').val(CDbl(totalnet - CNum($('#txtTotalCost').val()), 2));
+        let totalnet = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val()) + CNum($('#txtTotalVat').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val()) - CNum($('#txtCalDiscount').val());
+        $('#txtTotalNet').val(ShowNumber(totalnet,2));
+        $('#txtTotalProfit').val(ShowNumber(CNum(totalnet) - CNum($('#txtTotalCost').val()), 2));
 
         CalForeign();
     }
     function CalForeign() {
         let totalforeign = CDbl(CNum($('#txtTotalNet').val()) / CNum($('#txtExchangeRate').val()), 2);
-        $('#txtForeignNet').val(CDbl(totalforeign,2));
+        $('#txtForeignNet').val(ShowNumber(totalforeign,2));
     }
     function CalNetAmount() {
-        let amt = Number($('#txtAmtAdvance').val()) + Number($('#txtAmtCharge').val());
-        let vat = Number($('#txtAmtVAT').val());
-        let wht = Number($('#txtAmtWHT').val());
-        let disc = Number($('#txtAmtDiscount').val());
+        let amt = CNum($('#txtAmtAdvance').val()) + CNum($('#txtAmtCharge').val());
+        let vat = CNum($('#txtAmtVAT').val());
+        let wht = CNum($('#txtAmtWHT').val());
+        let disc = CNum($('#txtAmtDiscount').val());
         let net = amt-disc+ vat - wht;
 
-        $('#txtAmtNET').val(CDbl(net,2));
+        $('#txtAmtNET').val(ShowNumber(net,2));
     }
 </script>

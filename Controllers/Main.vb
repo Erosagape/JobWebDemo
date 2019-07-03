@@ -517,7 +517,7 @@ left join Mas_Vender v on d.VenderCode=v.VenCode
         Return "
 select h.ClrDate,h.ReceiveRef,h.ClrNo,d.ItemNo,a.AdvAmount,a.ChargeVAT,a.Charge50Tavi,a.AdvNet,
 d.SICode,d.SDescription,j.CustCode,j.CustBranch,sum(d.UsedAmount+d.ChargeVAT) as ClrTotal,
-ISNULL(a.AdvNet,0)-sum(d.UsedAmount+d.ChargeVAT) as ClrBal,
+ISNULL(a.AdvNet,0)-sum(d.BNet) as ClrBal,
 sum(d.UsedAmount) as ClrAmount,
 SUM(d.Tax50Tavi) as Clr50Tavi,SUM(d.ChargeVAT) as ClrVat,
 SUM(d.BNet) as ClrNet
@@ -548,7 +548,7 @@ d.SICode,d.SDescription,j.CustCode,j.CustBranch
 select a.PaymentDate,a.PaymentRef,a.AdvNo,a.ItemNo,a.AdvAmount,a.ChargeVAT,a.Charge50Tavi,a.AdvNet,
 a.SICode,a.SDescription,a.CustCode,a.CustBranch,
 sum(d.UsedAmount+d.ChargeVAT) as ClrTotal,
-ISNULL(a.AdvNet,0)-sum(d.UsedAmount+d.ChargeVAT) as ClrBal,
+ISNULL(a.AdvNet,0)-sum(d.BNet) as ClrBal,
 sum(d.UsedAmount) as ClrAmount,
 SUM(d.Tax50Tavi) as Clr50Tavi,SUM(d.ChargeVAT) as ClrVat,
 SUM(d.BNet) as ClrNet
@@ -557,7 +557,7 @@ left join Job_ClearDetail d on h.BranchCode=d.BranchCode and h.ClrNo=d.ClrNo
 left join (
   select ah.BranchCode,ah.AdvNo,ad.ItemNo,ah.PaymentDate,ah.PaymentRef,ah.JobType,
   ah.EmpCode,ah.AdvDate,ad.SICode,ad.SDescription,ad.AdvAmount,ad.ChargeVAT,ad.Charge50Tavi,ad.AdvNet,
-  ah.CustCode,ah.CustBranch
+  ah.CustCode,ah.CustBranch,ah.DocStatus
   from Job_AdvHeader ah inner join Job_AdvDetail ad
   on ah.BranchCode=ad.BranchCode and ah.AdvNo=ad.AdvNo
 ) a 
@@ -682,17 +682,16 @@ h.TotalIs50Tavi=ROUND(d.TotalIs50Tavi,2),
 h.TotalVAT=ROUND(d.TotalVAT,2),
 h.Total50Tavi=ROUND(d.Total50Tavi,2),
 h.SumDiscount=ROUND(d.SumDiscount,2),
-h.DiscountCal=ROUND((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100),2),
-h.TotalDiscount=ROUND(d.SumDiscount+((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100)),2),
-h.TotalNet=ROUND((d.TotalNet-h.TotalCustAdv)-(d.SumDiscount+((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100))),2),
-h.ForeignNet=ROUND((d.TotalNet-h.TotalCustAdv)-(d.SumDiscount+((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate/100)))/h.ExchangeRate,2)
+h.DiscountCal=ROUND((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate*0.01),2),
+h.TotalNet=ROUND((d.TotalNet-h.TotalCustAdv)-((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate*0.01)),2),
+h.ForeignNet=ROUND((d.TotalNet-h.TotalCustAdv)-((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate*0.01))/h.ExchangeRate,2)
 from Job_InvoiceHeader h
 inner join (
 	select BranchCode,DocNo,
-	sum((CASE WHEN AmtCharge>0 THEN Amt+AmtDiscount ELSE 0 END)) as TotalCharge,
-	sum((CASE WHEN AmtAdvance>0 THEN Amt+AmtDiscount ELSE 0 END)) as TotalAdvance,
-	sum(case when IsTaxCharge=1 And AmtCharge>0 then Amt else 0 end) as TotalIsTaxCharge, 
-	sum(case when Is50Tavi=1 And AmtCharge>0 then Amt else 0 end) as TotalIs50Tavi,
+	sum((CASE WHEN AmtCharge>0 THEN Amt-AmtDiscount ELSE 0 END)) as TotalCharge,
+	sum((CASE WHEN AmtAdvance>0 THEN TotalAmt ELSE 0 END)) as TotalAdvance,
+	sum(case when IsTaxCharge=1 And AmtCharge>0 then Amt-AmtDiscount else 0 end) as TotalIsTaxCharge, 
+	sum(case when Is50Tavi=1 And AmtCharge>0 then Amt-AmtDiscount else 0 end) as TotalIs50Tavi,
 	sum(case when AmtCharge>0 then AmtVat else 0 end) as TotalVAT,
 	sum(case when AmtCharge>0 then Amt50Tavi else 0 end) as Total50Tavi,
     sum(AmtDiscount) as SumDiscount,

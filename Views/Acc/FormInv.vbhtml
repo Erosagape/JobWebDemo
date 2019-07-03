@@ -134,7 +134,7 @@ End Code
         <div class="text-left" style="border:1px solid black;border-radius:5px;flex:1">
             WITHHOLDING TAX DETAIL
             <div style="display:flex">
-                <div class="text-center" style="flex:3">
+                <div class="text-center" style="flex:2">
                     1%:<br />
                     3%:
                 </div>
@@ -220,11 +220,11 @@ End Code
             $('#lblSumCustAdv').text(ShowNumber(h.TotalCustAdv,2));
             $('#lblSumBeforeVat').text(ShowNumber(h.TotalIsTaxCharge,2));
             $('#lblSumVat').text(ShowNumber(h.TotalVAT,2));
-            $('#lblSumAfterVat').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalVAT),2));
+            $('#lblSumAfterVat').text(ShowNumber(Number(h.TotalIsTaxCharge)+Number(h.TotalVAT),2));
             $('#lblSumAdvance').text(ShowNumber(h.TotalAdvance,2));
             $('#lblSumTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT),2));
-            $('#lblSumGrandTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT)-Number(h.TotalCustAdv),2));
-            $('#lblTotalBaht').text('(' + CNumThai(CDbl(Number(h.TotalCharge) + Number(h.TotalAdvance) + Number(h.TotalVAT)-Number(h.TotalCustAdv), 2)) + ')');
+            $('#lblSumGrandTotal').text(ShowNumber(Number(h.TotalCharge)+Number(h.TotalAdvance)+Number(h.TotalVAT)-Number(h.TotalCustAdv)-Number(h.TotalDiscount),2));
+            $('#lblTotalBaht').text('(' + CNumThai(CDbl(Number(h.TotalCharge) + Number(h.TotalAdvance) + Number(h.TotalVAT)-Number(h.TotalCustAdv)-Number(h.TotalDiscount), 2)) + ')');
 
             $('#lblSumNetInvoice').text(ShowNumber(Number(h.TotalNet),2));
         }
@@ -254,10 +254,10 @@ End Code
 
                 if (o.Amt50Tavi > 0) {
                     if (o.Rate50Tavi == 1) {
-                        sumbase1 += o.Amt;
+                        sumbase1 += (o.Amt-o.AmtDiscount);
                         sumtax1 += o.Amt50Tavi;
                     } else {
-                        sumbase3 += o.Amt;
+                        sumbase3 += (o.Amt-o.AmtDiscount);
                         sumtax3 += o.Amt50Tavi;
                     }
                 }

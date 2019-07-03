@@ -146,7 +146,7 @@ Namespace Controllers
                     End If
                 End If
                 If doctype = "ADV" Then
-                    Dim tSQL As String = String.Format("UPDATE Job_AdvHeader SET DocStatus=5 WHERE DocStatus<5 AND BranchCode+'|'+AdvNo in({0})", lst)
+                    Dim tSQL As String = String.Format("UPDATE Job_AdvHeader SET DocStatus=6 WHERE DocStatus<6 AND BranchCode+'|'+AdvNo in({0})", lst)
                     Dim result = Main.DBExecute(jobWebConn, tSQL)
                     If result = "OK" Then
                         Return New HttpResponseMessage(HttpStatusCode.OK)
@@ -278,7 +278,12 @@ Namespace Controllers
                     Else
                         tSqlW &= " AND a.AdvNo IS NULL"
                         tSqlW &= " AND h.ClrNo+'#'+Convert(varchar,d.ItemNo) NOT IN(SELECT c1.DocNo FROM Job_CashControlDoc c1 inner join Job_CashControl c2 on c1.BranchCode=c2.BranchCode and c1.ControlNo=c2.ControlNo where ISNULL(c2.CancelProve,'')='')"
-
+                    End If
+                Else
+                    If tbPrefix = "a" Then
+                        tSqlW &= " AND a.DocStatus<6 "
+                    Else
+                        tSqlW &= " AND h.DocStatus<3 "
                     End If
                 End If
 

@@ -108,8 +108,8 @@ End Code
                             payType = 'เงินฝากธนาคารหมุนเวียน';
                         }
                         desc0 += obj.PayChqTo !== null ? '<br/>ออกให้กับ ' + obj.PayChqTo : '';
-                        desc0 += obj.RecvBank != null ? '<br/>โอนไปยังบัญชีธนาคาร ' + obj.RecvBank + ' สาขา ' + obj.RecvBranch + ' เลขที่บัญชี ' + obj.DocNo : '';
-                        desc0 += obj.BookCode != null ? '<br/>จากเลขที่บัญชี ' + obj.BookCode : '';
+                        desc0 += obj.RecvBank != null ? '<br/>โอนไปยังบัญชีธนาคาร ' + obj.RecvBank + ' สาขา ' + obj.RecvBranch : '';
+                        desc0 += obj.BookCode != null ? '<br/>จากเลขที่บัญชี ' + obj.BookCode + ' เลขที่อ้างอิง ' + obj.DocNo : '';
                         desc0 += obj.TRemark != null ? '<br/>วันเวลาที่ทำรายการ : ' + obj.TRemark : '';
                         break;
                     case 'CH':
@@ -189,7 +189,7 @@ End Code
                             count++;
                             desc = count + '. ' + d.DocNo +' ('+ d.DocType +' By ' + d.CmpCode + ')';
 
-                            appendLine(div, desc, d.PaidAmount + ' ' + obj.CurrencyCode + ' (Rate='+ obj.ExchangeRate +')', CCurrency(CDbl(d.TotalAmount,2)));
+                            appendLine(div, desc, CDbl(d.PaidAmount/CNum(obj.ExchangeRate),2) + ' ' + obj.CurrencyCode + ' (Rate='+ obj.ExchangeRate +')', CCurrency(CDbl(d.TotalAmount,2)));
                         }
                     }
                 }                

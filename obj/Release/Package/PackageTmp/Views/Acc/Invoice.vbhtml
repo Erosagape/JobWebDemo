@@ -6,21 +6,22 @@ End Code
     <div class="row">
         <div class="col-sm-4" style="display:flex;flex-direction:row">
             <label style="display:block;width:20%">Branch:</label>
-            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" />
+            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled/>
             <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
             <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
         </div>
         <div class="col-sm-6" style="display:flex;flex-direction:row">
             <label style="display:block;width:20%">Customer:</label>
-            <input type="text" class="form-control" id="txtCustCode" style="width:20%" />
+            <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
+            <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
             <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
             <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
         </div>
         <div class="col-sm-2" style="display:flex;flex-direction:row">
-            <input type="button" class="btn btn-block" value="Show" id="btnShow" />
+            <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
+            <button class="btn btn-success" onclick="window.open('/clr/generateinv', '_blank');">Generate Invoice</button>
         </div>
-    </div>
-    <button class="btn btn-success" onclick="window.open('/clr/generateinv', '_blank');">Generate Invoice</button>
+    </div>    
     <ul class="nav nav-tabs">
         <li class="active">
             <a data-toggle="tab" href="#tabHeader">Headers</a>
@@ -52,7 +53,7 @@ End Code
         </div>
         <div class="tab-pane fade" id="tabDetail">
             Details Of Invoice No:<input type="text" id="txtInvNo" style="width:10%" disabled />
-            <table id="tbDetail" class="table table-responsive">
+            <table id="tbDetail" class="table table-responsive" style="width:100%">
                 <thead>
                     <tr>
                         <th>ItemNo</th>
@@ -185,13 +186,156 @@ End Code
         <div class="modal-dialog-lg">
             <div class="modal-content">
                 <div class="modal-header">
-
+                    <h4>Edit Detail</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            Invoice No <input type="text" id="txtDDocNo" style="width:10%" disabled />
+                            Item No. <input type="text" id="txtItemNo" style="width:5%" disabled />
+                            Code <input type="text" id="txtSICode" style="width:10%" disabled />
+                            <input type="text" id="txtSDescription" style="width:30%" />
+                            Slip No <input type="text" id="txtExpSlipNO" style="width:20%" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            Currency <input type="text" id="txtDCurrencyCode" style="width:10%" />
+                            <input type="button" id="btnCurr" value="..." onclick="SearchData('dcurrency')" />
+                            <input type="text" id="txtDCurrencyName" style="width:40%" disabled />
+                            Exc.Rate <input type="text" id="txtDExchangeRate" style="width:15%" onchange="CalForeignDetail()" />
+                            Discount
+                            <select id="txtDiscountType" onchange="ShowDiscount()">
+                                <option value="0" selected>Percent</option>
+                                <option value="1">Cash</option>
+                            </select>
+                            <input type="text" id="txtDiscountPerc" style="width:10%" onchange="CalDiscountDetail()" />
+                        </div>
+                    </div>
+                    <p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                Remark <textarea id="txtSRemark" style="width:100%"></textarea>
+                                <input type="hidden" id="txtCurrencyCodeCredit" />
+                                <input type="hidden" id="txtExchangeRateCredit" />
+                            </div>
+                            <div class="col-sm-6" style="display:flex;flex-direction:row">
+                                <div style="flex-direction:column;flex:1">
+                                    Qty <input type="text" id="txtQty" disabled />
+                                </div>
+                                <div style="flex-direction:column;flex:1">
+                                    Unit <input type="text" id="txtQtyUnit" disabled />
+                                </div>
+                                <div style="flex-direction:column;flex:1">
+                                    Price(B) <input type="text" id="txtUnitPrice" disabled />
+                                </div>
+                                <div style="flex-direction:column;flex:1">
+                                    Amount(B) <input type="text" id="txtAmt" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" style="display:flex;">
+                                <div style="flex-direction:row;flex:1">
+                                    <table>
+                                        <tr>
+                                            <td>VAT</td>
+                                            <td>
+                                                <select id="txtIsTaxCharge" disabled>
+                                                    <option value="0">NO</option>
+                                                    <option value="1">EX</option>
+                                                    <option value="2">IN</option>
+                                                </select>
+                                            </td>
+                                            <td>Rate</td>
+                                            <td>
+                                                <input type="text" id="txtDVATRate" disabled />
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtAmtVat" disabled />
+                                            </td>
+                                            <td>
+                                                Discount (B)
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtAmtDiscount" onchange="CalVATWHT(0)" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>WHT</td>
+                                            <td>
+                                                <select id="txtIs50Tavi" disabled>
+                                                    <option value="0">NO</option>
+                                                    <option value="1">YES</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                Rate
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtRate50Tavi" disabled />
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtAmt50Tavi" disabled />
+                                            </td>
+                                            <td>
+                                                Discount (F)
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtFAmtDiscount" disabled />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            Credit (F)<br />
+                                            <input type="text" id="txtFAmtCredit" disabled />
+                                        </td>
+                                        <td>
+                                            Credit (B)<br />
+                                            <input type="text" id="txtAmtCredit" disabled />
+                                        </td>
+                                        <td>
+                                            Price(F)<br />
+                                            <input type="text" id="txtFUnitPrice" disabled />
+                                        </td>
+                                        <td>
+                                            Amount(F)<br />
+                                            <input type="text" id="txtFAmt" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <b>Advance</b><br />
+                                            <input type="text" id="txtAmtAdvance" disabled style="font:bold" />
+                                        </td>
+                                        <td>
+                                            <b>Charge</b><br />
+                                            <input type="text" id="txtAmtCharge" disabled style="font:bold"/>
+                                        </td>
+                                        <td>
+                                            Total(F)<br /><input type="text" id="txtFTotalAmt" disabled />
+                                        </td>
+                                        <td>
+                                            Total(B)<br /><input type="text" id="txtTotalAmt" disabled />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
 
+                    </p>
                 </div>
                 <div class="modal-footer">
-
+                    <div style="float:left">
+                        <button id="btnUpd" class="btn btn-primary" onclick="SaveDetail()">Update</button>
+                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                    </div>
+                    <button id="btnHid" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -292,6 +436,15 @@ End Code
                     ],
                     destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                 });
+                $('#tbDetail tbody').on('click', 'tr', function () {
+                    SetSelect('#tbDetail', this);
+                    if (userRights.indexOf('E') > 0) {
+                        let data = $('#tbDetail').DataTable().row(this).data();
+                        LoadDetail(data);
+                    } else {
+                        alert('you are not allow to edit invoice');
+                    }
+                });
             }
         });
     }
@@ -311,6 +464,49 @@ End Code
             CreateLOV(dv, '#frmSearchCurr', '#tbCurr', 'Currency Code', response, 4);
         });
     }
+    function LoadDetail(dt) {
+        $('#txtDDocNo').val(dt.DocNo);
+        $('#txtItemNo').val(dt.ItemNo);
+        $('#txtSICode').val(dt.SICode);
+        $('#txtSDescription').val(dt.SDescription);
+        $('#txtExpSlipNO').val(dt.ExpSlipNO);
+        $('#txtSRemark').val(dt.SRemark);
+        $('#txtDCurrencyCode').val(dt.CurrencyCode);
+        ShowCurrency(path, dt.CurrencyCode, '#txtDCurrencyName');
+        $('#txtDExchangeRate').val(dt.ExchangeRate);
+        $('#txtQty').val(dt.Qty);
+        $('#txtQtyUnit').val(dt.QtyUnit);
+        $('#txtUnitPrice').val(ShowNumber(dt.UnitPrice,2));
+        $('#txtFUnitPrice').val(ShowNumber(dt.FUnitPrice, 2));
+        $('#txtAmt').val(ShowNumber(dt.Amt, 2));
+        $('#txtFAmt').val(ShowNumber(dt.FAmt, 2));
+        $('#txtDiscountType').val(dt.DiscountType);
+        $('#txtDiscountPerc').val(dt.DiscountPerc);
+        $('#txtAmtDiscount').val(ShowNumber(dt.AmtDiscount, 2));
+        $('#txtFAmtDiscount').val(ShowNumber(dt.FAmtDiscount, 2));
+        $('#txtIs50Tavi').val(dt.Is50Tavi);
+        $('#txtRate50Tavi').val(dt.Rate50Tavi);
+        $('#txtAmt50Tavi').val(ShowNumber(dt.Amt50Tavi,2));
+        $('#txtIsTaxCharge').val(dt.IsTaxCharge);
+        $('#txtAmtVat').val(ShowNumber(dt.AmtVat,2));
+        $('#txtTotalAmt').val(ShowNumber(dt.TotalAmt,2));
+        $('#txtFTotalAmt').val(ShowNumber(dt.FTotalAmt,2));
+        $('#txtAmtAdvance').val(ShowNumber(dt.AmtAdvance,2));
+        $('#txtAmtCharge').val(ShowNumber(dt.AmtCharge, 2));
+        $('#txtDVATRate').val(ShowNumber(dt.VATRate,0));
+        $('#txtCurrencyCodeCredit').val(dt.CurrencyCodeCredit);
+        $('#txtExchangeRateCredit').val(dt.ExchangeRateCredit);
+        $('#txtAmtCredit').val(ShowNumber(dt.AmtCredit,2));
+        $('#txtFAmtCredit').val(ShowNumber(dt.FAmtCredit, 2));
+
+        $('#frmDetail').modal('show');
+    }
+    function SaveDetail() {
+
+    }
+    function DeleteDetail() {
+
+    }
     function SearchData(type) {
         switch (type) {
             case 'branch':
@@ -324,6 +520,9 @@ End Code
                 break;
             case 'currency':
                 SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadCurrency);
+                break;
+            case 'dcurrency':
+                SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadDCurrency);
                 break;
         }
     }
@@ -476,10 +675,25 @@ End Code
         $('#txtCurrencyName').val(dt.TName);
         $('#txtExchangeRate').focus();
     }
+    function ReadDCurrency(dt) {
+        $('#txtDCurrencyCode').val(dt.Code);
+        $('#txtDCurrencyName').val(dt.TName);
+        $('#txtDExchangeRate').focus();
+    }
+
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
         $('#txtBranchCode').focus();
+    }
+    function ShowDiscount() {
+        let chk = $('#txtDiscountType').val();
+        if (chk === "1") {
+            $('#txtDiscountPerc').val(0);
+            $('#txtDiscountPerc').attr('disabled', 'disabled');
+        } else {
+            $('#txtDiscountPerc').removeAttr('disabled');
+        }
     }
     function SetDiscount() {
         let amt = CNum($('#txtTotalAdvance').val()) + CNum($('#txtTotalCharge').val()) - CNum($('#txtSumDiscount').val()) + CNum($('#txtTotalVAT').val()) - CNum($('#txtTotal50Tavi').val()) - CNum($('#txtTotalCustAdv').val());
@@ -499,10 +713,51 @@ End Code
         $('#txtTotalNet').val(ShowNumber(totalnet,2));
         CalForeign();
     }
-
     function CalForeign() {
         let totalforeign = CDbl(CNum($('#txtTotalNet').val()) / CNum($('#txtExchangeRate').val()), 2);
         $('#txtForeignNet').val(ShowNumber(totalforeign,2));
+    }
+    function CalForeignDetail() {
+        let rate = CNum($('#txtDExchangeRate').val());
+        $('#txtFUnitPrice').val(CDbl(CNum($('#txtUnitPrice').val()) / rate, 2));
+        $('#txtFAmt').val(CDbl(CNum($('#txtAmt').val()) / rate, 2));
+        $('#txtFTotalAmt').val(CDbl(CNum($('#txtTotalAmt').val()) / rate, 2));
+        $('#txtFAmtCredit').val(CDbl(CNum($('#txtAmtCredit').val()) / rate, 2));
+        $('#txtFAmtDiscount').val(CDbl(CNum($('#txtAmtDiscount').val()) / rate, 2));
+        if (CNum($('#txtAmtAdvance').val()) > 0) {
+            $('#txtAmtAdvance').val(ShowNumber($('#txtFTotalAmt').val(), 2));
+        }
+        if (CNum($('#txtAmtCharge').val()) > 0) {
+            $('#txtAmtCharge').val(ShowNumber(CNum($('#txtFAmt').val()) - CNum($('#txtFAmtDiscount').val()), 2));
+        }
+    }
+
+    function CalDiscountDetail() {
+        let amt = CNum($('#txtAmt').val());
+        let disc = amt * CNum($('#txtDiscountPerc').val()) * 0.01;
+        $('#txtAmtDiscount').val(ShowNumber(disc,2));
+        CalVATWHT(0);
+    }
+
+    function CalVATWHT(step = 0) {
+        let amt = CNum($('#txtAmt').val())-CNum($('#txtAmtDiscount').val());
+        if (step == 0) {
+            let vat = amt * CNum($('#txtDVATRate').val()) * 0.01;
+            $('#txtAmtVat').val(ShowNumber(vat,2));
+        }
+        let wht = amt * CNum($('#txtRate50Tavi').val()) * 0.01;
+        $('#txtAmt50Tavi').val(ShowNumber(wht, 2));
+        CalNetAmount();
+    }
+
+    function CalNetAmount() {
+        let amt = CNum($('#txtAmt').val()) - CNum($('#txtAmtDiscount').val());
+        let vat = CNum($('#txtAmtVat').val());
+        let wht = CNum($('#txtAmt50Tavi').val());
+        let net = amt + vat - wht;
+
+        $('#txtTotalAmt').val(ShowNumber(net, 2));
+        CalForeignDetail();
     }
 </script>
 

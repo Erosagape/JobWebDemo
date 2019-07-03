@@ -43,8 +43,8 @@ End Code
                                     Clear By :
                                 </td>
                                 <td>
-                                    <input type="text" id="txtEmpCode" style="width:100px" tabindex="2" />
-                                    <button id="btnBrowseEmp1" onclick="SearchData('clrby')">...</button>
+                                    <input type="text" id="txtEmpCode" style="width:100px" disabled />
+                                    <button id="btnBrowseEmp1" onclick="SearchData('clrby')" tabindex="2">...</button>
                                     <input type="text" id="txtEmpName" style="width:300px" disabled />
                                 </td>
                             </tr>
@@ -303,7 +303,8 @@ End Code
                             <label for="txtAdvItemNo">Clear From Adv Item.No :</label>
                             <input type="text" id="txtAdvItemNo" style="width:40px" disabled />
                             <label for="txtAdvNo">Adv.No :</label>
-                            <input type="text" id="txtAdvNo" style="width:150px" disabled />
+                            <input type="text" id="txtAdvNo" style="width:150px" disabled /> Net
+                            <input type="text" id="txtAdvAmount" style="width:60px" disabled />
                         </div>
                         <div class="modal-footer">
                             <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
@@ -439,9 +440,9 @@ End Code
             $('#cboJobType').attr('disabled', 'disabled');            
 
             $('#txtEmpCode').val(user);
-            ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
+            CallBackQueryUser(path, $('#txtEmpCode').val(), ReadClrBy);
 
-            $('#txtEmpCode').focus();
+            //$('#txtEmpCode').focus();
         }
     }
     function SetEnterToTab() {
@@ -509,7 +510,7 @@ End Code
 
         $('#txtEmpCode').keydown(function (event) {
             if (event.which == 13) {
-                ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
+                CallBackQueryUser(path, $('#txtEmpCode').val(), ReadClrBy);
             }
         });
 
@@ -850,7 +851,7 @@ End Code
             $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
             $('#chkReceive').prop('checked', $('#txtReceiveBy').val() == '' ? false : true);
             
-            ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
+            CallBackQueryUser(path, $('#txtEmpCode').val(), ReadClrBy);
             ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
 
             if (dt.DocStatus > 2) {
@@ -907,7 +908,7 @@ End Code
             $('#cboClrType').removeAttr('disabled');
             $('#cboClrFrom').removeAttr('disabled');
 
-            ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
+            CallBackQueryUser(path, $('#txtEmpCode').val(), ReadClrBy);
             let d = r.clr.detail;
             ReadClrDetail(d);
             $('#txtClrNo').focus();
@@ -984,7 +985,7 @@ End Code
         $('#cboClrFrom').val('1');
         $('#cboDocStatus').val('01');
 
-        ShowUser(path, $('#txtEmpCode').val(), '#txtEmpName');
+        CallBackQueryUser(path, $('#txtEmpCode').val(), ReadClrBy);
 
         $('#btnPrint').attr('disabled', 'disabled');
         $('#btnAdd').attr('disabled', 'disabled');
@@ -1125,7 +1126,7 @@ End Code
             Tax50Tavi: $('#txtWHT').val(),
             AdvNO: $('#txtAdvNo').val(),
             AdvItemNo: $('#txtAdvItemNo').val(),
-            AdvAmount: ($('#chkDuplicate').prop('checked') == true ? $('#txtNET').val() : dtl.AdvAmount),
+            AdvAmount: ($('#chkDuplicate').prop('checked') == true ? $('#txtNET').val() : $('#txtAdvAmount').val()),
             UsedAmount: $('#txtAMT').val(),
             IsQuoItem: dtl.IsQuoItem,
             SlipNO: $('#txtSlipNo').val(),
@@ -1175,7 +1176,7 @@ End Code
             $('#txtPayChqTo').val(dt.Pay50TaviTo);
             $('#txtSDescription').val(dt.SDescription);
             $('#txtVatType').val(dt.VATType);
-            $('#txtVATRate').val(dt.VATRate);
+            $('#txtVATRate').val(CDbl(dt.VATRate,0));
             $('#txtWHTRate').val(dt.Tax50TaviRate);
             $('#txtAMT').val(dt.UsedAmount);
             $('#txtVAT').val(dt.ChargeVAT);
@@ -1186,6 +1187,7 @@ End Code
             $('#txtCurrencyCode').val(dt.CurrencyCode);
             $('#txtAdvNo').val(dt.AdvNO);
             $('#txtAdvItemNo').val(dt.AdvItemNo);
+            $('#txtAdvAmount').val(dt.AdvAmount);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
@@ -1216,16 +1218,17 @@ End Code
             $('#txtVatType').val(dt.VATType);
             $('#txtVATRate').val(dt.VATRate);
             $('#txtWHTRate').val(dt.Tax50TaviRate);
-            $('#txtAMT').val(dt.AdvBalance);
-            $('#txtVAT').val(dt.AdvBalance*(dt.VATRate*0.01));
-            $('#txtWHT').val(dt.AdvBalance*(dt.Tax50TaviRate*0.01));
-            $('#txtNET').val(dt.AdvBalance + (dt.AdvBalance * (dt.VATRate * 0.01)) - (dt.AdvBalance * (dt.Tax50TaviRate * 0.01)));
+            $('#txtAMT').val(dt.AdvBalance / CDbl(1 + ((dt.VATRate - dt.Tax50TaviRate) * 0.01),2));
+            $('#txtVAT').val(CNum($('#txtAMT').val())*(dt.VATRate*0.01));
+            $('#txtWHT').val(CNum($('#txtAMT').val())*(dt.Tax50TaviRate*0.01));
+            $('#txtNET').val(CNum($('#txtAMT').val()) + (CNum($('#txtAMT').val()) * (dt.VATRate * 0.01)) - (CNum($('#txtAMT').val()) * (dt.Tax50TaviRate * 0.01)));
             $('#txtVenCode').val(dt.VenderCode);
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
             $('#chkIsCost').prop('checked', dt.IsExpense == 1 ? true : false);
             $('#txtAdvNo').val(dt.AdvNO);
             $('#txtAdvItemNo').val(dt.AdvItemNo);
+            $('#txtAdvAmount').val(dt.AdvBalance);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
@@ -1260,6 +1263,7 @@ End Code
         ShowCaption();
         $('#txtVenCode').val('');
         $('#txtAdvNo').val('');
+        $('#txtAdvAmount').val('0');
         $('#txtSlipNo').val('');
         $('#txtAdvItemNo').val('0');
 
@@ -1436,7 +1440,8 @@ End Code
     function ReadClrBy(dt) {
         $('#txtEmpCode').val(dt.UserID);
         $('#txtEmpName').val(dt.TName);
-        $('#txtEmpCode').focus();
+        $('#cboClrFrom').val(dt.DeptID);
+        //$('#txtEmpCode').focus();
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
@@ -1450,7 +1455,7 @@ End Code
             $('#cboSTCode').val(dt.GroupCode);
             $('#txtSDescription').val(dt.NameThai);
             $('#txtVatType').val(dt.IsTaxCharge);
-            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : Number(@ViewBag.PROFILE_VATRATE*100));
+            $('#txtVATRate').val(dt.IsTaxCharge == "0" ? "0" : CDbl(@ViewBag.PROFILE_VATRATE*100,0));
             $('#txtWHTRate').val(dt.Is50Tavi == "0" ? "0" : dt.Rate50Tavi);
             if (dt.IsTaxCharge == "2") {
                 $('#txtAMT').attr('disabled', 'disabled');
@@ -1542,8 +1547,8 @@ End Code
         if (type == '2') {
             amt = CDbl($('#txtNET').val(),4);
         }
-        let vatrate = CDbl($('#txtVATRate').val(),4);
-        let whtrate = CDbl($('#txtWHTRate').val(),4);
+        let vatrate = CDbl($('#txtVATRate').val(),0);
+        let whtrate = CDbl($('#txtWHTRate').val(),0);
         let vat = 0;
         let wht = 0;
         if (type == "2") {

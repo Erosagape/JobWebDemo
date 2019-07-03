@@ -41,6 +41,7 @@ End Code
                     <tr>
                         <th>JobNo</th>
                         <th>JobType/ShipBy</th>
+                        <th>JobStatus</th>
                         <th>InspectDate</th>
                         <th>Inv.Customer</th>
                         <th>Customer</th>
@@ -110,6 +111,12 @@ End Code
                         "data": null, "title": "JobType",
                         "render": function (data) {
                             return data.JobTypeName + '/' + data.ShipByName;
+                        }
+                    },
+                    {
+                        "data": null, "title": "Job Status",
+                        "render": function (data) {
+                            return data.JobStatusName;
                         }
                     },
                     {
