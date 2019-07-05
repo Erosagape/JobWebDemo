@@ -30,6 +30,19 @@ Namespace Controllers
             Return GetView("FormWTax53D")
         End Function
         Function FormInv() As ActionResult
+            If Not Request.QueryString("branch") Is Nothing Then
+                If Not Request.QueryString("code") Is Nothing Then
+                    Dim oRec = New CInvHeader(jobWebConn)
+                    Dim sqlw = String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}'", Request.QueryString("branch").ToString, Request.QueryString("code").ToString)
+                    Dim oRow = oRec.GetData(sqlw)
+                    If oRow.Count > 0 Then
+                        oRow(0).PrintedBy = Session("CurrUser").ToString
+                        oRow(0).PrintedDate = Today.Date
+                        oRow(0).PrintedTime = Now
+                        oRow(0).SaveData(sqlw)
+                    End If
+                End If
+            End If
             Return GetView("FormInv")
         End Function
         Function FormBill() As ActionResult

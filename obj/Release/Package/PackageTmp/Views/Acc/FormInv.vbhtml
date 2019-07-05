@@ -4,8 +4,8 @@
     ViewBag.Title = "Invoice Slip"
 End Code
 <style>
-    td {
-        font-size: 11px;
+    body {
+        font-size:11px;
     }
     table {
         border-width:thin;

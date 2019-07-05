@@ -5,11 +5,6 @@
     ViewBag.ReportName = "BILLING COVER SHEET"
 End Code
 <style>
-    * {
-        font-family: Tahoma;
-        font-size: 11px;
-    }
-
     td {
         font-size: 11px;
     }
@@ -144,7 +139,7 @@ End Code
                 html += '<td>' + dr.InvNo + '</td>';
                 html += '<td>' + dr.RefNo + '</td>';
                 html += '<td style="text-align:right">' + ShowNumber(dr.AmtAdvance, 2) + '</td>';
-                html += '<td style="text-align:right">' + ShowNumber(Number(dr.AmtChargeVAT) + Number(dr.AmtChargeNonVAT), 2) + '</td>';
+                html += '<td style="text-align:right">' + ShowNumber(dr.AmtChargeNonVAT, 2) + '</td>';
                 html += '<td style="text-align:right">' + ShowNumber(dr.AmtVAT, 2) + '</td>';
                 html += '<td style="text-align:right">' + (dr.AmtWHRate==1 ? ShowNumber(dr.AmtWH, 2) : 0) + '</td>';
                 html += '<td style="text-align:right">' + (dr.AmtWHRate!==1 ? ShowNumber(dr.AmtWH, 2) : 0) + '</td>';
@@ -152,7 +147,7 @@ End Code
                 html += '</tr>';
 
                 total += Number(dr.AmtTotal);
-                serv += Number(dr.AmtChargeVAT) + Number(dr.AmtChargeNonVAT);
+                serv += Number(dr.AmtChargeNonVAT);
                 adv += Number(dr.AmtAdvance);
                 vat += Number(dr.AmtVAT);
                 wh1 += Number(dr.AmtWHRate == 1 ? ShowNumber(dr.AmtWH, 2) : 0);

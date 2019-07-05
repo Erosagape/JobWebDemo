@@ -136,7 +136,7 @@ End Code
             html += '<td style="text-align:center">' + d.JobNo + '</td>';
             html += '<td style="text-align:right">' + ShowNumber(d.FNet,2) + '</td>';
             html += '<td style="text-align:center">' + d.DCurrencyCode + '</td>';
-            html += '<td style="text-align:center">' + d.ExchangeRate + '</td>';
+            html += '<td style="text-align:center">' + d.DExchangeRate + '</td>';
             html += '<td style="text-align:right">' + ShowNumber(d.Net,2) + '</td>';
             html += '</tr>';
 
