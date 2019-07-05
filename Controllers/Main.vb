@@ -1011,7 +1011,7 @@ where ISNULL(ih.CancelProve,'')='' {0}
 "
         Return String.Format(sql, psqlW)
     End Function
-    Function SQLSelectInvForReceive() As String
+    Function SQLSelectInvForReceive(bHasVoucher As Boolean) As String
         Return "
 select id.BranchCode,'' as ReceiptNo,
 0 as ItemNo,0 as CreditAmount,
@@ -1028,8 +1028,8 @@ id.CurrencyCode as DCurrencyCode,id.ExchangeRate as DExchangeRate,
 (id.AmtVat-ISNULL(r.ReceivedVat,0))/id.ExchangeRate as FAmtVAT,
 (id.Amt50Tavi-ISNULL(r.ReceivedWht,0))/id.ExchangeRate as FAmt50Tavi,
 (id.TotalAmt-ISNULL(r.ReceivedNet,0))/id.ExchangeRate as FNet,
-ih.Custcode,ih.CustBranch,ih.BillToCustCode,ih.BillToCustBranch,ih.RefNo,
-id.AmtAdvance,id.AmtCharge
+ih.CustCode,ih.CustBranch,ih.BillToCustCode,ih.BillToCustBranch,ih.RefNo,
+id.AmtAdvance,id.AmtCharge,id.AmtDiscount,ih.BillAcceptNo,ih.BillIssueDate,ih.BillAcceptDate 
 from Job_InvoiceDetail id inner join Job_InvoiceHeader ih
 on id.BranchCode=ih.BranchCode
 and id.DocNo=ih.DocNo
@@ -1041,13 +1041,13 @@ left join (
 	sum(rd.Net) as ReceivedNet
 	from Job_ReceiptDetail rd inner join Job_ReceiptHeader rh
 	on rd.BranchCode=rh.BranchCode AND rd.ReceiptNo=rh.ReceiptNo
-	and ISNULL(rh.CancelProve,'')=''
+	WHERE ISNULL(rh.CancelProve,'')='' 
+    " & If(bHasVoucher, " AND ISNULL(rd.VoucherNo,'')<>'' ", " AND ISNULL(rd.VoucherNo,'')='' ") & "
 	group by rd.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo
 ) r
 on id.BranchCode=r.BranchCode AND id.DocNo=r.InvoiceNo AND id.ItemNo=r.InvoiceItemNo
 where ISNULL(ih.CancelProve,'')=''
 "
-
 
     End Function
     Function SQLSelectDocumentByJob(branch As String, job As String) As String

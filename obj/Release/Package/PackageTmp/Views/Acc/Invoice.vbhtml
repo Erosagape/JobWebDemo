@@ -408,7 +408,7 @@ End Code
                 if (userRights.indexOf('E') > 0) {
                     $('#frmHeader').modal('show');
                 } else {
-                    alert('you are not allow to edit invoice');
+                    alert('you are not allow to edit invoice document');
                 }
             });
         });
@@ -744,7 +744,6 @@ End Code
         $('#txtDCurrencyName').val(dt.TName);
         $('#txtDExchangeRate').focus();
     }
-
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
@@ -795,14 +794,12 @@ End Code
             $('#txtAmtCharge').val(ShowNumber(CNum($('#txtFAmt').val()) - CNum($('#txtFAmtDiscount').val()), 2));
         }
     }
-
     function CalDiscountDetail() {
         let amt = CNum($('#txtAmt').val());
         let disc = amt * CNum($('#txtDiscountPerc').val()) * 0.01;
         $('#txtAmtDiscount').val(ShowNumber(disc,2));
         CalVATWHT(0);
     }
-
     function CalVATWHT(step = 0) {
         let amt = CNum($('#txtAmt').val())-CNum($('#txtAmtDiscount').val());
         if (step == 0) {
@@ -813,7 +810,6 @@ End Code
         $('#txtAmt50Tavi').val(ShowNumber(wht, 2));
         CalNetAmount();
     }
-
     function CalNetAmount() {
         let amt = CNum($('#txtAmt').val()) - CNum($('#txtAmtDiscount').val());
         let vat = CNum($('#txtAmtVat').val());

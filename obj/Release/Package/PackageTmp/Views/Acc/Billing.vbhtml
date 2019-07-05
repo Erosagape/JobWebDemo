@@ -2,84 +2,448 @@
 @Code
     ViewBag.Title = "Billing Ac"
 End Code
-
-<div>
-    <br />
-    Branch : <input type="text" id="txtBranchCode" />
-    <input type="button" value="Show" id="btnShow" />
-    <a href="/Acc/GenerateBilling">Create Billing</a>
-    <table id="tbHeader" class="table table-responsive">
-        <thead>
-            <tr>
-                <th>BillNo</th>
-                <th>BillDate</th>
-                <th>CustCode</th>
-                <th>BillRemark</th>
-                <th>BillRecvDate</th>
-                <th>DuePayment</th>
-                <th>Advance</th>
-                <th>Charge</th>
-                <th>VAT</th>
-                <th>WHT</th>
-                <th>Net</th>
-            </tr>
-        </thead>
-    </table>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-sm-4" style="display:flex;flex-direction:row">
+            <label style="display:block;width:20%">Branch:</label>
+            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+            <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+            <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+        </div>
+        <div class="col-sm-6" style="display:flex;flex-direction:row">
+            <label style="display:block;width:20%">Billing Place:</label>
+            <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
+            <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
+            <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
+            <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+        </div>
+        <div class="col-sm-2" style="display:flex;flex-direction:row">
+            <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
+            <button class="btn btn-success" onclick="window.open('/Acc/GenerateBilling', '_blank');">Generate Billing</button>
+        </div>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#tabHeader">Headers</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tabDetail">Details</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="tabHeader">
+            <table id="tbHeader" class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>BillNo</th>
+                        <th>BillDate</th>
+                        <th>CustCode</th>
+                        <th>BillRemark</th>
+                        <th>BillRecvDate</th>
+                        <th>DuePayment</th>
+                        <th>Advance</th>
+                        <th>Charge</th>
+                        <th>VAT</th>
+                        <th>WHT</th>
+                        <th>Net</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="tabDetail">
+            Details of Billing No:<input type="text" id="txtDocNo" style="width:10%" disabled />
+            <table id="tbDetail" class="table table-responsive" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>InvNo</th>
+                        <th>InvDate</th>
+                        <th>CustAdv</th>
+                        <th>Adv</th>
+                        <th>Charge</th>
+                        <th>ChargeVat</th>
+                        <th>Disc</th>
+                        <th>WH</th>
+                        <th>VAT</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+            </table>
+            <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+        </div>
+    </div>
+    <div id="frmHeader" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div style="display:flex">
+                        Billing No: <input type="text" id="txtBillAcceptNo" style="width:150px" disabled /> &nbsp;
+                        Issue Date: <input type="date" id="txtBillDate" style="width:150px" disabled />
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div style="display:flex">
+                        Billing To: <input type="text" id="txtBCustCode" style="width:100px" disabled />
+                        <input type="text" id="txtBCustBranch" style="width:50px" disabled />
+                        <input type="text" id="txtBCustName" style="width:250px" disabled />
+                    </div>
+                    <div style="display:flex">
+                        Received By : <input type="text" id="txtBillRecvBy" style="width:200px" /> &nbsp;
+                        Confirm Date : <input type="date" id="txtBillRecvDate" style="width:150px" />
+                    </div>
+                    <div style="display:flex">
+                        <div style="flex:2">
+                            Remark:<textarea id="txtBillRemark" style="width:100%"></textarea>
+                        </div>
+                        <div style="flex:1">
+                            Payment Due : <input type="date" id="txtDuePaymentDate" style="width:150px" />
+                        </div>
+                    </div>
+                    <p>
+                        <div style="display:flex">     
+                            <div style="flex:1">
+                                Cancel By <input type="text" id="txtCancelProve" disabled />
+                            </div>
+                            <div style="flex:3">
+                                Reason <textarea id="txtCancelReson" style="width:100%"></textarea>
+                            </div>                            
+                        </div>
+                        <div style="flex-direction:row;">
+                            Cancel Date <input type="date" id="txtCancelDate" disabled /> &nbsp;
+                            Time <input type="text" id="txtCancelTime" disabled /> &nbsp;
+                            <input type="button" id="btnCancel" class="btn btn-danger" onclick="CancelData()" value="Cancel" />
+                        </div>
+                    </p>
+                    <p>
+                        Total Billing :
+                        <div style="display:flex">
+                            <div style="flex:1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td>
+                                            Advance
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtTotalAdvance" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Service
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtTotalChargeNonVAT" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Service VAT
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtTotalChargeVAT" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Cust.Adv
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtTotalCustAdv" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="flex:1">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td>VAT </td>
+                                        <td>
+                                            <input type="number" id="txtTotalVAT" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            WH-Tax
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtTotalWH" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Discount
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtTotalDiscount" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Total
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtTotalNet" style="width:100px" disabled />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <div style="float:left">
+                        <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
+                        <button onclick="PrintData()" class="btn btn-default">Print</button>
+                        Last update <label id="lblEmpCode"></label> At <label id="lblRecDateTime"></label>
+                    </div>
+                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dvLOVs"></div>
 </div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-        var path = '@Url.Content("~")';
-        var user = '@ViewBag.User';
-        $('#btnShow').on('click', function () {
-            $.get(path + 'acc/getbillheader?branch=' + $('#txtBranchCode').val(), function (r) {
-                if (r.billheader.data.length == 0) {
-                    $('#tbHeader').DataTable().clear().draw();
-                    if (isAlert==true) alert('data not found');
-                    return;
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    let row = {};
+    let row_d = {};
+    SetLOVs();
+    $('#btnShow').on('click', function () {
+        ShowHeader();
+    });
+    function ShowHeader() {
+        $.get(path + 'acc/getbillheader?branch=' + $('#txtBranchCode').val() + '&cust=' +$('#txtCustCode').val(), function (r) {
+            if (r.billheader.data.length == 0) {
+                $('#tbHeader').DataTable().clear().draw();
+                if (isAlert==true) alert('data not found');
+                return;
+            }
+            let h = r.billheader.data;
+            row = {};
+            row_d = {};
+            $('#tbHeader').DataTable({
+                data: h,
+                selected: true, //ให้สามารถเลือกแถวได้
+                columns: [ //กำหนด property ของ header column
+                    {
+                        data: null, title: "#",
+                        render: function (data, type, full, meta) {
+                            let html = "<button class='btn btn-warning'>Edit</button>";
+                            return html;
+                        }
+                    },
+                    { data: "BillAcceptNo", title: "Inv No" },
+                    {
+                        data: "BillDate", title: "Inv date ",
+                        render: function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    { data: "CustCode", title: "Customer" },
+                    { data: "BillRemark", title: "Remark" },
+                    {
+                        data: "BillRecvDate", title: "Confirm date ",
+                        render: function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    {
+                        data: "DuePaymentDate", title: "Due date ",
+                        render: function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    { data: "TotalAdvance", title: "Advance" },
+                    { data: "TotalChargeVAT", title: "Charge" },
+                    { data: "TotalVAT", title: "VAT" },
+                    { data: "TotalWH", title: "WHT" },
+                    { data: "TotalNet", title: "NET" }
+                ],
+                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+            });
+            $('#tbHeader tbody').on('click', 'tr', function () {
+                row = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                SetSelect('#tbHeader', this);
+                row_d = {};
+                ReadData();
+                ShowDetail(row.BranchCode, row.BillAcceptNo);
+            });
+            $('#tbHeader tbody').on('dblclick', 'tr', function () {
+                $('a[href="#tabDetail"]').click();
+            });
+            $('#tbHeader tbody').on('click', 'button', function () {
+                if (userRights.indexOf('E') > 0) {
+                    $('#frmHeader').modal('show');
+                } else {
+                    alert('you are not allow to edit billing document');
                 }
-                let h = r.billheader.data;
-                $('#tbHeader').DataTable({
-                    data: h,
-                    selected: true, //ให้สามารถเลือกแถวได้
-                    columns: [ //กำหนด property ของ header column
-                        { data: "BillAcceptNo", title: "Inv No" },
-                        {
-                            data: "BillDate", title: "Inv date ",
-                            render: function (data) {
-                                return CDateEN(data);
-                            }
-                        },
-                        { data: "CustCode", title: "Customer" },
-                        { data: "BillRemark", title: "Reference Number" },
-                        {
-                            data: "BillRecvDate", title: "Inv date ",
-                            render: function (data) {
-                                return CDateEN(data);
-                            }
-                        },
-                        {
-                            data: "DuePaymentDate", title: "Inv date ",
-                            render: function (data) {
-                                return CDateEN(data);
-                            }
-                        },
-                        { data: "TotalAdvance", title: "Advance" },
-                        { data: "TotalChargeVAT", title: "Charge" },
-                        { data: "TotalVAT", title: "VAT" },
-                        { data: "TotalWH", title: "WHT" },
-                        { data: "TotalNet", title: "NET" }
-                    ],
-                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
-                });
-                $('#tbHeader tbody').on('dblclick', 'tr', function () {
-                    let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
-                    let code = data.BillAcceptNo;
-                    if (code !== '') {
-                        let branch = $('#txtBranchCode').val();
-                        window.open(path + 'Acc/FormBill?Branch=' + branch + '&Code=' + code);
-                    }
-                });
             });
         });
+    }
+    function PrintData() {
+        let code = row.BillAcceptNo;
+        if (code !== '') {
 
+            let branch = row.BranchCode;
+            window.open(path + 'Acc/FormBill?Branch=' + branch + '&Code=' + code, '_blank');
+        }
+    }
+    function ReadData() {
+        $('#txtDocNo').val(row.BillAcceptNo);
+        $('#txtBillAcceptNo').val(row.BillAcceptNo);
+        $('#txtBillDate').val(CDateEN(row.BillDate));
+        $('#txtBCustCode').val(row.CustCode);
+        $('#txtBCustBranch').val(row.CustBranch);
+        ShowCustomer(path, row.CustCode, row.CustBranch, '#txtBCustName');
+        $('#txtBillRecvBy').val(row.BillRecvBy);
+        $('#txtBillRecvDate').val(CDateEN(row.BillRecvDate));
+        $('#txtDuePaymentDate').val(CDateEN(row.DuePaymentDate));
+        $('#txtBillRemark').val(row.BillRemark);
+        $('#txtCancelReson').val(row.CancelReson);
+        $('#txtCancelProve').val(row.CancelProve);
+        $('#txtCancelDate').val(CDateEN(row.CancelDate));
+        $('#txtCancelTime').val(ShowTime(row.CancelTime));
+        $('#lblEmpCode').text(row.EmpCode);
+        $('#lblRecDateTime').text(ShowDate(row.RecDateTime));
+        $('#txtTotalAdvance').val(CDbl(row.TotalAdvance, 2));
+        $('#txtTotalCustAdv').val(CDbl(row.TotalCustAdv, 2));
+        $('#txtTotalChargeVAT').val(CDbl(row.TotalChargeVAT, 2));
+        $('#txtTotalChargeNonVAT').val(CDbl(row.TotalChargeNonVAT, 2));
+        $('#txtTotalVAT').val(CDbl(row.TotalVAT, 2));
+        $('#txtTotalWH').val(CDbl(row.TotalWH, 2));
+        $('#txtTotalDiscount').val(CDbl(row.TotalDiscount, 2));
+        $('#txtTotalNet').val(CDbl(row.TotalNet, 2));
+    }
+    function CancelData() {
+        if (userRights.indexOf('D') > 0) {
+            if ($('#txtCancelReson').val() == '') {
+                alert('Please enter reason for cancel');
+                $('#txtCancelReson').focus();
+                return;
+            }
+            $('#txtCancelDate').val(GetToday());
+            $('#txtCancelTime').val(ShowTime(GetTime()));
+            $('#txtCancelProve').val(user);
+        } else {
+            alert('you are not allow to cancel billing Document');
+        }
+    }
+    function SaveData() {
+        if (row !== null) {
+            row.BillRemark = $('#txtBillRemark').val();
+            row.BillRecvBy = $('#txtBillRecvBy').val();
+            row.BillRecvDate = CDateTH($('#txtBillRecvDate').val());
+            row.DuePaymentDate = CDateTH($('#txtDuePaymentDate').val());
+            row.CancelDate = CDateTH($('#txtCancelDate').val());
+            row.CancelTime = $('#txtCancelTime').val();
+            row.CancelProve = $('#txtCancelProve').val();
+            row.CancelReson = $('#txtCancelReson').val();
+            row.EmpCode = user;
+            row.RecDateTime = CDateTH(GetToday());
+
+            let jsonString = JSON.stringify({ data: row });
+            $.ajax({
+                url: "@Url.Action("SetBillHeader", "Acc")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonString,
+                success: function (response) {
+                    if (response.result.data !== null) {
+                        
+                        alert(response.result.data);
+                        $('#frmHeader').modal('hide');
+                        return;
+                    }
+                    alert(response.result.msg);
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        }
+    }
+    function ShowDetail(branch, code) {
+        $.get(path + 'Acc/GetBillDetail?Branch=' + branch + '&Code=' + code, function (r) {
+            if (r.billdetail.data.length > 0) {
+                let d = r.billdetail.data;
+                $('#tbDetail').DataTable({
+                    data: d,
+                    selected: true,
+                    columns: [
+                        { data: "InvNo", title: "Inv.No" },
+                        {
+                            data: null, title: "Inv.Date",
+                            render: function (data) {
+                                return CDateTH(data.InvDate);
+                            }
+                        },
+                        { data: "AmtCustAdvance", title: "Cust.Adv" },
+                        { data: "AmtAdvance", title: "Advance" },
+                        { data: "AmtChargeNonVAT", title: "Service" },
+                        { data: "AmtChargeVAT", title: "Service (VAT)" },
+                        { data: "AmtDiscount", title: "Discount" },
+                        { data: "AmtWH", title: "WH-Tax" },
+                        { data: "AmtVAT", title: "VAT" },
+                        { data: "AmtTotal", title: "Total" }
+                    ],
+                    destroy:true
+                });
+                $('#tbDetail tbody').on('click', 'tr', function () {
+                    SetSelect('#tbDetail', this);
+                    row_d = $('#tbDetail').DataTable().row(this).data();
+                });
+            }
+        });
+    }
+    function DeleteDetail() {
+        if (row_d.ItemNo !== undefined) {
+            if (confirm("Are you sure to delete inv " + row_d.InvNo + ' from ' + row_d.BillAcceptNo) == true) {
+                $.get(path, 'Acc/DelBillDetail?Branch=' + row.BranchCode + '&Code=' + row.BillAcceptNo + '&Item=' + row_d.ItemNo)
+                    .done(function (r) {
+                        if (r.billdetail.data !== null) {
+                            ShowDetail(row.BranchCode, row.BillAcceptNo);
+                        }
+                        alert(r.billdetail.result);
+                    });
+            }
+        } else {
+            alert('no data to delete');
+        }
+
+    }
+    function SetLOVs() {
+        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            let dv = document.getElementById("dvLOVs");
+            //Customers
+            CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
+            //Branch
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response,4);
+        });
+    }
+    function SearchData(type) {
+        switch (type) {
+            case 'branch':
+                SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
+                break;
+            case 'customer':
+                SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
+                break;
+        }
+    }
+    function ReadBranch(dt) {
+        $('#txtBranchCode').val(dt.Code);
+        $('#txtBranchName').val(dt.BrName);
+        $('#txtBranchCode').focus();
+    }
+    function ReadCustomer(dt) {
+        $('#txtCustCode').val(dt.CustCode);
+        $('#txtCustBranch').val(dt.Branch);
+        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+    }
 </script>
 
