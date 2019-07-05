@@ -56,19 +56,17 @@ End Code
     </thead>
     <tbody id="tbDetail"></tbody>
     <tfoot>
-        <tr style="background-color:lightblue;text-align:center;">
-            <td colspan="4"><label id="lblTotalText"></label></td>
+        <tr style="background-color:lightblue;text-align:right;">
+            <td colspan="4" style="text-align:center"><label id="lblTotalText"></label></td>
             <td colspan="2">TOTAL AMOUNT</td>
             <td colspan="1"><label id="lblTotalBeforeVAT"></label></td>
         </tr>
-        <tr style="background-color:lightblue;text-align:center;">
-            <td colspan="4"></td>
-            <td colspan="2">TOTAL VAT</td>
+        <tr style="background-color:lightblue;text-align:right;">            
+            <td colspan="6">TOTAL VAT</td>
             <td colspan="1"><label id="lblTotalVAT"></label></td>
         </tr>
-        <tr style="background-color:lightblue;text-align:center;">
-            <td colspan="4"></td>
-            <td colspan="2">TOTAL RECEIPT</td>
+        <tr style="background-color:lightblue;text-align:right;">
+            <td colspan="6">TOTAL RECEIPT</td>
             <td colspan="1"><label id="lblTotalAfterVAT"></label></td>
         </tr>
     </tfoot>
@@ -145,10 +143,10 @@ let branch = getQueryString('branch');
             html += '<td style="text-align:center">' + d.InvoiceNo + '</td>';
             html += '<td>' + d.SICode+ '-'+ d.SDescription + '</td>';
             html += '<td style="text-align:center">' + d.JobNo + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.Amt,2):'') + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.AmtVat,2):'') + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.Amt50Tavi,2):'') + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? '':ShowNumber(d.Net,2)) + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.Amt,2):'0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.AmtVat,2):'0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.Amt50Tavi,2):'0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? '0.00':ShowNumber(d.Net,2)) + '</td>';
             html += '</tr>';
 
             $('#tbDetail').append(html);

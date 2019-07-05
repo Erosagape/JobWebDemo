@@ -4,8 +4,8 @@
     ViewBag.Title = "Invoice Slip"
 End Code
 <style>
-    td {
-        font-size: 11px;
+    body {
+        font-size:11px;
     }
     table {
         border-width:thin;
@@ -93,38 +93,55 @@ End Code
     <table style="width:100%" border="1" class="text-center">
         <thead>
             <tr style="background-color :gainsboro;text-align:center;">
-                <th width="100px" rowspan="2">No</th>
-                <th width="400px" rowspan="2">DESCRIPTION</th>
-                <th colspan="3" rowspan="1">ADVANCE RE-IMBERSEMENT</th>
-                <th width="200px" rowspan="2">SERVICE CHARGE</th>
-            </tr>
-            <tr style="background-color :gainsboro;text-align:center;">
-                <th width="120px">EXPENSE</th>
-                <th width="120px">VAT</th>
-                <th width="120px">WHT</th>
+                <th width="50px">No</th>
+                <th width="400px">DESCRIPTION</th>
+                <th width="100px">ADVANCE</th>
+                <th width="100px">SERVICE</th>
+                <th width="50px">CURR</th>
+                <th width="100px">AMT</th>
+                <th width="100px">DISC</th>
+                <th width="100px">TOTAL</th>
             </tr>
         </thead>
         <tbody id="tbDetail"></tbody>
         <tfoot>
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     <div style="display:flex">
-                        <div class="text-left div1" style="flex:3">
+                        <div class="text-left div1" style="flex:2">
+                            TOTAL INVOICE (<label id="lblCurrencyCode"></label>)=<label id="lblForeignNet"></label> RATE=<label id="lblExchangeRate"></label>
+                            <br/>
                             REMARKS :<br />
                             <label id="lblDescription"></label>
                         </div>
                         <div class="text-right" style="flex:1">
-                            SUB TOTAL <br />DISCOUNT<br />CUST. ADV<br />SUBTOTAL 7%<br />VAT 7%<br />TOTAL SERVICE<br />ADVANCE RE-IMBERSEMENT<br />TOTAL INVOICE<br />GRAND TOTAL
+                            TOTAL ADVANCE<br />
+                            TOTAL SERVICE <br />
+                            VATABLE<br />
+                            VAT (RATE=<label id="lblVATRate"></label>%)<br />
+                            SERVICE+VAT<br />
+                            SERVICE+ADVANCE<br />
+                            DISCOUNT (RATE=<label id="lblDiscountRate"></label>%)<br />
+                            CUST. ADV<br />
+                            GRAND TOTAL
                         </div>
                     </div>
                 </td>
-                <td style="background-color :gainsboro;text-align:right;">
-                    <label id="lblSumNonVat"></label><br /><label id="lblSumDiscount"></label><br /><label id="lblSumCustAdv"></label><br /><label id="lblSumBeforeVat"></label><br /><label id="lblSumVat"></label><br /><label id="lblSumAfterVat"></label><br /><label id="lblSumAdvance"></label><br /><label id="lblSumTotal"></label><br /><label id="lblSumGrandTotal"></label>
+                <td style="background-color :gainsboro;text-align:right;" colspan="2">
+                    <label id="lblSumAdvance"></label><br />
+                    <label id="lblSumNonVat"></label><br />
+                    <label id="lblSumBeforeVat"></label><br />
+                    <label id="lblSumVat"></label><br />
+                    <label id="lblSumAfterVat"></label><br />
+                    <label id="lblSumTotal"></label><br />
+                    <label id="lblSumDiscount"></label><br />
+                    <label id="lblSumCustAdv"></label><br />
+                    <label id="lblSumGrandTotal"></label>
                 </td>
             </tr>
             <tr>
                 <td>TOTAL (BAHT)</td>
-                <td colspan="5">
+                <td colspan="7">
                     <div style="text-align:center"><label id="lblTotalBaht"></label></div>
                 </td>
             </tr>
@@ -189,6 +206,11 @@ End Code
             let h = dr.header[0][0];
             $('#lblDocNo').text(h.DocNo);
             $('#lblDocDate').text(ShowDate(CDateTH(h.DocDate)));
+            $('#lblCurrencyCode').text(h.CurrencyCode);
+            $('#lblExchangeRate').text(h.ExchangeRate);
+            $('#lblForeignNet').text(ShowNumber(h.ForeignNet, 2));
+            $('#lblDiscountRate').text(h.DiscountRate);
+            $('#lblVATRate').text(h.VATRate);
 
             let c = dr.customer[0][0];            
             if (c !== null) {
@@ -239,15 +261,17 @@ End Code
                 let html = '<tr>';
                 html += '<td style="text-align:center">' + o.ItemNo + '</td>';
                 html += '<td>' + o.SICode + '-' + o.SDescription + '</td>';
-                html += '<td style="text-align:right">' + ShowNumber(o.AmtAdvance, 2) + '</td>';
                 if (o.AmtAdvance > 0) {
-                    html += '<td style="text-align:right">' + ShowNumber(o.AmtVat, 2) + '</td>';
-                    html += '<td style="text-align:right">' + ShowNumber(o.AmtWht, 2) + '</td>';
+                    html += '<td style="text-align:right">' + ShowNumber(o.AmtAdvance, 2) + '</td>';
+                    html += '<td style="text-align:right">0.00</td>';
                 } else {
                     html += '<td style="text-align:right">0.00</td>';
-                    html += '<td style="text-align:right">0.00</td>';
+                    html += '<td style="text-align:right">' + ShowNumber(o.AmtCharge, 2) + '</td>';
                 }
-                html += '<td style="text-align:right">' + ShowNumber(o.AmtCharge,2) + '</td>';
+                html += '<td style="text-align:center">' + o.CurrencyCode + '</td>';
+                html += '<td style="text-align:right">' + ShowNumber(o.Amt, 2) + '</td>';
+                html += '<td style="text-align:right">' + ShowNumber(o.AmtDiscount, 2) + '</td>';
+                html += '<td style="text-align:right">' + ShowNumber(CNum(o.Amt)-CNum(o.AmtDiscount), 2) + '</td>';
                 html += '</tr>';
 
                 $('#tbDetail').append(html);

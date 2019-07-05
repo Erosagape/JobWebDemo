@@ -62,10 +62,12 @@ End Code
                         <th>ExpSlipNo</th>
                         <th>AmtAdvance</th>
                         <th>AmtCharge</th>
+                        <th>Currency</th>
+                        <th>Amt</th>
+                        <th>AmtDiscount</th>
                         <th>AmtVAT</th>
                         <th>Amt50Tavi</th>
                         <th>TotalAmt</th>
-                        <th>AmtCredit</th>
                     </tr>
                 </thead>
             </table>
@@ -200,7 +202,7 @@ End Code
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            Currency <input type="text" id="txtDCurrencyCode" style="width:10%" />
+                            Currency <input type="text" id="txtDCurrencyCode" style="width:10%" disabled />
                             <input type="button" id="btnCurr" value="..." onclick="SearchData('dcurrency')" />
                             <input type="text" id="txtDCurrencyName" style="width:40%" disabled />
                             Exc.Rate <input type="text" id="txtDExchangeRate" style="width:15%" onchange="CalForeignDetail()" />
@@ -348,6 +350,7 @@ End Code
     const user = '@ViewBag.User';
     const userRights = '@ViewBag.UserRights';
     let row = {};
+    let row_d = {};
     SetLOVs();
     $('#btnShow').on('click', function () {
         ShowHeader();
@@ -394,6 +397,7 @@ End Code
             $('#tbHeader tbody').on('click', 'tr', function () {
                 SetSelect('#tbHeader', this);
                 row = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                row_d = {};
                 ReadData();
                 ShowDetail(row.BranchCode, row.DocNo);
             });
@@ -430,6 +434,13 @@ End Code
                         { data: "ExpSlipNO", title: "Slip" },
                         { data: "AmtAdvance", title: "Advance" },
                         { data: "AmtCharge", title: "Charge" },
+                        {
+                            data: null, title: "Currency", render:function(data) {
+                                return data.CurrencyCode + '=' + data.ExchangeRate;
+                            }
+                        },
+                        { data: "Amt", title: "Amount" },
+                        { data: "AmtDiscount", title: "Discount" },
                         { data: "AmtVat", title: "VAT" },
                         { data: "Amt50Tavi", title: "WHT" },
                         { data: "TotalAmt", title: "NET" }
@@ -465,6 +476,7 @@ End Code
         });
     }
     function LoadDetail(dt) {
+        row_d = dt;
         $('#txtDDocNo').val(dt.DocNo);
         $('#txtItemNo').val(dt.ItemNo);
         $('#txtSICode').val(dt.SICode);
@@ -502,9 +514,61 @@ End Code
         $('#frmDetail').modal('show');
     }
     function SaveDetail() {
+        if (row_d !== null) {
+            row_d.SDescription = $('#txtSDescription').val();
+            row_d.ExpSlipNO = $('#txtExpSlipNO').val();
+            row_d.SRemark = $('#txtSRemark').val();
+            row_d.CurrencyCode = $('#txtDCurrencyCode').val();
+            row_d.ExchangeRate = $('#txtDExchangeRate').val();
+            row_d.FUnitPrice = CNum($('#txtFUnitPrice').val());
+            row_d.FAmt = CNum($('#txtFAmt').val());
+            row_d.DiscountType = $('#txtDiscountType').val();
+            row_d.DiscountPerc = CNum($('#txtDiscountPerc').val());
+            row_d.AmtDiscount = CNum($('#txtAmtDiscount').val());
+            row_d.FAmtDiscount = CNum($('#txtFAmtDiscount').val());
+            row_d.Amt50Tavi = CNum($('#txtAmt50Tavi').val());
+            row_d.AmtVat = CNum($('#txtAmtVat').val());
+            row_d.TotalAmt = CNum($('#txtTotalAmt').val());
+            row_d.FTotalAmt = CNum($('#txtFTotalAmt').val());
+            row_d.AmtAdvance = CNum($('#txtAmtAdvance').val());
+            row_d.AmtCharge = CNum($('#txtAmtCharge').val());
 
+            let jsonText = JSON.stringify({ data: row_d });
+            //alert(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetInvDetail", "Acc")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    if (response.result.data !== null) {
+                        ShowDetail(row.BranchCode, row.DocNo);
+                        alert(response.result.msg + '\n=>' + response.result.data);
+                        $('#frmDetail').modal('hide');
+                        return;
+                    }
+                    alert(response.result.msg);
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        } else {
+            alert('no data to save');
+        }
     }
     function DeleteDetail() {
+        if (row_d !== null) {
+            $.get(path, 'Acc/DelInvDetail?Branch=' + row.BranchCode + '&Code=' + row.DocNo + '&Item=' + row_d.ItemNo)
+                .done(function (r) {
+                    if (r.invdetail.data !== null) {
+                        ShowDetail(row.BranchCode, row.DocNo);
+                    }
+                    alert(r.invdetail.result);
+                });
+        } else {
+            alert('no data to delete');
+        }
 
     }
     function SearchData(type) {
@@ -722,7 +786,7 @@ End Code
         $('#txtFUnitPrice').val(CDbl(CNum($('#txtUnitPrice').val()) / rate, 2));
         $('#txtFAmt').val(CDbl(CNum($('#txtAmt').val()) / rate, 2));
         $('#txtFTotalAmt').val(CDbl(CNum($('#txtTotalAmt').val()) / rate, 2));
-        $('#txtFAmtCredit').val(CDbl(CNum($('#txtAmtCredit').val()) / rate, 2));
+        //$('#txtFAmtCredit').val(CDbl(CNum($('#txtAmtCredit').val()) / rate, 2));
         $('#txtFAmtDiscount').val(CDbl(CNum($('#txtAmtDiscount').val()) / rate, 2));
         if (CNum($('#txtAmtAdvance').val()) > 0) {
             $('#txtAmtAdvance').val(ShowNumber($('#txtFTotalAmt').val(), 2));

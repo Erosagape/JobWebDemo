@@ -161,7 +161,13 @@ End Code
                                                            <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" disabled /></td></tr>
                                                            <tr><td>Sum Discount</td><td><input type="text" id="txtTotalDiscount" disabled /></td></tr>
                                                            <tr><td>NET</td><td><input type="text" id="txtTotalNet" disabled /></td></tr>
-                                                           <tr><td>Currency</td><td><input type="text" id="txtCurrencyCode" disabled /></td></tr>
+                                                           <tr>
+                                                               <td>Currency</td>
+                                                               <td>
+                                                                   <input type="text" id="txtCurrencyCode" disabled />
+                                                                   <input type="button" value="..." onclick="SearchData('currency')" />
+                                                               </td>
+                                                           </tr>
                                                            <tr><td>Exc.Rate</td><td><input type="text" id="txtExchangeRate" onchange="CalForeign()" /></td></tr>
                                                            <tr><td>Invoiced</td><td><input type="text" id="txtForeignNet" disabled /></td></tr>
                                                            <tr><td>Cost</td><td><input type="text" id="txtTotalCost" disabled /></td></tr>
@@ -315,10 +321,13 @@ End Code
             let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
+            
             CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job', response, 3);
             CreateLOV(dv, '#frmSearchInv', '#tbInv', 'Cancelled Invoice', response, 3);
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            //Currency
+            CreateLOV(dv, '#frmSearchCurr', '#tbCurr', 'Currency Code', response, 2);
             //Cheque
             CreateLOV(dv, '#frmSearchChq', '#tbChq', 'Customer Cheque', response, 5);
         });
@@ -871,6 +880,9 @@ End Code
             case 'customer':
                 SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
                 break;
+            case 'currency':
+                SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadCurrency);
+                break;
             case 'chequecust':
                 SetGridCheque(path, '#tbChq', '#frmSearchChq', '?type=CU&Cancel=N&Branch=' + $('#txtBranchCode').val(), ReadCheque);
                 break;
@@ -904,6 +916,10 @@ End Code
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
         $('#txtBranchCode').focus();
+    }
+    function ReadCurrency(dt) {
+        $('#txtCurrencyCode').val(dt.Code);
+        CalForeign();
     }
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
@@ -958,8 +974,8 @@ End Code
                     AmtVat: CDbl(obj.AmtVat,2),
                     TotalAmt: CDbl(obj.TotalAmt,2),
                     FTotalAmt: CDbl(obj.TotalAmt / CNum($('#txtExchangeRate').val()), 2),
-                    AmtAdvance: (obj.AmtAdvance > 0 ? CDbl(obj.AmtAdvance ,2) : 0),
-                    AmtCharge: (obj.AmtCharge > 0 ? CDbl(obj.AmtCharge ,2) : 0),
+                    AmtAdvance: (obj.AmtAdvance > 0 ? CDbl(obj.AmtAdvance  / CNum($('#txtExchangeRate').val()),2) : 0),
+                    AmtCharge: (obj.AmtCharge > 0 ? CDbl(obj.AmtCharge  / CNum($('#txtExchangeRate').val()),2) : 0),
                     CurrencyCodeCredit: $('#txtCurrencyCode').val(),
                     ExchangeRateCredit: $('#txtExchangeRate').val(),
                     AmtCredit: CDbl(creditamt,2),

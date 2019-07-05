@@ -684,7 +684,7 @@ h.Total50Tavi=ROUND(d.Total50Tavi,2),
 h.SumDiscount=ROUND(d.SumDiscount,2),
 h.DiscountCal=ROUND((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate*0.01),2),
 h.TotalNet=ROUND((d.TotalNet-h.TotalCustAdv)-((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate*0.01)),2),
-h.ForeignNet=ROUND((d.TotalNet-h.TotalCustAdv)-((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate*0.01))/h.ExchangeRate,2)
+h.ForeignNet=ROUND(((d.TotalNet-h.TotalCustAdv)-((d.TotalNet-h.TotalCustAdv)*(h.DiscountRate*0.01)))/h.ExchangeRate,2)
 from Job_InvoiceHeader h
 inner join (
 	select BranchCode,DocNo,
