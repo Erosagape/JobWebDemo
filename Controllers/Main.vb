@@ -1059,9 +1059,9 @@ where ISNULL(ih.CancelProve,'')=''
     Function SQLSelectInvByReceive(pRcpNo As String, pNoVoucher As Boolean) As String
         Return "
 select id.BranchCode,r.ReceiptNo,
-r.ReceiptItemNo as ItemNo,0 as CreditAmount,
-ISNULL(r.ReceivedNet,0) as TransferAmount,
-0 as CashAmount,0 as ChequeAmount,r.ControlNo,r.VoucherNo,r.ControlItemNo,
+r.ReceiptItemNo as ItemNo,r.CreditAmount,
+r.TransferAmount,
+r.CashAmount,r.ChequeAmount,r.ControlNo,r.VoucherNo,r.ControlItemNo,
 ih.DocNo as InvoiceNo,ih.DocDate as InvoiceDate,id.ItemNo as InvoiceItemNo,
 id.SICode,id.SDescription,id.VATRate,id.Rate50Tavi,
 ISNULL(r.ReceivedAmt,0) as Amt,
@@ -1087,6 +1087,7 @@ inner join (
 	rd.AmtVAT as ReceivedVat,
 	rd.Amt50Tavi as ReceivedWht,
 	rd.Net as ReceivedNet,
+    rd.CreditAmount,rd.CashAmount,rd.ChequeAmount,rd.TransferAmount,
     rd.ReceiptNo,rh.ReceiptDate,
     rd.ItemNo as ReceiptItemNo,rd.ControlNo,rd.ControlItemNo,rd.VoucherNo
 	from Job_ReceiptDetail rd inner join Job_ReceiptHeader rh

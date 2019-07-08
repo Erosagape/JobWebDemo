@@ -423,19 +423,27 @@ set h.TotalCharge=ISNULL(d.TotalCharge,0),
 h.TotalVAT =ISNULL(d.TotalVAT,0),
 h.Total50Tavi =ISNULL(d.Total50Tavi,0),
 h.TotalNet=ISNULL(d.TotalNet,0),
-h.FTotalNet=ISNULL(d.TotalNet,0)/h.ExchangeRate
+h.FTotalNet=ISNULL(d.TotalNet,0)/h.ExchangeRate,
+h.ReceiveRef=d.LastControl,
+h.ReceiveBy=c.RecUser,
+h.ReceiveDate=c.RecDate,
+h.ReceiveTime=c.RecTime
 from Job_ReceiptHeader h
 inner join (
 	select BranchCode,ReceiptNo,
 	sum(Amt) as TotalCharge,
 	sum(AmtVAT) as TotalVAT,
 	sum(Amt50Tavi) as Total50Tavi,
-	sum(Net) as TotalNet
+	sum(Net) as TotalNet,
+    max(ControlNo) as LastControl
 	from Job_ReceiptDetail 
 	group by BranchCode,ReceiptNo
 ) d
 on h.BranchCode=d.BranchCode
 and h.ReceiptNo=d.ReceiptNo
+left join Job_CashControl c
+ON d.BranchCode=c.BranchCode
+AND d.LastControl=c.ControlNo
 "
         Using cm As New SqlCommand(sql, cn)
             cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.ReceiptNo='" + Me.ReceiptNo + "'"
