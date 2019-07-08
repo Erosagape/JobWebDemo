@@ -171,7 +171,7 @@ End Code
             }
         }
 
-        $.get(path + 'acc/getinvforreceive?show=NOPAY&type=ADV&branch=' + $('#txtBranchCode').val() + w, function (r) {
+        $.get(path + 'acc/getinvforreceive?show=WAIT&type=ADV&branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.invdetail.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
                 if (isAlert==true) alert('data not found');

@@ -31,10 +31,11 @@ Module Main
         End If
     End Function
     Friend Function GetValueSQL(conn As String, sql As String) As CResult
-        Dim ret As New CResult
-        ret.Source = sql
-        ret.Param = conn
-        ret.Result = ""
+        Dim ret As New CResult With {
+            .Source = sql,
+            .Param = conn,
+            .Result = ""
+        }
         Try
             Using cn As New SqlConnection(conn)
                 cn.Open()
@@ -1029,7 +1030,10 @@ id.CurrencyCode as DCurrencyCode,id.ExchangeRate as DExchangeRate,
 (id.Amt50Tavi-ISNULL(r.ReceivedWht,0))/id.ExchangeRate as FAmt50Tavi,
 (id.TotalAmt-ISNULL(r.ReceivedNet,0))/id.ExchangeRate as FNet,
 ih.CustCode,ih.CustBranch,ih.BillToCustCode,ih.BillToCustBranch,ih.RefNo,
-id.AmtAdvance,id.AmtCharge,id.AmtDiscount,ih.BillAcceptNo,ih.BillIssueDate,ih.BillAcceptDate 
+id.Amt As InvAmt,id.AmtVat as InvVat,id.Amt50Tavi as Inv50Tavi,id.TotalAmt as InvTotal,
+id.AmtAdvance,id.AmtCharge,id.AmtDiscount,id.AmtCredit,
+ih.BillAcceptNo,ih.BillIssueDate,ih.BillAcceptDate,
+r.LastReceiptNo,r.LastControlNo
 from Job_InvoiceDetail id inner join Job_InvoiceHeader ih
 on id.BranchCode=ih.BranchCode
 and id.DocNo=ih.DocNo
@@ -1038,17 +1042,62 @@ left join (
 	sum(rd.Amt) as ReceivedAmt,
 	sum(rd.AmtVAT) as ReceivedVat,
 	sum(rd.Amt50Tavi) as ReceivedWht,
-	sum(rd.Net) as ReceivedNet
+	sum(rd.Net) as ReceivedNet,
+    max(rh.ReceiptNo) as LastReceiptNo,
+    max(rd.ControlNo) as LastControlNo
 	from Job_ReceiptDetail rd inner join Job_ReceiptHeader rh
 	on rd.BranchCode=rh.BranchCode AND rd.ReceiptNo=rh.ReceiptNo
 	WHERE ISNULL(rh.CancelProve,'')='' 
-    " & If(bHasVoucher, " AND ISNULL(rd.VoucherNo,'')<>'' ", " AND ISNULL(rd.VoucherNo,'')='' ") & "
+    " & If(bHasVoucher, " AND ISNULL(rd.ControlNo,'')<>'' ", "") & "
 	group by rd.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo
 ) r
 on id.BranchCode=r.BranchCode AND id.DocNo=r.InvoiceNo AND id.ItemNo=r.InvoiceItemNo
 where ISNULL(ih.CancelProve,'')=''
 "
 
+    End Function
+    Function SQLSelectInvByReceive(pRcpNo As String, pNoVoucher As Boolean) As String
+        Return "
+select id.BranchCode,r.ReceiptNo,
+r.ReceiptItemNo as ItemNo,0 as CreditAmount,
+ISNULL(r.ReceivedNet,0) as TransferAmount,
+0 as CashAmount,0 as ChequeAmount,r.ControlNo,r.VoucherNo,r.ControlItemNo,
+ih.DocNo as InvoiceNo,ih.DocDate as InvoiceDate,id.ItemNo as InvoiceItemNo,
+id.SICode,id.SDescription,id.VATRate,id.Rate50Tavi,
+ISNULL(r.ReceivedAmt,0) as Amt,
+ISNULL(r.ReceivedVat,0) as AmtVAT,
+ISNULL(r.ReceivedWht,0) as Amt50Tavi,
+ISNULL(r.ReceivedNet,0) as Net,
+id.CurrencyCode as DCurrencyCode,id.ExchangeRate as DExchangeRate,
+ISNULL(r.ReceivedAmt,0)/id.ExchangeRate as FAmt,
+ISNULL(r.ReceivedVat,0)/id.ExchangeRate as FAmtVAT,
+ISNULL(r.ReceivedWht,0)/id.ExchangeRate as FAmt50Tavi,
+ISNULL(r.ReceivedNet,0)/id.ExchangeRate as FNet,
+ih.CustCode,ih.CustBranch,ih.BillToCustCode,ih.BillToCustBranch,ih.RefNo,
+id.Amt As InvAmt,id.AmtVat as InvVat,id.Amt50Tavi as Inv50Tavi,id.TotalAmt as InvTotal,
+id.AmtAdvance,id.AmtCharge,id.AmtDiscount,id.AmtCredit,
+ih.BillAcceptNo,ih.BillIssueDate,ih.BillAcceptDate,r.ReceiptDate,bh.DuePaymentDate
+from Job_InvoiceDetail id inner join Job_InvoiceHeader ih
+on id.BranchCode=ih.BranchCode
+and id.DocNo=ih.DocNo
+left join Job_BillAcceptHeader bh ON ih.BranchCode=bh.BranchCode AND ih.BillAcceptNo=bh.BillAcceptNo
+inner join (
+	select rd.BranchCode,rd.InvoiceNo,rd.InvoiceItemNo,
+	rd.Amt as ReceivedAmt,
+	rd.AmtVAT as ReceivedVat,
+	rd.Amt50Tavi as ReceivedWht,
+	rd.Net as ReceivedNet,
+    rd.ReceiptNo,rh.ReceiptDate,
+    rd.ItemNo as ReceiptItemNo,rd.ControlNo,rd.ControlItemNo,rd.VoucherNo
+	from Job_ReceiptDetail rd inner join Job_ReceiptHeader rh
+	on rd.BranchCode=rh.BranchCode AND rd.ReceiptNo=rh.ReceiptNo
+	WHERE ISNULL(rh.CancelProve,'')='' 
+    " & If(pRcpNo <> "", " AND rh.ReceiptNo='" & pRcpNo & "' ", "") & "
+    " & If(pNoVoucher, " AND ISNULL(rd.ControlNo,'')=''", "") & "
+) r
+on id.BranchCode=r.BranchCode AND id.DocNo=r.InvoiceNo AND id.ItemNo=r.InvoiceItemNo
+where ISNULL(ih.CancelProve,'')=''
+"
     End Function
     Function SQLSelectDocumentByJob(branch As String, job As String) As String
         Dim sql As String = "

@@ -493,6 +493,15 @@ Public Class CVoucherSub
         End Using
         Return lst
     End Function
+    Public Sub CancelData()
+        Dim oDtl As New CVoucherDoc(jobWebConn)
+        Dim oRows = oDtl.GetData(String.Format(" WHERE BranchCode='{0}' AND ControlNo='{1}' AND acType='{2}'", Me.BranchCode, Me.ControlNo, Me.acType))
+        If oRows.Count > 1 Then
+            For Each row In oRows
+                row.DeleteData()
+            Next
+        End If
+    End Sub
     Public Function DeleteData(Optional pSQLWhere As String = "") As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -503,6 +512,8 @@ Public Class CVoucherSub
                     pSQLWhere &= String.Format(" AND ControlNo='{0}'", Me.ControlNo)
                     pSQLWhere &= String.Format(" AND ItemNo='{0}'", Me.ItemNo)
                 End If
+                Me.CancelData()
+
                 Using cm As New SqlCommand("DELETE FROM Job_CashControlSub" + pSQLWhere, cn)
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text

@@ -5,82 +5,12 @@ End Code
     <div class="container">
         <input type="hidden" id="txtControlNo" />
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab1">Select document</a></li>
-            <li><a data-toggle="tab" href="#tab2">Clearing Info</a></li>
+            <li class="active"><a data-toggle="tab" href="#tab1">Type of Clear</a></li>
+            <li><a data-toggle="tab" href="#tab2">Document Info</a></li>
             <li><a data-toggle="tab" href="#tab3">Clearing Details</a></li>
         </ul>
         <div class="tab-content">
             <div id="tab1" class="tab-pane fade in active">
-                <div class="row">
-                    <div class="col-sm-4">
-                        Branch :<br />
-                        <input type="text" id="txtBranchCode" style="width:50px" />
-                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                        <input type="text" id="txtBranchName" style="width:200px" disabled />
-                    </div>
-                    <div class="col-sm-2">
-                        Job Type: <br />
-                        <select id="cboJobType" class="form-control dropdown"></select>
-                    </div>
-                    <div class="col-sm-6">
-                        Entry By :<br />
-                        <input type="text" id="txtReqBy" style="width:100px" />
-                        <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                        <input type="text" id="txtReqName" style="width:300px" disabled />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        Customer :<br />
-                        <input type="text" id="txtCustCode" style="width:120px" />
-                        <input type="text" id="txtCustBranch" style="width:50px" />
-                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                        <input type="text" id="txtCustName" style="width:300px" disabled />
-                    </div>
-                    <div class="col-sm-2">
-                        Payment Date From:<br />
-                        <input type="date" id="txtAdvDateF" />
-                    </div>
-                    <div class="col-sm-2">
-                        Payment Date To:<br />
-                        <input type="date" id="txtAdvDateT" />
-                    </div>
-                    <div class="col-sm-2">
-                        <br />
-                        <input type="checkbox" id="chkFromClr" class="checkbox" />No ADV
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        Clearing Document:<input type="text" id="txtAdvNo" />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
-                        <br/>
-                        <table id="tbHeader" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>Clr.No</th>
-                                    <th>Clr.date</th>
-                                    <th>Job No</th>
-                                    <th>Inv.No</th>
-                                    <th>customer</th>
-                                    <th>Adv.No</th>
-                                    <th>Adv.Total</th>
-                                    <th>Used</th>
-                                    <th>Balance</th>
-                                    <th>W-Tax</th>
-                                    <th>Clr.By</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        Receive Document : <br /><input type="text" id="txtListApprove" class="form-control" value="" disabled />
-                    </div>
-                </div>
-            </div>
-            <div id="tab2" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-3 table-bordered" id="dvCash">
                         <label><input type="radio" name="optACType" id="chkCash" value="CA"><b>Cash/Transfer :</b></label>
@@ -162,6 +92,76 @@ End Code
                         Ref Date:<input type="date" id="txtCredTranDate" class="form-control" />
                         Pay To:<input type="text" id="txtCredPayTo" class="form-control" />
                         <br />
+                    </div>
+                </div>
+            </div>
+            <div id="tab2" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Branch :<br />
+                        <input type="text" id="txtBranchCode" style="width:50px" />
+                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
+                        <input type="text" id="txtBranchName" style="width:200px" disabled />
+                    </div>
+                    <div class="col-sm-2">
+                        Job Type: <br />
+                        <select id="cboJobType" class="form-control dropdown"></select>
+                    </div>
+                    <div class="col-sm-6">
+                        Entry By :<br />
+                        <input type="text" id="txtReqBy" style="width:100px" />
+                        <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
+                        <input type="text" id="txtReqName" style="width:300px" disabled />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Customer :<br />
+                        <input type="text" id="txtCustCode" style="width:120px" />
+                        <input type="text" id="txtCustBranch" style="width:50px" />
+                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
+                        <input type="text" id="txtCustName" style="width:300px" disabled />
+                    </div>
+                    <div class="col-sm-2">
+                        Payment Date From:<br />
+                        <input type="date" id="txtAdvDateF" />
+                    </div>
+                    <div class="col-sm-2">
+                        Payment Date To:<br />
+                        <input type="date" id="txtAdvDateT" />
+                    </div>
+                    <div class="col-sm-2">
+                        <br />
+                        <input type="checkbox" id="chkFromClr" class="checkbox" />No ADV
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        Clearing Document:<input type="text" id="txtAdvNo" />
+                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <br />
+                        <table id="tbHeader" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Clr.No</th>
+                                    <th>Clr.date</th>
+                                    <th>Job No</th>
+                                    <th>Inv.No</th>
+                                    <th>customer</th>
+                                    <th>Adv.No</th>
+                                    <th>Adv.Total</th>
+                                    <th>Used</th>
+                                    <th>Balance</th>
+                                    <th>W-Tax</th>
+                                    <th>Clr.By</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        Receive Document : <br /><input type="text" id="txtListApprove" class="form-control" value="" disabled />
                     </div>
                 </div>
             </div>

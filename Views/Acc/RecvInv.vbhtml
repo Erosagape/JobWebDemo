@@ -5,68 +5,12 @@ End Code
     <div class="container">
         <input type="hidden" id="txtControlNo" />
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab1">Select document</a></li>
-            <li><a data-toggle="tab" href="#tab2">Invoice Info</a></li>
+            <li class="active"><a data-toggle="tab" href="#tab1">Select Payment</a></li>
+            <li><a data-toggle="tab" href="#tab2">Document Info</a></li>
             <li><a data-toggle="tab" href="#tab3">Receiving Details</a></li>
         </ul>
         <div class="tab-content">
             <div id="tab1" class="tab-pane fade in active">
-                <div class="row">
-                    <div class="col-sm-4">
-                        Branch :<br />
-                        <input type="text" id="txtBranchCode" style="width:50px" />
-                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                        <input type="text" id="txtBranchName" style="width:200px" disabled />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        Customer :<br />
-                        <input type="text" id="txtCustCode" style="width:120px" />
-                        <input type="text" id="txtCustBranch" style="width:50px" />
-                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                        <input type="text" id="txtCustName" style="width:300px" disabled />
-                    </div>
-                    <div class="col-sm-2">
-                        Invoice Date From:<br />
-                        <input type="date" id="txtDocDateF" />
-                    </div>
-                    <div class="col-sm-2">
-                        Invoice Date To:<br />
-                        <input type="date" id="txtDocDateT" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        Tax-Invoice:<input type="text" id="txtTaxInvNo" />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
-                        <br />
-                        <table id="tbHeader" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>Inv.No</th>
-                                    <th>Inv.date</th>
-                                    <th>Bill.No</th>
-                                    <th>Rec.No</th>
-                                    <th>Expenses</th>
-                                    <th>Advance</th>
-                                    <th>Charge</th>
-                                    <th>Amt</th>
-                                    <th>VAT</th>
-                                    <th>W-Tax</th>
-                                    <th>Net</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        Receive Document : <br /><input type="text" id="txtListApprove" class="form-control" value="" disabled />
-                    </div>
-                </div>
-            </div>
-            <div id="tab2" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-3 table-bordered" id="dvCash">
                         <label><input type="radio" name="optACType" id="chkCash" value="CA"><b>Cash/Transfer :</b></label>
@@ -151,12 +95,72 @@ End Code
                     </div>
                 </div>
             </div>
+            <div id="tab2" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Branch :<br />
+                        <input type="text" id="txtBranchCode" style="width:50px" />
+                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
+                        <input type="text" id="txtBranchName" style="width:200px" disabled />
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="checkbox" id="chkUseDue" /> Select by Payment Due Date
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Customer :<br />
+                        <input type="text" id="txtCustCode" style="width:120px" />
+                        <input type="text" id="txtCustBranch" style="width:50px" />
+                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
+                        <input type="text" id="txtCustName" style="width:300px" disabled />
+                    </div>
+                    <div class="col-sm-2">
+                        Date From:<br />
+                        <input type="date" id="txtDocDateF" />
+                    </div>
+                    <div class="col-sm-2">
+                        Date To:<br />
+                        <input type="date" id="txtDocDateT" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        Tax-Invoice:<input type="text" id="txtTaxInvNo" />
+                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <br />
+                        <table id="tbHeader" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Inv.No</th>
+                                    <th>Inv.date</th>
+                                    <th>Bill.No</th>
+                                    <th>Rec.No</th>
+                                    <th>Expenses</th>
+                                    <th>Advance</th>
+                                    <th>Charge</th>
+                                    <th>Amt</th>
+                                    <th>VAT</th>
+                                    <th>W-Tax</th>
+                                    <th>Net</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        Receive Document : <br /><input type="text" id="txtListApprove" class="form-control" value="" disabled />
+                    </div>
+                </div>
+            </div>
             <div id="tab3" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-12">
-                        <table id="tbDetail" class="table table-responsive">
+                        <table id="tbDetail" class="table table-responsive" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th>Type</th>
                                     <th>Doc.No</th>
                                     <th>Doc.Type</th>
                                     <th>Doc.Date</th>
@@ -307,13 +311,22 @@ End Code
         if ($('#txtCustCode').val() !== "") {
             w = w + '&cust=' + $('#txtCustCode').val();
         }
-        if ($('#txtDocDateF').val() !== "") {
-            w = w + '&DateFrom=' + CDateEN($('#txtDocDateF').val());
+        if ($('#chkUseDue').prop('checked') == true) {
+            if ($('#txtDocDateF').val() !== "") {
+                w = w + '&DueDateFrom=' + CDateEN($('#txtDocDateF').val());
+            }
+            if ($('#txtDocDateT').val() !== "") {
+                w = w + '&DueDateTo=' + CDateEN($('#txtDocDateT').val());
+            }
+        } else {
+            if ($('#txtDocDateF').val() !== "") {
+                w = w + '&DateFrom=' + CDateEN($('#txtDocDateF').val());
+            }
+            if ($('#txtDocDateT').val() !== "") {
+                w = w + '&DateTo=' + CDateEN($('#txtDocDateT').val());
+            }
         }
-        if ($('#txtAdvDateT').val() !== "") {
-            w = w + '&DateTo=' + CDateEN($('#txtDocDateT').val());
-        }
-        $.get(path + 'acc/getinvforreceive?show=RECEIVED&branch=' + $('#txtBranchCode').val() + w, function (r) {
+        $.get(path + 'acc/getinvforreceive?show=OPEN&branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.invdetail.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
                 if(isAlert==true) alert('data not found');
@@ -333,8 +346,8 @@ End Code
                             return CDateEN(data);
                         }
                     },
-                    { data: "BillAcceptNo", title: "BillNo" },
-                    { data: "RefNo", title: "RefNo" },
+                    { data: "ReceiptNo", title: "Receipt No" },
+                    { data: "SICode", title: "Code" },
                     { data: "SDescription", title: "Expenses" },
                     { data: "AmtAdvance", title: "Advance" },
                     { data: "AmtCharge", title: "Charge" },
@@ -428,6 +441,7 @@ End Code
             data: list,
             selected: true, //ให้สามารถเลือกแถวได้
             columns: [ //กำหนด property ของ header column
+                { data: "acType", title: "RCV" },
                 { data: "DocNo", title: "Doc.No" },
                 { data: "DocType", title: "Type " },
                 {
@@ -630,7 +644,11 @@ End Code
                 data: jsonString,
                 success: function (response) {
                     if (response.result.data != null) {
-                        SaveDetail();
+                        let vcno = '';
+                        for (let o of response.result.data[0]) {
+                            vcno += (vcno == '' ? o.PRVoucher : ',' + o.PRVoucher);
+                        }
+                        SaveDetail(vcno);
                     }
                 },
                 error: function (e) {
@@ -639,13 +657,67 @@ End Code
             });
         }
     }
-    function SaveDetail() {
+    function UpdateReceive(vcno) {
+        let i = 0;
+        let rows = [];
+        for (let o of arr) {
+            i += 1;
+            rows.push({
+                BranchCode: o.BranchCode,
+                ReceiptNo: o.ReceiptNo,
+                ItemNo: o.ItemNo,
+                CreditAmount: o.CreditAmount,
+                CashAmount: o.CashAmount,
+                TransferAmount: o.TransferAmount,
+                ChequeAmount: o.ChequeAmount,
+                ControlNo: docno,
+                VoucherNo: vcno,
+                ControlItemNo: i,
+                InvoiceNo: o.InvoiceNo,
+                InvoiceItemNo: o.InvoiceItemNo,
+                SICode: o.SICode,
+                SDescription: o.SDescription,
+                VATRate: o.VATRate,
+                Rate50Tavi: o.Rate50Tavi,
+                Amt: o.Amt,
+                AmtVAT: o.AmtVAT,
+                Amt50Tavi: o.Amt50Tavi,
+                Net: o.Net,
+                DCurrencyCode: o.DCurrencyCode,
+                DExchangeRate: o.DExchangeRate,
+                FAmt: o.FAmt,
+                FAmtVAT: o.FAmtVAT,
+                FAmt50Tavi: o.FAmt50Tavi,
+                FNet:o.FNet
+            });
+        }
+        let jsonText = JSON.stringify({ data: rows });
+            //alert(jsonText);
+        $.ajax({
+            url: "@Url.Action("SaveRcpDetail", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data !== null) {
+                    alert(response.result.msg+'\n->'+response.result.data);
+                    return;
+                }
+                alert(response.result.msg);
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    }
+    function SaveDetail(vcno) {
         if (list.length > 0) {
             for (let i = 0; i < list.length; i++) {
                 let o = list[i];
                 o.ControlNo = docno;
             }
             let jsonString = JSON.stringify({ data: list });
+            UpdateReceive(vcno);
             $.ajax({
                 url: "@Url.Action("SetVoucherDoc", "Acc")",
                 type: "POST",

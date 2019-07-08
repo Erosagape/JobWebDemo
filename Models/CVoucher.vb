@@ -185,6 +185,9 @@ Public Class CVoucher
                             dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
                             dr("CustCode") = Me.CustCode
                             dr("CustBranch") = Me.CustBranch
+                            If Me.CancelProve <> "" Then
+                                Me.CancelData()
+                            End If
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -197,6 +200,21 @@ Public Class CVoucher
         End Using
         Return msg
     End Function
+    Public Sub CancelData()
+        Dim oSub = New CVoucherSub(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND ControlNo='{1}'", Me.BranchCode, Me.ControlNo))
+        If oSub.Count > 0 Then
+            For Each row In oSub
+                row.CancelData()
+            Next
+        End If
+        Dim oDtl As New CVoucherDoc(jobWebConn)
+        Dim oRows = oDtl.GetData(String.Format(" WHERE BranchCode='{0}' AND ControlNo='{1}' ", Me.BranchCode, Me.ControlNo))
+        If oRows.Count > 0 Then
+            For Each row In oRows
+                row.DeleteData()
+            Next
+        End If
+    End Sub
     Public Sub AddNew(pFormatSQL As String)
         If pFormatSQL = "" Then
             m_ControlNo = ""
@@ -281,7 +299,7 @@ Public Class CVoucher
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
                 End Using
-
+                Me.CancelData()
                 msg = "Delete Complete"
             Catch ex As Exception
                 msg = "[ERROR]" & ex.Message

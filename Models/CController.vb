@@ -27,6 +27,7 @@ Public Class CController
         ViewBag.PROFILE_TAXBRANCH = GetValueConfig("PROFILE", "COMPANY_TAXBRANCH")
     End Sub
     Friend Function GetView(vName As String, Optional modName As String = "") As ActionResult
+        Dim baseURL = Me.ControllerContext.RouteData.Values("Controller").ToString() & "\" & vName
         Try
             LoadCompanyProfile()
             If CheckSession("CurrUser") Then
@@ -34,7 +35,7 @@ Public Class CController
             End If
             ViewBag.User = Session("CurrUser").ToString
             If ViewBag.User = "" Then
-                Return Redirect("~/index.html")
+                Return Redirect("~/index.html?redirect=" + baseURL)
             End If
             If CheckSession("CurrForm") Then
                 Session("CurrForm") = ""
@@ -53,7 +54,7 @@ Public Class CController
             ViewBag.UserRights = Session("CurrRights").ToString()
             Return View(vName)
         Catch ex As Exception
-            Return Redirect("~/index.html")
+            Return Redirect("~/index.html?message=" & ex.Message)
         End Try
     End Function
 End Class

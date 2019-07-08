@@ -152,6 +152,7 @@ Namespace Controllers
                         Return New HttpResponseMessage(HttpStatusCode.OK)
                     End If
                 End If
+
             End If
             Return New HttpResponseMessage(HttpStatusCode.NoContent)
         End Function
@@ -375,9 +376,8 @@ Namespace Controllers
                 End If
             End If
 
-            Dim Branch As String = ""
             If Not IsNothing(Request.QueryString("BranchCode")) Then
-                Branch = Request.QueryString("BranchCode")
+                Dim Branch = Request.QueryString("BranchCode")
                 tSqlW &= String.Format(" AND c.BranchCode='{0}'", Branch)
             End If
 
@@ -606,7 +606,7 @@ Namespace Controllers
                     o.SetConnect(jobWebConn)
                     Dim msg = o.SaveData(String.Format(" WHERE BranchCode='{0}' AND  ClrNo='{1}' And ItemNo='{2}' ", o.BranchCode, o.ClrNo, o.ItemNo))
                     If msg.Substring(0, 1) = "S" Then
-                        icount = icount + 1
+                        icount += 1
                     End If
                 Next
                 Dim obj = New CClrDetail(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' And ClrNo='{1}'", branchcode, clrno))

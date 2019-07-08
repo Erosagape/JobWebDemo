@@ -14,6 +14,12 @@ End Code
     <script src="~/Scripts/Func/Util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
     <title>Main Menu</title>
+    <style>
+a.list-group-item:hover{
+background:aqua;
+color:blue;
+}
+    </style>
 </head>
 <body>
     <div class="panel-primary">
@@ -102,7 +108,7 @@ End Code
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Cheque')">บันทึกรับเช็ค</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PettyCash')">บันทึกเงินสดย่อย</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('CreditAdv')">บันทึกเงินทดรองจ่าย</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvInv')">รับชำระใบแจ้งหนี้</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvInv')">รับชำระจากใบเสร็จ/ใบกำกับ</a>
                                         </div>
                                         <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
                                         <div class="collapse" id="mnuSubAcc">

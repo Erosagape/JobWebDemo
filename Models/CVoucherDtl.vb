@@ -260,7 +260,8 @@ Public Class CVoucherDoc
                         msg = "Cannot Cancel Document Status=" & row.DocStatus
                     End If
                 End If
-            Case "CLR" 'Clearing Receival
+            Case "CLR"
+                'Cancel Clearing Receival
                 Dim sql = String.Format(" WHERE BranchCode='{0}' AND ClrNo='{1}'", Me.BranchCode, Me.DocNo)
                 Dim tb = New CClrHeader(jobWebConn).GetData(sql)
                 If tb.Count > 0 Then
@@ -273,6 +274,17 @@ Public Class CVoucherDoc
                     End If
                 End If
             Case "INV"
+                'Cancel Receipt Saved
+                Dim oRcv As New CRcpDetail(jobWebConn)
+                Dim oRows = oRcv.GetData(String.Format(" WHERE BranchCode='{0}' AND ControlNo='{1}' AND InvoiceNo+'#'+Convert(varchar,InvoiceItemNo)='{2}' ", Me.BranchCode, Me.ControlNo, Me.DocNo))
+                If oRows.Count > 0 Then
+                    For Each row In oRows
+                        row.ControlNo = ""
+                        row.VoucherNo = ""
+                        row.ControlItemNo = 0
+                        row.SaveData(String.Format(" WHERE BranchCode='{0}' AND ReceiptNo='{1}' AND ItemNo='{2}'", row.BranchCode, row.ReceiptNo, row.ItemNo))
+                    Next
+                End If
                 Me.DocNo = If(Me.DocNo.Substring(0, 1) = "*", Me.DocNo, "*" & Me.DocNo)
                 Me.SaveData(String.Format(" WHERE BranchCode='{0}' And ControlNo='{1}' And ItemNo='{2}'", Me.BranchCode, Me.ControlNo, Me.ItemNo))
         End Select

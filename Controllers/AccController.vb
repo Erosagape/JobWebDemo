@@ -255,15 +255,6 @@ Namespace Controllers
                         data.AddNew(data.VoucherDate.ToString("yyMM") & "-___")
                     End If
                     Dim tSql As String = String.Format(" WHERE BranchCode='{0}' AND  ControlNo='{1}' ", data.BranchCode, data.ControlNo)
-                    If data.CancelProve <> "" Then
-                        'if status is cancel then cancel relate documents
-                        Dim oDoc = New CVoucherDoc(jobWebConn).GetData(tSql)
-                        If oDoc.Count > 0 Then
-                            For Each o As CVoucherDoc In oDoc
-                                o.CancelData()
-                            Next
-                        End If
-                    End If
                     Dim msg = data.SaveData(tSql)
                     Dim json = "{""result"":{""data"":""" & data.ControlNo & """,""msg"":""" & msg & """}}"
 
@@ -425,23 +416,30 @@ Namespace Controllers
                 End If
 
                 Dim tSqlw As String = " WHERE ControlNo<>'' "
+                Dim oData As New CVoucherSub(jobWebConn)
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                    oData.BranchCode = Request.QueryString("Branch").ToString
                 End If
 
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format(" AND ControlNo='{0}'", Request.QueryString("Code").ToString)
+                    oData.ControlNo = Request.QueryString("Code").ToString
                 Else
                     Return Content("{""voucher"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
 
                 If IsNothing(Request.QueryString("Item")) Then
                     Return Content("{""voucher"":{""result"":""Please Select Some Item"",""data"":[]}}", jsonContent)
+                Else
+                    oData.ItemNo = Request.QueryString("Item").ToString
+                    tSqlw &= String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString)
                 End If
-
-                Dim oData As New CVoucherSub(jobWebConn)
-                Dim msg = oData.DeleteData(tSqlw & String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString))
+                Dim msg = ""
                 Dim oDataSub = oData.GetData(tSqlw)
+                For Each oRow In oDataSub
+                    msg &= oRow.DeleteData()
+                Next
 
                 Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataSub) & "]}}"
                 Return Content(json, jsonContent)
@@ -480,8 +478,10 @@ Namespace Controllers
 
                 Dim oData As New CVoucherDoc(jobWebConn)
                 Dim oDataDoc = oData.GetData(tSqlw & String.Format(" AND ItemNo='{0}'", Request.QueryString("Item").ToString))
-                Dim msg = oDataDoc(0).DeleteData()
-                oDataDoc = oData.GetData(tSqlw)
+                Dim msg = ""
+                For Each oRow In oDataDoc
+                    msg &= oRow.DeleteData()
+                Next
 
                 Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oDataDoc) & "]}}"
                 Return Content(json, jsonContent)
@@ -502,32 +502,21 @@ Namespace Controllers
                         End If
                     End If
                 End If
-
+                Dim oData As New CVoucher(jobWebConn)
                 Dim tSqlw As String = " WHERE ControlNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                    oData.BranchCode = Request.QueryString("Branch").ToString
                 End If
 
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format(" AND ControlNo='{0}'", Request.QueryString("Code").ToString)
+                    oData.ControlNo = Request.QueryString("Code").ToString
                 Else
                     Return Content("{""voucher"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
                 End If
 
-                Dim oData As New CVoucher(jobWebConn)
-
                 Dim msg = oData.DeleteData(tSqlw)
-                If msg.Substring(0, 1) = "D" Then
-                    Dim oSub = New CVoucherSub(jobWebConn).GetData(tSqlw)
-                    For Each o As CVoucherSub In oSub
-                        o.DeleteData()
-                    Next
-
-                    Dim oDoc = New CVoucherDoc(jobWebConn).GetData(tSqlw)
-                    For Each o As CVoucherDoc In oDoc
-                        o.DeleteData()
-                    Next
-                End If
 
                 Dim json = "{""voucher"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
 
@@ -1397,23 +1386,36 @@ Namespace Controllers
             End Try
         End Function
         Function GetInvForReceive() As ActionResult
+            Dim tSqlw As String = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
             Try
-                Dim tSqlw As String = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
                 Dim bCheckVoucher As Boolean = False
+                Dim byReceipt As Boolean = False
                 If Not IsNothing(Request.QueryString("Show")) Then
-                    If Request.QueryString("Show").ToString = "NOPAY" Then
+                    If Request.QueryString("Show").ToString = "WAIT" Then
+                        'don't have receipt document yet
                         tSqlw &= " AND ISNULL(r.ReceivedNet,0)=0 "
                     End If
-                    If Request.QueryString("Show").ToString = "READY" Then
+                    If Request.QueryString("Show").ToString = "RECV" Then
+                        'have receipt document
                         tSqlw = " AND ISNULL(r.ReceivedNet,0)>0 "
                     End If
-                    If Request.QueryString("Show").ToString = "CLEARED" Then
+                    If Request.QueryString("Show").ToString = "OPEN" Then
+                        'by receipt document
+                        bCheckVoucher = True
+                        byReceipt = True
+                        tSqlw = ""
+                    End If
+                    If Request.QueryString("Show").ToString = "FULLPAY" Then
                         tSqlw = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)<=0 "
                     End If
-                    If Request.QueryString("Show").ToString = "RECEIVED" Then
-                        bCheckVoucher = True
+                    If Request.QueryString("Show").ToString = "PARTPAY" Then
+                        tSqlw = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
                     End If
-
+                    If Request.QueryString("Show").ToString = "WAITPAY" Then
+                        bCheckVoucher = True
+                        tSqlw = " AND ISNULL(r.LastReceiptNo,'')<>'' AND ISNULL(r.LastControlNo,'')='' "
+                        tSqlw &= " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>=0 "
+                    End If
                     If Request.QueryString("Show").ToString = "ALL" Then
                         tSqlw = ""
                     End If
@@ -1421,19 +1423,26 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND ih.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
                 End If
-                If Not IsNothing(Request.QueryString("DateFrom")) Then
-                    tSqlw &= " AND ih.DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
-                End If
-                If Not IsNothing(Request.QueryString("DateTo")) Then
-                    tSqlw &= " AND ih.DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
-                End If
-                If Not IsNothing(Request.QueryString("Cust")) Then
-                    tSqlw &= String.Format(" AND ih.CustCode='{0}' ", Request.QueryString("Cust").ToString)
-                End If
-
-                If Not IsNothing(Request.QueryString("RecvNo")) Then
-                    Dim recvNo = Request.QueryString("RecvNo").ToString
-                    tSqlw &= " AND EXISTS(select ReceiptNo from Job_ReceiptDetail where BranchCode=id.BranchCode and InvoiceNo=id.DocNo and InvoiceItemNo=id.ItemNo and ReceiptNo='" & recvNo & "') "
+                If byReceipt = True Then
+                    If Not IsNothing(Request.QueryString("DateFrom")) Then
+                        tSqlw &= " AND r.ReceiptDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                    End If
+                    If Not IsNothing(Request.QueryString("DateTo")) Then
+                        tSqlw &= " AND r.ReceiptDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                    End If
+                    If Not IsNothing(Request.QueryString("DueDateFrom")) Then
+                        tSqlw &= " AND bh.DuePaymentDate>='" & Request.QueryString("DueDateFrom") & " 00:00:00'"
+                    End If
+                    If Not IsNothing(Request.QueryString("DueDateTo")) Then
+                        tSqlw &= " AND bh.DuePaymentDate<='" & Request.QueryString("DueDateTo") & " 23:59:00'"
+                    End If
+                Else
+                    If Not IsNothing(Request.QueryString("DateFrom")) Then
+                        tSqlw &= " AND ih.DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                    End If
+                    If Not IsNothing(Request.QueryString("DateTo")) Then
+                        tSqlw &= " AND ih.DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                    End If
                 End If
                 If Not IsNothing(Request.QueryString("BillDateFrom")) Then
                     tSqlw &= " AND ih.BillIssueDate>='" & Request.QueryString("BillDateFrom") & " 00:00:00'"
@@ -1444,6 +1453,14 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("BillTo")) Then
                     tSqlw &= String.Format(" AND ih.BillToCustCode='{0}' ", Request.QueryString("BillTo").ToString)
                 End If
+
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND ih.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                Dim recvNo As String = ""
+                If Not IsNothing(Request.QueryString("RecvNo")) Then
+                    recvNo = Request.QueryString("RecvNo").ToString
+                End If
                 If Not IsNothing(Request.QueryString("Type")) Then
                     If Request.QueryString("Type").ToString = "ADV" Then
                         tSqlw &= " AND ISNULL(id.AmtAdvance,0)>0 "
@@ -1452,22 +1469,26 @@ Namespace Controllers
                         tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 "
                     End If
                     If Request.QueryString("Type").ToString = "TAX" Then
+                        'have advance or have service
                         tSqlw &= " AND ((ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)>0) OR ISNULL(id.AmtAdvance,0)>0) "
                     End If
                     If Request.QueryString("Type").ToString = "REC" Then
+                        'have service but no vat
                         tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0 "
                     End If
                     If Request.QueryString("Type").ToString = "RCP" Then
+                        'have service non vat or advance
                         tSqlw &= " AND ((ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0) OR ISNULL(id.AmtAdvance,0)>0)) "
                     End If
-
                 End If
-                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvForReceive(bCheckVoucher) & tSqlw)
+                Dim sql As String = If(Not byReceipt, SQLSelectInvForReceive(bCheckVoucher) & tSqlw, SQLSelectInvByReceive(recvNo, bCheckVoucher) & tSqlw)
+
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sql)
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""invdetail"":{""data"":" & json & "}}"
+                json = "{""invdetail"":{""data"":" & json & ",""condition"":""" & tSqlw & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[],""condition"":""" & tsqlw & """}}", jsonContent)
             End Try
         End Function
         Function GetInvForBill() As ActionResult

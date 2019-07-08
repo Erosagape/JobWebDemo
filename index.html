@@ -53,59 +53,68 @@
         </div>
     </div>
     <script type="text/javascript">
-        var userID = '';
-        $(document).ready(function () {
-            CheckLogin();
-            SetEvents();
+    let userID = '';
+    let openURL = getQueryString("redirect");
+    let msg = getQueryString("message");
+        //$(document).ready(function () {
+    if (msg !== '') {
+        alert(msg);
+    }
+    CheckLogin();
+    SetEvents();
+    $('#txtUserID').focus();
+        //});
+    function SetEvents() {
+        $('#dvLogin').on('shown.bs.modal', function () {
             $('#txtUserID').focus();
         });
-        function SetEvents() {
-            $('#dvLogin').on('shown.bs.modal', function () {
-                $('#txtUserID').focus();
-            });
-            $('#txtUserID').keydown(function (event) {
-                if (event.which === 13) {
-                    $('#txtPassword').focus();
-                }
-            });
-            $('#txtPassword').keydown(function (event) {
-                if (event.which === 13) {
-                    Login();
-                }
-            });
-        }
-        function CheckLogin() {
-            if (userID === '') {
-                $.get('Config/GetLogin')
-                    .done(function (r) {
-                        if (r.user.data.UserID !== null) {
-                            OpenMenu();
-                        } else {
-                            userID = '';
-                        }
-                    });
+        $('#txtUserID').keydown(function (event) {
+            if (event.which === 13) {
+                $('#txtPassword').focus();
             }
-        }
-        function Login() {
-            userID = $('#txtUserID').val();
-            if (userID !== '') {
-                var Password = $('#txtPassword').val();
-                $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password)
-                    .done(function (r) {
-                        if (r.user.data.length > 0) {
-                            OpenMenu();
-                        } else {
-                            userID = '';
-                            alert('User ID or Password Incorrect');
-                        }
-                    });
-            } else {
-                userID = '';
+        });
+        $('#txtPassword').keydown(function (event) {
+            if (event.which === 13) {
+                Login();
             }
+        });
+    }
+    function CheckLogin() {
+        if (userID === '') {
+            $.get('Config/GetLogin')
+                .done(function (r) {
+                    if (r.user.data.UserID !== null) {
+                        OpenMenu();
+                    } else {
+                        userID = '';
+                    }
+                });
         }
-        function OpenMenu() {
-            window.location.href = 'Menu/Index';
+    }
+    function Login() {
+        userID = $('#txtUserID').val();
+        if (userID !== '') {
+            var Password = $('#txtPassword').val();
+            $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password)
+                .done(function (r) {
+                    if (r.user.data.length > 0) {
+                        OpenMenu();
+                    } else {
+                        userID = '';
+                        alert('User ID or Password Incorrect');
+                    }
+                });
+        } else {
+            userID = '';
         }
+    }
+    function OpenMenu() {
+        if (openURL !== '') {
+            window.location.href = openURL;
+            return;
+        }
+        window.location.href = 'Menu/Index';
+    }
     </script>
 </body>
 </html>

@@ -262,6 +262,8 @@ Public Class CBillHeader
                                 o.BranchCode = Me.BranchCode
                                 o.BillAcceptNo = Me.BillAcceptNo
                                 o.CancelDocument(cn)
+                            Else
+                                Me.UpdateData()
                             End If
                             msg = "Save Complete"
                         End Using
@@ -366,6 +368,25 @@ Public Class CBillHeader
         End Using
         Return lst
     End Function
+    Public Sub UpdateData()
+        Dim msg As String = ""
+        Using cn As New SqlConnection(m_ConnStr)
+            Try
+                cn.Open()
+                Using cm As New SqlCommand()
+                    cm.Connection = cn
+                    cm.CommandType = CommandType.Text
+                    If Me.BillAcceptNo <> "" Then
+                        cm.CommandText = SQLUpdateBillToInv(Me.BranchCode, Me.BillAcceptNo, False)
+                        cm.ExecuteNonQuery()
+                    End If
+                End Using
+                msg = "Update Complete"
+            Catch ex As Exception
+                msg = ex.Message
+            End Try
+        End Using
+    End Sub
     Public Function DeleteData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
