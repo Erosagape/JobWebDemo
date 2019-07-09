@@ -57,7 +57,7 @@ Namespace Controllers
                     If oRow.Count > 0 Then
                         oRow(0).PrintedBy = Session("CurrUser").ToString
                         oRow(0).PrintedDate = Today.Date
-                        oRow(0).PrintedTime = Now
+                        oRow(0).PrintedTime = Today.Now
                         oRow(0).SaveData(sqlw)
                     End If
                 End If
@@ -911,6 +911,12 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     tSqlw &= String.Format("AND CustCode ='{0}' ", Request.QueryString("Cust").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND BillDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND BillDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
                 Dim oData = New CBillHeader(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""billheader"":{""data"":" & json & "}}"
@@ -1030,6 +1036,12 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     tSqlw &= String.Format("AND CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND ReceiptDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND ReceiptDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
                 End If
                 If Not IsNothing(Request.QueryString("Type")) Then
                     Select Case Request.QueryString("Type").ToString()

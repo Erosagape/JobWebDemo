@@ -2,348 +2,359 @@
 @Code
     ViewBag.Title = "invoice"
 End Code
-<div class="panel-body">
-    <div class="row">
-        <div class="col-sm-4" style="display:flex;flex-direction:row">
-            <label style="display:block;width:20%">Branch:</label>
-            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled/>
-            <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
-            <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-4" style="display:flex;flex-direction:row">
+                <label style="display:block;width:20%">Branch:</label>
+                <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+            </div>
+            <div class="col-sm-6" style="display:flex;flex-direction:row">
+                <label style="display:block;width:20%">Customer:</label>
+                <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
+                <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
+                <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
+                <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+            </div>
         </div>
-        <div class="col-sm-6" style="display:flex;flex-direction:row">
-            <label style="display:block;width:20%">Customer:</label>
-            <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
-            <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
-            <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
-            <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+        <div class="row">
+            <div class="col-sm-2">
+                Invoice Date From:<br />
+                <input type="date" class="form-control" id="txtDocDateF" />
+            </div>
+            <div class="col-sm-2">
+                Invoice Date To:<br />
+                <input type="date" class="form-control" id="txtDocDateT" />
+            </div>
+            <div class="col-sm-3">
+                <br />
+                <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
+                <button class="btn btn-success" onclick="window.open('/clr/generateinv', '_blank');">Generate Invoice</button>
+            </div>
         </div>
-        <div class="col-sm-2" style="display:flex;flex-direction:row">
-            <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
-            <button class="btn btn-success" onclick="window.open('/clr/generateinv', '_blank');">Generate Invoice</button>
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#tabHeader">Headers</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#tabDetail">Details</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="tabHeader">
+                <table id="tbHeader" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>DocNo</th>
+                            <th>DocDate</th>
+                            <th>CustCode</th>
+                            <th>Remark</th>
+                            <th>Discount</th>
+                            <th>Cust.Adv</th>
+                            <th>Advance</th>
+                            <th>Charge</th>
+                            <th>VAT</th>
+                            <th>WHT</th>
+                            <th>Net</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="tabDetail">
+                Details Of Invoice No:<input type="text" id="txtInvNo" style="width:10%" disabled />
+                <table id="tbDetail" class="table table-responsive" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ItemNo</th>
+                            <th>SICode</th>
+                            <th>SDescription</th>
+                            <th>ExpSlipNo</th>
+                            <th>AmtAdvance</th>
+                            <th>AmtCharge</th>
+                            <th>Currency</th>
+                            <th>Amt</th>
+                            <th>AmtDiscount</th>
+                            <th>AmtVAT</th>
+                            <th>Amt50Tavi</th>
+                            <th>TotalAmt</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
-    </div>    
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a data-toggle="tab" href="#tabHeader">Headers</a>
-        </li>
-        <li>
-            <a data-toggle="tab" href="#tabDetail">Details</a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade in active" id="tabHeader">
-            <table id="tbHeader" class="table table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>DocNo</th>
-                        <th>DocDate</th>
-                        <th>CustCode</th>
-                        <th>Remark</th>
-                        <th>Discount</th>
-                        <th>Cust.Adv</th>
-                        <th>Advance</th>
-                        <th>Charge</th>
-                        <th>VAT</th>
-                        <th>WHT</th>
-                        <th>Net</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="tab-pane fade" id="tabDetail">
-            Details Of Invoice No:<input type="text" id="txtInvNo" style="width:10%" disabled />
-            <table id="tbDetail" class="table table-responsive" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>ItemNo</th>
-                        <th>SICode</th>
-                        <th>SDescription</th>
-                        <th>ExpSlipNo</th>
-                        <th>AmtAdvance</th>
-                        <th>AmtCharge</th>
-                        <th>Currency</th>
-                        <th>Amt</th>
-                        <th>AmtDiscount</th>
-                        <th>AmtVAT</th>
-                        <th>Amt50Tavi</th>
-                        <th>TotalAmt</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-    <div id="frmHeader" class="modal modal-lg fade">
-        <div class="modal-dialog-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div style="display:flex;flex-direction:row">
-                        Invoice No:<input type="text" id="txtDocNo" style="width:10%" disabled />
-                        Doc.Date:<input type="date" id="txtDocDate" style="width:10%" disabled />
-                        Customer:<input type="text" id="txtDCustCode" style="width:10%" disabled />
-                        <input type="text" id="txtDCustBranch" style="width:5%" disabled />
-                        <input type="text" id="txtDCustName" style="width:30%" disabled />
+        <div id="frmHeader" class="modal modal-lg fade">
+            <div class="modal-dialog-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div style="display:flex;flex-direction:row">
+                            Invoice No:<input type="text" id="txtDocNo" style="width:10%" disabled />
+                            Doc.Date:<input type="date" id="txtDocDate" style="width:10%" disabled />
+                            Customer:<input type="text" id="txtDCustCode" style="width:10%" disabled />
+                            <input type="text" id="txtDCustBranch" style="width:5%" disabled />
+                            <input type="text" id="txtDCustName" style="width:30%" disabled />
+                        </div>
                     </div>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-2" style="display:flex;flex-direction:column">
-                            Advance :<input type="text" id="txtTotalAdvance" style="width:100%" disabled />
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-2" style="display:flex;flex-direction:column">
+                                Advance :<input type="text" id="txtTotalAdvance" style="width:100%" disabled />
 
-                            Charge :<input type="text" id="txtTotalCharge" style="width:100%" disabled />
-                            <div style="flex-direction:row">
-                                Disc.Line :<input type="text" id="txtSumDiscount" style="width:50%" disabled />
-                                <br />
-                                Disc.Total :<input type="text" id="txtDiscountCal" style="width:50%" disabled />
-                                <input type="hidden" id="txtTotalDiscount" />
-                            </div>
+                                Charge :<input type="text" id="txtTotalCharge" style="width:100%" disabled />
+                                <div style="flex-direction:row">
+                                    Disc.Line :<input type="text" id="txtSumDiscount" style="width:50%" disabled />
+                                    <br />
+                                    Disc.Total :<input type="text" id="txtDiscountCal" style="width:50%" disabled />
+                                    <input type="hidden" id="txtTotalDiscount" />
+                                </div>
 
-                            Vatable :<input type="text" id="txtTotalIsTaxCharge" style="width:100%" disabled />
-                            <div style="flex-direction:row">
-                                VAT Rate:<input type="text" id="txtVATRate" style="width:15%" />
-                                VAT:<input type="text" id="txtTotalVAT" style="width:40%" />
+                                Vatable :<input type="text" id="txtTotalIsTaxCharge" style="width:100%" disabled />
+                                <div style="flex-direction:row">
+                                    VAT Rate:<input type="text" id="txtVATRate" style="width:15%" />
+                                    VAT:<input type="text" id="txtTotalVAT" style="width:40%" />
+                                </div>
+                                <div style="flex-direction:row">
+                                    Taxable :<input type="text" id="txtTotalIs50Tavi" style="width:100%" disabled />
+                                    WH-Tax:<input type="text" id="txtTotal50Tavi" style="width:50%" />
+                                </div>
+                                Cust.Adv :<input type="text" id="txtTotalCustAdv" style="width:100%" disabled />
+                                Total Inv:<input type="text" id="txtTotalNet" style="width:100%" />
                             </div>
-                            <div style="flex-direction:row">
-                                Taxable :<input type="text" id="txtTotalIs50Tavi" style="width:100%" disabled />
-                                WH-Tax:<input type="text" id="txtTotal50Tavi" style="width:50%" />
+                            <div class="col-sm-5" style="display:flex;flex-direction:column">
+                                <p style="flex-direction:row">
+                                    Cust contact:<input type="text" id="txtContactName" style="width:30%" />
+                                </p>
+                                <p style="flex-direction:row">
+                                    Shipping Note:
+                                    <textarea id="txtShippingRemark" style="width:100%"></textarea>
+                                </p>
+                                <p style="flex-direction:row">
+                                    Bill To:<input type="text" id="txtBillToCustCode" style="width:20%" disabled />
+                                    <input type="text" id="txtBillToCustBranch" style="width:10%" disabled />
+                                    <button onclick="SearchData('billing')">...</button>
+                                    <input type="text" id="txtBillToCustName" style="width:40%" disabled />
+                                    <textarea id="txtBillAddress" style="width:100%" disabled></textarea>
+                                </p>
+                                <p style="flex-direction:row">
+                                    Bill.No:<input type="text" id="txtBillAcceptNo" style="width:15%" disabled />
+                                    Issue Date:<input type="date" id="txtBillIssueDate" style="width:25%" disabled />
+                                    Accept Date:<input type="date" id="txtBillAcceptDate" style="width:25%" />
+                                </p>
+                                <p style="flex-direction:row">
+                                    Discount Rate(%) :<input type="text" id="txtDiscountRate" style="width:15%" onchange="SetDiscount()" />
+                                    Discount:<input type="text" id="txtCalDiscount" style="width:15%" />
+                                </p>
+                                <p style="flex-direction:row">
+                                    Currency:<input type="text" id="txtCurrencyCode" style="width:10%" disabled />
+                                    <button onclick="SearchData('currency')">...</button>
+                                    <input type="text" id="txtCurrencyName" style="width:40%" disabled />
+                                </p>
+                                <p style="flex-direction:row">
+                                    Exchange Rate:<input type="text" id="txtExchangeRate" style="width:15%" onchange="CalForeign()" />
+                                    Total Foreign:<input type="text" id="txtForeignNet" style="width:20%" disabled />
+                                </p>
                             </div>
-                            Cust.Adv :<input type="text" id="txtTotalCustAdv" style="width:100%" disabled />
-                            Total Inv:<input type="text" id="txtTotalNet" style="width:100%" />
+                            <div class="col-sm-4">
+                                Remark:
+                                <input type="text" id="txtRemark1" class="form-control" />
+                                <input type="text" id="txtRemark2" class="form-control" />
+                                <input type="text" id="txtRemark3" class="form-control" />
+                                <input type="text" id="txtRemark4" class="form-control" />
+                                <input type="text" id="txtRemark5" class="form-control" />
+                                <input type="text" id="txtRemark6" class="form-control" />
+                                <input type="text" id="txtRemark7" class="form-control" />
+                                <input type="text" id="txtRemark8" class="form-control" />
+                                <input type="text" id="txtRemark9" class="form-control" />
+                                <input type="text" id="txtRemark10" class="form-control" />
+                            </div>
                         </div>
-                        <div class="col-sm-5" style="display:flex;flex-direction:column">
-                            <p style="flex-direction:row">
-                                Cust contact:<input type="text" id="txtContactName" style="width:30%" />
-                            </p>
-                            <p style="flex-direction:row">
-                                Shipping Note:
-                                <textarea id="txtShippingRemark" style="width:100%"></textarea>
-                            </p>
-                            <p style="flex-direction:row">
-                                Bill To:<input type="text" id="txtBillToCustCode" style="width:20%" disabled />
-                                <input type="text" id="txtBillToCustBranch" style="width:10%" disabled />
-                                <button onclick="SearchData('billing')">...</button>
-                                <input type="text" id="txtBillToCustName" style="width:40%" disabled />
-                                <textarea id="txtBillAddress" style="width:100%" disabled></textarea>
-                            </p>
-                            <p style="flex-direction:row">
-                                Bill.No:<input type="text" id="txtBillAcceptNo" style="width:15%" disabled />
-                                Issue Date:<input type="date" id="txtBillIssueDate" style="width:25%" disabled />
-                                Accept Date:<input type="date" id="txtBillAcceptDate" style="width:25%" />
-                            </p>
-                            <p style="flex-direction:row">
-                                Discount Rate(%) :<input type="text" id="txtDiscountRate" style="width:15%" onchange="SetDiscount()" />
-                                Discount:<input type="text" id="txtCalDiscount" style="width:15%" />
-                            </p>
-                            <p style="flex-direction:row">
-                                Currency:<input type="text" id="txtCurrencyCode" style="width:10%" disabled />
-                                <button onclick="SearchData('currency')">...</button>
-                                <input type="text" id="txtCurrencyName" style="width:40%" disabled />
-                            </p>
-                            <p style="flex-direction:row">
-                                Exchange Rate:<input type="text" id="txtExchangeRate" style="width:15%" onchange="CalForeign()" />
-                                Total Foreign:<input type="text" id="txtForeignNet" style="width:20%" disabled />
-                            </p>
-                        </div>
-                        <div class="col-sm-4">
-                            Remark:
-                            <input type="text" id="txtRemark1" class="form-control" />
-                            <input type="text" id="txtRemark2" class="form-control" />
-                            <input type="text" id="txtRemark3" class="form-control" />
-                            <input type="text" id="txtRemark4" class="form-control" />
-                            <input type="text" id="txtRemark5" class="form-control" />
-                            <input type="text" id="txtRemark6" class="form-control" />
-                            <input type="text" id="txtRemark7" class="form-control" />
-                            <input type="text" id="txtRemark8" class="form-control" />
-                            <input type="text" id="txtRemark9" class="form-control" />
-                            <input type="text" id="txtRemark10" class="form-control" />
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Cancel Reason:<br /> <textarea id="txtCancelReson" style="width:80%"></textarea>
+                                <button id="btnCancel" class="btn btn-danger" onclick="CancelData()">Cancel</button>
+                            </div>
+                            <div class="col-sm-3">
+                                Cancel date:<br /> <input type="date" id="txtCancelDate" style="width:100%" disabled />
+                            </div>
+                            <div class="col-sm-2">
+                                Cancel Time:<br /><input type="text" id="txtCancelTime" style="width:100%" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                Cancel By:<br /> <input type="text" id="txtCancelProve" style="width:100%" disabled />
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            Cancel Reason:<br /> <textarea id="txtCancelReson" style="width:80%"></textarea>
-                            <button id="btnCancel" class="btn btn-danger" onclick="CancelData()">Cancel</button>
+                    <div class="modal-footer">
+                        <div style="float:left">
+                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
+                            <button onclick="PrintData()" class="btn btn-default">Print</button>
                         </div>
-                        <div class="col-sm-3">
-                            Cancel date:<br /> <input type="date" id="txtCancelDate" style="width:100%" disabled />
-                        </div>
-                        <div class="col-sm-2">
-                            Cancel Time:<br /><input type="text" id="txtCancelTime" style="width:100%" disabled />
-                        </div>
-                        <div class="col-sm-3">
-                            Cancel By:<br /> <input type="text" id="txtCancelProve" style="width:100%" disabled />
-                        </div>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <div style="float:left">
-                        <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
-                        <button onclick="PrintData()" class="btn btn-default">Print</button>
-                    </div>
-                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="frmDetail" class="modal modal-lg fade">
-        <div class="modal-dialog-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Edit Detail</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            Invoice No <input type="text" id="txtDDocNo" style="width:10%" disabled />
-                            Item No. <input type="text" id="txtItemNo" style="width:5%" disabled />
-                            Code <input type="text" id="txtSICode" style="width:10%" disabled />
-                            <input type="text" id="txtSDescription" style="width:30%" />
-                            Slip No <input type="text" id="txtExpSlipNO" style="width:20%" />
-                        </div>
+        <div id="frmDetail" class="modal modal-lg fade">
+            <div class="modal-dialog-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Edit Detail</h4>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            Currency <input type="text" id="txtDCurrencyCode" style="width:10%" disabled />
-                            <input type="button" id="btnCurr" value="..." onclick="SearchData('dcurrency')" />
-                            <input type="text" id="txtDCurrencyName" style="width:40%" disabled />
-                            Exc.Rate <input type="text" id="txtDExchangeRate" style="width:15%" onchange="CalForeignDetail()" />
-                            Discount
-                            <select id="txtDiscountType" onchange="ShowDiscount()">
-                                <option value="0" selected>Percent</option>
-                                <option value="1">Cash</option>
-                            </select>
-                            <input type="text" id="txtDiscountPerc" style="width:10%" onchange="CalDiscountDetail()" />
-                        </div>
-                    </div>
-                    <p>
+                    <div class="modal-body">
                         <div class="row">
-                            <div class="col-sm-6">
-                                Remark <textarea id="txtSRemark" style="width:100%"></textarea>
-                                <input type="hidden" id="txtCurrencyCodeCredit" />
-                                <input type="hidden" id="txtExchangeRateCredit" />
-                            </div>
-                            <div class="col-sm-6" style="display:flex;flex-direction:row">
-                                <div style="flex-direction:column;flex:1">
-                                    Qty <input type="text" id="txtQty" disabled />
-                                </div>
-                                <div style="flex-direction:column;flex:1">
-                                    Unit <input type="text" id="txtQtyUnit" disabled />
-                                </div>
-                                <div style="flex-direction:column;flex:1">
-                                    Price(B) <input type="text" id="txtUnitPrice" disabled />
-                                </div>
-                                <div style="flex-direction:column;flex:1">
-                                    Amount(B) <input type="text" id="txtAmt" disabled />
-                                </div>
+                            <div class="col-sm-12">
+                                Invoice No <input type="text" id="txtDDocNo" style="width:10%" disabled />
+                                Item No. <input type="text" id="txtItemNo" style="width:5%" disabled />
+                                Code <input type="text" id="txtSICode" style="width:10%" disabled />
+                                <input type="text" id="txtSDescription" style="width:30%" />
+                                Slip No <input type="text" id="txtExpSlipNO" style="width:20%" />
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6" style="display:flex;">
-                                <div style="flex-direction:row;flex:1">
+                            <div class="col-sm-12">
+                                Currency <input type="text" id="txtDCurrencyCode" style="width:10%" disabled />
+                                <input type="button" id="btnCurr" value="..." onclick="SearchData('dcurrency')" />
+                                <input type="text" id="txtDCurrencyName" style="width:40%" disabled />
+                                Exc.Rate <input type="text" id="txtDExchangeRate" style="width:15%" onchange="CalForeignDetail()" />
+                                Discount
+                                <select id="txtDiscountType" onchange="ShowDiscount()">
+                                    <option value="0" selected>Percent</option>
+                                    <option value="1">Cash</option>
+                                </select>
+                                <input type="text" id="txtDiscountPerc" style="width:10%" onchange="CalDiscountDetail()" />
+                            </div>
+                        </div>
+                        <p>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    Remark <textarea id="txtSRemark" style="width:100%"></textarea>
+                                    <input type="hidden" id="txtCurrencyCodeCredit" />
+                                    <input type="hidden" id="txtExchangeRateCredit" />
+                                </div>
+                                <div class="col-sm-6" style="display:flex;flex-direction:row">
+                                    <div style="flex-direction:column;flex:1">
+                                        Qty <input type="text" id="txtQty" disabled />
+                                    </div>
+                                    <div style="flex-direction:column;flex:1">
+                                        Unit <input type="text" id="txtQtyUnit" disabled />
+                                    </div>
+                                    <div style="flex-direction:column;flex:1">
+                                        Price(B) <input type="text" id="txtUnitPrice" disabled />
+                                    </div>
+                                    <div style="flex-direction:column;flex:1">
+                                        Amount(B) <input type="text" id="txtAmt" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6" style="display:flex;">
+                                    <div style="flex-direction:row;flex:1">
+                                        <table>
+                                            <tr>
+                                                <td>VAT</td>
+                                                <td>
+                                                    <select id="txtIsTaxCharge" disabled>
+                                                        <option value="0">NO</option>
+                                                        <option value="1">EX</option>
+                                                        <option value="2">IN</option>
+                                                    </select>
+                                                </td>
+                                                <td>Rate</td>
+                                                <td>
+                                                    <input type="text" id="txtDVATRate" disabled />
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="txtAmtVat" disabled />
+                                                </td>
+                                                <td>
+                                                    Discount (B)
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="txtAmtDiscount" onchange="CalVATWHT(0)" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>WHT</td>
+                                                <td>
+                                                    <select id="txtIs50Tavi" disabled>
+                                                        <option value="0">NO</option>
+                                                        <option value="1">YES</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    Rate
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="txtRate50Tavi" disabled />
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="txtAmt50Tavi" disabled />
+                                                </td>
+                                                <td>
+                                                    Discount (F)
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="txtFAmtDiscount" disabled />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
                                     <table>
                                         <tr>
-                                            <td>VAT</td>
                                             <td>
-                                                <select id="txtIsTaxCharge" disabled>
-                                                    <option value="0">NO</option>
-                                                    <option value="1">EX</option>
-                                                    <option value="2">IN</option>
-                                                </select>
-                                            </td>
-                                            <td>Rate</td>
-                                            <td>
-                                                <input type="text" id="txtDVATRate" disabled />
+                                                Credit (F)<br />
+                                                <input type="text" id="txtFAmtCredit" disabled />
                                             </td>
                                             <td>
-                                                <input type="text" id="txtAmtVat" disabled />
+                                                Credit (B)<br />
+                                                <input type="text" id="txtAmtCredit" disabled />
                                             </td>
                                             <td>
-                                                Discount (B)
+                                                Price(F)<br />
+                                                <input type="text" id="txtFUnitPrice" disabled />
                                             </td>
                                             <td>
-                                                <input type="text" id="txtAmtDiscount" onchange="CalVATWHT(0)" />
+                                                Amount(F)<br />
+                                                <input type="text" id="txtFAmt" disabled />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>WHT</td>
                                             <td>
-                                                <select id="txtIs50Tavi" disabled>
-                                                    <option value="0">NO</option>
-                                                    <option value="1">YES</option>
-                                                </select>
+                                                <b>Advance</b><br />
+                                                <input type="text" id="txtAmtAdvance" disabled style="font:bold" />
                                             </td>
                                             <td>
-                                                Rate
+                                                <b>Charge</b><br />
+                                                <input type="text" id="txtAmtCharge" disabled style="font:bold" />
                                             </td>
                                             <td>
-                                                <input type="text" id="txtRate50Tavi" disabled />
+                                                Total(F)<br /><input type="text" id="txtFTotalAmt" disabled />
                                             </td>
                                             <td>
-                                                <input type="text" id="txtAmt50Tavi" disabled />
-                                            </td>
-                                            <td>
-                                                Discount (F)
-                                            </td>
-                                            <td>
-                                                <input type="text" id="txtFAmtDiscount" disabled />
+                                                Total(B)<br /><input type="text" id="txtTotalAmt" disabled />
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            Credit (F)<br />
-                                            <input type="text" id="txtFAmtCredit" disabled />
-                                        </td>
-                                        <td>
-                                            Credit (B)<br />
-                                            <input type="text" id="txtAmtCredit" disabled />
-                                        </td>
-                                        <td>
-                                            Price(F)<br />
-                                            <input type="text" id="txtFUnitPrice" disabled />
-                                        </td>
-                                        <td>
-                                            Amount(F)<br />
-                                            <input type="text" id="txtFAmt" disabled />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <b>Advance</b><br />
-                                            <input type="text" id="txtAmtAdvance" disabled style="font:bold" />
-                                        </td>
-                                        <td>
-                                            <b>Charge</b><br />
-                                            <input type="text" id="txtAmtCharge" disabled style="font:bold"/>
-                                        </td>
-                                        <td>
-                                            Total(F)<br /><input type="text" id="txtFTotalAmt" disabled />
-                                        </td>
-                                        <td>
-                                            Total(B)<br /><input type="text" id="txtTotalAmt" disabled />
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
 
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <div style="float:left">
-                        <button id="btnUpd" class="btn btn-primary" onclick="SaveDetail()">Update</button>
-                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                        </p>
                     </div>
-                    <button id="btnHid" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <div class="modal-footer">
+                        <div style="float:left">
+                            <button id="btnUpd" class="btn btn-primary" onclick="SaveDetail()">Update</button>
+                            <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                        </div>
+                        <button id="btnHid" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="dvLOVs"></div>
-</div>    
+        <div id="dvLOVs"></div>
+    </div>    
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     const path = '@Url.Content("~")';
@@ -356,7 +367,17 @@ End Code
         ShowHeader();
     });
     function ShowHeader() {
-        $.get(path + 'acc/getinvforbill?show=ALL&cust=' + $('#txtCustCode').val() + '&branch=' + $('#txtBranchCode').val(), function (r)
+        let w = '';
+        if ($('#txtCustCode').val() !== '') {
+            w += '&cust=' + $('#txtCustCode').val();
+        }
+        if ($('#txtDocDateF').val() !== "") {
+            w += '&DateFrom=' + CDateEN($('#txtDocDateF').val());
+        }
+        if ($('#txtDocDateT').val() !== "") {
+            w += '&DateTo=' + CDateEN($('#txtDocDateT').val());
+        }
+        $.get(path + 'acc/getinvforbill?show=ALL&branch=' + $('#txtBranchCode').val()+ w, function (r)
         {
             if (r.invdetail.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
