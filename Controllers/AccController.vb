@@ -37,8 +37,8 @@ Namespace Controllers
                     Dim oRow = oRec.GetData(sqlw)
                     If oRow.Count > 0 Then
                         oRow(0).PrintedBy = Session("CurrUser").ToString
-                        oRow(0).PrintedDate = Today.Date
-                        oRow(0).PrintedTime = Now
+                        oRow(0).PrintedDate = DateTime.Today
+                        oRow(0).PrintedTime = DateTime.Now
                         oRow(0).SaveData(sqlw)
                     End If
                 End If
@@ -56,8 +56,8 @@ Namespace Controllers
                     Dim oRow = oRec.GetData(sqlw)
                     If oRow.Count > 0 Then
                         oRow(0).PrintedBy = Session("CurrUser").ToString
-                        oRow(0).PrintedDate = Today.Date
-                        oRow(0).PrintedTime = Today.Now
+                        oRow(0).PrintedDate = DateTime.Today
+                        oRow(0).PrintedTime = DateTime.Now
                         oRow(0).SaveData(sqlw)
                     End If
                 End If
@@ -72,8 +72,8 @@ Namespace Controllers
                     Dim oRow = oRec.GetData(sqlw)
                     If oRow.Count > 0 Then
                         oRow(0).PrintedBy = Session("CurrUser").ToString
-                        oRow(0).PrintedDate = Today.Date
-                        oRow(0).PrintedTime = Now
+                        oRow(0).PrintedDate = DateTime.Today
+                        oRow(0).PrintedTime = DateTime.Now
                         oRow(0).SaveData(sqlw)
                     End If
                 End If
@@ -127,6 +127,174 @@ Namespace Controllers
         Function CreditNote() As ActionResult
             Return GetView("CreditNote", "MODULE_ACC")
             'Return RedirectToAction("FormCreditNote")
+        End Function
+        Function GetCNDNDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode ='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND DocNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format(" AND ItemNo ='{0}'", Request.QueryString("Item").ToString)
+                End If
+                Dim oData = New CCNDNDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""creditnote"":{""detail"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetCNDNDetail(<FromBody()> data As CCNDNDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    If "" & data.DocNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    If data.ItemNo = 0 Then
+                        data.AddNew()
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' AND ItemNo={2} ", data.BranchCode, data.DocNo, data.ItemNo))
+                    Dim json = "{""result"":{""data"":""" & data.DocNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelCNDNDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode Like '{0}'", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""creditnote"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND DocNo Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""creditnote"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CCNDNDetail(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""creditnote"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetCNDNGrid() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE a.DocStatus<>99 "
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString = "CN" Then
+                        tSqlw &= " AND b.TotalNet>0 "
+                    End If
+                    If Request.QueryString("Show").ToString = "DN" Then
+                        tSqlw &= " AND b.TotalNet<0 "
+                    End If
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND a.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND a.DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND a.DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND a.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(Main.SQLSelectCNDNSummary() & tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""creditnote"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""creditnote"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+            End Try
+        End Function
+        Function GetCreditNote() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode ='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND DocNo ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CCNDNHeader(jobWebConn).GetData(tSqlw)
+                Dim jsonH As String = JsonConvert.SerializeObject(oData)
+                Dim oDataD = New CCNDNDetail(jobWebConn).GetData(tSqlw)
+                Dim jsonD As String = JsonConvert.SerializeObject(oData)
+                Dim json = "{""creditnote"":{""header"":" & jsonH & ",""detail"":" & jsonD & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""creditnote"":{""header"":[],""detail"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
+        Function SetCNDNHeader(<FromBody()> data As CCNDNHeader) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    If "" & data.DocNo = "" Then
+                        If data.DocDate = DateTime.MinValue Then
+                            data.DocDate = Today.Date
+                        End If
+                        data.AddNew(If(data.DocType = 0, "CN", "DN") & "-" & data.DocDate.ToString("yyMM") & "-____")
+                    End If
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' ", data.BranchCode, data.DocNo))
+                    Dim json = "{""result"":{""data"":""" & data.DocNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelCreditNote() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE DocNo<>'' "
+                Dim oData As New CCNDNHeader(jobWebConn)
+                Dim oDataD As New CCNDNDetail(jobWebConn)
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}'", Request.QueryString("Branch").ToString)
+                    oData.BranchCode = Request.QueryString("Branch").ToString
+                    oDataD.BranchCode = Request.QueryString("Branch").ToString
+                Else
+                    Return Content("{""creditnote"":{""result"":""Please Select Branch"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND DocNo Like '{0}'", Request.QueryString("Code").ToString)
+                    oData.DocNo = Request.QueryString("Code").ToString
+                    oDataD.DocNo = Request.QueryString("Code").ToString
+                Else
+                    Return Content("{""creditnote"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                oDataD.DeleteData(tSqlw)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""creditnote"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
         End Function
         Function GLNote() As ActionResult
             Return GetView("GLNote", "MODULE_ACC")

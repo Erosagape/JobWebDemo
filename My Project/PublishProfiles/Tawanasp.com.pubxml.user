@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>07/09/2019 12:55:38</publishTime>
+      <publishTime>07/09/2019 18:37:16</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>07/09/2019 12:55:38</publishTime>
+      <publishTime>07/09/2019 18:37:16</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>07/09/2019 12:55:38</publishTime>
+      <publishTime>07/09/2019 18:37:15</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -305,7 +305,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:01</publishTime>
     </File>
     <File Include="index.html">
-      <publishTime>07/08/2019 13:55:31</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Models/dsJobOrder.xsc">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -620,7 +620,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Scripts/Func/combo.js">
-      <publishTime>07/02/2019 15:28:44</publishTime>
+      <publishTime>07/09/2019 15:26:48</publishTime>
     </File>
     <File Include="Scripts/Func/popup.js">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -629,7 +629,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Scripts/Func/util.js">
-      <publishTime>07/02/2019 17:18:14</publishTime>
+      <publishTime>07/09/2019 15:26:48</publishTime>
     </File>
     <File Include="Scripts/i18n/defaults-ar_AR.js">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -971,19 +971,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/Billing.vbhtml">
-      <publishTime>07/09/2019 12:53:18</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/Cheque.vbhtml">
-      <publishTime>06/25/2019 14:41:44</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/CreditNote.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>07/09/2019 18:47:05</publishTime>
     </File>
     <File Include="Views/Acc/Expense.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/FormBill.vbhtml">
-      <publishTime>07/05/2019 12:10:45</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/FormCreditNote.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -995,19 +995,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/FormInv.vbhtml">
-      <publishTime>07/05/2019 11:57:15</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/FormRcp.vbhtml">
-      <publishTime>07/05/2019 12:13:14</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/FormTaxinv.vbhtml">
-      <publishTime>07/05/2019 12:20:14</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/FormVoucher.vbhtml">
-      <publishTime>07/03/2019 15:03:08</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/FormWHTax.vbhtml">
-      <publishTime>06/27/2019 17:16:25</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/FormWTax3.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1025,10 +1025,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/GenerateReceipt.vbhtml">
-      <publishTime>07/08/2019 10:50:18</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/GenerateTaxInv.vbhtml">
-      <publishTime>07/08/2019 10:50:18</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/GLNote.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1037,46 +1037,46 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/Acc/Invoice.vbhtml">
-      <publishTime>07/09/2019 12:52:54</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/PettyCash.vbhtml">
-      <publishTime>06/25/2019 14:43:04</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/Receipt.vbhtml">
-      <publishTime>07/09/2019 12:45:46</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/RecvInv.vbhtml">
-      <publishTime>07/08/2019 15:00:34</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/Taxinvoice.vbhtml">
-      <publishTime>07/09/2019 13:05:30</publishTime>
+      <publishTime>07/09/2019 15:26:49</publishTime>
     </File>
     <File Include="Views/Acc/Voucher.vbhtml">
-      <publishTime>06/25/2019 14:47:27</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/WHTax.vbhtml">
-      <publishTime>06/25/2019 14:48:44</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Adv/Approve.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Adv/CreditAdv.vbhtml">
-      <publishTime>06/25/2019 14:44:39</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Adv/EstimateCost.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Adv/FormAdv.vbhtml">
-      <publishTime>07/03/2019 14:57:03</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Adv/FormCreditAdv.vbhtml">
-      <publishTime>06/26/2019 16:42:17</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Adv/Index.vbhtml">
-      <publishTime>06/28/2019 16:29:16</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Adv/Payment.vbhtml">
-      <publishTime>06/27/2019 16:17:59</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Adv/_FormAdv.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1085,7 +1085,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/10/2018 17:18:18</publishTime>
     </File>
     <File Include="Views/Clr/Approve.vbhtml">
-      <publishTime>06/25/2019 14:46:11</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Clr/Clear.vbhtml">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -1094,19 +1094,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Clr/Earnest.vbhtml">
-      <publishTime>06/25/2019 14:39:24</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Clr/FormClr.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Clr/GenerateInv.vbhtml">
-      <publishTime>07/05/2019 10:05:27</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Clr/Index.vbhtml">
-      <publishTime>07/03/2019 16:47:03</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Clr/Receive.vbhtml">
-      <publishTime>07/08/2019 13:09:22</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Config/FileManager.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1133,10 +1133,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/JobOrder/FormJob.vbhtml">
-      <publishTime>06/26/2019 16:42:17</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/JobOrder/FormJobSum.vbhtml">
-      <publishTime>06/26/2019 16:42:17</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/JobOrder/FormQuotation.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1145,7 +1145,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/JobOrder/Index.vbhtml">
-      <publishTime>07/03/2019 14:46:08</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/JobOrder/ListJob.vbhtml">
       <publishTime>11/09/2018 10:43:09</publishTime>
@@ -1157,7 +1157,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/JobOrder/ShowJob.vbhtml">
-      <publishTime>07/02/2019 16:50:25</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/JobOrder/Transport.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1214,7 +1214,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/Menu/Index.vbhtml">
-      <publishTime>07/08/2019 14:15:36</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Report/Index.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>
@@ -1223,10 +1223,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.vbhtml">
-      <publishTime>07/02/2019 12:22:21</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Shared/_Report.vbhtml">
-      <publishTime>07/05/2019 12:06:52</publishTime>
+      <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Shared/_ReportLandscape.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>

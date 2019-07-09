@@ -1,17 +1,717 @@
-﻿
-@Code
-    Layout = Nothing
+﻿@Code
+    ViewBag.Title = "Credit/Debit Note"
 End Code
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-4" style="display:flex;flex-direction:row">
+                <label style="display:block;width:20%">Branch:</label>
+                <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+            </div>
+            <div class="col-sm-6" style="display:flex;flex-direction:row">
+                <label style="display:block;width:20%">Customer:</label>
+                <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
+                <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
+                <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
+                <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                Document Date From:<br />
+                <input type="date" class="form-control" id="txtDocDateF" />
+            </div>
+            <div class="col-sm-2">
+                Document Date To:<br />
+                <input type="date" class="form-control" id="txtDocDateT" />
+            </div>
+            <div class="col-sm-3">
+                <br />
+                <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
+                <input type="button" class="btn btn-default" value="Add CN/DN" id="btnNew" />
+            </div>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#tabHeader">Headers</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#tabDetail">Details</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="tabHeader">
+                <table id="tbHeader" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>DocNo</th>
+                            <th>DocDate</th>
+                            <th>CustCode</th>
+                            <th>Reference</th>
+                            <th>Remark</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="tabDetail">
+                <input type="button" class="btn btn-default" value="Add Invoice" id="btnAdd" />
+                <table id="tbDetail" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>InvNo</th>
+                            <th>SICode</th>
+                            <th>SDescription</th>
+                            <th>Original</th>
+                            <th>Correct</th>
+                            <th>Diff</th>
+                            <th>Vat</th>
+                            <th>Net</th>
+                            <th>Currency</th>
+                            <th>Rate</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div id="frmHeader" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div style="display:flex;flex-direction:row">
+                            Document No:<input type="text" id="txtDocNo" style="width:20%" disabled />
+                            Doc.Date:<input type="date" id="txtDocDate" style="width:30%" />
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12" style="display:flex;flex-direction:column">
+                                <p style="flex-direction:row">
+                                    Document Type:
+                                    <select id="txtDocType">
+                                        <option value="0">Credit Note</option>
+                                        <option value="1">Debit Note</option>
+                                    </select>
+                                    Create By:<input type="text" id="txtEmpCode" style="width:30%" disabled />
+                                </p>
+                                <p style="flex-direction:row">
+                                    Customer:<input type="text" id="txtHCustCode" style="width:20%" disabled />
+                                    <input type="text" id="txtHCustBranch" style="width:10%" disabled />
+                                    <input type="text" id="txtHCustName" style="width:50%" disabled />
+                                </p>
+                                <p>
+                                    <textarea id="txtHCustAddr" style="width:100%;height:100%" disabled></textarea>
+                                </p>
+                                <p style="flex-direction:row">
+                                    Document Note:
+                                    <textarea id="txtRemark" style="width:100%;height:100%"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                        <p>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input type="checkbox" id="chkApprove" onclick="ApproveData()" />
+                                    Approve Date:<br /> <input type="date" id="txtApproveDate" style="width:100%" disabled />
+                                </div>
+                                <div class="col-sm-3">
+                                    Approve Time:<br /><input type="text" id="txtApproveTime" style="width:100%" disabled />
+                                </div>
+                                <div class="col-sm-5">
+                                    Approve By:<br /> <input type="text" id="txtApproveBy" style="width:100%" disabled />
+                                </div>
+                            </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button id="btnCancel" class="btn btn-danger" onclick="CancelData()">Cancel</button>
+                            </div>
+                            <div class="col-sm-4">
+                                Cancel date:<br /> <input type="date" id="txtCancelDate" style="width:100%" disabled />
+                            </div>
+                            <div class="col-sm-5">
+                                Update By:<br /> <input type="text" id="txtUpdateBy" style="width:100%" disabled />
+                            </div>
+                        </div>
+                            Cancel Reason:<br /> <textarea id="txtCancelReson" style="width:100%"></textarea>
+                        <input type="hidden" id="txtDocStatus" />
+                    </div>
+                    <div class="modal-footer">
+                        <div style="float:left">
+                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
+                            <button onclick="PrintData()" class="btn btn-default">Print</button>
+                        </div>
+                        Last update:<input type="date" id="txtLastupDate" disabled />
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmDetail" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                Document No <input type="text" id="txtDDocNo" style="width:20%" disabled />
+                                Item No. <input type="text" id="txtItemNo" style="width:5%" disabled />
+                                Invoice No <input type="text" id="txtBillingNo" style="width:20%" disabled />
+                                <input type="button" value="..." onclick="SearchData('invoice');" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        Code <input type="text" id="txtSICode" style="width:15%" disabled />
+                        <input type="text" id="txtSDescription" style="width:75%" />
+                        <p>
+                            Currency <input type="text" id="txtDCurrencyCode" style="width:10%" disabled />
+                            <input type="button" value="..." onclick="SearchData('currency');" />
+                            <input type="text" id="txtCurrencyName" style="width:60%" disabled />
+                        </p>
+                        <p>
+                            <div class="row">
+                                <div class="col-sm-4" style="display:flex;">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                Exc.Rate
+                                            </td>
+                                            <td>
+                                               <input type="number" id="txtExchangeRate" style="width:100%" onchange="CalForeign()" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Original
+                                            </td>
+                                            <td>
+                                                <input type="number" id="txtOriginalAmt" style="width:100%" onchange="CalDiff()" disabled />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Correct</td>
+                                            <td>
+                                                <input type="number" id="txtCorrectAmt" style="width:100%" onchange="CalDiff()" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Diff</td>
+                                            <td>
+                                                <input type="number" id="txtDiffAmt" style="width:100%" onchange="CalVATWHT()" />
+                                            </td>
+                                        </tr>                                        
+                                    </table>
+                                </div>
+                                <div class="col-sm-8">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                VAT
+                                                <select id="txtIsTaxCharge" style="width:100%" disabled>
+                                                    <option value="0">NO</option>
+                                                    <option value="1">EX</option>
+                                                    <option value="2">IN</option>
+                                                </select>
+                                            </td>
+                                            <td style="text-align:right">
+                                                Rate
+                                                <input type="number" id="txtVATRate" style="width:50%" onchange="CalVATWHT()" />
+                                            </td>
+                                            <td style="text-align:right">
+                                                <input type="number" id="txtVATAmt" style="width:100%" onchange="CalNetAmount()" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                WHT
+                                                <select id="txtIs50Tavi" style="width:100%" disabled>
+                                                    <option value="0">NO</option>
+                                                    <option value="1">YES</option>
+                                                </select>
+                                            </td>
+                                            <td style="text-align:right">
+                                                Rate
+                                                <input type="number" id="txtWHTRate" style="width:50%" onchange="CalVATWHT(1)" />
+                                            </td>
+                                            <td style="text-align:right">
+                                                <input type="number" id="txtWHTAmt" style="width:100%" onchange="CalNetAmount()" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align:right">
+                                                Net Change (B)
+                                            </td>
+                                            <td style="text-align:right">
+                                                <input type="number" id="txtTotalNet" style="width:100%" disabled />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align:right">
+                                                Net Change (F)
+                                            </td>
+                                            <td style="text-align:right">
+                                                <input type="number" id="txtForeignNet" style="width:100%" disabled />
+                                            </td>
+                                        </tr>
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>CreditNote</title>
-</head>
-<body>
-    <div> 
+                                    </table>
+                                </div>
+                            </div>
+                        </p>
+                             
+                    </div>
+                    <div class="modal-footer">
+                        <div style="float:left">
+                            <button id="btnUpd" class="btn btn-primary" onclick="SaveDetail()">Update</button>
+                            <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                        </div>
+                        <button id="btnHid" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="dvLOVs"></div>
     </div>
-</body>
-</html>
+<script src="~/Scripts/Func/combo.js"></script>
+<script type="text/javascript">
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    let row = {};
+    let row_d = {};
+    SetLOVs();
+    $('#btnShow').on('click', function () {
+        ShowHeader();
+    });
+    $('#btnNew').on('click', function () {
+        $('#txtDocNo').val('');
+        $('#txtDocType').val('0');
+        $('#txtDocDate').val('');
+        $('#txtHCustCode').val($('#txtCustCode').val());
+        $('#txtHCustBranch').val($('#txtCustBranch').val());
+        ShowCustomerAddress(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtHCustName', '#txtHCustAddr');
+        $('#txtEmpCode').val(user);
+        $('#txtApproveBy').val('');
+        $('#txtApproveDate').val('');
+        $('#txtApproveTime').val('');
+        $('#txtUpdateBy').val('');
+        $('#chkApprove').prop('checked', false);
+        $('#txtLastupDate').val(GetToday());
+        $('#txtDocStatus').val('0');
+        $('#txtCancelDate').val('');
+        $('#txtCancelReson').val('');
+        $('#txtRemark').val('');
+        row = {			
+            BranchCode:$('#txtBranchCode').val(),
+            DocNo:$('#txtDocNo').val(),
+            DocType:$('#txtDocType').val(),
+            CustCode:$('#txtHCustCode').val(),
+            CustBranch:$('#txtHCustBranch').val(),
+            DocDate:CDateTH($('#txtDocDate').val()),
+            EmpCode:$('#txtEmpCode').val(),
+            ApproveBy:$('#txtApproveBy').val(),
+            ApproveDate:CDateTH($('#txtApproveDate').val()),
+            ApproveTime:CDateTH($('#txtApproveTime').val()),
+            UpdateBy:user,
+            LastupDate:CDateTH(GetToday()),
+            DocStatus:$('#txtDocStatus').val(),
+            CancelDate:CDateTH($('#txtCancelDate').val()),
+            CancelReason:$('#txtCancelReson').val(),
+            Remark:$('#txtRemark').val(),
+        };
+        $('#frmHeader').modal('show');
+    });
+    $('#btnAdd').on('click', function () {
+        $('#txtDDocNo').val($('#txtDocNo').val());
+        $('#txtItemNo').val('0');
+        $('#txtBillingNo').val('');
+        $('#txtSICode').val('');
+        $('#txtSDescription').val('');
+        $('#txtOriginalAmt').val('0.00');
+        $('#txtCorrectAmt').val('0.00');
+        $('#txtDiffAmt').val('0.00');
+        $('#txtIsTaxCharge').val('0');
+        $('#txtVATRate').val('0.00');
+        $('#txtVATAmt').val('0.00');
+        $('#txtIs50Tavi').val('0');
+        $('#txtWHTRate').val('0.00');
+        $('#txtWHTAmt').val('0.00');
+        $('#txtTotalNet').val('0.00');
+        $('#txtDCurrencyCode').val('THB');
+        $('#txtCurrencyName').val('THAI BAHT');
+        $('#txtExchangeRate').val('1');
+        $('#txtForeignNet').val('0.00');
+        row_d={			
+            BranchCode:$('#txtBranchCode').val(),
+            DocNo:$('#txtDDocNo').val(),
+            ItemNo:$('#txtItemNo').val(),
+            BillingNo:$('#txtBillingNo').val(),
+            SICode:$('#txtSICode').val(),
+            SDescription:$('#txtSDescription').val(),
+            OriginalAmt:CNum($('#txtOriginalAmt').val()),
+            CorrectAmt:CNum($('#txtCorrectAmt').val()),
+            DiffAmt:CNum($('#txtDiffAmt').val()),
+            IsTaxCharge:$('#txtIsTaxCharge').val(),
+            VATRate:CNum($('#txtVATRate').val()),
+            VATAmt: CNum($('#txtVATAmt').val()),
+            Is50Tavi:$('#txtIs50Tavi').val(),
+            WHTRate:CNum($('#txtWHTRate').val()),
+            WHTAmt:CNum($('#txtWHTAmt').val()),
+            TotalNet:CNum($('#txtTotalNet').val()),
+            CurrencyCode:$('#txtDCurrencyCode').val(),
+            ExchangeRate:CNum($('#txtExchangeRate').val()),
+            ForeignNet:CNum($('#txtForeignNet').val())
+        };
+        $('#frmDetail').modal('show');
+    });
+    function SetLOVs() {
+        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            let dv = document.getElementById("dvLOVs");
+            //Customers
+            CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
+            //Currency
+            CreateLOV(dv, '#frmSearchCurr', '#tbCurr', 'Currency', response, 2);
+            //Branch
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response,4);
+        });
+    }
+    function SearchData(type) {
+        switch (type) {
+            case 'branch':
+                SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
+                break;
+            case 'customer':
+                SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
+                break;
+            case 'currency':
+                SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadCurrency);
+                break;
+        }
+    }
+    function ApproveData() {
+        $('#txtApproveBy').val($('#chkApprove').prop('checked') == true ? user : '');
+        $('#txtApproveDate').val($('#chkApprove').prop('checked') == true ? GetToday() : '');
+        $('#txtApproveTime').val($('#chkApprove').prop('checked') == true ? ShowTime(GetTime()) : '');
+        $('#txtDocStatus').val($('#chkApprove').prop('checked') == true ? '1' : row.DocStatus);
+    }
+    function CancelData() {
+        if (userRights.indexOf('D') > 0) {
+            if ($('#txtCancelReson').val() == '') {
+                alert('Please enter reason for cancel');
+                $('#txtCancelReson').focus();
+                return;
+            }
+            $('#txtCancelDate').val(GetToday());
+            $('#txtCancelTime').val(ShowTime(GetTime()));            
+            $('#txtUpdateBy').val(user);
+            $('#txtDocStatus').val('99');
+        } else {
+            alert('you are not allow to cancel Document');
+        }
+    }
+    function SaveData() {
+        let dataDoc={			
+            BranchCode:$('#txtBranchCode').val(),
+            DocNo:$('#txtDocNo').val(),
+            DocType:$('#txtDocType').val(),
+            CustCode:$('#txtHCustCode').val(),
+            CustBranch:$('#txtHCustBranch').val(),
+            DocDate:CDateTH($('#txtDocDate').val()),
+            EmpCode:$('#txtEmpCode').val(),
+            ApproveBy:$('#txtApproveBy').val(),
+            ApproveDate:CDateTH($('#txtApproveDate').val()),
+            ApproveTime:$('#txtApproveTime').val(),
+            UpdateBy:user,
+            LastupDate:CDateTH(GetToday()),
+            DocStatus:$('#txtDocStatus').val(),
+            CancelDate:CDateTH($('#txtCancelDate').val()),
+            CancelReason:$('#txtCancelReson').val(),
+            Remark:$('#txtRemark').val(),
+        };
+        let jsonString = JSON.stringify({ data: dataDoc });
+        $.ajax({
+            url: "@Url.Action("SetCNDNHeader", "Acc")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonString,
+            success: function (response) {
+                if (response.result.data !== null) {
+                    ShowHeader();
+                    alert(response.result.data);
+                    $('#frmHeader').modal('hide');
+                    return;
+                }
+                alert(response.result.msg);
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    }
+    function PrintData() {
+        let code = row.DocNo;
+        if (code !== '') {
+            let branch = row.BranchCode;
+            window.open(path + 'Acc/FormCreditNote?Branch=' + branch + '&Code=' + code);
+        }
+    }
+    function ShowHeader() {
+        let w = '';
+        if ($('#txtCustCode').val() !== '') {
+            w += '&cust=' + $('#txtCustCode').val();
+        }
+        if ($('#txtDocDateF').val() !== "") {
+            w += '&DateFrom=' + CDateEN($('#txtDocDateF').val());
+        }
+        if ($('#txtDocDateT').val() !== "") {
+            w += '&DateTo=' + CDateEN($('#txtDocDateT').val());
+        }
+        $.get(path + 'acc/getCNDNGrid?branch=' + $('#txtBranchCode').val() + w, function (r) {
+            if (r.creditnote.data.length == 0) {
+                $('#tbHeader').DataTable().clear().draw();
+                alert('data not found');
+                return;
+            }
+            let h = r.creditnote.data;
+            $('#tbHeader').DataTable({
+                data: h,
+                selected: true, //ให้สามารถเลือกแถวได้
+                columns: [ //กำหนด property ของ header column
+                    {
+                        data: null, title: "#",
+                        render: function (data, type, full, meta) {
+                            let html = "<button class='btn btn-warning'>Edit</button>";
+                            return html;
+                        }
+                    },
+                    { data: "DocNo", title: "Document No" },
+                    {
+                        data: "DocDate", title: "Issue date ",
+                        render: function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    { data: "CustCode", title: "Customer" },
+                    { data: "InvoiceNo", title: "Invoice No" },
+                    { data: "Remark", title: "Remark" },
+                    { data: "TotalNet", title: "Total" }
+                ],
+                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+            });
+            $('#tbHeader tbody').on('click', 'tr', function () {
+                row = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                SetSelect('#tbHeader', this);
+                $('#txtDocNo').val(row.DocNo);
+                row_d = {};
+                ReadData();
+                ShowDetail(row.BranchCode, row.DocNo);
+            });
+            $('#tbHeader tbody').on('dblclick', 'tr', function () {
+                $('a[href="#tabDetail"]').click();
+            });
+            $('#tbHeader tbody').on('click', 'button', function () {
+                if (userRights.indexOf('E') > 0) {
+                    $('#frmHeader').modal('show');
+                } else {
+                    alert('you are not allow to edit this document');
+                }
+            });
+        });
+    }
+    function ShowDetail(branch, code) {
+        $.get(path + 'Acc/GetCNDNDetail?Branch=' + branch + '&Code=' + code, function (r) {
+            if (r.creditnote.detail.length > 0) {
+                let d = r.creditnote.detail;
+                LoadDetail(d);
+            }
+        });
+    }
+    function LoadDetail(d) {
+        $('#tbDetail').DataTable({
+            data: d,
+            selected: true,
+            columns: [
+                {
+                    data: null, title: "#",
+                    render: function (data, type, full, meta) {
+                        let html = "<button class='btn btn-warning'>Edit</button>";
+                        return html;
+                    }
+                },
+                { data: "BillingNo", title: "Invoice" },
+                { data: "SICode", title: "Cpde" },
+                { data: "SDescription", title: "Expenses" },
+                { data: "OriginalAmt", title: "Original" },
+                { data: "CorrectAmt", title: "Correct.Amt" },
+                { data: "DiffAmt", title: "Change" },
+                { data: "VATAmt", title: "VAT" },
+                { data: "TotalNet", title: "Net" },
+                { data: "CurrencyCode", title: "Currency" },
+                { data: "ExchangeRate", title: "Rate" },
+                { data: "ForeignNet", title: "Total" }
+            ],
+            destroy:true
+        });
+        $('#tbDetail tbody').on('click', 'tr', function () {
+            SetSelect('#tbDetail', this);
+            row_d = $('#tbDetail').DataTable().row(this).data();
+            ReadDetail();
+        });
+        $('#tbDetail tbody').on('click', 'button', function () {
+            if (userRights.indexOf('E') > 0) {
+                $('#frmDetail').modal('show');
+            } else {
+                alert('you are not allow to edit this document');
+            }
+        });
+    }
+    function ReadData() {
+        $('#txtDocType').val(row.DocType);
+        $('#txtHCustCode').val(row.CustCode);
+        $('#txtHCustBranch').val(row.CustBranch);
+        ShowCustomerAddress(path, row.CustCode, row.CustBranch, '#txtHCustName','#txtHCustAddr');
+        $('#txtDocDate').val(CDateEN(row.DocDate));
+        $('#txtEmpCode').val(row.EmpCode);
+        $('#txtApproveBy').val(row.ApproveBy);
+        $('#txtApproveDate').val(CDateEN(row.ApproveDate));
+        $('#txtApproveTime').val(ShowTime(row.ApproveTime));
+        $('#txtUpdateBy').val(row.UpdateBy);
+        $('#txtLastupDate').val(CDateEN(row.LastupDate));
+        $('#txtDocStatus').val(row.DocStatus);
+        $('#txtCancelDate').val(CDateEN(row.CancelDate));
+        $('#txtCancelReson').val(row.CancelReason);
+        $('#txtRemark').val(row.Remark);
+    }
+    function ReadBranch(dt) {
+        $('#txtBranchCode').val(dt.Code);
+        $('#txtBranchName').val(dt.BrName);
+        $('#txtBranchCode').focus();
+    }
+    function ReadCustomer(dt) {
+        $('#txtCustCode').val(dt.CustCode);
+        $('#txtCustBranch').val(dt.Branch);
+        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+    }
+    function ReadCurrency(dt) {
+        $('#txtDCurrencyCode').val(dt.Code);
+        $('#txtCurrencyName').val(dt.TName);
+        $('#txtExchangeRate').focus();
+    }
+    function ReadDetail() {
+        $('#txtDDocNo').val(row_d.DocNo);
+        $('#txtItemNo').val(row_d.ItemNo);        
+        $('#txtBillingNo').val(row_d.BillingNo);
+        $('#txtSICode').val(row_d.SICode);
+        $('#txtSDescription').val(row_d.SDescription);
+        $('#txtOriginalAmt').val(row_d.OriginalAmt);
+        $('#txtCorrectAmt').val(row_d.CorrectAmt);
+        $('#txtDiffAmt').val(row_d.DiffAmt);
+        $('#txtIsTaxCharge').val(row_d.IsTaxCharge);
+        $('#txtVATRate').val(row_d.VATRate);
+        $('#txtVATAmt').val(row_d.VATAmt);
+        $('#txtIs50Tavi').val(row_d.Is50Tavi);
+        $('#txtWHTRate').val(row_d.WHTRate);
+        $('#txtWHTAmt').val(row_d.WHTAmt);
+        $('#txtTotalNet').val(row_d.TotalNet);
+        $('#txtDCurrencyCode').val(row_d.CurrencyCode);
+        ShowCurrency(path, row_d.CurrencyCode, '#txtCurrencyName');
+        $('#txtExchangeRate').val(row_d.ExchangeRate);
+        $('#txtForeignNet').val(row_d.ForeignNet);
+    }
+    function SaveDetail() {
+        if (row_d !== null) {
+            let obj={			
+                BranchCode:$('#txtBranchCode').val(),
+                DocNo:$('#txtDDocNo').val(),
+                ItemNo:$('#txtItemNo').val(),
+                BillingNo:$('#txtBillingNo').val(),
+                SICode:$('#txtSICode').val(),
+                SDescription:$('#txtSDescription').val(),
+                OriginalAmt:CNum($('#txtOriginalAmt').val()),
+                CorrectAmt:CNum($('#txtCorrectAmt').val()),
+                DiffAmt:CNum($('#txtDiffAmt').val()),
+                IsTaxCharge:$('#txtIsTaxCharge').val(),
+                VATRate:CNum($('#txtVATRate').val()),
+                VATAmt: CNum($('#txtVATAmt').val()),
+                Is50Tavi:$('#txtIs50Tavi').val(),
+                WHTRate:CNum($('#txtWHTRate').val()),
+                WHTAmt:CNum($('#txtWHTAmt').val()),
+                TotalNet:CNum($('#txtTotalNet').val()),
+                CurrencyCode:$('#txtDCurrencyCode').val(),
+                ExchangeRate:CNum($('#txtExchangeRate').val()),
+                ForeignNet:CNum($('#txtForeignNet').val())
+            };
+
+            let jsonText = JSON.stringify({ data: obj });
+            //alert(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetCNDNDetail", "Acc")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    if (response.result.data !== null) {
+                        ShowDetail(row.BranchCode, row.DocNo);
+                        alert(response.result.msg + '\n=>' + response.result.data);
+                        $('#frmDetail').modal('hide');
+                        return;
+                    }
+                    alert(response.result.msg);
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        } else {
+            alert('no data to save');
+        }
+    }
+    function DeleteDetail() {
+        if (row_d !== null) {
+            $.get(path, 'Acc/DelCNDNDetail?Branch=' + row.BranchCode + '&Code=' + row.DocNo + '&Item=' + row_d.ItemNo)
+                .done(function (r) {
+                    if (r.creditnote.data !== null) {
+                        ShowDetail(row.BranchCode, row.DocNo);
+                    }
+                    alert(r.creditnote.result);
+                });
+        } else {
+            alert('no data to delete');
+        }
+    }
+    function CalDiff() {
+        let oldAmt = CNum($('#txtOriginalAmt').val());
+        let newAmt = CNum($('#txtCorrectAmt').val());
+        $('#txtDiffAmt').val(CDbl(oldAmt - newAmt,2));
+        CalVATWHT();
+    }
+    function CalForeign() {
+        let totalforeign = CDbl(CNum($('#txtTotalNet').val()) / CNum($('#txtExchangeRate').val()), 2);
+        $('#txtForeignNet').val(CDbl(totalforeign,2));
+    }
+    function CalVATWHT(step = 0) {
+        let amt = CNum($('#txtDiffAmt').val());
+        if (step == 0) {
+            let vat = amt * CNum($('#txtVATRate').val()) * 0.01;
+            $('#txtVATAmt').val(CDbl(vat,2));
+        }
+        let wht = amt * CNum($('#txtWHTRate').val()) * 0.01;
+        $('#txtWHTAmt').val(CDbl(wht, 2));
+        CalNetAmount();
+    }
+    function CalNetAmount() {
+        let amt = CNum($('#txtDiffAmt').val());
+        let vat = CNum($('#txtVATAmt').val());
+        let wht = CNum($('#txtWHTAmt').val());
+        let net = amt + vat - wht;
+
+        $('#txtTotalNet').val(CDbl(net, 2));
+        CalForeign();
+    }
+</script>

@@ -54,6 +54,7 @@ End Code
             <table id="tbHeader" class="table table-responsive">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>DocNo</th>
                         <th>DocDate</th>
                         <th>CustCode</th>
@@ -475,6 +476,13 @@ End Code
                 data: h,
                 selected: true, //ให้สามารถเลือกแถวได้
                 columns: [ //กำหนด property ของ header column
+                    {
+                        data: null, title: "#",
+                        render: function (data, type, full, meta) {
+                            let html = "<button class='btn btn-warning'>Edit</button>";
+                            return html;
+                        }
+                    },
                     { data: "ReceiptNo", title: "Receive No" },
                     {
                         data: "ReceiptDate", title: "Issue date ",

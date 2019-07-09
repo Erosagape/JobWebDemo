@@ -400,6 +400,7 @@
     <Compile Include="Models\CConfig.vb" />
     <Compile Include="Models\CController.vb" />
     <Compile Include="Models\CCountry.vb" />
+    <Compile Include="Models\CCreditNote.vb" />
     <Compile Include="Models\CCurrency.vb" />
     <Compile Include="Models\CCustomsPort.vb" />
     <Compile Include="Models\CDeclareType.vb" />

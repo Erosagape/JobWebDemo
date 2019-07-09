@@ -273,6 +273,33 @@ ON h.BranchCode=d.BranchCode
 AND h.DocNo=d.DocNo 
 "
     End Function
+
+    Function SQLSelectCNDNSummary() As String
+        Return "
+SELECT a.*,b.InvoiceNo,
+b.TotalAmt,b.TotalVAT,b.TotalWHT,b.TotalNet,b.FTotalNet
+FROM Job_CNDNHeader a LEFT JOIN
+(
+    SELECT BranchCode,DocNo,
+    (SELECT STUFF((
+        SELECT DISTINCT ',' + BillingNo
+        FROM Job_CNDNDetail WHERE BranchCode=d.BranchCode
+        AND DocNo=d.DocNo  
+    FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
+    )) as InvoiceNo,
+    Sum(DiffAmt) as TotalAmt,
+    Sum(VATAmt) as TotalVAT,
+    Sum(WHTAmt) as TotalWHT,
+    Sum(TotalNet) as TotalNet,
+    Sum(ForeignNet) as FTotalNet
+    FROM Job_CNDNDetail d
+    GROUP BY BranchCode,DocNo
+) b
+ON a.BranchCode=b.BranchCode
+AND a.DocNo=b.DocNo
+"
+    End Function
+
     Function SQLSelectVoucher() As String
         Return "
 SELECT h.BranchCode,h.ControlNo,h.VoucherDate,h.TRemark,h.CustCode,h.CustBranch,h.RecUser,h.RecDate,h.RecTime,
