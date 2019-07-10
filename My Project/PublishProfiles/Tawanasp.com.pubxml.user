@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>07/09/2019 18:37:16</publishTime>
+      <publishTime>07/10/2019 19:06:27</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>07/09/2019 18:37:16</publishTime>
+      <publishTime>07/10/2019 19:06:27</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>07/09/2019 18:37:15</publishTime>
+      <publishTime>07/10/2019 19:06:26</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -977,7 +977,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/09/2019 15:26:50</publishTime>
     </File>
     <File Include="Views/Acc/CreditNote.vbhtml">
-      <publishTime>07/09/2019 18:47:05</publishTime>
+      <publishTime>07/10/2019 14:41:28</publishTime>
     </File>
     <File Include="Views/Acc/Expense.vbhtml">
       <publishTime>06/25/2019 10:28:44</publishTime>
@@ -1022,7 +1022,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Acc/GenerateBilling.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>07/10/2019 19:13:57</publishTime>
     </File>
     <File Include="Views/Acc/GenerateReceipt.vbhtml">
       <publishTime>07/09/2019 15:26:50</publishTime>
@@ -1100,10 +1100,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/Clr/GenerateInv.vbhtml">
-      <publishTime>07/09/2019 15:26:50</publishTime>
+      <publishTime>07/10/2019 18:48:59</publishTime>
     </File>
     <File Include="Views/Clr/Index.vbhtml">
-      <publishTime>07/09/2019 15:26:50</publishTime>
+      <publishTime>07/10/2019 16:00:17</publishTime>
     </File>
     <File Include="Views/Clr/Receive.vbhtml">
       <publishTime>07/09/2019 15:26:50</publishTime>

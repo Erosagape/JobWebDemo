@@ -775,11 +775,14 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
+                    if (chq.length > 0) {
+                        SaveCheque(response.result.data);
+                    }
                     SaveDetail(response.result.data);
                     PrintInvoice();
-                    ResetData();
                     $('#dvCreate').modal('hide');
                     alert(response.result.data);
+                    ResetData();
                     return;
                 }
                 alert(response.result.msg);
@@ -810,11 +813,13 @@ End Code
                 ControlNo: o.ControlNo,
                 ItemNo: 0,
                 DocType: 'INV',
+                DocNo: docno,
+                DocDate: CDateTH($('#txtDocDate').val()),
                 CmpType: 'C',
                 CmpCode: o.CustCode,
                 CmpBranch: o.CustBranch,
                 PaidAmount: CDbl(o.ChqAmount, 2),
-                TotalAmount: CDbl((o.ChqAmount), 2),
+                TotalAmount: CDbl(o.ChqAmount, 2),
                 acType:'CU'
             });
         }
@@ -827,8 +832,8 @@ End Code
             contentType: "application/json",
             data: jsonText,
             success: function (response) {
-                if (response.result.data !== null) {
-                    alert(response.result.msg + '\n=>' + response.result.data);
+                if (response.result.document !== null) {
+                    alert(response.result.msg);
                     return;
                 }
                 alert(response.result.msg);
@@ -850,13 +855,9 @@ End Code
                 data: jsonText,
                 success: function (response) {
                     if (response.result.data !== null) {
-                        if (chq.length > 0) {
-                            SaveCheque(response.result.data);
-                        }
                         alert(response.result.msg + '\n=>' + response.result.data);
                         SetGridAdv(false);
                         $('#btnGen').hide();
-                        arr = [];
                         return;
                     }
                     alert(response.result.msg);
@@ -903,10 +904,11 @@ End Code
         if (dt.AmountRemain > 0) {
             $('#txtChqNo').val(dt.ChqNo);
             if (dt.AmountRemain <= CNum($('#txtTotalNet').val())) {
-                $('#txtChqAmount').val(dt.AmountRemain);
+                $('#txtChqAmount').val(CNum(dt.AmountRemain));
             } else {
-                $('#txtChqAmount').val($('#txtTotalNet').val());
+                $('#txtChqAmount').val(CNum($('#txtTotalNet').val()));
             }
+            $('#txtControlNo').val(dt.ControlNo);
             return;
         } else {
             alert('Cheque amount is zero');
@@ -1159,7 +1161,7 @@ End Code
             ],
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
-        $('#tbCheque tbody').on('click', 'button', function () {
+        $('#tbCheque tbody').on('click', 'button', function () {            
             let dt = GetSelect('#tbCheque', this); //read current row selected
             if (chq.indexOf(dt) >= 0) {
                 chq.splice(chq.indexOf(dt));

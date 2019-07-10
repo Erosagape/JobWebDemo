@@ -1050,6 +1050,7 @@ End Code
                 success: function (response) {
                     alert(response.result.msg);
                     ShowData($('#txtBranchCode').val(), $('#txtClrNo').val());
+                    $('#frmDetail').modal('hide');
                 }
             });
             return;

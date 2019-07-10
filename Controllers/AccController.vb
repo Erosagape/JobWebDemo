@@ -1541,7 +1541,8 @@ Namespace Controllers
         End Function
         Function GetInvReport() As ActionResult
             Try
-                Dim tSqlw As String = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
+                Dim defaultWhere As String = "(id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)-ISNULL(c.CreditNet,0))"
+                Dim tSqlw As String = " AND " & defaultWhere & " >0 "
                 If Not IsNothing(Request.QueryString("Show")) Then
                     If Request.QueryString("Show").ToString = "NOPAY" Then
                         tSqlw &= " AND ISNULL(r.ReceivedNet,0)=0 "
@@ -1550,7 +1551,7 @@ Namespace Controllers
                         tSqlw = " AND ISNULL(r.ReceivedNet,0)>0 "
                     End If
                     If Request.QueryString("Show").ToString = "CLEARED" Then
-                        tSqlw = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)<=0 "
+                        tSqlw = " AND " & defaultWhere & "<=0 "
                     End If
                     If Request.QueryString("Show").ToString = "ALL" Then
                         tSqlw = ""
@@ -1592,7 +1593,8 @@ Namespace Controllers
             End Try
         End Function
         Function GetInvForReceive() As ActionResult
-            Dim tSqlw As String = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
+            Dim defaultWhere As String = "(id.TotalAmt-ISNULL(c.CreditNet,0)-ISNULL(r.ReceivedNet,0))"
+            Dim tSqlw As String = " AND " & defaultWhere & ">0 "
             Try
                 Dim bCheckVoucher As Boolean = False
                 Dim byReceipt As Boolean = False
@@ -1612,15 +1614,15 @@ Namespace Controllers
                         tSqlw = ""
                     End If
                     If Request.QueryString("Show").ToString = "FULLPAY" Then
-                        tSqlw = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)<=0 "
+                        tSqlw = " AND " & defaultWhere & "<=0 "
                     End If
                     If Request.QueryString("Show").ToString = "PARTPAY" Then
-                        tSqlw = " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>0 "
+                        tSqlw = " AND " & defaultWhere & ">0 "
                     End If
                     If Request.QueryString("Show").ToString = "WAITPAY" Then
                         bCheckVoucher = True
                         tSqlw = " AND ISNULL(r.LastReceiptNo,'')<>'' AND ISNULL(r.LastControlNo,'')='' "
-                        tSqlw &= " AND id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)>=0 "
+                        tSqlw &= " AND " & defaultWhere & ">=0 "
                     End If
                     If Request.QueryString("Show").ToString = "ALL" Then
                         tSqlw = ""
@@ -1694,12 +1696,12 @@ Namespace Controllers
                 json = "{""invdetail"":{""data"":" & json & ",""condition"":""" & tSqlw & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[],""condition"":""" & tsqlw & """}}", jsonContent)
+                Return Content("{""invdetail"":{""msg"":""" & ex.Message & """,""data"":[],""condition"":""" & tSqlw & """}}", jsonContent)
             End Try
         End Function
         Function GetInvForBill() As ActionResult
             Try
-                Dim tSqlw As String = " AND a.TotalNet>0 "
+                Dim tSqlw As String = " AND ISNULL(a.CustCode,'')<>'' "
                 If Not IsNothing(Request.QueryString("Show")) Then
                     If Request.QueryString("Show").ToString = "BILLED" Then
                         tSqlw &= " AND ISNULL(a.BillAcceptNo,'')<>'' "

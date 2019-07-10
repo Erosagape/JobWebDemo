@@ -336,6 +336,15 @@ Public Class CCNDNDetail
             m_BillingNo = value
         End Set
     End Property
+    Private m_BillItemNo As Integer
+    Public Property BillItemNo As Integer
+        Get
+            Return m_BillItemNo
+        End Get
+        Set(value As Integer)
+            m_BillItemNo = value
+        End Set
+    End Property
     Private m_SICode As String
     Public Property SICode As String
         Get
@@ -489,6 +498,7 @@ Public Class CCNDNDetail
                             If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("BillingNo") = Me.BillingNo
+                            dr("BillItemNo") = Me.BillItemNo
                             dr("SICode") = Me.SICode
                             dr("SDescription") = Me.SDescription
                             dr("OriginalAmt") = Me.OriginalAmt
@@ -540,6 +550,9 @@ Public Class CCNDNDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("BillingNo"))) = False Then
                         row.BillingNo = rd.GetString(rd.GetOrdinal("BillingNo")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("BillItemNo"))) = False Then
+                        row.BillItemNo = rd.GetInt32(rd.GetOrdinal("BillItemNo"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("SICode"))) = False Then
                         row.SICode = rd.GetString(rd.GetOrdinal("SICode")).ToString()

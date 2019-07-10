@@ -157,9 +157,10 @@ End Code
                     <div class="modal-header">
                         <div class="row">
                             <div class="col-sm-12">
-                                Document No <input type="text" id="txtDDocNo" style="width:20%" disabled />
-                                Item No. <input type="text" id="txtItemNo" style="width:5%" disabled />
-                                Invoice No <input type="text" id="txtBillingNo" style="width:20%" disabled />
+                                Doc.No <input type="text" id="txtDDocNo" style="width:20%" disabled />
+                                Seq.<input type="text" id="txtItemNo" style="width:5%" disabled />
+                                Inv.No <input type="text" id="txtBillingNo" style="width:20%" disabled />
+                                #No <input type="text" id="txtBillItemNo" style="width:5%" disabled />
                                 <input type="button" value="..." onclick="SearchData('invoice');" />
                             </div>
                         </div>
@@ -274,6 +275,34 @@ End Code
                 </div>
             </div>
         </div>
+        <div id="frmSearchBill" class="modal fade">
+            <div class="modal-dialog-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Select Invoice
+                    </div>
+                    <div class="modal-body">
+                        <table id="tbInvoice" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>InvNo</th>
+                                    <th>Item</th>
+                                    <th>Description</th>
+                                    <th>Service</th>
+                                    <th>Vat</th>
+                                    <th>Wh-Tax</th>
+                                    <th>Net</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnClose" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="dvLOVs"></div>
     </div>
 <script src="~/Scripts/Func/combo.js"></script>
@@ -329,6 +358,7 @@ End Code
         $('#txtDDocNo').val($('#txtDocNo').val());
         $('#txtItemNo').val('0');
         $('#txtBillingNo').val('');
+        $('#txtBillItemNo').val('');
         $('#txtSICode').val('');
         $('#txtSDescription').val('');
         $('#txtOriginalAmt').val('0.00');
@@ -349,7 +379,8 @@ End Code
             BranchCode:$('#txtBranchCode').val(),
             DocNo:$('#txtDDocNo').val(),
             ItemNo:$('#txtItemNo').val(),
-            BillingNo:$('#txtBillingNo').val(),
+            BillingNo: $('#txtBillingNo').val(),
+            BillItemNo:CNum($('#txtBillitemNo').val()),
             SICode:$('#txtSICode').val(),
             SDescription:$('#txtSDescription').val(),
             OriginalAmt:CNum($('#txtOriginalAmt').val()),
@@ -391,6 +422,9 @@ End Code
                 break;
             case 'currency':
                 SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadCurrency);
+                break;
+            case 'invoice':
+                ShowInvoice();
                 break;
         }
     }
@@ -607,6 +641,7 @@ End Code
         $('#txtDDocNo').val(row_d.DocNo);
         $('#txtItemNo').val(row_d.ItemNo);        
         $('#txtBillingNo').val(row_d.BillingNo);
+        $('#txtBillItemNo').val(row_d.BillItemNo);        
         $('#txtSICode').val(row_d.SICode);
         $('#txtSDescription').val(row_d.SDescription);
         $('#txtOriginalAmt').val(row_d.OriginalAmt);
@@ -630,7 +665,8 @@ End Code
                 BranchCode:$('#txtBranchCode').val(),
                 DocNo:$('#txtDDocNo').val(),
                 ItemNo:$('#txtItemNo').val(),
-                BillingNo:$('#txtBillingNo').val(),
+                BillingNo: $('#txtBillingNo').val(),
+                BillitemNo:$('#txtBillitemNo').val(),
                 SICode:$('#txtSICode').val(),
                 SDescription:$('#txtSDescription').val(),
                 OriginalAmt:CNum($('#txtOriginalAmt').val()),
@@ -714,4 +750,50 @@ End Code
         $('#txtTotalNet').val(CDbl(net, 2));
         CalForeign();
     }
+    function ShowInvoice() {
+        $.get(path + 'acc/getinvforreceive?show=ALL&billto=' + $('#txtCustCode').val() + '&branch=' + $('#txtBranchCode').val(), function (r) {
+            if (r.invdetail.data.length == 0) {
+                $('#tbInvoice').DataTable().clear().draw();
+                $('#frmSearchBill').modal('show');
+                return;
+            }
+            let d = r.invdetail.data;
+            $('#tbInvoice').DataTable({
+                data: d,
+                selected: true, //ให้สามารถเลือกแถวได้
+                columns: [ //กำหนด property ของ header column
+                    { data: "InvoiceNo", title: "Doc No" },
+                    { data: "InvoiceItemNo", title: "Item No" },
+                    { data: "SDescription", title: "Description" },
+                    { data: "InvAmt", title: "Charge" },
+                    { data: "InvVat", title: "Vat" },
+                    { data: "Inv50Tavi", title: "W-Tax" },
+                    { data: "InvTotal", title: "NET" }
+                ],
+                destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+            });
+            $('#tbInvoice tbody').on('click', 'tr', function () {
+                let data = $('#tbInvoice').DataTable().row(this).data(); //read current row selected
+                ReadInvoice(data);
+                $('#frmSearchBill').modal('hide');
+            });
+            $('#frmSearchBill').modal('show');
+        });
+    }
+    function ReadInvoice(dt) {
+        $('#txtBillingNo').val(dt.InvoiceNo);
+        $('#txtBillItemNo').val(dt.InvoiceItemNo);
+        $('#txtSICode').val(dt.SICode);
+        $('#txtSDescription').val(dt.SDescription);
+        $('#txtDCurrencyCode').val(dt.DCurrencyCode);
+        ShowCurrency(path, dt.DCurrencyCode, '#txtCurrencyName');
+        $('#txtExchangeRate').val(dt.DExchangeRate);
+        $('#txtOriginalAmt').val(CDbl(dt.InvAmt, 2));
+        $('#txtIs50Tavi').val(dt.Is50Tavi);
+        $('#txtWHTRate').val(dt.Rate50Tavi);
+        $('#txtIsTaxCharge').val(dt.IsTaxCharge);
+        $('#txtVATRate').val(CDbl(dt.VATRate,0));
+    }
+
+
 </script>
