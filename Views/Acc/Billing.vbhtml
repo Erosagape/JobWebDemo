@@ -33,6 +33,7 @@ End Code
                 <button class="btn btn-success" onclick="window.open('/Acc/GenerateBilling', '_blank');">Generate Billing</button>
             </div>
         </div>
+        <input type="checkbox" id="chkCancel" />Show Cancel Only
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#tabHeader">Headers</a>
@@ -236,6 +237,11 @@ End Code
         if ($('#txtDocDateT').val() !== "") {
             w += '&DateTo=' + CDateEN($('#txtDocDateT').val());
         }
+        if ($('#chkCancel').prop('checked') == true) {
+            w += '&show=CANCEL';
+        } else {
+            w += '&show=ACTIVE';
+        }
         $.get(path + 'acc/getbillheader?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.billheader.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
@@ -422,7 +428,7 @@ End Code
     function DeleteDetail() {
         if (row_d.ItemNo !== undefined) {
             if (confirm("Are you sure to delete inv " + row_d.InvNo + ' from ' + row_d.BillAcceptNo) == true) {
-                $.get(path, 'Acc/DelBillDetail?Branch=' + row.BranchCode + '&Code=' + row.BillAcceptNo + '&Item=' + row_d.ItemNo)
+                $.get(path+ 'Acc/DelBillDetail?Branch=' + row.BranchCode + '&Code=' + row.BillAcceptNo + '&Item=' + row_d.ItemNo)
                     .done(function (r) {
                         if (r.billdetail.data !== null) {
                             ShowDetail(row.BranchCode, row.BillAcceptNo);

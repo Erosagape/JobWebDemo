@@ -717,6 +717,7 @@ End Code
             alert('Please select Customer first!');
             return;
         }
+
         let dataInv = {
             BranchCode:$('#txtBranchCode').val(),
             DocNo: $('#txtDocNo').val(),
@@ -778,10 +779,14 @@ End Code
                     if (chq.length > 0) {
                         SaveCheque(response.result.data);
                     }
-                    SaveDetail(response.result.data);
+                    if ($('#txtDocNo').val() !== '') {
+                        DeleteDetail($('#txtDocNo').val());
+                    } else {
+                        SaveDetail(response.result.data);
+                    }
+                    alert(response.result.data);
                     PrintInvoice();
                     $('#dvCreate').modal('hide');
-                    alert(response.result.data);
                     ResetData();
                     return;
                 }
@@ -840,6 +845,13 @@ End Code
             },
             error: function (e) {
                 alert(e);
+            }
+        });
+    }
+    function DeleteDetail(docno) {
+        $.get(path + 'Acc/DelInvDetail?Branch=' + $('#txtBranchCode').val() + '&Code=' + docno, function (r) {
+            if (r.invdetail.data !== null) {
+                SaveDetail(docno);
             }
         });
     }

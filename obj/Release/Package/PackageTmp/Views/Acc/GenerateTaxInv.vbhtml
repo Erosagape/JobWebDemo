@@ -34,7 +34,7 @@ End Code
             <option value="TAX" selected>Tax-Invoice (Vatable+Advance)</option>
             <option value="SRV" selected>Tax-Invoice (Vatable only)</option>
             <option value="REC">Receipt (Non-Vat only)</option>
-            <option value="RCP">Receipt (Non-Vat+Advance)</option>
+            <option value="RCV">Receipt (Non-Vat+Advance)</option>
         </select>
         <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
         <div class="row">

@@ -330,6 +330,7 @@ Public Class CBillDetail
                 End Using
                 If Me.BillAcceptNo <> "" Then
                     CancelDocument(cn)
+                    UpdateTotal(cn)
                 End If
                 msg = "Delete Complete"
             Catch ex As Exception

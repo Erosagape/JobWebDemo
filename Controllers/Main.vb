@@ -846,7 +846,6 @@ and b.JobNo=c.JNo
         Return "
 SELECT a.*,b.NameThai,b.NameEng FROM Job_InvoiceHeader a
 LEFT JOIN Mas_Company b ON a.CustCode=b.CustCode AND a.CustBranch=b.Branch
-WHERE ISNULL(a.CancelProve,'')='' 
 "
     End Function
     Function SQLUpdateBillHeader(branch As String, billno As String) As String

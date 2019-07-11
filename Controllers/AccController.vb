@@ -198,7 +198,12 @@ Namespace Controllers
         End Function
         Function GetCNDNGrid() As ActionResult
             Try
-                Dim tSqlw As String = " WHERE a.DocStatus<>99 "
+                Dim tSqlw As String = ""
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlw = String.Format(" WHERE a.DocStatus IN('{0}') ", Request.QueryString("Status").ToString().Replace(",", "','"))
+                Else
+                    tSqlw = " WHERE a.DocStatus <>'99' "
+                End If
                 If Not IsNothing(Request.QueryString("Show")) Then
                     If Request.QueryString("Show").ToString = "CN" Then
                         tSqlw &= " AND b.TotalNet>0 "
@@ -221,7 +226,7 @@ Namespace Controllers
                 End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(Main.SQLSelectCNDNSummary() & tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""creditnote"":{""data"":" & json & "}}"
+                json = "{""creditnote"":{""data"":" & json & ",""msg"":""" & tSqlw & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("{""creditnote"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
@@ -1070,6 +1075,14 @@ Namespace Controllers
         Function GetBillHeader() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE BillAcceptNo<>'' "
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString() = "ACTIVE" Then
+                        tSqlw &= String.Format(" AND NOT ISNULL(CancelProve,'')<>'' ")
+                    End If
+                    If Request.QueryString("Show").ToString() = "CANCEL" Then
+                        tSqlw &= String.Format(" AND ISNULL(CancelProve,'')<>'' ")
+                    End If
+                End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
                 End If
@@ -1213,7 +1226,7 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("Type")) Then
                     Select Case Request.QueryString("Type").ToString()
-                        Case "RCP"
+                        Case "RCV"
                             tSqlw &= " AND ReceiptNo like 'RC%' "
                         Case "TAX"
                             tSqlw &= " AND ReceiptNo like 'TX%' "
@@ -1227,6 +1240,15 @@ Namespace Controllers
                             Return Content("{""result"":{""data"":null,""msg"":""Please Enter Receipt Type""}}", jsonContent)
                     End Select
                 End If
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString() = "ACTIVE" Then
+                        tSqlw &= String.Format(" AND NOT ISNULL(CancelProve,'')<>'' ")
+                    End If
+                    If Request.QueryString("Show").ToString() = "CANCEL" Then
+                        tSqlw &= String.Format(" AND ISNULL(CancelProve,'')<>'' ")
+                    End If
+                End If
+
                 Dim oHead = New CRcpHeader(jobWebConn).GetData(tSqlw)
                 Dim oDet = New CRcpDetail(jobWebConn).GetData(tSqlw)
 
@@ -1281,13 +1303,13 @@ Namespace Controllers
                             data.ReceiptDate = Today.Date
                         End If
                         Select Case data.ReceiptType
-                            Case "RCP"
+                            Case "REC"
                                 data.AddNew("RC-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "TAX"
                                 data.AddNew("TX-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "SRV"
                                 data.AddNew("SV-" & data.ReceiptDate.ToString("yyMM") & "___")
-                            Case "REC"
+                            Case "RCV"
                                 data.AddNew("RV-" & data.ReceiptDate.ToString("yyMM") & "___")
                             Case "ADV"
                                 data.AddNew("AV-" & data.ReceiptDate.ToString("yyMM") & "___")
@@ -1528,7 +1550,10 @@ Namespace Controllers
                 Dim oData As New CInvDetail(jobWebConn)
                 Dim oRec = oData.GetData(tSqlw)
                 If oRec.Count > 0 Then
-                    Dim msg = oRec(0).DeleteData(tSqlw)
+                    Dim msg = ""
+                    For Each doc In oRec
+                        msg &= doc.DeleteData(tSqlw) & vbCrLf
+                    Next
                     Dim json = "{""invdetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oRec(0)) & "]}}"
                     Return Content(json, jsonContent)
                 Else
@@ -1701,10 +1726,16 @@ Namespace Controllers
         End Function
         Function GetInvForBill() As ActionResult
             Try
-                Dim tSqlw As String = " AND ISNULL(a.CustCode,'')<>'' "
+                Dim tSqlw As String = " WHERE ISNULL(a.CustCode,'')<>'' "
                 If Not IsNothing(Request.QueryString("Show")) Then
                     If Request.QueryString("Show").ToString = "BILLED" Then
                         tSqlw &= " AND ISNULL(a.BillAcceptNo,'')<>'' "
+                    End If
+                    If Request.QueryString("Show").ToString = "ACTIVE" Then
+                        tSqlw &= " AND NOT ISNULL(a.CancelProve,'')<>'' "
+                    End If
+                    If Request.QueryString("Show").ToString = "CANCEL" Then
+                        tSqlw &= " AND ISNULL(a.CancelProve,'')<>'' "
                     End If
                 Else
                     tSqlw &= " AND ISNULL(a.BillAcceptNo,'')='' "

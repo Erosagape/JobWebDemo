@@ -397,7 +397,7 @@ End Code
         let data = [];
         let i = 0;
         for (let obj of o) {
-            if (obj.TotalNet !== 0) {
+            //if (obj.TotalNet !== 0) {
                 i = i + 1;
                 data.push({
                     BranchCode: obj.BranchCode,
@@ -421,7 +421,7 @@ End Code
                     AmtDiscRate: obj.DiscountRate,
                     AmtForeign: obj.ForeignNet
                 });
-            }
+            //}
         }
         return data;
     }

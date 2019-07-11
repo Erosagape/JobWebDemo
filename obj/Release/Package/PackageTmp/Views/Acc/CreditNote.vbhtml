@@ -32,6 +32,7 @@ End Code
                 <input type="button" class="btn btn-default" value="Add CN/DN" id="btnNew" />
             </div>
         </div>
+        <input type="checkbox" id="chkCancel" />Show Cancel Only
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#tabHeader">Headers</a>
@@ -137,7 +138,7 @@ End Code
                                 Update By:<br /> <input type="text" id="txtUpdateBy" style="width:100%" disabled />
                             </div>
                         </div>
-                            Cancel Reason:<br /> <textarea id="txtCancelReson" style="width:100%"></textarea>
+                        Cancel Reason:<br /> <textarea id="txtCancelReson" style="width:100%"></textarea>
                         <input type="hidden" id="txtDocStatus" />
                     </div>
                     <div class="modal-footer">
@@ -182,7 +183,7 @@ End Code
                                                 Exc.Rate
                                             </td>
                                             <td>
-                                               <input type="number" id="txtExchangeRate" style="width:100%" onchange="CalForeign()" />
+                                                <input type="number" id="txtExchangeRate" style="width:100%" onchange="CalForeign()" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -204,7 +205,7 @@ End Code
                                             <td>
                                                 <input type="number" id="txtDiffAmt" style="width:100%" onchange="CalVATWHT()" />
                                             </td>
-                                        </tr>                                        
+                                        </tr>
                                     </table>
                                 </div>
                                 <div class="col-sm-8">
@@ -263,7 +264,7 @@ End Code
                                 </div>
                             </div>
                         </p>
-                             
+
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
@@ -317,6 +318,14 @@ End Code
         ShowHeader();
     });
     $('#btnNew').on('click', function () {
+        ClearHeader();
+        $('#frmHeader').modal('show');
+    });
+    $('#btnAdd').on('click', function () {
+        ClearDetail();
+        $('#frmDetail').modal('show');
+    });
+    function ClearHeader() {
         $('#txtDocNo').val('');
         $('#txtDocType').val('0');
         $('#txtDocDate').val('');
@@ -352,9 +361,8 @@ End Code
             CancelReason:$('#txtCancelReson').val(),
             Remark:$('#txtRemark').val(),
         };
-        $('#frmHeader').modal('show');
-    });
-    $('#btnAdd').on('click', function () {
+    }
+    function ClearDetail() {
         $('#txtDDocNo').val($('#txtDocNo').val());
         $('#txtItemNo').val('0');
         $('#txtBillingNo').val('');
@@ -397,8 +405,7 @@ End Code
             ExchangeRate:CNum($('#txtExchangeRate').val()),
             ForeignNet:CNum($('#txtForeignNet').val())
         };
-        $('#frmDetail').modal('show');
-    });
+    }
     function SetLOVs() {
         $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
         $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
@@ -506,7 +513,12 @@ End Code
         if ($('#txtDocDateT').val() !== "") {
             w += '&DateTo=' + CDateEN($('#txtDocDateT').val());
         }
-        $.get(path + 'acc/getCNDNGrid?branch=' + $('#txtBranchCode').val() + w, function (r) {
+        if ($('#chkCancel').prop('checked') == true) {
+            w += '&Status=99';
+        } else {
+            w += '&Status=0,1';
+        }
+        $.get(path + 'Acc/GetCNDNGrid?Branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.creditnote.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
                 alert('data not found');
@@ -539,8 +551,9 @@ End Code
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
-                row = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                ClearHeader();
                 SetSelect('#tbHeader', this);
+                row = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 $('#txtDocNo').val(row.DocNo);
                 row_d = {};
                 ReadData();
@@ -594,6 +607,7 @@ End Code
         });
         $('#tbDetail tbody').on('click', 'tr', function () {
             SetSelect('#tbDetail', this);
+            ClearDetail();
             row_d = $('#tbDetail').DataTable().row(this).data();
             ReadDetail();
         });
@@ -613,6 +627,9 @@ End Code
         $('#txtDocDate').val(CDateEN(row.DocDate));
         $('#txtEmpCode').val(row.EmpCode);
         $('#txtApproveBy').val(row.ApproveBy);
+        if ($('#txtApproveBy').val() !== '') {
+            $('#chkApprove').prop('checked', true);
+        }
         $('#txtApproveDate').val(CDateEN(row.ApproveDate));
         $('#txtApproveTime').val(ShowTime(row.ApproveTime));
         $('#txtUpdateBy').val(row.UpdateBy);
@@ -683,7 +700,14 @@ End Code
                 ExchangeRate:CNum($('#txtExchangeRate').val()),
                 ForeignNet:CNum($('#txtForeignNet').val())
             };
-
+            if ($('#txtDocType').val() == '0' && obj.TotalNet < 0) {
+                alert('Credit Note value must be more than zero');
+                return;
+            }
+            if ($('#txtDocType').val() == '1' && obj.TotalNet > 0) {
+                alert('Debit Note value must be less than zero');
+                return;
+            }
             let jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
@@ -710,7 +734,7 @@ End Code
     }
     function DeleteDetail() {
         if (row_d !== null) {
-            $.get(path, 'Acc/DelCNDNDetail?Branch=' + row.BranchCode + '&Code=' + row.DocNo + '&Item=' + row_d.ItemNo)
+            $.get(path+ 'Acc/DelCNDNDetail?Branch=' + row.BranchCode + '&Code=' + row.DocNo + '&Item=' + row_d.ItemNo)
                 .done(function (r) {
                     if (r.creditnote.data !== null) {
                         ShowDetail(row.BranchCode, row.DocNo);

@@ -32,6 +32,7 @@ End Code
                 <button class="btn btn-success" onclick="window.open('/Acc/GenerateReceipt', '_blank');">Generate Receipts</button>
             </div>
         </div>
+        <input type="checkbox" id="chkCancel" />Show Cancel Only
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#tabHeader">Headers</a>
@@ -219,7 +220,7 @@ End Code
                                                 Amount
                                             </td>
                                             <td>
-                                                <input type="number" id="txtAmt" style="width:100%" onchange="CalVATWHT(0)" disabled/>
+                                                <input type="number" id="txtAmt" style="width:100%" onchange="CalVATWHT(0)" disabled />
                                             </td>
                                         </tr>
                                         <tr>
@@ -305,21 +306,21 @@ End Code
                         Voucher No: <input type="text" id="txtVoucherNo" style="width:20%" disabled />
                         Control No: <input type="text" id="txtControlNo" style="width:20%" disabled />
                         #No: <input type="text" id="txtControlItemNo" style="width:5%" disabled />
-                             <div class="row">
-                                     <div class="col-sm-3">
-                                         Cash<br /><input type="number" id="txtCashAmount" class="form-control" disabled />
-                                     </div>
-                                     <div class="col-sm-3">
-                                         Transfer<br /><input type="number" id="txtTransferAmount" class="form-control" disabled />
-                                     </div>
-                                     <div class="col-sm-3">
-                                         Cheque<br /><input type="number" id="txtChequeAmount" class="form-control" disabled />
-                                     </div>
-                                     <div class="col-sm-3">
-                                         Credit<br/><input type="number" id="txtCreditAmount" class="form-control" disabled />
-                                     </div>
-                             </div>
-                             
+                        <div class="row">
+                            <div class="col-sm-3">
+                                Cash<br /><input type="number" id="txtCashAmount" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                Transfer<br /><input type="number" id="txtTransferAmount" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                Cheque<br /><input type="number" id="txtChequeAmount" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                Credit<br /><input type="number" id="txtCreditAmount" class="form-control" disabled />
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
@@ -452,6 +453,11 @@ End Code
         }
         if ($('#txtDocDateT').val() !== "") {
             w += '&DateTo=' + CDateEN($('#txtDocDateT').val());
+        }
+        if ($('#chkCancel').prop('checked') == true) {
+            w += '&show=CANCEL';
+        } else {
+            w += '&show=ACTIVE';
         }
         $.get(path + 'acc/getReceipt?type=ADV&branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.receipt.header.length == 0) {
@@ -698,7 +704,7 @@ End Code
     }
     function DeleteDetail() {
         if (row_d !== null) {
-            $.get(path, 'Acc/DelRcpDetail?Branch=' + row.BranchCode + '&Code=' + row.ReceiptNo + '&Item=' + row_d.ItemNo)
+            $.get(path+ 'Acc/DelRcpDetail?Branch=' + row.BranchCode + '&Code=' + row.ReceiptNo + '&Item=' + row_d.ItemNo)
                 .done(function (r) {
                     if (r.rcpdetail.data !== null) {
                         ShowDetail(row.BranchCode, row.ReceiptNo);
