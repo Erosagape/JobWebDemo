@@ -116,7 +116,7 @@ End Code
 </div>
 <script type="text/javascript">
     const path = '@Url.Content("~")';
-let branch = getQueryString('branch');
+    let branch = getQueryString('branch');
     let receiptno = getQueryString('code');
     $.get(path + 'acc/getreceivereport?branch=' + branch + '&code=' + receiptno, function (r) {
         if (r.receipt.data.length !== null) {

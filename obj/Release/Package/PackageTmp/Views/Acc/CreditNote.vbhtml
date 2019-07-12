@@ -403,7 +403,8 @@ End Code
             TotalNet:CNum($('#txtTotalNet').val()),
             CurrencyCode:$('#txtDCurrencyCode').val(),
             ExchangeRate:CNum($('#txtExchangeRate').val()),
-            ForeignNet:CNum($('#txtForeignNet').val())
+            ForeignNet: CNum($('#txtForeignNet').val()),
+            TaxInvNo: ''
         };
     }
     function SetLOVs() {
@@ -572,6 +573,7 @@ End Code
         });
     }
     function ShowDetail(branch, code) {
+        $('#tbDetail').DataTable().clear().draw();
         $.get(path + 'Acc/GetCNDNDetail?Branch=' + branch + '&Code=' + code, function (r) {
             if (r.creditnote.detail.length > 0) {
                 let d = r.creditnote.detail;
@@ -698,7 +700,8 @@ End Code
                 TotalNet:CNum($('#txtTotalNet').val()),
                 CurrencyCode:$('#txtDCurrencyCode').val(),
                 ExchangeRate:CNum($('#txtExchangeRate').val()),
-                ForeignNet:CNum($('#txtForeignNet').val())
+                ForeignNet: CNum($('#txtForeignNet').val()),
+                TaxInvNo: row_d.TaxInvNo
             };
             if ($('#txtDocType').val() == '0' && obj.TotalNet < 0) {
                 alert('Credit Note value must be more than zero');
@@ -816,7 +819,8 @@ End Code
         $('#txtIs50Tavi').val(dt.Is50Tavi);
         $('#txtWHTRate').val(dt.Rate50Tavi);
         $('#txtIsTaxCharge').val(dt.IsTaxCharge);
-        $('#txtVATRate').val(CDbl(dt.VATRate,0));
+        $('#txtVATRate').val(CDbl(dt.VATRate, 0));
+        row_d.TaxInvNo = dt.LastReceiptNo;
     }
 
 

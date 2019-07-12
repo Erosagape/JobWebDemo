@@ -481,6 +481,15 @@ Public Class CCNDNDetail
             m_ForeignNet = value
         End Set
     End Property
+    Private m_TaxInvNo As String
+    Public Property TaxInvNo As String
+        Get
+            Return m_TaxInvNo
+        End Get
+        Set(value As String)
+            m_TaxInvNo = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -598,6 +607,10 @@ Public Class CCNDNDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ForeignNet"))) = False Then
                         row.ForeignNet = rd.GetDouble(rd.GetOrdinal("ForeignNet"))
+                    End If
+                    Dim oInv = New CRcpDetail(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND InvoiceNo='{1}' AND InvoiceItemNo='{2}'", row.BranchCode, row.BillingNo, row.BillItemNo))
+                    If oInv.Count > 0 Then
+                        row.TaxInvNo = oInv(0).ReceiptNo
                     End If
                     lst.Add(row)
                 End While

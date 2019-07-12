@@ -242,13 +242,20 @@ Namespace Controllers
                     tSqlw &= String.Format(" AND DocNo ='{0}'", Request.QueryString("Code").ToString)
                 End If
                 Dim oData = New CCNDNHeader(jobWebConn).GetData(tSqlw)
+                Dim strCust As String = "[]"
+                If oData.Count > 0 Then
+                    Dim oCust = New CCompany(jobWebConn).GetData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}'", oData(0).CustCode, oData(0).CustBranch))
+                    If oCust.Count > 0 Then
+                        strCust = JsonConvert.SerializeObject(oCust(0))
+                    End If
+                End If
                 Dim jsonH As String = JsonConvert.SerializeObject(oData)
                 Dim oDataD = New CCNDNDetail(jobWebConn).GetData(tSqlw)
-                Dim jsonD As String = JsonConvert.SerializeObject(oData)
-                Dim json = "{""creditnote"":{""header"":" & jsonH & ",""detail"":" & jsonD & "}}"
+                Dim jsonD As String = JsonConvert.SerializeObject(oDataD)
+                Dim json = "{""creditnote"":{""header"":" & jsonH & ",""detail"":" & jsonD & ",""customer"":" & strCust & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("{""creditnote"":{""header"":[],""detail"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+                Return Content("{""creditnote"":{""header"":[],""detail"":[],""customer"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function SetCNDNHeader(<FromBody()> data As CCNDNHeader) As ActionResult
