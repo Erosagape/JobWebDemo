@@ -409,6 +409,9 @@
     <Compile Include="Models\CInvDetail.vb" />
     <Compile Include="Models\CInvHeader.vb" />
     <Compile Include="Models\CJobOrder.vb" />
+    <Compile Include="Models\CQuoDetail.vb" />
+    <Compile Include="Models\CQuoHeader.vb" />
+    <Compile Include="Models\CQuoItem.vb" />
     <Compile Include="Models\CRcpDetail.vb" />
     <Compile Include="Models\CRcpHeader.vb" />
     <Compile Include="Models\CRole.vb" />

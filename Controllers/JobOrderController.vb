@@ -28,9 +28,225 @@ Namespace Controllers
             Return GetView("FormQuotation")
         End Function
         Function Quotation() As ActionResult
-            'Return GetView("Quotation", "MODULE_SALES")
-            Return RedirectToAction("FormQuotation")
+            Return GetView("Quotation", "MODULE_SALES")
         End Function
+        Function GetQuotation() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE QNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND QNo='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oDataH = New CQuoHeader(jobWebConn).GetData(tSqlw)
+                Dim jsonH As String = JsonConvert.SerializeObject(oDataH)
+                Dim oDataD = New CQuoHeader(jobWebConn).GetData(tSqlw)
+                Dim jsonD As String = JsonConvert.SerializeObject(oDataD)
+                Dim oDataI = New CQuoHeader(jobWebConn).GetData(tSqlw)
+                Dim jsonI As String = JsonConvert.SerializeObject(oDataI)
+                Dim json As String = "{""quotation"":{""header"":" & jsonH & ",""detail"":" & jsonD & ",""item"":" & jsonI & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetQuoHeader(<FromBody()> data As CQuoHeader) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    If "" & data.QNo = "" Then
+                        data.AddNew("Q-" & DateTime.Now.ToString("yyMM") & "-####")
+                    End If
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND QNo='{1}' ", data.BranchCode, data.QNo))
+                    Dim json = "{""result"":{""data"":""" & data.QNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelQuoHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE QNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""quoheader"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND QNo='{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""quoheader"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CQuoHeader(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+                Dim oDataD As New CQuoDetail(jobWebConn)
+                oDataD.DeleteData(tSqlw)
+                Dim oDataI As New CQuoItem(jobWebConn)
+                oDataI.DeleteData(tSqlw)
+                Dim json = "{""quoheader"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetQuoDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE QNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND QNo='{0}'", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Seq")) Then
+                    tSqlw &= String.Format(" AND SeqNo={0}", Request.QueryString("Seq").ToString)
+                End If
+                Dim oData = New CQuoDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                Dim oDataD = New CQuoItem(jobWebConn).GetData(tSqlw)
+                Dim jsonD As String = JsonConvert.SerializeObject(oDataD)
+                json = "{""quotation"":{""detail"":" & json & ",""items"":" & jsonD & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetQuoDetail(<FromBody()> data As CQuoDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    If "" & data.QNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Q.No""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND QNo='{1}' AND SeqNo={2} ", data.BranchCode, data.QNo, data.SeqNo))
+                    Dim json = "{""result"":{""data"":""" & data.SeqNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelQuoDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE QNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""quodetail"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND QNo='{0}' ", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""quodetail"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Seq")) Then
+                    tSqlw &= String.Format(" AND SeqNo={0} ", Request.QueryString("Seq").ToString)
+                End If
+                Dim oData As New CQuoDetail(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+                Dim oDataD As New CQuoItem(jobWebConn)
+                oDataD.DeleteData(tSqlw)
+
+                Dim json = "{""quodetail"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetQuoItem() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE QNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND QNo='{0}'", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Seq")) Then
+                    tSqlw &= String.Format(" AND SeqNo={0}", Request.QueryString("Seq").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format(" AND ItemNo={0}", Request.QueryString("Item").ToString)
+                End If
+                Dim oData = New CQuoItem(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""quotation"":{""items"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetQuoItem(<FromBody()> data As CQuoItem) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    If "" & data.QNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    If "" & data.SeqNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Sequence""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND QNo='{1}' And SeqNo={2} And ItemNo={3} ", data.BranchCode, data.QNo, data.SeqNo, data.ItemNo))
+                    Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelQuoItem() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE QNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""quoitem"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND QNo='{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""quoitem"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Seq")) Then
+                    tSqlw &= String.Format(" AND SeqNo={0} ", Request.QueryString("Seq").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format(" AND ItemNo={0} ", Request.QueryString("Item").ToString)
+                End If
+                Dim oData As New CQuoItem(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""quoitem"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+
         Function QuoApprove() As ActionResult
             Return GetView("QuoApprove", "MODULE_SALES")
         End Function

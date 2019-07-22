@@ -8,7 +8,7 @@ End Code
             <div class="col-sm-6">
                 Branch Code :<br />
                 <div style="display:flex">
-                    <input type="text" id="txtBranchCode" style="width:100px">
+                    <input type="text" id="txtBranchCode" style="width:100px" disabled>
                     <input type="button" class="btn btn-default" style="width:50px" value="..." onclick="SearchData('branch')" />
                     <input type="text" id="txtBranchName" style="width:100%" disabled>
                 </div>
@@ -55,8 +55,8 @@ End Code
                         </div>
                         <div style="display:flex">
                             <div style="flex:1">Max Advance :<br /><input type="number" id="txtMaxAdvance" class="form-control" value="0.00"></div>
-                            <div style="flex:1">Max Cost :<br /><input type="number" id="txtMaxCost" class="form-control" value="0.00"></div>
-                            <div style="flex:1">Min Charge :<br /><input type="number" id="txtMinCharge" class="form-control" value="0.00"></div>
+                            <div style="flex:1">Max Cost :<br /><input type="number" id="txtMaxCost" class="form-control" value="0.00" onchange="CalProfit()"></div>
+                            <div style="flex:1">Min Charge :<br /><input type="number" id="txtMinCharge" class="form-control" value="0.00" onchange="CalProfit()"></div>
                             <div style="flex:1">Min Profit :<br /><input type="number" id="txtMinProfit" class="form-control" value="0.00"></div>
                         </div>
                         <div style="display:flex">
@@ -81,6 +81,7 @@ End Code
         </div>
     </div>
 </div>
+<div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     let path = '@Url.Content("~")';
@@ -91,6 +92,11 @@ End Code
     //});
     
     function SetEvents() {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+            var dv = document.getElementById("dvLOVs");
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+        });
+
         let lists = 'JOB_TYPE=#txtJobType,SHIP_BY=#txtShipBy';
         loadCombos(path, lists);
         $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
@@ -120,15 +126,13 @@ End Code
                     responsive: true,
                     destroy:true
                 });
-                $('#tbDetail tbody').on('click', 'tr', function() {
-                    $('#tbDetail tbody > tr').removeClass('selected');
-                    $(this).addClass('selected');
-
-                    row = $('#tbDetail').DataTable().row(this).data();
-                });
-                $('#tbDetail tbody').on('click', 'button', function () {
+                $('#tbDetail tbody').on('click', 'tr', function () {
+                    SetSelect('#tbDetail', this);
+                    row = $('#tbDetail').DataTable().row(this).data(); //read current row selected
                     ClearData();
                     ReadData(row);
+                });
+                $('#tbDetail tbody').on('click', 'button', function () {
                     $('#dvEditor').modal('show');
                 });
             });
@@ -160,9 +164,9 @@ End Code
 	function SaveData(){
 		var obj={
             ID:$('#txtID').val(),
-            BranchCode:row.BranchCode,
-            JobType:row.JobType,
-            ShipBy:row.ShipBy,
+            BranchCode:$('#txtBranchCode').val(),
+            JobType:$('#txtJobType').val(),
+            ShipBy:$('#txtShipBy').val(),
             SICode:$('#txtSICode').val(),
             SDescription:$('#txtSDescription').val(),
             TRemark:$('#txtTRemark').val(),
@@ -214,5 +218,22 @@ End Code
         $('#txtActive').val('1');
         $('#txtLastUpdate').val(GetToday());
         $('#txtUpdateBy').val(user);
-	}
+    }
+    function SearchData(type) {
+        switch (type) {
+            case 'branch':
+                SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
+                break;
+        }
+    }
+    function ReadBranch(dr) {
+        $('#txtBranchCode').val(dr.Code);
+        $('#txtBranchName').val(dr.BrName);
+    }
+    function CalProfit() {
+        let cost = $('#txtMaxCost').val();
+        let charge = $('#txtMinCharge').val();
+        let minprofit = CNum(charge) - CNum(cost);
+        $('#txtMinProfit').val(CNum(minprofit));
+    }
 </script>

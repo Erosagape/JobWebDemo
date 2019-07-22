@@ -1,6 +1,5 @@
-﻿
-@Code
-    ViewBag.Title = "Billing Ac"
+﻿@Code
+    ViewBag.Title = "Billing Acknowledgement"
 End Code
     <div class="panel-body">
         <div class="row">
