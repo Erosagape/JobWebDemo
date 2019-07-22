@@ -388,7 +388,7 @@ End Code
             DocNo:$('#txtDDocNo').val(),
             ItemNo:$('#txtItemNo').val(),
             BillingNo: $('#txtBillingNo').val(),
-            BillItemNo:CNum($('#txtBillitemNo').val()),
+            BillItemNo:CNum($('#txtBillItemNo').val()),
             SICode:$('#txtSICode').val(),
             SDescription:$('#txtSDescription').val(),
             OriginalAmt:CNum($('#txtOriginalAmt').val()),
@@ -685,7 +685,7 @@ End Code
                 DocNo:$('#txtDDocNo').val(),
                 ItemNo:$('#txtItemNo').val(),
                 BillingNo: $('#txtBillingNo').val(),
-                BillitemNo:$('#txtBillitemNo').val(),
+                BillItemNo:$('#txtBillItemNo').val(),
                 SICode:$('#txtSICode').val(),
                 SDescription:$('#txtSDescription').val(),
                 OriginalAmt:CNum($('#txtOriginalAmt').val()),
@@ -778,7 +778,7 @@ End Code
         CalForeign();
     }
     function ShowInvoice() {
-        $.get(path + 'acc/getinvforreceive?show=ALL&billto=' + $('#txtCustCode').val() + '&branch=' + $('#txtBranchCode').val(), function (r) {
+        $.get(path + 'acc/getinvforreceive?show=ALL&billto=' + row.CustCode + '&branch=' + row.BranchCode, function (r) {
             if (r.invdetail.data.length == 0) {
                 $('#tbInvoice').DataTable().clear().draw();
                 $('#frmSearchBill').modal('show');

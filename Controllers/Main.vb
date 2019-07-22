@@ -144,6 +144,8 @@ GROUP BY a.UserID,b.ModuleID
 "
             If uname <> "" Then
                 SQL = String.Format(SQL, " AND a.UserID='" & uname & "'")
+            Else
+                SQL = String.Format(SQL, "")
             End If
             Dim dt As DataTable = New CUtil(jobWebConn).GetTableFromSQL(SQL)
             Dim iRow As Integer = 0
@@ -151,6 +153,46 @@ GROUP BY a.UserID,b.ModuleID
 
                 Dim oAuth = New CUserAuth(jobWebConn) With {
                     .UserID = If(uname <> "", uname, dr("UserID").ToString()),
+                    .AppID = dr("ModuleCode").ToString(),
+                    .MenuID = dr("ModuleFunc").ToString(),
+                    .Author = dr("Authorize").ToString()
+                }
+                msg += oAuth.SaveData(String.Format(" WHERE UserID='{0}' AND AppID='{1}' AND MenuID='{2}'", oAuth.UserID, oAuth.AppID, oAuth.MenuID)) & "\n"
+                iRow += 1
+            Next
+            Return msg & iRow & " Processed"
+        Catch ex As Exception
+            Return "[ERROR] SetAuthorizeByRole:" + ex.Message
+        End Try
+    End Function
+    Friend Function SetAuthorizeFromPolicy(roleid As String) As String
+        Dim msg As String = ""
+        Try
+            Dim SQL As String = "
+SELECT a.UserID,SUBSTRING(b.ModuleID,1,CHARINDEX('/',b.ModuleID)-1) as ModuleCode,
+SUBSTRING(b.ModuleID,CHARINDEX('/',b.ModuleID)+1,50) as ModuleFunc,
+(CASE WHEN MAX(CASE WHEN CHARINDEX('M',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'M' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('E',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'E' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('I',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'I' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('R',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'R' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('D',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'D' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('P',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'P' ELSE '' END) 
+ as Authorize
+FROM Mas_UserRolePolicy b,Mas_UserRoleDetail a
+WHERE a.RoleID=b.RoleID {0}
+GROUP BY a.UserID,b.ModuleID
+"
+            If roleid <> "" Then
+                SQL = String.Format(SQL, " AND b.RoleID='" & roleid & "'")
+            Else
+                SQL = String.Format(SQL, "")
+            End If
+            Dim dt As DataTable = New CUtil(jobWebConn).GetTableFromSQL(SQL)
+            Dim iRow As Integer = 0
+            For Each dr As DataRow In dt.Rows
+
+                Dim oAuth = New CUserAuth(jobWebConn) With {
+                    .UserID = dr("UserID").ToString(),
                     .AppID = dr("ModuleCode").ToString(),
                     .MenuID = dr("ModuleFunc").ToString(),
                     .Author = dr("Authorize").ToString()
@@ -1231,5 +1273,12 @@ INNER JOIN Job_InvoiceHeader ih ON rd.BranchCode=ih.BranchCode AND rd.InvoiceNo=
 LEFT JOIN Job_CashControlSub vd ON rd.BranchCode=vd.BranchCode AND rd.ControlNo=vd.ControlNo AND rd.ControlItemNo=vd.ItemNo
 "
         Return sql
+    End Function
+    Function SQLSelectServiceBudget() As String
+        Return "
+SELECT a.*,b.ID,b.TRemark,b.MaxAdvance,b.MaxCost,b.MinCharge,b.MinProfit,b.Active,b.LastUpdate,b.UpdateBy
+FROM Job_SrvSingle a LEFT JOIN Job_BudgetPolicy b
+ON a.SICode=b.SICode 
+"
     End Function
 End Module

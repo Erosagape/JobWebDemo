@@ -197,12 +197,13 @@ color:blue;
                             <button class="btn btn-default btn-block" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('venders')">ผู้ให้บริการ</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('ServUnit')">หน่วยบริการ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('Bank')">ธนาคาร</button>
                         </div>
                         <div class="col-sm-6">
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('ServiceGroup')">กลุ่มค่าบริการ</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Bank')">ธนาคาร</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('BudgetPolicy')">มาตรฐานค่าบริการ</button>
                         </div>
                     </div>
                 </div>
@@ -509,6 +510,9 @@ color:blue;
                     break;
                 case 'Role':
                     window.location.href = path + 'Config/Role';
+                    break;
+                case 'BudgetPolicy':
+                    window.location.href = path + 'Master/BudgetPolicy';
                     break;
                 default:
                     alert('Under Development, Coming soon!');

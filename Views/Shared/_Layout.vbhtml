@@ -6,12 +6,15 @@
     <link rel="stylesheet" href="~/Content/bootstrap.min.css">
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css">
     <link rel="stylesheet" href="~/Content/jquery.datatables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
     <script src="~/Scripts/bootstrap-select.js"></script>
     <script src="~/Scripts/Func/util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
+
     <title>@ViewBag.Title</title>
     <script type="text/javascript">
         function BackToMenu() {

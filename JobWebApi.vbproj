@@ -394,6 +394,7 @@
     <Compile Include="Models\CBillHeader.vb" />
     <Compile Include="Models\CBookAccount.vb" />
     <Compile Include="Models\CBranch.vb" />
+    <Compile Include="Models\CBudgetPolicy.vb" />
     <Compile Include="Models\CClrDetail.vb" />
     <Compile Include="Models\CClrHeader.vb" />
     <Compile Include="Models\CCompany.vb" />
@@ -564,6 +565,7 @@
     <Content Include="Views\Acc\GenerateBilling.vbhtml" />
     <Content Include="Views\Acc\GenerateReceipt.vbhtml" />
     <Content Include="Views\Acc\GenerateTaxInv.vbhtml" />
+    <Content Include="Views\Master\BudgetPolicy.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

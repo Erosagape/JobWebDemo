@@ -50,6 +50,9 @@ Namespace Controllers
         Function Bank() As ActionResult
             Return GetView("Bank", "MODULE_MAS")
         End Function
+        Function BudgetPolicy() As ActionResult
+            Return GetView("BudgetPolicy", "MODULE_MAS")
+        End Function
         Function GetServiceGroup() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE GroupCode<>'' "
@@ -934,5 +937,80 @@ AND b.IsApplyPolicy=1
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function GetServiceBudget() As ActionResult
+            Try
+                Dim tSqlW As String = " AND b.Active=1 "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlW &= String.Format(" AND b.BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= String.Format(" AND b.JobType={0} ", Request.QueryString("JType").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlW &= String.Format(" AND b.ShipBy={0} ", Request.QueryString("SBy").ToString)
+                End If
+
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(Main.SQLSelectServiceBudget() & tSqlW)
+                Dim json As String = JsonConvert.SerializeObject(oData.Rows)
+                json = "{""budgetpolicy"":{""data"":" & json & ",""msg"":""OK""}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""budgetpolicy"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
+        Function GetBudgetPolicy() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ID<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND ID={0}", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CBudgetPolicy(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""budgetpolicy"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetBudgetPolicy(<FromBody()> data As CBudgetPolicy) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.ID = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE ID={0} ", data.ID))
+                    Dim json = "{""result"":{""data"":""" & data.ID & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelBudgetPolicy() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ID<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ID Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""budgetpolicy"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CBudgetPolicy(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""budgetpolicy"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+
     End Class
 End Namespace

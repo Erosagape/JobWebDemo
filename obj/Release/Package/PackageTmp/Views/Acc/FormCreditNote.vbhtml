@@ -1,16 +1,12 @@
 ﻿@Code
     Layout = "~/Views/Shared/_Report.vbhtml"
     ViewBag.Title = "Credit Note Slip"
-    ViewBag.ReportName = "CREDIT NOTE"
+    ViewBag.ReportName = ""
 End Code
 <style>
-    * {
-        font-family: Tahoma;
-        font-size: 11px;
-    }
 
     td {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     table {
@@ -18,6 +14,9 @@ End Code
         border-collapse: collapse;
     }
 </style>
+<div style="text-align:center">
+    <h3><label id="lblDocType">CREDIT NOTE</label></h3>
+</div>
 <div style="display:flex">
     <div style="flex:3">
 
@@ -60,7 +59,6 @@ End Code
         
     </div>
 </div>
-<br />
 <div style="display:flex">
     <div style="flex:1">
         <label id="lblCustAddress"></label>
@@ -69,7 +67,7 @@ End Code
 
     </div>
 </div>
-<br /><br />
+<br />
 <div style="display:flex">
     <div style="flex:1">
         บริษัทได้ปรับปรุงรายการบันทึกบัญชีของท่าน ดังต่อไปนี้
@@ -83,7 +81,7 @@ End Code
             <th>รายการ</th>
             <th>ใบแจ้งหนี้</th>
             <th>ใบกำกับภาษี</th>
-            <th>มูลค่าเดิน</th>
+            <th>มูลค่าเดิม</th>
             <th>มูลค่าที่ถูกต้อง</th>
             <th>ผลต่างจำนวนเงิน</th>
         </tr>
@@ -92,7 +90,7 @@ End Code
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="5" rowspan="3">
+            <td colspan="5" rowspan="4">
                 <div style="display:flex">
                     <div style="flex:4">
 
@@ -101,6 +99,7 @@ End Code
                     <div style="flex:1">
                         ผลต่าง <br />
                         ภาษีมูลค่าเพิ่ม <label id="lblVATRate"></label>% <br />
+                        หัก ณ ที่จ่าย<br />
                         รวมทั้งสิ้น
                     </div>
                 </div>
@@ -109,6 +108,9 @@ End Code
         </tr>
         <tr>
             <td align="right"><label id="lblTotalVAT"></label></td>
+        </tr>
+        <tr>
+            <td align="right"><label id="lblTotalWHT"></label></td>
         </tr>
         <tr>
             <td align="right"><label id="lblTotalNet"></label></td>
@@ -137,7 +139,7 @@ End Code
 
     </div>
     <div style="flex:6 ">
-        เหตุผลที่ลดหนี้ <label id="lblRemark"></label>
+        <label id="lblRemark"></label>
     </div>
     <div style="flex:1">
 
@@ -166,15 +168,19 @@ End Code
     });
     function ShowData(dt) {
         let h = dt.header[0];
-        let c = dt.customer[0];
+        let c = dt.customer;
         $('#lblCustNameThai').text(c.NameThai);
         $('#lblCustAddress').text(c.TAddress1 + '\n' + c.TAddress2);
         $('#lblCustTaxBranch').text(c.Branch);
         $('#lblCustTaxNumber').text(c.TaxNumber);
 
+        let typeThai = h.DocType == 0 ? 'ลดหนี้' : 'เพิ่มหนี้';
+        let typeEng = h.DocType == 0 ? 'CREDIT NOTE' : 'DEBIT NOTE';
+
         $('#lblDocNo').text(h.DocNo);
+        $('#lblDocType').text(typeEng);
         $('#lblDocDate').text(ShowDate(CDateTH(h.DocDate)));
-        $('#lblRemark').text(h.Remark);
+        $('#lblRemark').text('เหตุผลที่' + typeThai + ' ' + h.Remark);
 
         let html = '';
         let service = 0;
@@ -188,23 +194,22 @@ End Code
             html = '<td>' + d.SDescription + '</td>';
             html += '<td style="text-align:center">' + d.BillingNo + '</td>';
             html += '<td style="text-align:center">' + d.TaxInvNo + '</td>';
-            html += '<td style="text-align:right">' + (d.DiffAmt >0? ShowNumber(d.DiffAmt,2):'0.00') + '</td>';
-            html += '<td style="text-align:right">' + (d.VATAmt > 0 ? ShowNumber(d.VATAmt, 2) : '0.00') + '</td>';
-            html += '<td style="text-align:right">' + (d.WHTAmt > 0 ? ShowNumber(d.WHTAmt, 2) : '0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.OriginalAmt >0? ShowNumber(d.OriginalAmt,2):'0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.CorrectAmt > 0 ? ShowNumber(d.CorrectAmt, 2) : '0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.DiffAmt > 0 ? ShowNumber(d.DiffAmt, 2) : '0.00') + '</td>';
             html += '</tr>';
 
             $('#tbDetail').append(html);
 
-            if (d.TotalNet > 0) {
-                service += Number(d.DiffAmt);
-                vat += Number(d.VATAmt);
-                wht += Number(d.WHTAmt);
-                total += Number(d.TotalNet);
-            }
+            service += Number(d.DiffAmt);
+            vat += Number(d.VATAmt);
+            wht += Number(d.WHTAmt);
+            total += Number(d.TotalNet);
         }
         $('#lblTotalDiff').text(ShowNumber(service, 2));
         $('#lblTotalVAT').text(ShowNumber(vat, 2));
-        $('#lblTotalNet').text(ShowNumber(total + wht, 2));
-        $('#lblTotalBaht').text(CNumThai(total + wht));
+        $('#lblTotalWHT').text(ShowNumber(wht, 2));
+        $('#lblTotalNet').text(ShowNumber(total, 2));
+        $('#lblTotalBaht').text(CNumThai(total));
     }
 </script>

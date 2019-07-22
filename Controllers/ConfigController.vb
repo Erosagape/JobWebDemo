@@ -578,6 +578,9 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE RoleID='{0}' AND ModuleID='{1}' ", data.RoleID, data.ModuleID))
+                    If msg.Substring(0, 1) = "S" Then
+                        msg = Main.SetAuthorizeFromPolicy(data.RoleID)
+                    End If
                     Dim json = "{""result"":{""data"":""" & data.ModuleID & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
