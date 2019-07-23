@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>07/22/2019 16:02:44</publishTime>
+      <publishTime>07/23/2019 18:25:45</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>07/22/2019 16:02:44</publishTime>
+      <publishTime>07/23/2019 18:25:45</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>07/22/2019 16:02:43</publishTime>
+      <publishTime>07/23/2019 18:25:44</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -971,7 +971,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/22/2019 11:30:23</publishTime>
     </File>
     <File Include="Views/Acc/Billing.vbhtml">
-      <publishTime>07/11/2019 13:09:52</publishTime>
+      <publishTime>07/22/2019 16:08:09</publishTime>
     </File>
     <File Include="Views/Acc/Cheque.vbhtml">
       <publishTime>07/10/2019 19:19:57</publishTime>
@@ -1154,7 +1154,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2019 10:28:44</publishTime>
     </File>
     <File Include="Views/JobOrder/Quotation.vbhtml">
-      <publishTime>07/22/2019 18:17:11</publishTime>
+      <publishTime>07/23/2019 18:55:25</publishTime>
     </File>
     <File Include="Views/JobOrder/ShowJob.vbhtml">
       <publishTime>07/10/2019 19:19:57</publishTime>

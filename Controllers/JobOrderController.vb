@@ -33,17 +33,34 @@ Namespace Controllers
         Function GetQuotation() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE QNo<>'' "
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString() = "ACTIVE" Then
+                        tSqlw &= String.Format(" AND NOT ISNULL(CancelBy,'')<>'' ")
+                    End If
+                    If Request.QueryString("Show").ToString() = "CANCEL" Then
+                        tSqlw &= String.Format(" AND ISNULL(CancelBy,'')<>'' ")
+                    End If
+                End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND QNo='{0}' ", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND QNo ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format("AND CustCode ='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
                 End If
                 Dim oDataH = New CQuoHeader(jobWebConn).GetData(tSqlw)
                 Dim jsonH As String = JsonConvert.SerializeObject(oDataH)
-                Dim oDataD = New CQuoHeader(jobWebConn).GetData(tSqlw)
+                Dim oDataD = New CQuoDetail(jobWebConn).GetData(tSqlw)
                 Dim jsonD As String = JsonConvert.SerializeObject(oDataD)
-                Dim oDataI = New CQuoHeader(jobWebConn).GetData(tSqlw)
+                Dim oDataI = New CQuoItem(jobWebConn).GetData(tSqlw)
                 Dim jsonI As String = JsonConvert.SerializeObject(oDataI)
                 Dim json As String = "{""quotation"":{""header"":" & jsonH & ",""detail"":" & jsonD & ",""item"":" & jsonI & "}}"
                 Return Content(json, jsonContent)
@@ -59,7 +76,7 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     If "" & data.QNo = "" Then
-                        data.AddNew("Q-" & DateTime.Now.ToString("yyMM") & "-####")
+                        data.AddNew("Q-" & DateTime.Now.ToString("yyMM") & "-____")
                     End If
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND QNo='{1}' ", data.BranchCode, data.QNo))
                     Dim json = "{""result"":{""data"":""" & data.QNo & """,""msg"":""" & msg & """}}"

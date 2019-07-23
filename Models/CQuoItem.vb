@@ -20,12 +20,12 @@ Public Class CQuoItem
             m_BranchCode = value
         End Set
     End Property
-    Private m_QNo As Date
-    Public Property QNo As Date
+    Private m_QNo As String
+    Public Property QNo As String
         Get
             Return m_QNo
         End Get
-        Set(value As Date)
+        Set(value As String)
             m_QNo = value
         End Set
     End Property

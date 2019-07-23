@@ -56,6 +56,16 @@ Public Class CQuoDetail
             m_ShipBy = value
         End Set
     End Property
+    Public ReadOnly Property JobTypeName As String
+        Get
+            Return GetValueConfig("JOB_TYPE", m_JobType.ToString("00"))
+        End Get
+    End Property
+    Public ReadOnly Property ShipByName As String
+        Get
+            Return GetValueConfig("SHIP_BY", m_ShipBy.ToString("00"))
+        End Get
+    End Property
     Private m_Description As String
     Public Property Description As String
         Get
