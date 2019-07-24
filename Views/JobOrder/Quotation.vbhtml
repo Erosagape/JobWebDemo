@@ -583,7 +583,7 @@ End Code
         let code = row.QNo;
         if (code !== '') {
             let branch = row.BranchCode;
-            window.open(path + 'JobOrder/FormQuotation?Branch=' + branch + '&Code=' + code, '_blank');
+            window.open(path + 'JobOrder/FormQuotation?Branch=' + branch + '&docno=' + code, '_blank');
         }
     }
     function CancelData() {
@@ -715,7 +715,7 @@ End Code
         row_i.TaxRate = $('#txtTaxRate').val();
         row_i.TaxAmt = $('#txtTaxAmt').val();
         row_i.TotalAmt = $('#txtTotalAmt').val();
-        row_i.TotalCharge = $('#txtTotalcharge').val();
+        row_i.TotalCharge = $('#txtTotalCharge').val();
         row_i.UnitDiscntPerc = $('#txtUnitDiscntPerc').val();
         row_i.UnitDiscntAmt = $('#txtUnitDiscntAmt').val();
         row_i.VenderCode = $('#txtVenderCode').val();

@@ -354,12 +354,12 @@ End Code
                                         </div>
                                         <div style="flex:1">
                                             WHT
-                                            <select id="txtIsTax" onchange="CalVATWHT(1)">
+                                            <select id="txtIsTax" onchange="CalVATWHT()">
                                                 <option value="0">NO</option>
                                                 <option value="1">YES</option>
                                             </select>
                                             Rate
-                                            <input type="text" id="txtTaxRate" onchange="CalVATWHT(1)" />
+                                            <input type="text" id="txtTaxRate" onchange="CalVATWHT()" />
                                             <br />
                                             WHT Amt
                                             <input type="text" id="txtTaxAmt" onchange="CalCommission()" />
@@ -857,6 +857,7 @@ End Code
         $('#txtTotalAmt').val('0');
         $('#txtTotalCharge').val('0');
         $('#txtDiscountType').val('0');
+        ShowDiscount();
         $('#txtUnitDiscntPerc').val('0');
         $('#txtUnitDiscntAmt').val('0');
         $('#txtFUnitDiscntAmt').val('0');
@@ -865,6 +866,7 @@ End Code
         $('#txtVenderCost').val('0');
         $('#txtBaseProfit').val('0');
         $('#txtCommissionType').val('0');
+        ShowCommission();
         $('#txtCommissionPerc').val('0');
         $('#txtCommissionAmt').val('0');
         $('#txtNetProfit').val('0');
@@ -995,18 +997,21 @@ End Code
         $('#txtTaxAmt').val(row_i.TaxAmt);
         $('#txtTotalAmt').val(row_i.TotalAmt);
         $('#txtTotalCharge').val(row_i.TotalCharge);
-        $('#txtDiscountType').val((row_i.UnitDiscntPerc > 0 ? '1' : '0'));
+        $('#txtDiscountType').val((row_i.UnitDiscntPerc > 0 ? '0' : '1'));
+        ShowDiscount();
         $('#txtUnitDiscntPerc').val(row_i.UnitDiscntPerc);
         $('#txtUnitDiscntAmt').val(row_i.UnitDiscntAmt);
         $('#txtVenderCode').val(row_i.VenderCode);
         ShowVender(path, row_i.VenderCode, '#txtVenderName');
         $('#txtVenderCost').val(row_i.VenderCost);
         $('#txtBaseProfit').val(row_i.BaseProfit);
-        $('#txtCommissionType').val((row_i.CommissionPerc > 0 ? '1' : '0'));
+        $('#txtCommissionType').val((row_i.CommissionPerc > 0 ? '0' : '1'));
+        ShowCommission();
         $('#txtCommissionPerc').val(row_i.CommissionPerc);
         $('#txtCommissionAmt').val(row_i.CommissionAmt);
         $('#txtNetProfit').val(row_i.BaseProfit);
         $('#txtIsRequired').val(row_i.IsRequired);
+        CalAmount();
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
@@ -1081,7 +1086,7 @@ End Code
         }
         $('#txtFUnitDiscntAmt').val(CDbl(disc / CNum($('#txtCurrencyRate').val()),2));
         $('#txtTotalCharge').val(CNum($('#txtTotalAmt').val()) - disc);
-        CalVATWHT(0);
+        CalVATWHT();
     }
     function GetBasePrice() {
         let type = $('#txtIsvat').val();
@@ -1103,21 +1108,19 @@ End Code
         }
         return amt;
     }
-    function CalVATWHT(step = 0) {
+    function CalVATWHT() {
         let amt = GetBasePrice();
         let type = $('#txtIsvat').val();
-        if (step == 0) {            
-            let vat = 0;
-            switch (type) {
-                case '0': //novat
-                    vat = 0;
-                    break;
-                default:
-                    vat = amt * (CNum($('#txtVatRate').val()) * 0.01);
-                    break;
-            }
-            $('#txtVatAmt').val(CDbl(vat,2));
+        let vat = 0;
+        switch (type) {
+            case '0': //novat
+                vat = 0;
+                break;
+            default:
+                vat = amt * (CNum($('#txtVatRate').val()) * 0.01);
+                break;
         }
+        $('#txtVatAmt').val(CDbl(vat,2));
         let wht = 0;
         type = $('#txtIsTax').val();
         switch (type) {

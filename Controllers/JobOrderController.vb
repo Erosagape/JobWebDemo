@@ -1,4 +1,6 @@
-﻿Imports System.Web.Http
+﻿Imports System.Net
+Imports System.Net.Http
+Imports System.Web.Http
 Imports System.Web.Mvc
 Imports Newtonsoft.Json
 Namespace Controllers
@@ -27,6 +29,43 @@ Namespace Controllers
         Function FormQuotation() As ActionResult
             Return GetView("FormQuotation")
         End Function
+        Function ApproveQuotation(<FromBody()> ByVal data As String()) As HttpResponseMessage
+            Try
+                ViewBag.User = Session("CurrUser").ToString()
+                Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_SALES", "QuoApprove")
+                If AuthorizeStr.IndexOf("I") < 0 Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+
+                If IsNothing(data) Then
+                    Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+                End If
+
+                Dim json As String = ""
+                Dim lst As String = ""
+                Dim user As String = ""
+                For Each str As String In data
+                    If str.IndexOf("|") >= 0 Then
+                        If lst <> "" Then lst &= ","
+                        lst &= "'" & str & "'"
+                    Else
+                        user = str
+                    End If
+                Next
+
+                If lst <> "" Then
+                    Dim tSQL As String = String.Format("UPDATE Job_QuotationHeader SET DocStatus=1,ApproveBy='" & user & "',ApproveDate='" & DateTime.Now.ToString("yyyy-MM-dd") & "',ApproveTime='" & DateTime.Now.ToString("HH:mm:ss") & "' 
+ WHERE DocStatus=0 AND BranchCode+'|'+QNo in({0})", lst)
+                    Dim result = Main.DBExecute(jobWebConn, tSQL)
+                    If result = "OK" Then
+                        Return New HttpResponseMessage(HttpStatusCode.OK)
+                    End If
+                End If
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            Catch ex As Exception
+                Return New HttpResponseMessage(HttpStatusCode.BadRequest)
+            End Try
+        End Function
         Function Quotation() As ActionResult
             Return GetView("Quotation", "MODULE_SALES")
         End Function
@@ -41,6 +80,9 @@ Namespace Controllers
                         tSqlw &= String.Format(" AND ISNULL(CancelBy,'')<>'' ")
                     End If
                 End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlw &= String.Format("AND DocStatus={0} ", Request.QueryString("Status").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
                 End If
@@ -49,6 +91,9 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     tSqlw &= String.Format("AND CustCode ='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Sales")) Then
+                    tSqlw &= String.Format("AND ManagerCode='{0}' ", Request.QueryString("Sales").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("DateFrom")) Then
                     tSqlw &= " AND DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
