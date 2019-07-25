@@ -20,13 +20,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:03</publishTime>
     </File>
     <File Include="bin/JobWebApi.dll">
-      <publishTime>07/24/2019 16:47:00</publishTime>
+      <publishTime>07/25/2019 18:19:41</publishTime>
     </File>
     <File Include="bin/JobWebApi.pdb">
-      <publishTime>07/24/2019 16:47:00</publishTime>
+      <publishTime>07/25/2019 18:19:41</publishTime>
     </File>
     <File Include="bin/JobWebApi.xml">
-      <publishTime>07/24/2019 16:47:00</publishTime>
+      <publishTime>07/25/2019 18:19:40</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -980,7 +980,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/12/2019 13:50:49</publishTime>
     </File>
     <File Include="Views/Acc/Expense.vbhtml">
-      <publishTime>06/25/2019 10:28:44</publishTime>
+      <publishTime>07/25/2019 18:32:42</publishTime>
     </File>
     <File Include="Views/Acc/FormBill.vbhtml">
       <publishTime>07/10/2019 19:19:57</publishTime>
@@ -1038,6 +1038,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Views/Acc/Invoice.vbhtml">
       <publishTime>07/11/2019 13:08:56</publishTime>
+    </File>
+    <File Include="Views/Acc/Payment.vbhtml">
+      <publishTime>07/25/2019 12:53:17</publishTime>
     </File>
     <File Include="Views/Acc/PettyCash.vbhtml">
       <publishTime>07/10/2019 19:19:57</publishTime>
@@ -1151,7 +1154,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/11/2018 10:43:09</publishTime>
     </File>
     <File Include="Views/JobOrder/QuoApprove.vbhtml">
-      <publishTime>07/24/2019 15:38:18</publishTime>
+      <publishTime>07/24/2019 16:58:10</publishTime>
     </File>
     <File Include="Views/JobOrder/Quotation.vbhtml">
       <publishTime>07/24/2019 18:11:34</publishTime>
@@ -1217,7 +1220,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/19/2019 10:51:02</publishTime>
     </File>
     <File Include="Views/Menu/Index.vbhtml">
-      <publishTime>07/22/2019 11:59:37</publishTime>
+      <publishTime>07/25/2019 13:08:49</publishTime>
     </File>
     <File Include="Views/Report/Index.vbhtml">
       <publishTime>03/19/2019 10:51:02</publishTime>

@@ -409,6 +409,8 @@
     <Compile Include="Models\CInvDetail.vb" />
     <Compile Include="Models\CInvHeader.vb" />
     <Compile Include="Models\CJobOrder.vb" />
+    <Compile Include="Models\CPayDetail.vb" />
+    <Compile Include="Models\CPayHeader.vb" />
     <Compile Include="Models\CQuoDetail.vb" />
     <Compile Include="Models\CQuoHeader.vb" />
     <Compile Include="Models\CQuoItem.vb" />
@@ -569,6 +571,7 @@
     <Content Include="Views\Acc\GenerateReceipt.vbhtml" />
     <Content Include="Views\Acc\GenerateTaxInv.vbhtml" />
     <Content Include="Views\Master\BudgetPolicy.vbhtml" />
+    <Content Include="Views\Acc\Payment.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

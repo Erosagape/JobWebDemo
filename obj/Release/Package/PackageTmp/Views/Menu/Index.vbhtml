@@ -102,13 +102,14 @@ color:blue;
                                     <div class="panel-body">
                                         <a href="#mnuSubFin" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานการเงิน</a>
                                         <div class="collapse" id="mnuSubFin">
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PayAdvance')">จ่ายเงินตามใบเบิก</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvClear')">รับเคลียร์เงินจากใบเบิก</a>
-                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Earnest')">รับเคลียร์เงินมัดจำ</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Cheque')">บันทึกรับเช็ค</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PettyCash')">บันทึกเงินสดย่อย</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('CreditAdv')">บันทึกเงินทดรองจ่าย</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('PayAdvance')">จ่ายเงินตามใบเบิก</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvClear')">รับเคลียร์เงินจากใบเบิก</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Earnest')">รับเคลียร์เงินมัดจำ</a>
                                             <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('RecvInv')">รับชำระจากใบเสร็จ/ใบกำกับ</a>
+                                            <a href="#" class="list-group-item glyphicon-minus" onclick="OpenMenu('Payment')">จ่ายเงินตามบิลค่าใช้จ่าย</a>
                                         </div>
                                         <a href="#mnuSubAcc" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#mnuFin">งานบัญชี</a>
                                         <div class="collapse" id="mnuSubAcc">
@@ -492,6 +493,9 @@ color:blue;
                     break;
                 case 'RecvInv':
                     window.location.href = path + 'Acc/RecvInv';
+                    break;
+                case 'Payment':
+                    window.location.href = path + 'Acc/Payment';
                     break;
                 case 'PettyCash':
                     window.location.href = path + 'Acc/PettyCash';

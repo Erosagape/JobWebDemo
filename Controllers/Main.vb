@@ -304,6 +304,30 @@ on b.BranchCode =a.BranchCode
 and b.AdvNo=a.AdvNo
 "
     End Function
+    Public Function SQLUpdatePayHeader()
+        Return "
+update b 
+set b.TotalExpense =ISNULL(a.SumNet,0)
+,b.TotalVAT=ISNULL(a.SumAmtVAT,0)
+,b.TotalTax=ISNULL(a.SumAmtWHT,0)
+,b.TotalDiscount=ISNULL(a.SumAmtDisc,0)
+,b.TotalNet=ISNULL(a.SumTotal,0)
+,b.ForeignAmt=ISNULL(a.SumFTotal,0)
+from Job_PaymentHeader b left join 
+(
+	select BranchCode,DocNo,Sum(Amt-AmtDisc) as SumNet,
+	sum(AmtVAT) as SumAmtVAT,
+	sum(AmtWHT) as SumAmtWHT,
+    sum(AmtDisc) as SumAmtDisc,
+    sum(Total) as SumTotal,
+    sum(FTotal) as SumFTotal
+	from Job_PaymentDetail 
+	group by BranchCode,DocNo
+) a                                     
+on b.BranchCode =a.BranchCode
+and b.DocNo=a.DocNo
+"
+    End Function
     Function SQLUpdateWHTaxHeader() As String
         Return "
 UPDATE h

@@ -84,13 +84,13 @@ Namespace Controllers
                     tSqlw &= String.Format("AND DocStatus={0} ", Request.QueryString("Status").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND QNo ='{0}' ", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND QNo='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Cust")) Then
-                    tSqlw &= String.Format("AND CustCode ='{0}' ", Request.QueryString("Cust").ToString)
+                    tSqlw &= String.Format("AND CustCode='{0}' ", Request.QueryString("Cust").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Sales")) Then
                     tSqlw &= String.Format("AND ManagerCode='{0}' ", Request.QueryString("Sales").ToString)

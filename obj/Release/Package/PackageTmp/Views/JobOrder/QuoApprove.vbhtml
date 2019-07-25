@@ -126,7 +126,7 @@ End Code
         if ($('#txtAdvDateT').val() !== "") {
             w = w + '&DateTo=' + CDateEN($('#txtAdvDateT').val());
         }
-        w = w + '&Show=ACTIVE';
+        w = w + '&Show=ACTIVE&Status=0';
         $.get(path + 'joborder/getquotation?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.quotation.header.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();

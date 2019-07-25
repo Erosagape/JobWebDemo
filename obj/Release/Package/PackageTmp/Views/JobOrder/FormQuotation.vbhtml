@@ -1,5 +1,4 @@
-﻿
-@Code
+﻿@Code
     Layout = "~/Views/Shared/_Report.vbhtml"
     ViewBag.ReportName = "QUOTATION"
     ViewBag.Title = "Quotation Form"
@@ -33,213 +32,142 @@ End Code
 </style>
 <div style="display:flex">
     <div style="flex:1">
-        CUSTOMER : NIPPO MECHATRONICS (THAILAND) CO., LTD.
+        CUSTOMER : <label id="lblCustName"></label>
     </div>
     <div style="flex:1">
         <div style="flex:1;text-align:right">
-            REF : ______________________________
+            REF : <label id="lblQNo"></label>
         </div>
     </div>
 </div>
 
 <div style="display:flex">
     <div style="flex:1">
-        A : XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        <label id="lblCustAddress"></label>
     </div>
     <div style="flex:1">
         <div style="flex:1;text-align:right">
-            DATE : ______________________________
+            DATE : <label id="lblDocDate"></label>
         </div>
     </div>
 </div>
 
 <div style="display:flex">
     <div style="flex:1">
-        B : TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+        <label id="lblCustTelFax"></label>
     </div>
     <div style="flex:1">
         <div style="flex:1;text-align:right">
-            OFFERED TO : ______________________________
+            OFFERED TO : <label id="lblContactName"></label>
         </div>
     </div>
 </div>
-
+<br/>
 <div style="display:flex">
     <div style="flex:1">
-        K : KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
-    </div>
-    <div style="flex:1">
-        <div style="flex:1;text-align:right">
-            EXPIRY DATE : ______________________________
-        </div>
-    </div>
+        <label id="lblDescriptionH"></label>
+    </div>    
 </div>
-
+<br />
 <div style="display:flex">
     <div style="flex:1">
-        h : uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu
-    </div>
-    <div style="flex:1">
-        <div style="flex:1;text-align:right">
-            EXCHANGE RATE JPY : ______________________________
-        </div>
+        <label id="lblTRemark"></label>
     </div>
 </div>
 
 
 <table style="" border="1" width="100%">
-    <tr>
-        <th width="5%">NO.</th>
-        <th width="45%">DESCRIPTION</th>
-        <th width="5%">UNIT</th>
-        <th width="5%">QTY</th>
-        <th width="15%">UNIT PRICE</th>
-        <th width="5%">XRT</th>
-        <th width="10%">AMOUNT<br />(FC)</th>
-        <th width="10%">AMOUNT<br />(THB)</th>
-    </tr>
-    <tr>
-        <td>
-            1
-        </td>
-        <td colspan="7">
-            CU JPY
-        </td>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>WAREHOUSE IN CHARGE</td>
-        <td>SHP</td>
-        <td>1</td>
-        <td class="number">7000,000.00</td>
-        <td class="number">0.34</td>
-        <td class="number">700,000.00</td>
-        <td class="number">238,000.00</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>OSR - UNLOADING/LAODING FEE FROM TRUCK</td>
-        <td>SHP</td>
-        <td>3</td>
-        <td class="number">5,900.00</td>
-        <td class="number">0.34</td>
-        <td class="number">17,700.00</td>
-        <td class="number">6,018.00</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>OSR - TRANSPORTATION FEE / TRUCK(6 WHEEL)</td>
-        <td>TRK6</td>
-        <td>4</td>
-        <td class="number">1,000.00</td>
-        <td class="number">0.34</td>
-        <td class="number">4,000.00</td>
-        <td class="number">1,360.00</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>OSR - </td>
-        <td>SHP</td>
-        <td>1</td>
-        <td class="number">7000,000.00</td>
-        <td class="number">0.34</td>
-        <td class="number">700,000.00</td>
-        <td class="number">238,000.00</td>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td>WAREHOUSE IN CHARGE</td>
-        <td>SHP</td>
-        <td>1</td>
-        <td class="number">7000,000.00</td>
-        <td class="number">0.34</td>
-        <td class="number">700,000.00</td>
-        <td class="number">238,000.00</td>
-    </tr>
-    <tr>
-        <td>6</td>
-        <td>WAREHOUSE IN CHARGE</td>
-        <td>SHP</td>
-        <td>1</td>
-        <td class="number">7000,000.00</td>
-        <td class="number">0.34</td>
-        <td class="number">700,000.00</td>
-        <td class="number">238,000.00</td>
-    </tr>
-    <tr>
-        <td colspan="6" class="number">
-            SUB TOTAL
-        </td>
-        <td class="number">
-            725,950.00
-        </td>
-        <td class="number">
-            246,823.00
-        </td>
-
-    </tr>
-    <tr>
-        <td>2</td>
-        <td colspan="7">CU THAI</td>
-
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>OSR - UNLOADING/LAODING FEE FROM TRUCK</td>
-        <td>SHP</td>
-        <td>3</td>
-        <td class="number">5,900.00</td>
-        <td class="number">0.34</td>
-        <td class="number">17,700.00</td>
-        <td class="number">6,018.00</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>OSR - TRANSPORTATION FEE / TRUCK(6 WHEEL)</td>
-        <td>TRK6</td>
-        <td>4</td>
-        <td class="number">1,000.00</td>
-        <td class="number">0.34</td>
-        <td class="number">4,000.00</td>
-        <td class="number">1,360.00</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>OSR - </td>
-        <td>SHP</td>
-        <td>1</td>
-        <td class="number">7000,000.00</td>
-        <td class="number">0.34</td>
-        <td class="number">700,000.00</td>
-        <td class="number">238,000.00</td>
-    </tr>
-
-    <tr>
-        <td colspan="6" class="number">
-            SUB TOTAL
-        </td>
-        <td class="number">
-            64,300.00
-        </td>
-        <td class="number">
-            64,300.00
-        </td>
-
-
-    </tr>
-    <tr>
-        <td colspan="6" class="number">GRAND TOTAL(THB)</td>
-        <td colspan="2" style="text-align:right">311,123.00</td>
-    </tr>
-
-
-
-
+    <thead>
+        <tr>
+            <th width="5%">NO.</th>
+            <th width="45%">DESCRIPTION</th>
+            <th width="5%">UNIT</th>
+            <th width="5%">QTY</th>
+            <th width="15%">UNIT PRICE</th>
+            <th width="5%">XRT</th>
+            <th width="10%">AMOUNT<br />(FC)</th>
+            <th width="10%">NET<br />(THB)</th>
+        </tr>
+    </thead>
+    <tbody id="tbDetail">
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6" class="number">GRAND TOTAL (THB)</td>
+            <td colspan="2" style="text-align:right"><label id="lblTotalCharge"></label></td>
+        </tr>
+    </tfoot>
 </table>
+<p>
+    <label id="lblDescriptionF"></label>
+</p>
+<p>
+    Best Regards,
+    <br/><br /><br /><br />
+    <label id="lblManagerName"></label>
+</p>
+<script type="text/javascript">
+    const path = '@Url.Content("~")';
+    let branch = getQueryString('branch');
+    let docno = getQueryString('docno');
+    $.get(path + 'joborder/getquotation?branch=' + branch + '&code=' + docno, function (r) {
+        if (r.quotation.header !== null) {
+            ShowData(r.quotation);
+        }
+    });
+    function LoadCustomer(cde, br) {
+        $.get(path + 'master/getcompany?code=' + cde + '&branch=' + br, function (r) {
+            if (r.company.data.length > 0) {
+                let c = r.company.data[0];
+                $('#lblCustName').text(c.NameThai);
+                $('#lblCustAddress').text(c.TAddress1 + '\n' + c.TAddress2);
+                $('#lblCustTelFax').text(c.Phone + c.FaxNumber);
+            }
+        });
+    }
+    function ShowData(dt) {
+        let h = dt.header[0];
+        LoadCustomer(h.CustCode, h.CustBranch);
 
-<p>REMARK LIST : H8090-KKKJIJUHIIUIYF</p>
-<p>H : POIYUHVKBDJDKHJD</p>
-<p>J : KOUFJHGNKMFINBBF</p>
+        $('#lblQNo').text(h.QNo);
+        $('#lblDocDate').text(ShowDate(CDateTH(h.DocDate)));
+        $('#lblTRemark').text(h.TRemark);
+        $('#lblContactName').text(h.ContactName);
+        $('#lblDescriptionH').text(h.DescriptionH);
+        $('#lblDescriptionF').text(h.DescriptionF);
 
-<p>SUBJECT TO IMPORT DUTY &IMPORT VAT</p>
-<p>SUBJECT TO CUSTOMER OVERTIME . SUNDAY/HOLIDAY/OVER TIME WORK/THUCK DEMURANG. IMPORT LICENSE</p>
+        ShowUser(path, h.ManagerCode, '#lblManagerName');
+
+        let html = '';
+        let service = 0;
+
+        for (let d of dt.detail) {
+
+            html = '<tr><td>' + d.SeqNo + '</td>';
+            html += '<td colspan="3">' + d.Description + '</td>';
+            html += '<td colspan="2">' + d.JobTypeName + '</td>';
+            html += '<td colspan="2">' + d.ShipByName + '</td>';
+            html += '</tr>';
+
+            $('#tbDetail').append(html);
+
+            for (let i of dt.item) {
+                let desc = i.DescriptionThai;
+                desc += i.UnitDiscntAmt > 0 ? '<br/>Discount (Rate=' + i.UnitDiscntPerc + '%)=' + i.UnitDiscntAmt : '';
+                html = '<tr><td>' + d.SeqNo + '.' + i.ItemNo + '</td>';
+                html += '<td>' + desc + '</td>';
+                html += '<td>' + i.UnitCheck + '</td>';
+                html += '<td>' + i.QtyBegin + '-' + i.QtyEnd + '</td>';
+                html += '<td style="text-align:right">' + ShowNumber(i.ChargeAmt, 2) + ' ' + i.CurrencyCode + '</td>';
+                html += '<td style="text-align:center">' + i.CurrencyRate + '</td>';                
+                html += '<td style="text-align:right">' + ShowNumber(i.TotalAmt,2) + '</td>';
+                html += '<td style="text-align:right">' + ShowNumber(i.TotalCharge,2) + '</td>';
+                html += '<tr></tr>';
+
+                $('#tbDetail').append(html);
+                service += Number(i.TotalCharge);
+            }
+        }
+        $('#lblTotalCharge').text(ShowNumber(service, 2));
+    }
+</script>
