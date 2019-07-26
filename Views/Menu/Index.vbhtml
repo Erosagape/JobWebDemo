@@ -256,10 +256,12 @@ color:blue;
                             <button class="btn btn-default btn-block" onclick="OpenMenu('Currency')">สกุลเงิน</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('Country')">ประเทศ</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('vessel')">ชื่อพาหนะ</button>
                         </div>
                         <div class="col-sm-6">
                             <button class="btn btn-default btn-block" onclick="OpenMenu('DeclareType')">ประเภทใบขน</button>
                             <button class="btn btn-default btn-block" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</button>
+                            <button class="btn btn-default btn-block" onclick="OpenMenu('CustomsUnit')">หน่วยสินค้า</button>
                         </div>
                     </div>
                 </div>
@@ -422,6 +424,9 @@ color:blue;
                 case 'CustomsPort':
                     window.location.href = path + 'Master/CustomsPort';
                     break;
+                case 'CustomsUnit':
+                    window.location.href = path + 'Master/CustomsUnit';
+                    break;
                 case 'InterPort':
                     window.location.href = path + 'Master/InterPort';
                     break;
@@ -517,6 +522,9 @@ color:blue;
                     break;
                 case 'BudgetPolicy':
                     window.location.href = path + 'Master/BudgetPolicy';
+                    break;
+                case 'vessel':
+                    window.location.href = path + 'Master/Vessel';
                     break;
                 default:
                     alert('Under Development, Coming soon!');

@@ -262,6 +262,32 @@ function SetGridCheque(p, g, d, t, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridCustomsUnit(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetCustomsUnit', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'customsunit.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "Code", title: "รหัส" },
+            { data: "TName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
 function SetGridCurrency(p, g , d, ev) {
     $(g).DataTable({
         ajax: {
@@ -315,16 +341,16 @@ function SetGridGroupCode(p, g, d, ev) {
     BindEvent(g, d, ev);
 }
 function SetGridUnit(p, g ,d ,ev) {
-    $.get(p + 'joborder/getjobdatadistinct?field=InvProductUnit')
+    $.get(p + 'master/getcustomsunit')
         .done(function (r) {
-            let dr = r[0].Table;
+            let dr = r.customsunit.data;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
                     selected: true, //ให้สามารถเลือกแถวได้
                     columns: [ //กำหนด property ของ header column
                         { data: null, title: "#" },
-                        { data: "val", title: "value" }
+                        { data: "TName", title: "value" }
                     ],
                     "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
                         {
@@ -587,16 +613,16 @@ function SetGridWeightUnit(p, g, d, ev) {
 
 }
 function SetGridVessel(p, g, d, t, ev) {
-    $.get(p + 'joborder/getjobdatadistinct?field='+ t +'VesselName')
+    $.get(p + 'master/getvessel?type='+ t )
         .done(function (r) {
-            let dr = r[0].Table;
+            let dr = r.vessel.data;
             if (dr.length > 0) {
                 $(g).DataTable({
                     data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
                     selected: true, //ให้สามารถเลือกแถวได้
                     columns: [ //กำหนด property ของ header column
                         { data: null, title: "#" },
-                        { data: "val", title: "ชื่อยานพาหนะ" }
+                        { data: "TName", title: "ชื่อยานพาหนะ" }
                     ],
                     "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
                         {

@@ -197,8 +197,8 @@ End Code
                             <br/>
                             <label id="lblAmount" for="txtAmt">Amount :</label>
                             <input type="text" id="txtAmt" style="width:100px;text-align:right" tabindex="17" />
-                            Discount <input type="text" id="txtDiscountPerc" style="width:50px"  tabindex="18"/>
-                            <input type="text" id="txtAmtDisc" tabindex="19" />
+                            Discount <input type="text" id="txtDiscountPerc" style="width:50px" onchange="CalDiscount()" tabindex="18"/>
+                            <input type="text" id="txtAmtDisc" tabindex="19" onchange="CalTotal()" />
                             <br/>
                             <input type="checkbox" id="txtIsTaxCharge" onclick="CalVATWHT()"> VAT :
                             <input type="text" id="txtAmtVAT" style="width:100px;text-align:right" tabindex="20" />
@@ -841,17 +841,29 @@ End Code
         }
         CalVATWHT();
     }
+    function CalDiscount() {
+        let rate = CNum($('#txtDiscountPerc').val());
+        let disc = 0;
+        if (rate == 0) {
+            disc = CNum($('#txtAmtDisc').val());
+        } else {
+            disc = CDbl(CNum($('#txtTotal').val()) * (rate * 0.01), 2);
+            $('#txtAmtDisc').val(disc);
+        }
+        CalTotal();
+    }
     function CalAmount() {
-        let price = CDbl($('#txtUnitPrice').val(),4);
+        let price = CDbl($('#txtUnitPrice').val(), 4);
         let qty = CDbl($('#txtQty').val(),4);
         let rate = CDbl($('#txtExchangeRate').val(),4); //rate ของ detail
         if (qty > 0) {
             let amt = CNum(qty) * CNum(price);
-            $('#txtAmt').val(CDbl(CNum(amt) * CNum(rate),4));
+            $('#txtAmt').val(CDbl(CNum(amt) * CNum(rate), 4));
             CalVATWHT();
         } else {
             $('#txtUnitPrice').val(0);
             $('#txtAmt').val(0);
+            $('#txtAmtDisc').val(0);
             $('#txtTotal').val(0);
             $('#txtFTotal').val(0);
             $('#txtAmtVAT').val(0);
@@ -859,10 +871,11 @@ End Code
         }
     }
     function CalTotal() {
-        let amt = CDbl($('#txtAmt').val(),4);
+        let amt = CDbl($('#txtAmt').val(), 4);
+        let disc = CDbl($('#txtAmtDisc').val(), 4);
         let vat = CDbl($('#txtAmtVAT').val(),4);
         let wht = CDbl($('#txtAmtWHT').val(),4);
-        $('#txtTotal').val(CDbl(CNum(amt) + CNum(vat) - CNum(wht), 4));
+        $('#txtTotal').val(CDbl(CNum(amt) + CNum(vat) - CNum(wht) - CNum(disc), 4));
         let rate = CDbl($('#txtExchangeRate').val(), 4);
         let net = CDbl($('#txtTotal').val(), 4);
         $('#txtFTotal').val(CDbl((net / rate), 4));

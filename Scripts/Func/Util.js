@@ -369,6 +369,14 @@ function CallBackQueryCountry(p, code, ev) {
         }
     });
 }
+function CallBackQueryCustomsUnit(p, code, ev) {
+    $.get(p + 'master/getcustomsunit?Code=' + code).done(function (r) {
+        var dr = r.customsunit.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function CallBackQueryCurrency(p, cno, ev) {
     $.get(p + 'master/getcurrency?Code=' + cno).done(function (r) {
         let dr = r.currency.data;
@@ -393,6 +401,14 @@ function CallBackQueryUser(p, UserID, ev) {
                 ev(b);
             }
         });
+}
+function CallBackQueryVessel(p, code, ev) {
+    $.get(p + 'master/getvessel?Code=' + code).done(function (r) {
+        var dr = r.vessel.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
 }
 function CallBackQueryVender(p, VenCode, ev) {
     $.get(p + 'Master/GetVender?Code=' + VenCode)

@@ -53,6 +53,63 @@ Namespace Controllers
         Function BudgetPolicy() As ActionResult
             Return GetView("BudgetPolicy", "MODULE_MAS")
         End Function
+        Function CustomsUnit() As ActionResult
+            Return GetView("CustomsUnit", "MODULE_MAS")
+        End Function
+        Function Vessel() As ActionResult
+            Return GetView("Vessel", "MODULE_MAS")
+        End Function
+        Function GetVessel() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE RegsNumber<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RegsNumber ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CVessel(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""vessel"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetVessel(<FromBody()> data As CVessel) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.RegsNumber = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE RegsNumber='{0}' ", data.RegsNumber))
+                    Dim json = "{""result"":{""data"":""" & data.RegsNumber & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelVessel() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE RegsNumber<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND RegsNumber Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""vessel"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CVessel(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""vessel"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+
         Function GetServiceGroup() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE GroupCode<>'' "
@@ -1006,6 +1063,56 @@ AND b.IsApplyPolicy=1
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""budgetpolicy"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetCustomsUnit() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code] ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CCustomsUnit(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""customsunit"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetCustomsUnit(<FromBody()> data As CCustomsUnit) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.Code = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE [Code]='{0}' ", data.Code))
+                    Dim json = "{""result"":{""data"":""" & data.Code & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelCustomsUnit() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE [Code]<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND [Code] Like '{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""customsunit"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CCustomsUnit(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""customsunit"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

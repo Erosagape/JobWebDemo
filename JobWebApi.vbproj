@@ -404,6 +404,7 @@
     <Compile Include="Models\CCreditNote.vb" />
     <Compile Include="Models\CCurrency.vb" />
     <Compile Include="Models\CCustomsPort.vb" />
+    <Compile Include="Models\CCustomsUnit.vb" />
     <Compile Include="Models\CDeclareType.vb" />
     <Compile Include="Models\CInterPort.vb" />
     <Compile Include="Models\CInvDetail.vb" />
@@ -424,6 +425,7 @@
     <Compile Include="Models\CUserAuth.vb" />
     <Compile Include="Models\CUtil.vb" />
     <Compile Include="Models\CVender.vb" />
+    <Compile Include="Models\CVessel.vb" />
     <Compile Include="Models\CVoucher.vb" />
     <Compile Include="Models\CVoucherDtl.vb" />
     <Compile Include="Models\CVoucherSub.vb" />
@@ -572,6 +574,8 @@
     <Content Include="Views\Acc\GenerateTaxInv.vbhtml" />
     <Content Include="Views\Master\BudgetPolicy.vbhtml" />
     <Content Include="Views\Acc\Payment.vbhtml" />
+    <Content Include="Views\Master\CustomsUnit.vbhtml" />
+    <Content Include="Views\Master\Vessel.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

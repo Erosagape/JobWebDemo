@@ -695,15 +695,15 @@ End Code
         $('#txtWeightUnit').focus();
     }
     function ReadInvUnit(dt) {
-        $('#txtInvUnit').val(dt.val);
+        $('#txtInvUnit').val(dt.TName);
         $('#txtInvUnit').focus();
     }
     function ReadVessel(dt) {
-        $('#txtVesselName').val(dt.val);
+        $('#txtVesselName').val(dt.TName);
         $('#txtVesselName').focus();
     }
     function ReadMVessel(dt) {
-        $('#txtMVesselName').val(dt.val);
+        $('#txtMVesselName').val(dt.TName);
         $('#txtMVesselName').focus();
     }
     function ReadShipping(dt) {
