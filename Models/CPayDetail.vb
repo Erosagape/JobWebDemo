@@ -83,12 +83,12 @@ Public Class CPayDetail
             m_QtyUnit = value
         End Set
     End Property
-    Private m_UnitPrice As String
-    Public Property UnitPrice As String
+    Private m_UnitPrice As Double
+    Public Property UnitPrice As Double
         Get
             Return m_UnitPrice
         End Get
-        Set(value As String)
+        Set(value As Double)
             m_UnitPrice = value
         End Set
     End Property
@@ -173,6 +173,15 @@ Public Class CPayDetail
             m_FTotal = value
         End Set
     End Property
+    Private m_ForJNo As String
+    Public Property ForJNo As String
+        Get
+            Return m_ForJNo
+        End Get
+        Set(value As String)
+            m_ForJNo = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -204,6 +213,7 @@ Public Class CPayDetail
                             dr("AmtWHT") = Me.AmtWHT
                             dr("Total") = Me.Total
                             dr("FTotal") = Me.FTotal
+                            dr("ForJNo") = Me.ForJNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             UpdateTotal(cn)
@@ -255,7 +265,7 @@ Public Class CPayDetail
                         row.QtyUnit = rd.GetString(rd.GetOrdinal("QtyUnit")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("UnitPrice"))) = False Then
-                        row.UnitPrice = rd.GetString(rd.GetOrdinal("UnitPrice")).ToString()
+                        row.UnitPrice = rd.GetDouble(rd.GetOrdinal("UnitPrice")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("IsTaxCharge"))) = False Then
                         row.IsTaxCharge = rd.GetByte(rd.GetOrdinal("IsTaxCharge"))
@@ -267,7 +277,7 @@ Public Class CPayDetail
                         row.DiscountPerc = rd.GetDouble(rd.GetOrdinal("DiscountPerc"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Amt"))) = False Then
-                        row.Amt = rd.GetValue(rd.GetOrdinal("Amt"))
+                        row.Amt = rd.GetDouble(rd.GetOrdinal("Amt"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("AmtDisc"))) = False Then
                         row.AmtDisc = rd.GetDouble(rd.GetOrdinal("AmtDisc"))
@@ -283,6 +293,9 @@ Public Class CPayDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("FTotal"))) = False Then
                         row.FTotal = rd.GetDouble(rd.GetOrdinal("FTotal"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("ForJNo"))) = False Then
+                        row.ForJNo = rd.GetString(rd.GetOrdinal("ForJNo")).ToString()
                     End If
                     lst.Add(row)
                 End While

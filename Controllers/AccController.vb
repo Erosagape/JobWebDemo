@@ -43,11 +43,20 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("VenCode")) Then
                     tSqlw &= String.Format(" AND VenCode='{0}' ", Request.QueryString("VenCode").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("Currency")) Then
+                    tSqlw &= String.Format(" AND CurrencyCode='{0}' ", Request.QueryString("Currency").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("DateFrom")) Then
                     tSqlw &= " AND DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00' "
                 End If
                 If Not IsNothing(Request.QueryString("DateTo")) Then
                     tSqlw &= " AND DocDate<='" & Request.QueryString("DateTo") & " 23:59:00' "
+                End If
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    If Request.QueryString("Type").ToString = "NOPAY" Then
+                        tSqlw &= String.Format(" AND NOT (DocNo IN(SELECT p.DocNo FROM (SELECT h.DocNo FROM Job_CashControlDoc h INNER JOIN Job_CashControlSub d ON h.BranchCode=d.BranchCode AND h.ControlNo=d.ControlNo AND h.acType=d.acType WHERE h.DocType='PAY' AND d.PRType='P' AND h.BranchCode='{0}') p  )", Request.QueryString("Branch").ToString)
+                        tSqlw &= String.Format(" OR DocNo IN(SELECT DISTINCT p.PaymentNo FROM (SELECT h.PaymentNo FROM Job_AdvHeader h WHERE h.DocStatus<>99 AND h.BranchCode='{0}') p WHERE p.PaymentNo IS NOT NULL))", Request.QueryString("Branch").ToString)
+                    End If
                 End If
                 Dim oData = New CPayHeader(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
@@ -1771,7 +1780,7 @@ Namespace Controllers
             End Try
         End Function
         Function GetInvForReceive() As ActionResult
-            Dim defaultWhere As String = "(id.TotalAmt-ISNULL(c.CreditNet,0)-ISNULL(r.ReceivedNet,0))"
+            Dim defaultWhere As String = "(id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(c.CreditNet,0)-ISNULL(r.ReceivedNet,0))"
             Dim tSqlw As String = " AND " & defaultWhere & ">0 "
             Try
                 Dim bCheckVoucher As Boolean = False

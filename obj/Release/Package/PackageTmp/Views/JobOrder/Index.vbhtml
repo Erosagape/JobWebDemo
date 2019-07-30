@@ -40,7 +40,7 @@ End Code
                 <thead>
                     <tr>
                         <th>JobNo</th>
-                        <th>JobType/ShipBy</th>
+                        <th>DocDate</th>
                         <th>JobStatus</th>
                         <th>InspectDate</th>
                         <th>Inv.Customer</th>
@@ -97,6 +97,53 @@ End Code
         loadMonth('#cboMonth');
     }
     function getJobdata() {
+        $.get(path + 'joborder/updatejobstatus' + GetCliteria(), function (r) {
+            $('#tblJob').DataTable({
+                "ajax": {
+                    //"url": "joborder/getjobjson" + strParam,
+                    "url": path+"joborder/getjobreport" + GetCliteria(),
+                    "dataSrc": "job.data"
+                },
+                "destroy": true,
+                "columns": [
+                    { "data": "JNo", "title": "Job Number" },
+                    {
+                        "data": "DocDate", "title": "Open Date",
+                        "render" : function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    {
+                        "data": null, "title": "Job Status",
+                        "render": function (data) {
+                            return data.JobStatus;
+                        }
+                    },
+                    {
+                        "data": "DutyDate", "title": "Clearance Date",
+                        "render" : function (data) {
+                            return CDateEN(data);
+                        }
+                    },
+                    { "data": "InvNo", "title": "Customer Inv." },
+                    { "data": "CustTName", "title": "Customer" },
+                    { "data": "DeclareNumber", "title": "Declare No." },
+                    { "data": "InvProduct", "title": "Commodity" }
+                ]
+            });
+            $('#tblJob tbody').on('click', 'tr', function () {
+                $('#tblJob tbody > tr').removeClass('selected');
+                $(this).addClass('selected');
+
+                let data = $('#tblJob').DataTable().row(this).data();
+                $('#txtJobNo').val(data.JNo);
+            });
+            $('#tblJob tbody').on('dblclick', 'tr', function () {
+                OpenJob();
+            });
+        });            
+    }
+    function getJobdata_1() {
         $.get(path + 'joborder/updatejobstatus' + GetCliteria(), function (r) {
             $('#tblJob').DataTable({
                 "ajax": {

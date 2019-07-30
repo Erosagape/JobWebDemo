@@ -971,7 +971,7 @@ FROM Job_Order j INNER JOIN (
         AND JobStatus<>99 AND NOT ISNULL(CancelReson,'')<>''
         UNION
         SELECT BranchCode,JNo,1 FROM Job_Order 
-        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NULL AND DutyDate>GETDATE() 
+        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NULL AND NOT DutyDate<=GETDATE()
         AND JobStatus<>1 AND NOT ISNULL(CancelReson,'')<>''
         UNION
         SELECT BranchCode,JNo,2 FROM Job_Order 
@@ -1139,7 +1139,7 @@ where ISNULL(ih.CancelProve,'')='' {0}
         Dim amtSQL As String = "(id.Amt-ISNULL(id.AmtDiscount,0)-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedAmt,0)-ISNULL(c.CreditAmt,0))"
         Dim vatSQL As String = "(id.AmtVat-ISNULL(r.ReceivedVat,0)-ISNULL(c.CreditVat,0))"
         Dim whtSQL As String = "(id.Amt50Tavi-ISNULL(r.ReceivedWht,0)-ISNULL(c.CreditWht,0))"
-        Dim netSQL As String = "(id.TotalAmt-ISNULL(r.ReceivedNet,0)-ISNULL(c.CreditNet,0))"
+        Dim netSQL As String = "(id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(c.CreditNet,0)-ISNULL(r.ReceivedNet,0))"
         Return "
 select id.BranchCode,'' as ReceiptNo,
 0 as ItemNo,0 as CreditAmount,
@@ -1268,7 +1268,7 @@ SELECT rh.*,
 c1.NameThai as CustTName,c1.NameEng as CustEName,c1.TAddress1+' '+c1.TAddress2 as CustTAddr,c1.EAddress1+' '+c1.EAddress2 as CustEAddr,c1.Phone as CustPhone,c1.TaxNumber as CustTaxID,
 c2.NameThai as BillTName,c2.NameEng as BillEName,c2.TAddress1+' '+c2.TAddress2 as BillTAddr,c2.EAddress1+' '+c2.EAddress2 as BillEAddr,c2.Phone as BillPhone,c2.TaxNumber as BillTaxID,
 rd.ItemNo,rd.InvoiceNo,rd.InvoiceItemNo,ih.DocDate as InvoiceDate,ih.BillAcceptNo,ih.BillIssueDate,ih.BillAcceptDate,ih.RefNo,
-id.ExpSlipNO,id.AmtCharge,id.AmtAdvance,id.AmtVat,id.Amt50Tavi,id.TotalAmt,
+id.ExpSlipNO,id.AmtCharge,id.AmtAdvance,id.Amt-id.AmtDiscount as InvAmt,id.AmtVat as InvVAT,id.Amt50Tavi as Inv50Tavi,id.TotalAmt as InvTotal,
 (SELECT STUFF((
     SELECT DISTINCT ',' + JobNo
     FROM Job_ClearDetail WHERE BranchCode=id.BranchCode

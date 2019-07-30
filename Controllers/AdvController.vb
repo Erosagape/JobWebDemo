@@ -187,6 +187,58 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             End Try
         End Function
+        Function SetAdvDetail(<FromBody()> ByVal data As List(Of CAdvDetail)) As ActionResult
+            Try
+                ViewBag.User = Session("CurrUser").ToString()
+
+                Dim AuthorizeStr = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                If AuthorizeStr.IndexOf("E") < 0 Then
+                    Return Content("{""result"":{""data"":null,""msg"":""You are not authorize to edit document""}}", jsonContent)
+                End If
+
+                Dim json As String = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                If IsNothing(data) Then
+                    Return Content(json, jsonContent)
+                End If
+
+                If "" & data(0).BranchCode = "" Then
+                    Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                End If
+
+                If "" & data(0).AdvNo = "" Then
+                    Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                End If
+
+                If data(0).ItemNo = 0 Then
+                    AuthorizeStr = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
+                    If AuthorizeStr.IndexOf("I") < 0 Then
+                        Return Content("{""result"":{""data"":null,""msg"":""You are not authorize to add document""}}", jsonContent)
+                    End If
+                End If
+
+                Dim i As Integer = 0
+                Dim str As String = ""
+                Dim branchcode As String = ""
+                Dim docno As String = ""
+
+                For Each o As CAdvDetail In data
+                    i += 1
+                    branchcode = o.BranchCode
+                    docno = o.AdvNo
+                    o.SetConnect(jobWebConn)
+                    Dim msg = o.SaveData(String.Format(" WHERE BranchCode='{0}' AND AdvNo='{1}' And ItemNo='{2}' ", o.BranchCode, o.AdvNo, o.ItemNo))
+                    If str <> "" Then str &= ","
+                    str &= msg
+                Next
+
+                Dim obj = New CAdvDetail(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' And AdvNo='{1}'", branchcode, docno))
+                json = "{""result"":{""msg"":""" & str & """,""data"":""" & docno & """,""document"":[" & JsonConvert.SerializeObject(obj) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""Error!"",""error"":""" & ex.Message & """,""document"":[]}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
         Function SaveAdvanceDetail(<FromBody()> ByVal data As CAdvDetail) As ActionResult
             Try
                 ViewBag.User = Session("CurrUser").ToString()

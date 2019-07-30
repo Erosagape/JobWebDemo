@@ -138,6 +138,9 @@ End Code
                         <label for="txtTotalCTN">Total Containers :</label>
                         <input type="text" id="txtTotalCTN" style="width:130px" tabindex="23" />
                         <input type="button" id="btnGetCTN" value="..." onclick="SplitData()" />
+                        <br/>
+                        <label for="txtMeasurement">Measurement(M3) :</label>
+                        <input type="text" id="txtMeasurement" style="width:80px" tabindex="16" />
                         <br />
                         <label for="txtDeliverNo">Delivery No :</label>
                         <input type="text" id="txtDeliverNo" style="width:130px" tabindex="41" />
@@ -155,8 +158,6 @@ End Code
                         <label for="txtInvPackQty">Package.Total :</label>
                         <input type="text" id="txtInvPackQty" style="width:130px" tabindex="27" />
                         <br />
-                        <label for="txtMeasurement">Measurement(M3) :</label>
-                        <input type="text" id="txtMeasurement" style="width:80px" tabindex="16" />
                         <label for="txtNetWeight">Net Weight :</label>
                         <input type="text" id="txtNetWeight" style="width:80px" tabindex="28" />
                         <label for="txtGrossWeight">Gross Weight :</label>
@@ -691,11 +692,11 @@ End Code
         $('#txtInvFCountryCode').val(dt.CTYCODE);
     }
     function ReadGWUnit(dt) {
-        $('#txtWeightUnit').val(dt.val);
+        $('#txtWeightUnit').val(dt.Code);
         $('#txtWeightUnit').focus();
     }
     function ReadInvUnit(dt) {
-        $('#txtInvUnit').val(dt.TName);
+        $('#txtInvUnit').val(dt.Code);
         $('#txtInvUnit').focus();
     }
     function ReadVessel(dt) {
@@ -764,7 +765,7 @@ End Code
                 SetGridCountry(path, '#tbFCountry', '#frmSearchFCountry', ReadFCountry);
                 break;
             case 'GWUnit':
-                SetGridWeightUnit(path, '#tbWUnt', '#frmSearchWUnt', ReadGWUnit);
+                SetGridUnit(path, '#tbWUnt', '#frmSearchWUnt', ReadGWUnit);
                 break;
             case 'invproductunit':
                 SetGridUnit(path, '#tbIUnt', '#frmSearchIUnt', ReadInvUnit);

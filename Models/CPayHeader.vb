@@ -218,6 +218,15 @@ Public Class CPayHeader
             m_RefNo = value
         End Set
     End Property
+    Private m_PayType As String
+    Public Property PayType As String
+        Get
+            Return m_PayType
+        End Get
+        Set(value As String)
+            m_PayType = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -253,6 +262,7 @@ Public Class CPayHeader
                             dr("ExchangeRate") = Me.ExchangeRate
                             dr("ForeignAmt") = Me.ForeignAmt
                             dr("RefNo") = Me.RefNo
+                            dr("PayType") = Me.PayType
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -350,6 +360,9 @@ Public Class CPayHeader
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("RefNo"))) = False Then
                         row.RefNo = rd.GetString(rd.GetOrdinal("RefNo")).ToString()
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("PayType"))) = False Then
+                        row.PayType = rd.GetString(rd.GetOrdinal("PayType")).ToString()
                     End If
                     lst.Add(row)
                 End While

@@ -350,6 +350,7 @@ function SetGridUnit(p, g ,d ,ev) {
                     selected: true, //ให้สามารถเลือกแถวได้
                     columns: [ //กำหนด property ของ header column
                         { data: null, title: "#" },
+                        { data: "Code", title: "code" },
                         { data: "TName", title: "value" }
                     ],
                     "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว

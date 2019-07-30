@@ -22,14 +22,15 @@ End Code
 <table id="tbDetail" class="table table-responsive">
     <thead>
         <tr>
+            <th width="5%">#</th>
             <th width="10%">Clear.No</th>
-            <th width="8%">Exp.Code</th>
+            <th width="8%">Exp.Code</th>            
             <th width="30%">Description</th>
             <th width="10%">Inv.No</th>
-            <th width="10%">Advance</th>
-            <th width="9%">Charges</th>
-            <th width="9%">Cost</th>
-            <th width="9%">Profit</th>
+            <th width="8%">Advance</th>
+            <th width="8%">Charges</th>
+            <th width="8%">Cost</th>
+            <th width="8%">Profit</th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -78,6 +79,21 @@ End Code
 </div>
 <button id="btnGenerateInv" class="btn btn-success">Generate Invoice</button>
 <button id="btnPrintJobsum" class="btn btn-info">Print Summary</button>
+<div class="modal fade" id="dvEditor" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Set Invoice To <label id="lblClrNo"></label> # <label id="lblItemNo"></label>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="txtInvoiceNo" /><button id="btnUpdateInv" onclick="UpdateInvoice()">Update Invoice</button>
+            </div>
+            <div class="modal-footer">
+                <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     let path = '@Url.Content("~")';
     let user = '@ViewBag.User';
@@ -137,6 +153,11 @@ End Code
                         
 
                     html += '<tr>';
+                    if ((d[i].LinkBillNo == null || d[i].LinkBillNo == '') && cost > 0) {
+                        html += '<td><input type="button" value="Edit" onclick="OpenEditor(' + "'" + d[i].ClrNo + "'" + ',' + d[i].ItemNo + ')"/></td>';
+                    } else {
+                        html += '<td><input type="button" value="View" onclick="OpenInvoice(' + "'" + d[i].BranchCode + "'" + ',' + "'" + d[i].LinkBillNo + "'" + ')"/></td>';
+                    }
                     html += '<td>' + d[i].ClrNo + '#' + d[i].ItemNo + '</td>';
                     html += '<td>'+d[i].SICode+'</td>';
                     html += '<td>' + d[i].SDescription + '' + slipNo + '</td>';
@@ -184,8 +205,8 @@ End Code
             }
         });
     }
-    $('#tbDetail tbody').on('click', 'tr', function () {            
-        let clearno = $(this).find('td:eq(0)').text().split('#')[0];
+    $('#tbDetail tbody').on('dblclick', 'tr', function () {            
+        let clearno = $(this).find('td:eq(1)').text().split('#')[0];
         //alert('you click ' + clearno);
         window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
     });
@@ -195,4 +216,18 @@ End Code
     $('#btnGenerateInv').on('click', function () {
         window.open(path + 'Clr/GenerateInv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
     });
+    function OpenInvoice(branch,code) {
+        window.open(path + 'Acc/FormInv?Branch=' + branch + '&Code=' + code,'_blank');
+    }
+    function OpenEditor(clrno, item) {
+        //alert('you click ' + clrno + '/' + item);
+        $('#lblClrNo').text(clrno);
+        $('#lblItemNo').text(item);
+        $('#dvEditor').modal('show');
+    }
+    function UpdateInvoice() {
+        alert($('#txtInvoiceNo').val());
+        $('#dvEditor').modal('hide');
+    }
+
 </script>

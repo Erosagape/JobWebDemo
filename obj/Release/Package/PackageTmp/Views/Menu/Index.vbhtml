@@ -523,7 +523,7 @@ color:blue;
                 case 'BudgetPolicy':
                     window.location.href = path + 'Master/BudgetPolicy';
                     break;
-                case 'Vessel':
+                case 'vessel':
                     window.location.href = path + 'Master/Vessel';
                     break;
                 default:

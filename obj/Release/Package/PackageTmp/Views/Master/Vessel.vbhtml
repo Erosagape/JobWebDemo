@@ -121,7 +121,7 @@ End Code
     function SearchData(type) {
         switch (type) {
             case 'vessel':
-                SetGridVessel(path, '#tbCode', '#frmSearchCode', ReadData);
+                SetGridVessel(path, '#tbCode', '#frmSearchCode', '', ReadData);
                 break;
         }
     }

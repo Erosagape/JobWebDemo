@@ -120,6 +120,7 @@ function loadMonth(e) {
             .append($('<option>', { value: i })
                 .text(i.toString()));
     }
+    $(e).val(new Date().getMonth()+1);
 }
 function loadLang(e) {
     $(e).empty();
@@ -140,6 +141,7 @@ function loadYear(path) {
                     .append($('<option>', { value: dr[i].JobYear })
                         .text(dr[i].JobYear));
             }
+            $('#cboYear').val(new Date().getFullYear());
         }
     });
 }

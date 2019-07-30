@@ -68,13 +68,6 @@ End Code
         <label id="lblDescriptionH"></label>
     </div>    
 </div>
-<br />
-<div style="display:flex">
-    <div style="flex:1">
-        <label id="lblTRemark"></label>
-    </div>
-</div>
-
 
 <table style="" border="1" width="100%">
     <thead>
@@ -99,6 +92,13 @@ End Code
     </tfoot>
 </table>
 <p>
+    <br />
+    <div style="display:flex">
+        <div style="flex:1">
+            <label id="lblTRemark"></label>
+        </div>
+    </div>
+    <br/>
     <label id="lblDescriptionF"></label>
 </p>
 <p>

@@ -475,6 +475,14 @@ function CallBackQueryBudgetPolicy(p, code, ev) {
         }
     });
 }
+function CallBackQueryPayment(p, br, no, ev) {
+    $.get(p + 'acc/getpayment?Branch=' + br + '&Code=' + no).done(function (r) {
+        let dr = r.payment;
+        if (dr.header.length > 0) {
+            ev(dr);
+        }
+    });
+}
 function ShowConfigValue(path, Code, Key, ControlID) {
     let strParam = "";
     if (Code != "") {

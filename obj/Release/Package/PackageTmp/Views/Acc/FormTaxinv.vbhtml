@@ -143,18 +143,18 @@ End Code
             html += '<td style="text-align:center">' + d.InvoiceNo + '</td>';
             html += '<td>' + d.SICode+ '-'+ d.SDescription + '</td>';
             html += '<td style="text-align:center">' + d.JobNo + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.Amt,2):'0.00') + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.AmtVat,2):'0.00') + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.Amt50Tavi,2):'0.00') + '</td>';
-            html += '<td style="text-align:right">' + (d.AmtCharge>0? '0.00':ShowNumber(d.Net,2)) + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.InvAmt,2):'0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.InvVAT,2):'0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? ShowNumber(d.Inv50Tavi,2):'0.00') + '</td>';
+            html += '<td style="text-align:right">' + (d.AmtCharge>0? '0.00':ShowNumber(d.InvTotal,2)) + '</td>';
             html += '</tr>';
 
             $('#tbDetail').append(html);
             if (d.AmtCharge > 0) {
-                service += Number(d.Amt);
-                vat += Number(d.AmtVat);
-                wht += Number(d.Amt50Tavi);
-                total += Number(d.Amt) + Number(d.AmtVat);
+                service += Number(d.InvAmt);
+                vat += Number(d.InvVAT);
+                wht += Number(d.Inv50Tavi);
+                total += Number(d.InvAmt) + Number(d.InvVAT);
             }
         }
         $('#lblTotalBeforeVAT').text(ShowNumber(service, 2));

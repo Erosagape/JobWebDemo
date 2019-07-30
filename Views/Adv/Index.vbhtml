@@ -82,7 +82,8 @@ End Code
                                     Bill A/P:
                                 </td>
                                 <td>
-                                    <input type="text" id="txtPaymentNo" style="width:200px" tabindex="7" />
+                                    <input type="text" id="txtPaymentNo" style="width:200px" tabindex="7" disabled />
+                                    <button id="btnBrowsePay" onclick="SearchData('payment')">...</button>
                                 </td>
                             </tr>
                         </table>
@@ -726,6 +727,8 @@ End Code
             let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
+            //Payment
+            CreateLOV(dv, '#frmSearchPay', '#tbPay', 'Payment Bills', response, 3);
             //Venders
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response,4);
             //Job
@@ -1227,6 +1230,40 @@ End Code
             $('#txtSICode').focus();
         });
     }
+    function GetAdvDetail(list) {
+        let rows = [];
+        let header = list.header[0];
+        for (let row of list.detail) {
+            let dt = {
+                BranchCode : $('#txtBranchCode').val(),
+                AdvNo : $('#txtAdvNo').val(),
+                ItemNo : 0,
+                SICode : row.SICode,
+                STCode : 'EXP',
+                ForJNo : row.ForJNo,
+                TRemark : row.SRemark,
+                Doc50Tavi : '',
+                PayChqTo : '',
+                SDescription : row.SDescription,
+                IsChargeVAT : row.IsTaxCharge,
+                VATRate: header.VATRate,
+                Is50Tavi: row.Is50Tavi,
+                Rate50Tavi : header.TaxRate,
+                AdvAmount : CDbl(CNum(row.Amt/header.ExchangeRate),2),
+                ChargeVAT : CDbl(CNum(row.AmtVAT/header.ExchangeRate),2),
+                Charge50Tavi : CDbl(CNum(row.AmtWHT/header.ExchangeRate),2),
+                AdvNet: row.FTotal,
+                AdvQty: row.Qty,
+                UnitPrice: row.UnitPrice,
+                CurrencyCode: header.CurrencyCode,
+                ExchangeRate: header.ExchangeRate,
+                VenCode: header.VenCode,
+                IsDuplicate: 0
+            };
+            rows.push(dt);    
+        }
+        return rows;
+    }
     function GetDataDetail() {
         let dt = {
             BranchCode : $('#txtBranchCode').val(),
@@ -1427,6 +1464,9 @@ End Code
             case 'advance':
                 SetGridAdv();
                 break;
+            case 'payment':
+                SetGridPayment(path, '#tbPay', '#frmSearchPay', ReadPayment);
+                break;
             case 'branch':
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
                 break;
@@ -1545,6 +1585,32 @@ End Code
     function ReadJob(dt) {
         $('#txtForJNo').val(dt.JNo);
         $('#txtInvNo').val(dt.InvNo);
+    }
+    function ReadPayment(dt) {
+        SaveHeader();
+        let docno = dt.DocNo;
+        let branch = dt.BranchCode;
+        $.get(path + 'acc/getpayment?branch=' + branch + '&code=' + docno)
+            .done(function (r) {
+                if (r.payment.detail.length > 0) {
+                    let dt = GetAdvDetail(r.payment);
+                    SaveAdvFromPay(dt);
+                }
+            });
+    }
+    function SaveAdvFromPay(obj) {
+        let jsonString = JSON.stringify({ data: obj });
+        $.ajax({
+            url: "@Url.Action("SetAdvDetail", "Adv")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonString,
+            success: function (response) {                
+                alert(response.result.msg);
+                ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
+            }
+        });
+        return;
     }
     function SumTotal() {
         let cash = CDbl($('#txtAdvCash').val(),4);
@@ -1765,4 +1831,7 @@ End Code
         };
         return obj;
     }
+
+
+
 </script>

@@ -82,7 +82,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delcustomsunit?code=' + code, function (r) {
-            alert(r.currency.result);
+            alert(r.customsunit.result);
             ClearData();
         });
     }
@@ -93,7 +93,7 @@ End Code
         };
         if (obj.Code != "") {
             if (obj.TName == '') {
-                alert('Please enter currency name');
+                alert('Please enter unit name');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.Code +"?");

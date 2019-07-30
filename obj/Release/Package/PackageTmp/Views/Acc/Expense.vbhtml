@@ -127,6 +127,7 @@ End Code
                     <div class="col-sm-5">
                         VAT Rate :<input type="text" id="txtVATRate" style="width:50px" /><br />
                         TAX Rate :<input type="text" id="txtTaxRate" style="width:50px" /><br />
+                        Pay Type :<select id="txtPayType"></select>
                     </div>
                 </div>
                 <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
@@ -194,12 +195,12 @@ End Code
                             <input type="text" id="txtQtyUnit" style="width:100px;text-align:right" tabindex="15" />
                             <label id="lblUnitPrice" for="txtUnitPrice">Price :</label>
                             <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="16" />
-                            <br/>
+                            <br />
                             <label id="lblAmount" for="txtAmt">Amount :</label>
                             <input type="text" id="txtAmt" style="width:100px;text-align:right" tabindex="17" />
-                            Discount <input type="text" id="txtDiscountPerc" style="width:50px" onchange="CalDiscount()" tabindex="18"/>
+                            Discount <input type="text" id="txtDiscountPerc" style="width:50px" onchange="CalDiscount()" tabindex="18" />
                             <input type="text" id="txtAmtDisc" tabindex="19" onchange="CalTotal()" />
-                            <br/>
+                            <br />
                             <input type="checkbox" id="txtIsTaxCharge" onclick="CalVATWHT()"> VAT :
                             <input type="text" id="txtAmtVAT" style="width:100px;text-align:right" tabindex="20" />
                             <input type="checkbox" id="txtIs50Tavi" onclick="CalVATWHT()">WH-Tax :
@@ -211,6 +212,8 @@ End Code
                             <input type="text" id="txtFTotal" style="width:100px;text-align:right" disabled />
                             <br />
                             Remark : <input type="text" id="txtSRemark" style="width:230px" tabindex="23" />
+                            <br />
+                            Job No : <input type="text" id="txtForJNo" style="width:230px" tabindex="24" />
                         </div>
                         <div class="modal-footer">
                             <div style="float:left">
@@ -407,10 +410,9 @@ End Code
     }
     function SetLOVs() {
         //Combos
-        let lists = 'JOB_TYPE=#cboJobType';
-        lists += ',SHIP_BY=#cboShipBy';
-
+        let lists = 'PAYMENT_TYPE=#txtPayType';
         loadCombos(path, lists);
+
         LoadService();
 
         //3 Fields Show
@@ -494,7 +496,8 @@ End Code
             CurrencyCode:$('#txtCurrencyCode').val(),
             ExchangeRate:CNum($('#txtExchangeRate').val()),
             ForeignAmt:CNum($('#txtForeignAmt').val()),
-            RefNo:$('#txtRefNo').val()
+            RefNo: $('#txtRefNo').val(),
+            PayType:$('#txtPayType').val()
         };
         return dt;
     }
@@ -525,6 +528,7 @@ End Code
             $('#txtCancelDate').val(CDateEN(dt.CancelDate));
             $('#txtCancelTime').val(ShowTime(dt.CancelTime));
             $('#txtRefNo').val(dt.RefNo);
+            $('#txtPayType').val(dt.PayType);
             return;
         }
         ClearHeader();
@@ -585,6 +589,7 @@ End Code
         $('#txtCancelDate').val('');
         $('#txtCancelTime').val('');
         $('#txtRefNo').val('');
+        $('#txtPayType').val('CA');
     }
     function SaveDetail() {
 
@@ -677,7 +682,8 @@ End Code
             AmtVAT: $('#txtAmtVAT').val(),
             AmtWHT: $('#txtAmtWHT').val(),
             Total: $('#txtTotal').val(),
-            FTotal: $('#txtFTotal').val()
+            FTotal: $('#txtFTotal').val(),
+            ForJNo: $('#txtForJNo').val()
         };
         return dt;
     }
@@ -701,6 +707,7 @@ End Code
             $('#txtAmtWHT').val(dt.AmtWHT);
             $('#txtTotal').val(dt.Total);
             $('#txtFTotal').val(dt.FTotal);
+            $('#txtForJNo').val(dt.ForJNo);
             return;
         }
         ClearDetail();
@@ -723,6 +730,7 @@ End Code
         $('#txtAmtWHT').val('0');
         $('#txtTotal').val('0');
         $('#txtFTotal').val('0');
+        $('#txtForJNo').val('');
     }
     function LoadService() {
         if (serv.length==0) {
