@@ -326,21 +326,22 @@ End Code
     const path = '@Url.Content("~")';
     const user = '@ViewBag.User';
     const userRights = '@ViewBag.UserRights';
-    let job = '';
     //$(document).ready(function () {
-    SetEvents();
-    SetLOVs();
-    SetEnterToTab();
     let branch = getQueryString("BranchCode");
-    job = getQueryString("JNo");
+    let job = getQueryString("JNo");
     if (branch !== '' && job !== '') {
         $('#txtBranchCode').val(branch);
-
+        $('#txtForJNo').val(job);
+        $('#txtForJNo').attr('disabled', 'disabled');
         ShowBranch(path, branch, '#txtBranchName');
+        CallBackQueryJob(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), ReadJob);        
     } else {
         $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
         $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
     }
+    SetEvents();
+    SetLOVs();
+    SetEnterToTab();
     //});
     function SetIsLocal() {
         $('#txtIsLocal').val($('#chkIsLocal').prop('checked') ? '1' : '0');

@@ -5,7 +5,7 @@ End Code
     <div class="container">
         <label for="txtBranchCode">Branch :</label><input type="text" style="width:30px" id="txtBranchCode" disabled />
         <input type="text" style="width:130px" id="txtBranchName" disabled />
-        <label for="txtJNo">Job No :</label><input type="text" style="width:130px" id="txtJNo" disabled />
+        <label for="txtJNo">Job No :</label><input type="text" style="width:130px;background-color:yellow;color:red" id="txtJNo" disabled />
         <label for="txtRevised">Revised :</label><input type="text" style="width:30px" id="txtRevised" disabled />
         <label for="txtDocDate">Open Date :</label><input type="date" style="width:130px" id="txtDocDate" disabled />
         <label for="txtJobStatus">Job Status :</label><input type="text" style="width:130px" id="txtJobStatus" disabled />
@@ -1267,6 +1267,8 @@ End Code
 
         let br = document.createElement("br");
         dv.appendChild(br);
+        $('#txtQtyAdd').val('');
+        $('#txtUnitAdd').val('');
     }
     function SumService() {
         let c = document.getElementsByName("txtQtyCon");

@@ -1,4 +1,31 @@
 ﻿//function for javascripts usage
+function sortData(obj, key, order) {
+    obj.sort(compareValues(key, order));
+}
+function compareValues(key, order = 'asc') {
+    return function (a, b) {
+        if (!a.hasOwnProperty(key) ||
+            !b.hasOwnProperty(key)) {
+            return 0;
+        }
+
+        const varA = (typeof a[key] === 'string') ?
+            a[key].toUpperCase() : a[key];
+        const varB = (typeof b[key] === 'string') ?
+            b[key].toUpperCase() : b[key];
+
+        let comparison = 0;
+        if (varA > varB) {
+            comparison = 1;
+        } else if (varA < varB) {
+            comparison = -1;
+        }
+        return (
+            (order == 'desc') ?
+                (comparison * -1) : comparison
+        );
+    };
+}
 function GetSelect(tb, e) {
     //get selected value from LOV
     let indexRow = $(e).parents('tr');
@@ -510,30 +537,4 @@ function CallOpenJob(p, br, jno) {
 function CallPrintJob(p, br, jno) {
     window.open(p + 'joborder/formjob?BranchCode=' + br + '&JNo=' + jno);
 }
-function sortData(obj, key, order) {
-    obj.sort(compareValues(key, order));
-}
-function compareValues(key, order = 'asc') {
-    return function (a, b) {
-        if (!a.hasOwnProperty(key) ||
-            !b.hasOwnProperty(key)) {
-            return 0;
-        }
 
-        const varA = (typeof a[key] === 'string') ?
-            a[key].toUpperCase() : a[key];
-        const varB = (typeof b[key] === 'string') ?
-            b[key].toUpperCase() : b[key];
-
-        let comparison = 0;
-        if (varA > varB) {
-            comparison = 1;
-        } else if (varA < varB) {
-            comparison = -1;
-        }
-        return (
-            (order == 'desc') ?
-                (comparison * -1) : comparison
-        );
-    };
-}

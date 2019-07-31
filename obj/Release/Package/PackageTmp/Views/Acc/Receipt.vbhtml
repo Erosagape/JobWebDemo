@@ -29,7 +29,7 @@ End Code
             <div class="col-sm-3">
                 <br />
                 <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
-                <button class="btn btn-success" onclick="window.open('/Acc/GenerateReceipt', '_blank');">Generate Receipts</button>
+                <button class="btn btn-success" onclick="CreateReceipt()">Generate Receipts</button>
             </div>
         </div>
         <input type="checkbox" id="chkCancel" />Show Cancel Only
@@ -769,5 +769,12 @@ End Code
         $('#txtFAmt50Tavi').val(CDbl(CNum($('#txtAmt50Tavi').val()) / rate, 2));
         $('#txtFNet').val(CDbl(CNum($('#txtNet').val()) / rate, 2));
         ChangeAmount();
+    }
+    function CreateReceipt() {
+        let w = '?branch=' + $('#txtBranchCode').val();
+        if ($('#txtCustCode').val() !== '') {
+            w += '&custcode=' + $('#txtCustCode').val() + '&custbranch=' + $('#txtCustBranch').val();
+        }        
+        window.open('/Acc/GenerateReceipt' + w, '_blank');
     }
 </script>

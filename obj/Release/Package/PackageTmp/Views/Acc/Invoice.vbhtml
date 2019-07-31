@@ -30,7 +30,7 @@ End Code
             <div class="col-sm-3">
                 <br />
                 <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
-                <button class="btn btn-success" onclick="window.open('/clr/generateinv', '_blank');">Generate Invoice</button>
+                <button class="btn btn-success" onclick="CreateInvoice()">Generate Invoice</button>
             </div>
         </div>
         <input type="checkbox" id="chkCancel" />Show Cancel Only
@@ -845,6 +845,13 @@ End Code
 
         $('#txtTotalAmt').val(ShowNumber(net, 2));
         CalForeignDetail();
+    }
+    function CreateInvoice() {
+        let w = '';
+        if ($('#txtCustCode').val() !== '') {
+            w += '&custcode=' + $('#txtCustCode').val() + '&custbranch=' + $('#txtCustBranch').val();
+        }
+        window.open('/clr/generateinv?branch=' + $('#txtBranchCode').val() + w, '_blank');
     }
 </script>
 

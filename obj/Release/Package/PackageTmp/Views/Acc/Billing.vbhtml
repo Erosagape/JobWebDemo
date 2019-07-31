@@ -29,7 +29,7 @@ End Code
             <div class="col-sm-3">
                 <br />
                 <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
-                <button class="btn btn-success" onclick="window.open('/Acc/GenerateBilling', '_blank');">Generate Billing</button>
+                <button class="btn btn-success" onclick="CreateBilling()">Generate Billing</button>
             </div>
         </div>
         <input type="checkbox" id="chkCancel" />Show Cancel Only
@@ -470,6 +470,13 @@ End Code
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+    }
+    function CreateBilling() {
+        let w = '?branch=' + $('#txtBranchCode').val();
+        if ($('#txtCustCode').val() !== '') {
+            w += '&custcode=' + $('#txtCustCode').val() + '&custbranch=' + $('#txtCustBranch').val();
+        }        
+        window.open('/Acc/GenerateBilling' + w, '_blank');
     }
 </script>
 

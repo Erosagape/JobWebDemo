@@ -714,7 +714,13 @@ group by c.BookCode,c.LimitBalance) q
         Return "
 SELECT a.*,ISNULL(c.ChqUsed,0) AS AmountUsed,a.ChqAmount-ISNULL(c.ChqUsed,0) as AmountRemain,
 b.CustCode,b.CustBranch,b.VoucherDate
-FROM Job_CashControlSub a INNER JOIN Job_CashControl b
+FROM 
+(   
+    SELECT BranchCode,ControlNo,ChqNo," & If(pType = "CU", "RecvBank", "BankCode") & ",acType,PRType,
+    SUM(ChqAmount) as ChqAmount
+    FROM Job_CashControlSub
+    GROUP BY BranchCode,ControlNo,ChqNo," & If(pType = "CU", "RecvBank", "BankCode") & ",acType,PRType
+) a INNER JOIN Job_CashControl b
 ON a.BranchCode=b.BranchCode AND a.ControlNo=b.ControlNo
 LEFT JOIN (
     SELECT h.BranchCode,h.ChqNo,SUM(d.PaidAmount) as ChqUsed,

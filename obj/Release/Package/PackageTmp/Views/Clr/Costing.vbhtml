@@ -86,10 +86,10 @@ End Code
                 Set Invoice To <label id="lblClrNo"></label> # <label id="lblItemNo"></label>
             </div>
             <div class="modal-body">
-                <input type="text" id="txtInvoiceNo" />
+                <input type="text" id="txtInvoiceNo" /><button id="btnUpdateInv" onclick="UpdateInvoice()">Update Invoice</button>
             </div>
             <div class="modal-footer">
-                <button id="btnUpdateInv" onclick="UpdateInvoice()">Update Invoice</button>
+                <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -109,6 +109,9 @@ End Code
                 $('#txtBranchName').val(h.BranchName);
                 $('#txtJNo').val(h.JobNo);
                 $('#txtCloseDate').val(CDateEN(h.CloseJobDate));
+                if ($('#txtCloseDate').val() == '') {
+                    $('#btnGenerateInv').attr('disabled', 'disabled');
+                }
                 $('#txtJobStatus').val(h.JobStatusName);
 
                 let html = '';
@@ -154,9 +157,9 @@ End Code
 
                     html += '<tr>';
                     if ((d[i].LinkBillNo == null || d[i].LinkBillNo == '') && cost > 0) {
-                        html += '<td><input type="button" value="Edit" onclick="OpenEditor("' + d[i].ClrNo + '",' + d[i].ItemNo + ')"/></td>';
+                        html += '<td><input type="button" value="Edit" onclick="OpenEditor(' + "'" + d[i].ClrNo + "'" + ',' + d[i].ItemNo + ')"/></td>';
                     } else {
-                        html += '<td></td>';
+                        html += '<td><input type="button" value="View" onclick="OpenInvoice(' + "'" + d[i].BranchCode + "'" + ',' + "'" + d[i].LinkBillNo + "'" + ')"/></td>';
                     }
                     html += '<td>' + d[i].ClrNo + '#' + d[i].ItemNo + '</td>';
                     html += '<td>'+d[i].SICode+'</td>';
@@ -206,7 +209,7 @@ End Code
         });
     }
     $('#tbDetail tbody').on('dblclick', 'tr', function () {            
-        let clearno = $(this).find('td:eq(0)').text().split('#')[0];
+        let clearno = $(this).find('td:eq(1)').text().split('#')[0];
         //alert('you click ' + clearno);
         window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
     });
@@ -216,8 +219,11 @@ End Code
     $('#btnGenerateInv').on('click', function () {
         window.open(path + 'Clr/GenerateInv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
     });
+    function OpenInvoice(branch,code) {
+        window.open(path + 'Acc/FormInv?Branch=' + branch + '&Code=' + code,'_blank');
+    }
     function OpenEditor(clrno, item) {
-        alert('you click ' + clrno + '/' + item);
+        //alert('you click ' + clrno + '/' + item);
         $('#lblClrNo').text(clrno);
         $('#lblItemNo').text(item);
         $('#dvEditor').modal('show');

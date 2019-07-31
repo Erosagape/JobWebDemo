@@ -279,10 +279,11 @@ End Code
     let arr_clr = [];
     let chq = [];
     //$(document).ready(function () {
-    SetEvents();
     //Load params
     let branch = getQueryString("branch");
     let code = getQueryString("code");
+    let custcode = getQueryString("custcode");
+    let custbranch = getQueryString("custbranch");
     if (branch !== '' && code !== '') {
         $('#txtBranchCode').val(branch);
         ShowBranch(path, branch, '#txtBranchName');
@@ -293,10 +294,20 @@ End Code
             }
         });
     } else {
-        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
-        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+        if (custcode !== '') {
+            $('#txtBranchCode').val(branch);
+            ShowBranch(path, branch, '#txtBranchName');
+
+            $('#txtCustCode').val(custcode);
+            $('#txtCustBranch').val(custbranch);
+            ShowCustomer(path, custcode, custbranch, '#txtCustName');
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+        }
     }
     //});
+    SetEvents();
     function SetEvents() {
         //Combos
         let lists = 'JOB_TYPE=#cboJobType';
