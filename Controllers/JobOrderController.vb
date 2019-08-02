@@ -468,7 +468,6 @@ Namespace Controllers
         Function GetNewJob() As ActionResult
             Try
                 Dim oJob As New CJobOrder(jobWebConn)
-                Dim prefix As String = jobPrefix
                 If Not IsNothing(Request.QueryString("JType")) Then
                     oJob.JobType = Convert.ToInt16("" & Request.QueryString("JType"))
                 End If
@@ -480,12 +479,10 @@ Namespace Controllers
                 Else
                     oJob.BranchCode = "00"
                 End If
-                If Not IsNothing(Request.QueryString("Prefix")) Then
-                    prefix = "" & Request.QueryString("Prefix")
-                End If
                 If Not IsNothing(Request.QueryString("Inv")) Then
                     oJob.InvNo = "" & Request.QueryString("Inv")
                 End If
+
                 Dim sql As String = String.Format(" WHERE BranchCode='{0}' AND JobType='{1}' AND ShipBy='{2}' ", oJob.BranchCode, oJob.JobType, oJob.ShipBy)
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     oJob.CustCode = "" & Request.QueryString("Cust").Split("|")(0)
@@ -512,6 +509,10 @@ Namespace Controllers
                     If FindJob.Count > 0 Then
                         oJob = FindJob(0)
                     End If
+                End If
+                Dim prefix As String = GetJobPrefix(oJob)
+                If Not IsNothing(Request.QueryString("Prefix")) Then
+                    prefix = "" & Request.QueryString("Prefix")
                 End If
                 oJob.AddNew(prefix & DateTime.Now.ToString("yyMM") & "____", IIf(CopyFrom <> "", False, True))
                 Dim result As String = oJob.SaveData(" WHERE BranchCode='" & oJob.BranchCode & "' And JNo='" & oJob.JNo & "'")

@@ -1317,9 +1317,9 @@ ON a.SICode=b.SICode
         Dim jobType As String = GetValueConfig("JOB_TYPE", data.JobType.ToString("00"))
         Dim shipBy As String = GetValueConfig("SHIP_BY", data.ShipBy.ToString("00"))
         Dim Customer As String = data.CustCode
-        formatStr = formatStr.Replace("[J]", jobType)
-        formatStr = formatStr.Replace("[S]", shipBy)
-        formatStr = formatStr.Replace("[C]", Customer)
+        formatStr = formatStr.Replace("[J]", jobType.Substring(0, 1))
+        formatStr = formatStr.Replace("[S]", shipBy.Substring(0, 1))
+        formatStr = formatStr.Replace("[C]", Customer.Substring(0, 3))
         Return formatStr
     End Function
     Function GetDatabaseList(pCustomer As String, pApp As String) As List(Of String)
