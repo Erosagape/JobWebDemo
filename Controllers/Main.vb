@@ -6,12 +6,12 @@ Module Main
     Friend Const jobDataPath As String = "~/App_Data/job_data.xml"
     Friend Const logoApp As String = "logo-tawan.jpg"
     Friend Const logoRep As String = "logo-idl.jpg"
-    Friend Const jobPrefix As String = "TJOB"
-    Friend Const advPrefix As String = "TADV"
-    Friend Const clrPrefix As String = "TCLR"
+    Friend Const jobPrefix As String = "[J][S]"
+    Friend Const advPrefix As String = "ADV"
+    Friend Const clrPrefix As String = "CLR"
     Friend Const invPrefix As String = "INV-"
-    Friend jobWebConn As String = ConfigurationManager.ConnectionStrings("JobWebConnectionStringR").ConnectionString
-    Friend jobMasConn As String = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString
+    Friend jobWebConn As String = ""
+    Friend jobMasConn As String = ""
     Friend Function GetDBDate(pDate As Date, Optional pTodayAsDefault As Boolean = False) As Object
         If pDate.Year > 2000 Then
             Return pDate
@@ -1310,5 +1310,78 @@ SELECT a.*,b.ID,b.TRemark,b.MaxAdvance,b.MaxCost,b.MinCharge,b.MinProfit,b.Activ
 FROM Job_SrvSingle a LEFT JOIN Job_BudgetPolicy b
 ON a.SICode=b.SICode 
 "
+    End Function
+    Function GetJobPrefix(data As CJobOrder) As String
+        Dim formatStr As String = GetValueConfig("RUNNING_FORMAT", "JOBNO")
+        If formatStr = "" Then formatStr = jobPrefix
+        Dim jobType As String = GetValueConfig("JOB_TYPE", data.JobType.ToString("00"))
+        Dim shipBy As String = GetValueConfig("SHIP_BY", data.ShipBy.ToString("00"))
+        Dim Customer As String = data.CustCode
+        formatStr = formatStr.Replace("[J]", jobType)
+        formatStr = formatStr.Replace("[S]", shipBy)
+        formatStr = formatStr.Replace("[C]", Customer)
+        Return formatStr
+    End Function
+    Function GetDatabaseList(pCustomer As String, pApp As String) As List(Of String)
+        Dim db = New List(Of String)
+        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+        Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomerApp WHERE CustID='{0}' AND AppID='{1}' ", pCustomer, pApp))
+        If tb.Rows.Count > 0 Then
+            For Each dr As DataRow In tb.Rows
+                db.Add(dr("WebTranDB").ToString())
+            Next
+        Else
+            db.Add("jobdemo")
+        End If
+        Return db
+    End Function
+    Function GetDatabaseProfile(pCustomer As String) As DataTable
+        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+        Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomer WHERE CustID='{0}' ", pCustomer))
+        Return tb
+    End Function
+    Function GetDatabaseConnection(pCustomer As String, pApp As String, pSeq As String) As String()
+        Dim db = New String() {ConfigurationManager.ConnectionStrings("JobWebConnectionStringR").ConnectionString.ToString, ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.ToString}
+        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+        Using tb As DataTable = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomerApp WHERE CustID='{0}' AND AppID='{1}' AND Seq='{2}'", pCustomer, pApp, pSeq))
+            If tb.Rows.Count > 0 Then
+                db = New String() {tb.Rows(0)("WebTranConnect").ToString, tb.Rows(0)("WebMasConnect").ToString}
+            End If
+        End Using
+        Return db
+    End Function
+    Function SetDatabaseMaster(pDBName As String) As Boolean
+        Try
+            Dim bChk As Boolean = False
+            Using cn As New SqlConnection(pDBName)
+                cn.Open()
+                bChk = (cn.State = ConnectionState.Open)
+                If bChk Then
+                    jobMasConn = pDBName
+                End If
+                cn.Close()
+                Return bChk
+            End Using
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+    Function SetDatabaseJob(pDBName As String) As Boolean
+        Try
+            Dim bChk As Boolean = False
+            Using cn As New SqlConnection(pDBName)
+                cn.Open()
+                bChk = (cn.State = ConnectionState.Open)
+                If bChk Then
+                    jobWebConn = pDBName
+                End If
+                cn.Close()
+                Return bChk
+            End Using
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
     End Function
 End Module

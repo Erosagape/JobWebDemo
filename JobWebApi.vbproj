@@ -174,7 +174,9 @@
     <Content Include="Scripts\Data\job.txt" />
     <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Content\responsive.dataTables.min.css" />
-    <None Include="My Project\PublishProfiles\Tawanasp.com.pubxml" />
+    <None Include="My Project\PublishProfiles\bizocean.pubxml" />
+    <None Include="My Project\PublishProfiles\jobdemo.pubxml" />
+    <None Include="My Project\PublishProfiles\jobtest.pubxml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />

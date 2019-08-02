@@ -7,7 +7,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "JobWebApi", "JobWebApi.vbpr
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GenClassFromDB", "GenClassFromDB\GenClassFromDB.vbproj", "{BB24AA3D-0DA6-4964-A563-7F187FB52286}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "JobWebConfig", "JobWebConfig\JobWebConfig.vbproj", "{65563B26-8C32-4706-B05A-8BDE0165E353}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TawanWebConfig", "JobWebConfig\TawanWebConfig.vbproj", "{65563B26-8C32-4706-B05A-8BDE0165E353}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

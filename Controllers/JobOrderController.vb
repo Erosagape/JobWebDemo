@@ -527,7 +527,7 @@ Namespace Controllers
             If Not IsNothing(data) Then
                 data.SetConnect(jobWebConn)
                 If data.JNo = "" Then
-                    data.AddNew(jobPrefix & DateTime.Now.ToString("yyMM") & "____", False)
+                    data.AddNew(GetJobPrefix(data) & DateTime.Now.ToString("yyMM") & "____", False)
                 End If
                 Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", data.BranchCode, data.JNo))
                 'Dim msg = JsonConvert.SerializeObject(data)

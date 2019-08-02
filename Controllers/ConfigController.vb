@@ -24,7 +24,16 @@ Namespace Controllers
             Return GetView("Role", "MODULE_ADM")
         End Function
         Function GetDatabase() As ActionResult
-
+            Dim company As String = My.MySettings.Default.LicenseTo
+            Dim companyName As String = ""
+            Dim oData = Main.GetDatabaseList(company, "JOBSHIPPING")
+            Using tb As DataTable = Main.GetDatabaseProfile(company)
+                If tb.Rows.Count > 0 Then
+                    companyName = tb.Rows(0)("CustName").ToString()
+                End If
+            End Using
+            Dim json = "{""database"":" & JsonConvert.SerializeObject(oData) & ",""company"":""" & companyName & """}"
+            Return Content(json, jsonContent)
         End Function
         Function GetSQLResult(<FromBody> data As CResult) As ActionResult
             Dim tSQL As String = data.Source
@@ -291,7 +300,7 @@ Namespace Controllers
                 oData = New CUser(jobWebConn)
             End If
             Dim json As String = JsonConvert.SerializeObject(oData)
-            json = "{""user"":{""data"":" & json & "}}"
+            json = "{""user"":{""data"":" & json & ",""connection_job"":""" & jobWebConn.Replace("\", "\\") & """,""connection_mas"":""" & jobMasConn.Replace("\", "\\") & """}}"
             Return Content(json, jsonContent)
         End Function
         Function SetLogOut() As ActionResult
@@ -302,6 +311,17 @@ Namespace Controllers
         End Function
         Function SetLogin() As ActionResult
             Try
+                Dim dbID As String = "1"
+                If Not IsNothing(Request.QueryString("Database")) Then
+                    dbID = Request.QueryString("Database").ToString
+                End If
+                'Load Connections by Database which selected
+                Dim dbConn As String() = Main.GetDatabaseConnection(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", dbID)
+                Session("ConnJob") = dbConn(0)
+                Session("ConnMas") = dbConn(1)
+                Main.SetDatabaseMaster(Session("ConnMas").ToString)
+                Main.SetDatabaseJob(Session("ConnJob").ToString)
+                'check user
                 Dim chk As Integer = 0
                 Dim tSqlw As String = " WHERE UserID<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
@@ -312,19 +332,25 @@ Namespace Controllers
                     tSqlw &= String.Format("AND UPassword='{0}'", Request.QueryString("Pass").ToString)
                     chk += 1
                 End If
+                'Load License Name
+                Using tbLicense = Main.GetDatabaseProfile(My.MySettings.Default.LicenseTo.ToString)
+                    If tbLicense.Rows.Count > 0 Then
+                        Session("CurrLicense") = tbLicense.Rows(0)("CustName").ToString & "(DB=" & dbID & ")"
+                    Else
+                        Return Content("[]", jsonContent)
+                    End If
+                End Using
+
                 Dim oData = New CUser(jobWebConn).GetData(tSqlw)
                 If chk = 2 And oData.Count > 0 Then
-                    ViewBag.User = oData(0).UserID
-                    Session.Timeout = 30
-                    Session("CurrUser") = ViewBag.User
+                    Session("CurrUser") = oData(0).UserID
                     Session("UserProfiles") = oData(0)
                 Else
-                    ViewBag.User = ""
                     Session("CurrUser") = ""
                     Session("UserProfiles") = Nothing
                 End If
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""user"":{""data"":" & json & "}}"
+                json = "{""user"":{""data"":" & json & ",""database_job"":""" & jobWebConn.Replace("\", "\\") & """,""database_mas"":""" & jobMasConn.Replace("\", "\\") & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

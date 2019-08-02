@@ -14,7 +14,6 @@
     <script src="~/Scripts/bootstrap-select.js"></script>
     <script src="~/Scripts/Func/util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
-
     <title>@ViewBag.Title</title>
     <script type="text/javascript">
         function BackToMenu() {

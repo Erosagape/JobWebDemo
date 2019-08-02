@@ -61,6 +61,19 @@ function loadConfig(e, code, path, def) {
         }
     });
 }
+function loadDatabaseList(e) {
+    $(e).empty();
+    $(e).append($('<option>', { value: '' })
+        .text('N/A'));
+    $.get('Config/GetDatabase').done(function (dr) {
+        if (dr.database.length > 0) {
+            for (let i = 0; i < dr.database.length; i++) {
+                $(e).append($('<option>', { value: (i+ 1) })
+                    .text(dr.company + '->' + dr.database[i].trim()));
+            }            
+        }
+    });
+}
 function loadBank(cb, path) {
     $.get(path + 'Master/GetBank').done(function (r) {
         let dr = r.bank.data;

@@ -388,6 +388,14 @@ function CallBackQueryCustomer(p, cno, br, ev) {
         }
     });
 }
+function CallBackQueryCustomerSingle(p, cno, ev) {
+    $.get(p + 'master/getcompany?Code=' + cno).done(function (r) {
+        let dr = r.company.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function CallBackQueryCountry(p, code, ev) {
     $.get(p + 'master/getcountry?Code=' + code).done(function (r) {
         let dr = r.country.data;

@@ -9,6 +9,7 @@
     <script src="Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="Scripts/bootstrap.js"></script>
     <script src="Scripts/Func/Util.js"></script>
+    <script src="Scripts/Func/combo.js"></script>
     <title>Shipping Control System</title>
 </head>
 <body>
@@ -37,7 +38,7 @@
                             </div>
                         </div>
                         <div class="modal-body">
-                            Company ID : <select class="form-control dropdown" id="txtCompanyID"></select>
+                            Database : <select class="form-control dropdown" id="txtDatabaseID"></select>
                             User ID : <input type="text" class="form-control" id="txtUserID" />
                             Password : <input type="password" class="form-control" id="txtPassword" />
                         </div>
@@ -61,6 +62,7 @@
         alert(msg);
     }
     CheckLogin();
+    loadDatabaseList('#txtDatabaseID'); 
     SetEvents();
     $('#txtUserID').focus();
         //});
@@ -95,7 +97,8 @@
         userID = $('#txtUserID').val();
         if (userID !== '') {
             var Password = $('#txtPassword').val();
-            $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password)
+            var dbName = $('#txtDatabaseID').val();
+            $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password + '&Database=' +dbName)
                 .done(function (r) {
                     if (r.user.data.length > 0) {
                         OpenMenu();

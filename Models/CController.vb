@@ -29,13 +29,33 @@ Public Class CController
     Friend Function GetView(vName As String, Optional modName As String = "") As ActionResult
         Dim baseURL = Me.ControllerContext.RouteData.Values("Controller").ToString() & "\" & vName
         Try
-            LoadCompanyProfile()
             If CheckSession("CurrUser") Then
                 Session("CurrUser") = ""
             End If
+            If CheckSession("CurrLicense") Then
+                Session("CurrLicense") = ""
+            End If
             ViewBag.User = Session("CurrUser").ToString
+            ViewBag.LICENSE_NAME = Session("CurrLicense").ToString
             If ViewBag.User = "" Then
                 Return Redirect("~/index.html?redirect=" + baseURL)
+            End If
+            If ViewBag.LICENSE_NAME = "" Then
+                Return Redirect("~/index.html?redirect=" + baseURL)
+            End If
+            If CheckSession("ConnJob") Then
+                jobWebConn = ""
+                Return Redirect("~/index.html?redirect=" + baseURL)
+            Else
+                jobWebConn = Session("ConnJob").ToString
+                ViewBag.CONNECTION_JOB = jobWebConn
+            End If
+            If CheckSession("ConnMas") Then
+                jobMasConn = ""
+                Return Redirect("~/index.html?redirect=" + baseURL)
+            Else
+                jobMasConn = Session("ConnMas").ToString
+                ViewBag.CONNECTION_MAS = jobMasConn
             End If
             If CheckSession("CurrForm") Then
                 Session("CurrForm") = ""
@@ -43,6 +63,7 @@ Public Class CController
             If CheckSession("CurrRights") Then
                 Session("CurrRights") = "*MIREDP"
             End If
+            LoadCompanyProfile()
             If modName <> "" Then
                 Session("CurrForm") = modName & "/" & vName
                 Session("CurrRights") = Main.GetAuthorize(ViewBag.User, modName, vName)

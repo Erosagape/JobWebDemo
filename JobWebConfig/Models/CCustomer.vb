@@ -110,6 +110,15 @@ Public Class CCustomer
             m_CustMessage = value
         End Set
     End Property
+    Private m_Seq As Integer
+    Public Property Seq As Integer
+        Get
+            Return m_Seq
+        End Get
+        Set(value As Integer)
+            m_Seq = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -133,6 +142,7 @@ Public Class CCustomer
                             dr("Active") = Me.Active
                             dr("CustRemark") = Me.CustRemark
                             dr("CustMessage") = Me.CustMessage
+                            dr("Seq") = Me.Active
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -156,6 +166,7 @@ Public Class CCustomer
         m_BeginDate = DateTime.MinValue
         m_ExpireDate = DateTime.MinValue
         m_Active = 0
+        m_Seq = 1
         m_CustRemark = ""
         m_CustMessage = ""
     End Sub
@@ -194,6 +205,9 @@ Public Class CCustomer
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Active"))) = False Then
                         row.Active = rd.GetBoolean(rd.GetOrdinal("Active"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("Seq"))) = False Then
+                        row.Seq = rd.GetBoolean(rd.GetOrdinal("Seq"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("CustRemark"))) = False Then
                         row.CustRemark = rd.GetString(rd.GetOrdinal("CustRemark")).ToString()

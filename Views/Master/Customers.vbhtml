@@ -191,6 +191,11 @@ End Code
                 CallBackQueryCustomer(path,code ,branch, ReadCustomer);
             }
         });
+        $('#txtCustCode').keydown(function (event) {
+            if (event.which == 13) {                
+                CallBackQueryCustomerSingle(path, $('#txtCustCode').val(), ReadCustomer);
+            }
+        });
         $('#txtBillToBranch').keydown(function (event) {
             if (event.which == 13) {
                 $('#txtBillToCustName').val('');

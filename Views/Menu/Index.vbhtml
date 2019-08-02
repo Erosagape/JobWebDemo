@@ -31,7 +31,7 @@ color:blue;
                             <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="CheckLogin()" />
                         </td>
                         <td align="right">
-                            <h5><label id="lblCompanyName" style="text-align:right" onclick="CheckLogin()">Shipping Control System</label></h5>
+                            <h5><label id="lblCompanyName" style="text-align:right" onclick="CheckDatabase()">Shipping Control System</label></h5>
                         </td>
                     </tr>
                 </table>
@@ -271,52 +271,16 @@ color:blue;
             </div>
         </div>
     </div>
-    <div id="dvLogin" class="modal" style="width:100%">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color:black">
-                    <div class="modal-title" style="color:white;text-align:center">
-                        Logon Information
-                    </div>
-                </div>
-                <div class="modal-body">
-                    Company ID : <input type="text" class="form-control" id="txtCompanyID" value="jobdemo" disabled />
-                    User ID : <input type="text" class="form-control" id="txtUserID" />
-                    Password : <input type="password" class="form-control" id="txtPassword" />
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" id="btnLogin" onclick="Login()">Log in</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var userID = '';
-    $(document).ready(function () {
-        SetEvents();
+    let path = '@Url.Content("~")';
+    let userID = '';
+    let compID = '';
+    //$(document).ready(function () {
         CheckLogin();
-    });
-    function SetEvents() {
-        $('#dvLogin').on('shown.bs.modal', function () {
-            $('#txtUserID').focus();
-        });
-        $('#txtUserID').keydown(function (event) {
-            if (event.which === 13) {
-                $('#txtPassword').focus();
-            }
-        });
-        $('#txtPassword').keydown(function (event) {
-            if (event.which === 13) {
-                Login();
-            }
-        });
-    }
+    //});
     function ShowLogin(r) {
         userID = r.UserID;
         $('#lblUserID').text(r.TName);
-        var compID = $('#txtCompanyID').val();
         if (compID !== '') {
             $('#lblCompanyName').text(compID);
         }
@@ -326,10 +290,11 @@ color:blue;
             $.get(path+'Config/GetLogin')
                 .done(function (r) {
                     if (r.user.data.UserID !== null) {
+                        compID = '@ViewBag.LICENSE_NAME';
                         ShowLogin(r.user.data);
                     } else {
                         userID = '';
-                        $('#dvLogin').modal('show');
+                        window.Open('/index.html', '', '');
                     }
                 });
         } else {
@@ -347,193 +312,177 @@ color:blue;
             }
         }
     }
-    function Login() {
-        userID = $('#txtUserID').val();
-        if (userID !== '') {
-            var Password = $('#txtPassword').val();
-            $.get(path+'Config/SetLogin?Code=' + userID + '&Pass=' + Password)
-                .done(function (r) {
-                    if (r.user.data.length > 0) {
-                        var b = r.user.data[0];
-                        ShowLogin(b);
-                    } else {
-                        userID = '';
-                        $('#lblUserID').text('Please Login');
-
-                        alert('User ID or Password Incorrect');
-                    }
-                    $('#dvLogin').modal('hide');
-                });
-        } else {
-            userID = '';
-            $('#lblUserID').text('Please Login');
-            $('#lblCompanyName').text('Shipping Control System');
-        }
-    }
     function OpenMenu(mnuID) {
+        let mnuPath = '';
+        switch (mnuID) {
+            case 'Advance':
+                mnuPath = path+'Adv/Index';
+                break;
+            case 'AppQuo':
+                mnuPath = path + 'JobOrder/QuoApprove';
+                break;
+            case 'AppAdvance':
+                mnuPath = path + 'Adv/Approve';
+                break;
+            case 'PayAdvance':
+                mnuPath = path + 'Adv/Payment';
+                break;
+            case 'Bank':
+                mnuPath = path + 'Master/Bank';
+                break;
+            case 'BookAccount':
+                mnuPath = path + 'Master/BookAccount';
+                break;
+            case 'Branch':
+                mnuPath = path + 'Master/Branch';
+                break;
+            case 'Clearing':
+                mnuPath = path + 'Clr/Index';
+                break;
+            case 'AppClearing':
+                mnuPath = path + 'Clr/Approve';
+                break;
+            case 'RecvClear':
+                mnuPath = path + 'Clr/Receive';
+                break;
+            case 'Constant':
+                mnuPath = path +'Config/Index';
+                break;
+            case 'CreateJob':
+                mnuPath = path +'JobOrder/CreateJob';
+                break;
+            case 'SearchJob':
+                mnuPath = path +'JobOrder/Index';
+                break;
+            case 'Country':
+                mnuPath = path + 'Master/Country';
+                break;
+            case 'Currency':
+                mnuPath = path + 'Master/Currency';
+                break;
+            case 'DeclareType':
+                mnuPath = path + 'Master/DeclareType';
+                break;
+            case 'CustomsPort':
+                mnuPath = path + 'Master/CustomsPort';
+                break;
+            case 'CustomsUnit':
+                mnuPath = path + 'Master/CustomsUnit';
+                break;
+            case 'InterPort':
+                mnuPath = path + 'Master/InterPort';
+                break;
+            case 'ServiceCode':
+                mnuPath = path + 'Master/ServiceCode';
+                break;
+            case 'ServiceGroup':
+                mnuPath = path + 'Master/ServiceGroup';
+                break;
+            case 'ServUnit':
+                mnuPath = path + 'Master/ServUnit';
+                break;
+            case 'users':
+                mnuPath = path +'Master/Users';
+                break;
+            case 'UserAuth':
+                mnuPath = path + 'Config/UserAuth';
+                break;
+            case 'venders':
+                mnuPath = path +'Master/Venders';
+                break;
+            case 'customers':
+                mnuPath = path +'Master/Customers';
+                break;
+            case 'GLNote':
+                mnuPath = path + 'Acc/GLNote';
+                break;
+            case 'Voucher':
+                mnuPath = path + 'Acc/Voucher';
+                break;
+            case 'WHTax':
+                mnuPath = path + 'Acc/WHTax';
+                break;
+            case 'Invoice':
+                mnuPath = path + 'Acc/Invoice';
+                break;
+            case 'Receipt':
+                mnuPath = path + 'Acc/Receipt';
+                break;
+            case 'Billing':
+                mnuPath = path + 'Acc/Billing';
+                break;
+            case 'Expense':
+                mnuPath = path + 'Acc/Expense';
+                break;
+            case 'TaxInvoice':
+                mnuPath = path + 'Acc/TaxInvoice';
+                break;
+            case 'CreditNote':
+                mnuPath = path + 'Acc/CreditNote';
+                break;
+            case 'CreditAdv':
+                mnuPath = path + 'Adv/CreditAdv';
+                break;
+            case 'Report':
+                mnuPath = path + 'Report/Index';
+                break;
+            case 'Tracking':
+                mnuPath = path + 'Tracking/Index';
+                break;
+            case 'Transport':
+                mnuPath = path + 'JobOrder/Transport';
+                break;
+            case 'Quotation':
+                mnuPath = path + 'JobOrder/Quotation';
+                break;
+            case 'Cheque':
+                mnuPath = path + 'Acc/Cheque';
+                break;
+            case 'RecvInv':
+                mnuPath = path + 'Acc/RecvInv';
+                break;
+            case 'Payment':
+                mnuPath = path + 'Acc/Payment';
+                break;
+            case 'PettyCash':
+                mnuPath = path + 'Acc/PettyCash';
+                break;
+            case 'Earnest':
+                mnuPath = path + 'Clr/Earnest';
+                break;
+            case 'MasS':
+                $('#dvMasS').modal('show');
+                break;
+            case 'MasG':
+                $('#dvMasG').modal('show');
+                break;
+            case 'MasA':
+                $('#dvMasA').modal('show');
+                break;
+            case 'Role':
+                mnuPath = path + 'Config/Role';
+                break;
+            case 'BudgetPolicy':
+                mnuPath = path + 'Master/BudgetPolicy';
+                break;
+            case 'vessel':
+                mnuPath = path + 'Master/Vessel';
+                break;
+            default:
+                alert('Under Development, Coming soon!');
+                break;
+        }
         if (userID !== '') {
-            switch (mnuID) {
-                case 'Advance':
-                    window.location.href = path+'Adv/Index';
-                    break;
-                case 'AppQuo':
-                    window.location.href = path + 'JobOrder/QuoApprove';
-                    break;
-                case 'AppAdvance':
-                    window.location.href = path + 'Adv/Approve';
-                    break;
-                case 'PayAdvance':
-                    window.location.href = path + 'Adv/Payment';
-                    break;
-                case 'Bank':
-                    window.location.href = path + 'Master/Bank';
-                    break;
-                case 'BookAccount':
-                    window.location.href = path + 'Master/BookAccount';
-                    break;
-                case 'Branch':
-                    window.location.href = path + 'Master/Branch';
-                    break;
-                case 'Clearing':
-                    window.location.href = path + 'Clr/Index';
-                    break;
-                case 'AppClearing':
-                    window.location.href = path + 'Clr/Approve';
-                    break;
-                case 'RecvClear':
-                    window.location.href = path + 'Clr/Receive';
-                    break;
-                case 'Constant':
-                    window.location.href = path +'Config/Index';
-                    break;
-                case 'CreateJob':
-                    window.location.href = path +'JobOrder/CreateJob';
-                    break;
-                case 'SearchJob':
-                    window.location.href = path +'JobOrder/Index';
-                    break;
-                case 'Country':
-                    window.location.href = path + 'Master/Country';
-                    break;
-                case 'Currency':
-                    window.location.href = path + 'Master/Currency';
-                    break;
-                case 'DeclareType':
-                    window.location.href = path + 'Master/DeclareType';
-                    break;
-                case 'CustomsPort':
-                    window.location.href = path + 'Master/CustomsPort';
-                    break;
-                case 'CustomsUnit':
-                    window.location.href = path + 'Master/CustomsUnit';
-                    break;
-                case 'InterPort':
-                    window.location.href = path + 'Master/InterPort';
-                    break;
-                case 'ServiceCode':
-                    window.location.href = path + 'Master/ServiceCode';
-                    break;
-                case 'ServiceGroup':
-                    window.location.href = path + 'Master/ServiceGroup';
-                    break;
-                case 'ServUnit':
-                    window.location.href = path + 'Master/ServUnit';
-                    break;
-                case 'users':
-                    window.location.href = path +'Master/Users';
-                    break;
-                case 'UserAuth':
-                    window.location.href = path + 'Config/UserAuth';
-                    break;
-                case 'venders':
-                    window.location.href = path +'Master/Venders';
-                    break;
-                case 'customers':
-                    window.location.href = path +'Master/Customers';
-                    break;
-                case 'GLNote':
-                    window.location.href = path + 'Acc/GLNote';
-                    break;
-                case 'Voucher':
-                    window.location.href = path + 'Acc/Voucher';
-                    break;
-                case 'WHTax':
-                    window.location.href = path + 'Acc/WHTax';
-                    break;
-                case 'Invoice':
-                    window.location.href = path + 'Acc/Invoice';
-                    break;
-                case 'Receipt':
-                    window.location.href = path + 'Acc/Receipt';
-                    break;
-                case 'Billing':
-                    window.location.href = path + 'Acc/Billing';
-                    break;
-                case 'Expense':
-                    window.location.href = path + 'Acc/Expense';
-                    break;
-                case 'TaxInvoice':
-                    window.location.href = path + 'Acc/TaxInvoice';
-                    break;
-                case 'CreditNote':
-                    window.location.href = path + 'Acc/CreditNote';
-                    break;
-                case 'CreditAdv':
-                    window.location.href = path + 'Adv/CreditAdv';
-                    break;
-                case 'Report':
-                    window.location.href = path + 'Report/Index';
-                    break;
-                case 'Tracking':
-                    window.location.href = path + 'Tracking/Index';
-                    break;
-                case 'Transport':
-                    window.location.href = path + 'JobOrder/Transport';
-                    break;
-                case 'Quotation':
-                    window.location.href = path + 'JobOrder/Quotation';
-                    break;
-                case 'Cheque':
-                    window.location.href = path + 'Acc/Cheque';
-                    break;
-                case 'RecvInv':
-                    window.location.href = path + 'Acc/RecvInv';
-                    break;
-                case 'Payment':
-                    window.location.href = path + 'Acc/Payment';
-                    break;
-                case 'PettyCash':
-                    window.location.href = path + 'Acc/PettyCash';
-                    break;
-                case 'Earnest':
-                    window.location.href = path + 'Clr/Earnest';
-                    break;
-                case 'MasS':
-                    $('#dvMasS').modal('show');
-                    break;
-                case 'MasG':
-                    $('#dvMasG').modal('show');
-                    break;
-                case 'MasA':
-                    $('#dvMasA').modal('show');
-                    break;
-                case 'Role':
-                    window.location.href = path + 'Config/Role';
-                    break;
-                case 'BudgetPolicy':
-                    window.location.href = path + 'Master/BudgetPolicy';
-                    break;
-                case 'vessel':
-                    window.location.href = path + 'Master/Vessel';
-                    break;
-                default:
-                    alert('Under Development, Coming soon!');
-                    break;
+            if (mnuPath !== '') {
+                window.location.href = mnuPath;
             }
         } else {
             alert('Please login first');
-            window.location.href = path + 'index.html';
+            window.location.href = path + 'index.html?redirect='+ mnuPath;
         }
+    }
+    function CheckDatabase() {
+        alert('MAS=@ViewBag.CONNECTION_MAS\nJOB=@ViewBag.CONNECTION_JOB');
     }
     </script>
 </body>
