@@ -1497,8 +1497,8 @@ End Code
         }
     }
     function GetParam() {
-        let strParam = '?';
-        strParam += 'Branch=' + $('#txtBranchCode').val();
+        let strParam = '?Status=0,1,2,3,4,5,6';
+        strParam += '&Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
         strParam += '&SBy=' + $('#cboShipBy').val().substr(0, 2);
         strParam += '&CustCode=' + $('#txtCustCode').val();

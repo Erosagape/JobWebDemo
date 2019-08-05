@@ -121,7 +121,7 @@ End Code
                 let c = r.company.data[0];
                 $('#lblCustName').text(c.NameThai);
                 $('#lblCustAddress').text(c.TAddress1 + '\n' + c.TAddress2);
-                $('#lblCustTelFax').text(c.Phone + c.FaxNumber);
+                $('#lblCustTelFax').text((CStr(c.Phone) == '' ? '' : 'Tel :' + CStr(c.Phone)) + (CStr(c.FaxNumber) == '' ? '' : ' Fax :' + CStr(c.FaxNumber)));
             }
         });
     }
@@ -150,12 +150,14 @@ End Code
             html += '</tr>';
 
             $('#tbDetail').append(html);
-
-            for (let i of dt.item) {
+            let items = dt.item.filter(function (data) {
+                return data.SeqNo == d.SeqNo;
+            });
+            for (let i of items) {
                 let desc = i.DescriptionThai;
                 desc += i.UnitDiscntAmt > 0 ? '<br/>Discount (Rate=' + i.UnitDiscntPerc + '%)=' + i.UnitDiscntAmt : '';
-                html = '<tr><td>' + d.SeqNo + '.' + i.ItemNo + '</td>';
-                html += '<td>' + desc + '</td>';
+                html = '<tr><td></td>';
+                html += '<td>' + d.SeqNo + '.' + i.ItemNo + ' ' + desc + '</td>';
                 html += '<td>' + i.UnitCheck + '</td>';
                 html += '<td>' + i.QtyBegin + '-' + i.QtyEnd + '</td>';
                 html += '<td style="text-align:right">' + ShowNumber(i.ChargeAmt, 2) + ' ' + i.CurrencyCode + '</td>';

@@ -253,6 +253,9 @@ End Code
                             <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
                             Cust.Inv : <input type="text" id="txtInvNo" style="width:230px" disabled />
                             <br />
+                            Quotation No : <input type="text" id="txtQNo" style="width:230px" disabled />
+                            <input type="button" id="btnBrowseQ" value="..." onclick="SearchData('quotation')" />
+                            <br />
                             <a onclick="SearchData('detcurrency')">Currency :</a>
                             <input type="text" id="txtCurrencyCode" style="width:50px" tabindex="15" />
                             <input type="text" id="txtCurrencyName" style="width:200px" disabled />
@@ -377,6 +380,34 @@ End Code
                             <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="frmSearchQuo" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Select Quotation<br />
+                    Customer :<input type="text" id="txtCustCode" style="width:100px" disabled /><input type="text" id="txtCustName" style="width:400px" disabled />
+                </div>
+                <div class="modal-body">
+                    <table id="tbQuo" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Q.No</th>
+                                <th>QtyBegin</th>
+                                <th>QtyEnd</th>
+                                <th>Unit Price</th>
+                                <th>Vender</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -1145,7 +1176,7 @@ End Code
             VATRate: $('#txtVATRate').val(),
             Tax50TaviRate : $('#txtWHTRate').val(),
             IsDuplicate: ($('#chkDuplicate').prop('checked') == true ? 1 : 0),
-            QNo: dtl.QNo,
+            QNo: $('#txtQNo').val(),
             FNet: Number($('#txtNET').val())/Number($('#txtCurRate').val()),
             BNet: $('#txtNET').val()
         };
@@ -1187,6 +1218,7 @@ End Code
             $('#chkDuplicate').prop('checked', dt.IsDuplicate == 1 ? true : false);
             $('#txtCurrencyCode').val(dt.CurrencyCode);
             $('#txtAdvNo').val(dt.AdvNO);
+            $('#txtQNo').val(dt.QNo);
             $('#txtAdvItemNo').val(dt.AdvItemNo);
             $('#txtAdvAmount').val(dt.AdvAmount);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
@@ -1230,6 +1262,7 @@ End Code
             $('#txtAdvNo').val(dt.AdvNO);
             $('#txtAdvItemNo').val(dt.AdvItemNo);
             $('#txtAdvAmount').val(dt.AdvBalance);
+            $('#txtQNo').val(dt.QNo);
             ShowCurrency(path, $('#txtCurrencyCode').val(), '#txtCurrencyName');
             ShowCaption();
             return;
@@ -1244,6 +1277,7 @@ End Code
         if (isjobmode == false) {
             $('#txtForJNo').val('');
             $('#txtInvNo').val('');
+            $('#txtQNo').val('');
         }
         $('#txtRemark').val('');
         $('#txt50Tavi').val('');
@@ -1340,7 +1374,6 @@ End Code
             });
             $('#frmHeader').modal('show');
         });
-
     }
     function SearchData(type) {
         switch (type) {
@@ -1371,6 +1404,10 @@ End Code
                 break;
             case 'servunit':
                 SetGridServUnit(path, '#tbUnit', '#frmSearchUnit', ReadUnit);
+                break;
+            case 'quotation':
+                let qry = '?branch=' + $('#txtBranchCode').val() + '&cust=' + $('#txtCustCode').val() + '&code=' + $('#txtSICode').val() + '&jtype=' + $('#txtJobType').val() + '&sby=' + $('#txtShipBy').val();
+                SetGridQuotation(path, '#tbQuo', qry, '#frmSearchQuo', ReadQuotation);
                 break;
         }
     }
@@ -1406,8 +1443,8 @@ End Code
     }
 
     function GetParam() {
-        let strParam = '?';
-        strParam += 'Branch=' + $('#txtBranchCode').val();
+        let strParam = '?Status=0,1,2,3,4,5,6';
+        strParam += '&Branch=' + $('#txtBranchCode').val();
         strParam += '&JType=' + $('#cboJobType').val().substr(0, 2);
         return strParam;
     }
@@ -1492,6 +1529,7 @@ End Code
     function ReadJob(dt) {
         $('#txtForJNo').val(dt.JNo);
         $('#txtInvNo').val(dt.InvNo);
+        $('#txtQNo').val(dt.QNo);
         $('#txtForJNo').focus();
     }
     
@@ -1619,5 +1657,34 @@ End Code
                 alert("Not found data for clear");
             }
         });
+    }
+    function ReadQuotation(dr) {
+        $('#txtSICode').val(dt.SICode);
+        $('#cboSTCode').val('QUO');
+        $('#txtSDescription').val(dt.DescriptionThai);
+        $('#txtVatType').val(dt.Isvat);
+        $('#txtVATRate').val(dt.VatRate);
+        $('#txtWHTRate').val(dt.IsTax == "0" ? "0" : dt.TaxRate);
+        if (dt.Isvat == "2") {
+            $('#txtAMT').attr('disabled', 'disabled');
+            $('#txtVATRate').attr('disabled', 'disabled');
+            $('#txtWHTRate').attr('disabled', 'disabled');
+            $('#txtVAT').attr('disabled', 'disabled');
+            $('#txtWHT').attr('disabled', 'disabled');
+        } else {
+            $('#txtAMT').removeAttr('disabled');
+            $('#txtVATRate').removeAttr('disabled');
+            $('#txtWHTRate').removeAttr('disabled');
+            $('#txtVAT').removeAttr('disabled');
+            $('#txtWHT').removeAttr('disabled');
+        }
+        $('#txtCurrencyCode').val(dt.CurrencyCode);
+        ShowCurrency(path, dt.CurrencyCode, '#txtCurrencyName');
+        $('#txtCurRate').val(dt.CurrencyRate);
+        $('#txtUnitPrice').val(dt.ChargeAmt);
+        $('#txtUnitCode').val(dt.UnitCheck);            
+        $('#txtVenCode').val(dt.VenderCode);           
+        ShowVender(path, dt.VenderCode, '#txtPayChqTo');
+        CalAmount();
     }
 </script>

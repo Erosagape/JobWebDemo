@@ -69,6 +69,90 @@ Namespace Controllers
         Function Quotation() As ActionResult
             Return GetView("Quotation", "MODULE_SALES")
         End Function
+        Function CopyQuotation() As ActionResult
+            Dim tSqlw As String = " WHERE QNo<>'' "
+            If Not IsNothing(Request.QueryString("Branch")) Then
+                tSqlw &= String.Format(" AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+            End If
+            If Not IsNothing(Request.QueryString("Code")) Then
+                tSqlw &= String.Format(" AND QNo='{0}' ", Request.QueryString("Code").ToString)
+            End If
+            Dim custcode As String = ""
+            Dim custbranch As String = ""
+            If Not IsNothing(Request.QueryString("Cust")) Then
+                custcode = Request.QueryString("Cust").ToString().Split("|")(0)
+                custbranch = Request.QueryString("Cust").ToString().Split("|")(1)
+            Else
+                Return Content("{""result"":""Please select customer""}", jsonContent)
+            End If
+            Try
+                Dim oHead = New CQuoHeader(jobWebConn).GetData(tSqlw)
+                If oHead.Count > 0 Then
+                    Dim oDetails = New CQuoDetail(jobWebConn).GetData(tSqlw)
+                    Dim oItems = New CQuoItem(jobWebConn).GetData(tSqlw)
+                    oHead(0).DocDate = DateTime.Today
+                    oHead(0).CustCode = custcode
+                    oHead(0).CustBranch = custbranch
+                    oHead(0).BillToCustCode = custcode
+                    oHead(0).BillToCustBranch = custbranch
+                    oHead(0).DocStatus = 0
+                    oHead(0).ApproveBy = ""
+                    oHead(0).ApproveDate = DateTime.MinValue
+                    oHead(0).ApproveTime = DateTime.MinValue
+                    oHead(0).CancelBy = ""
+                    oHead(0).CancelDate = DateTime.MinValue
+                    oHead(0).CancelReason = ""
+                    oHead(0).AddNew("Q-" & DateTime.Now.ToString("yyMM") & "-____")
+                    Dim msg = oHead(0).SaveData(String.Format(" WHERE BranchCode='{0}' AND QNo='{1}'", oHead(0).BranchCode, oHead(0).QNo))
+                    If msg.Substring(0, 1) = "S" Then
+                        For Each detail In oDetails
+                            detail.QNo = oHead(0).QNo
+                            detail.SaveData(String.Format(" WHERE BranchCode='{0}' AND QNo='{1}' AND SeqNo={2}", oHead(0).BranchCode, oHead(0).QNo, detail.SeqNo))
+                        Next
+                        For Each item In oItems
+                            item.QNo = oHead(0).QNo
+                            item.SaveData(String.Format(" WHERE BranchCode='{0}' AND QNo='{1}' AND SeqNo={2} AND ItemNo={3}", oHead(0).BranchCode, oHead(0).QNo, item.SeqNo, item.ItemNo))
+                        Next
+                        Return Content("{""result"":""" & oHead(0).QNo & """}", jsonContent)
+                    Else
+                        Return Content("{""result"":""" & msg & """}", jsonContent)
+                    End If
+                Else
+                    Return Content("{""result"":""Not Found Quotation " & Request.QueryString("Code").ToString & """}", jsonContent)
+                End If
+            Catch ex As Exception
+                Return Content("{""result"":""" & ex.Message & """}", jsonContent)
+            End Try
+        End Function
+        Function GetQuotationGrid() As ActionResult
+            Try
+                Dim tSqlW As String = ""
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND Job_QuotationDetail.JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("SBy")) Then
+                    tSqlW &= " AND Job_QuotationDetail.ShipBy=" & Request.QueryString("SBy") & ""
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlW &= " AND Job_QuotationHeader.BranchCode='" & Request.QueryString("Branch") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlW &= " AND Job_QuotationHeader.DocStatus='" & Request.QueryString("Status") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlW &= " AND Job_QuotationHeader.CustCode='" & Request.QueryString("Cust") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlW &= " AND Job_QuotationItem.SICode='" & Request.QueryString("Code") & "'"
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectQuotation() & " WHERE NOT ISNULL(Job_QuotationHeader.CancelBy,'')<>'' " & tSqlW & " ORDER BY Job_QuotationHeader.BranchCode,Job_QuotationHeader.QNo,Job_QuotationHeader.ApproveDate DESC,Job_QuotationItem.SICode,Job_QuotationItem.QtyBegin")
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""quotation"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetQuotation() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE QNo<>'' "
@@ -396,7 +480,7 @@ Namespace Controllers
                     tSqlW &= " AND BranchCode='" & Request.QueryString("Branch") & "'"
                 End If
                 If Not IsNothing(Request.QueryString("Status")) Then
-                    tSqlW &= " AND JobStatus='" & Request.QueryString("Status") & "'"
+                    tSqlW &= " AND JobStatus IN(" & Request.QueryString("Status") & ")"
                 End If
                 If Not IsNothing(Request.QueryString("JNo")) Then
                     tSqlW &= " AND JNo='" & Request.QueryString("JNo") & "'"
@@ -494,7 +578,7 @@ Namespace Controllers
                         Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""Customer '" + oJob.CustCode + "/" + oJob.CustBranch + "' Not Found!""}}", jsonContent)
                     End If
                 End If
-                sql &= String.Format(" AND CustCode='{0}' And CustBranch='{1}' And InvNo='{2}'", oJob.CustCode, oJob.CustBranch, oJob.InvNo)
+                sql &= String.Format(" AND CustCode='{0}' And CustBranch='{1}' And InvNo='{2}' AND JobStatus<>99 ", oJob.CustCode, oJob.CustBranch, oJob.InvNo)
                 Dim FindJob = oJob.GetData(sql)
                 If FindJob.Count > 0 Then
                     Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""invoice '" + oJob.InvNo + "' has been opened for job '" + FindJob(0).JNo + "' ""}}", jsonContent)

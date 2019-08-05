@@ -81,6 +81,7 @@ End Code
             </div>
         </div>
         <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
+        <input type="checkbox" id="chkCopyMode" /> Copy Mode
         <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
         <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
     </div>
@@ -90,11 +91,11 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var row = {}; //row pointer to current record show in buffer
-    $(document).ready(function () {
-        SetEvents();
-        SetEnterToTab();
-        $('#txtSICode').focus();
-    });
+    //$(document).ready(function () {
+    SetEvents();
+    SetEnterToTab();
+    AddData();
+    //});
     function SetEnterToTab() {
         //Set enter to tab
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {
@@ -131,11 +132,32 @@ End Code
             CreateLOV(dv,'#dvSearch','#tbGrid','Service Code',response,2);
             //1 Fields
             //Unit
-            CreateLOV(dv,'#dvUnit','#tbUnit','Units',response,1);
+            CreateLOV(dv,'#dvUnit','#tbUnit','Units',response,2);
         });
     }
     function SetEvents() {
         SetLOVs();
+        $('#cboType').click(function () {
+            let code = $('#cboType').val();
+            $.get(path + 'Master/GetServiceGroup?Code=' + code)
+                .done(function (r) {
+                    if (r.servicegroup.data.length > 0) {
+                        let dt = r.servicegroup.data[0];
+
+                        $('#chkIsTaxCharge').prop('checked', dt.IsTaxCharge === 0 ? false : true);
+                        $('#chkIs50Tavi').prop('checked', dt.Is50Tavi === 0 ? false : true);
+                        $('input:radio[name=optVAT]:checked').prop('checked', false);
+                        $('input:radio[name=optWHT]:checked').prop('checked', false);
+                        $('input:radio[name=optVAT][value="' + dt.IsTaxCharge + '"]').prop('checked', true);
+                        $('input:radio[name=optWHT][value=1]').prop('checked', dt.IsLtdAdv50Tavi === 1 ? true : false);
+                        $('input:radio[name=optWHT][value=2]').prop('checked', dt.IsPay50TaviTo === 1 ? true : false);
+                        $('#txtRate50Tavi').val(dt.Rate50Tavi);
+                        $('#chkIsHaveSlip').prop('checked', dt.IsHaveSlip === 0 ? false : true);
+                        $('#chkIsCredit').prop('checked', dt.IsCredit === 0 ? false : true);
+                        $('#chkIsExpense').prop('checked', dt.IsExpense === 0 ? false : true);
+                    }
+                });
+        });
         //if value IsTaxCharge =1 -> Exclude VAT ,2-> Include VAT 
         $('#chkIsTaxCharge').change(function () {
             //Default value is Excluded VAT
@@ -168,7 +190,7 @@ End Code
         $('#txtSICode').focus();
     }
     function ShowUnit(dt) {
-        $('#txtUnitCharge').val(dt.val);
+        $('#txtUnitCharge').val(dt.UnitType);
         $('#txtUnitCharge').focus();
     }
     function ShowVender(dt) {
@@ -182,7 +204,11 @@ End Code
     function ShowSearch(ty) {
         switch (ty) {
             case 'sicode':
-                SetGridSICodeByGroup(path, '#tbGrid', $('#cboType').val(), '#dvSearch' , ShowData);
+                let w = '';
+                if ($('#cboType').val() !== null) {
+                    w += '?Group=' + $('#cboType').val();
+                }
+                SetGridSICodeFilter(path, '#tbGrid',w, '#dvSearch' , ShowData);
                 break;
             case 'vender':
                 SetGridVender(path, '#tbVend', '#dvVend' , ShowVender);
@@ -191,11 +217,16 @@ End Code
                 SetGridCurrency(path, '#tbCurr', '#dvCurr', ShowCurrency);
                 break;
             case 'unit':
-                SetGridUnit(path, '#tbUnit','#dvUnit',ShowUnit);
+                SetGridServUnit(path, '#tbUnit','#dvUnit',ShowUnit);
                 break;                 
         }
     }
     function AddData() {
+        if ($('#chkCopyMode').prop('checked') == true) {
+            $('#txtSICode').val('');
+            $('#txtNameThai').focus();
+            return;
+        }
         $.get(path + 'master/getnewservicecode',function (r) {
                 if (r.servicecode.data.length>0) {
                     ShowData(r.servicecode.data[0]);
@@ -283,8 +314,8 @@ End Code
     function SaveData() {
         if (row.SICode != undefined) {
             var obj = GetDataSave(row);
-            if (obj.SICode == '') {
-                alert('Please enter service code');
+            if (obj.GroupCode == null) {
+                alert('Please enter service type');
                 return;
             }
             if (obj.NameThai == '') {

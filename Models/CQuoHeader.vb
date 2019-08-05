@@ -230,7 +230,7 @@ Public Class CQuoHeader
                     End Using
                 End Using
             Catch ex As Exception
-                msg = ex.Message
+                msg = "[ERROR]" & ex.Message
             End Try
         End Using
         Return msg

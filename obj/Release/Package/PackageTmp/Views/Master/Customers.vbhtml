@@ -185,14 +185,19 @@ End Code
     function SetEvents() {
         $('#txtBranch').keydown(function (event) {
             if (event.which == 13) {
-                var code = $('#txtCustCode').val();
-                var branch = $('#txtBranch').val();
+                let code = $('#txtCustCode').val();
+                let branch = $('#txtBranch').val();
                 ClearData();
+                $('#txtCustCode').val(code);
+                $('#txtBranch').val(branch);
                 CallBackQueryCustomer(path,code ,branch, ReadCustomer);
             }
         });
         $('#txtCustCode').keydown(function (event) {
             if (event.which == 13) {                
+                let code = $('#txtCustCode').val();
+                ClearData();
+                $('#txtCustCode').val(code);
                 CallBackQueryCustomerSingle(path, $('#txtCustCode').val(), ReadCustomer);
             }
         });

@@ -98,6 +98,10 @@
         if (userID !== '') {
             var Password = $('#txtPassword').val();
             var dbName = $('#txtDatabaseID').val();
+            if (dbName == '') {
+                alert('Please choose database first');
+                return;
+            }
             $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password + '&Database=' +dbName)
                 .done(function (r) {
                     if (r.user.data.length > 0) {

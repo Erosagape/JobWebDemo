@@ -247,9 +247,9 @@ End Code
         $('#lblCurrency').text(j.InvCurUnit);
         $('#lblExcRate').text(j.InvCurRate);
         $('#lblInvProduct').text(j.InvProduct);
-        $('#lblInvTotal').text(j.InvTotal + ' ' + j.InvCurUnit);
+        $('#lblInvTotal').text(j.InvTotal + ' ' + CStr(j.InvCurUnit));
         $('#lblInvQty').text(j.InvProductQty);
-        $('#lblInvUnit').text(j.InvProductUnit);
+        $('#lblInvUnit').text(CStr(j.InvProductUnit));
         $('#lblPackQty').text(j.TotalQty);
         $('#lblPackUnit').text('UNIT');
         $('#lblTotalGW').text(j.TotalGW);
@@ -268,7 +268,7 @@ End Code
         $('#lblTaxPrivilege').text(j.TyClearTaxReson);
         $('#lblShippingCmd').text(j.ShippingCmd);
         $('#lblDescription').text(j.Description);
-        $('#divRemark').html('<b>REMARKS:</b>' + j.TRemark);
+        $('#divRemark').html('<b>REMARKS:</b>' + CStr(j.TRemark));
 
         var jt = j.JobType;
         var sb = j.ShipBy;

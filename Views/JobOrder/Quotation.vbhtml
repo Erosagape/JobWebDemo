@@ -26,10 +26,11 @@ End Code
                 Date To:<br />
                 <input type="date" class="form-control" id="txtDocDateT" />
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <br />
                 <input type="button" class="btn btn-primary" value="Show" onclick="ShowHeader()" id="btnShow" />
                 <button class="btn btn-success" onclick="AddHeader()">New Quotation</button>
+                <button class="btn btn-warning" onclick="CopyData()">Copy Quotation</button>
             </div>
         </div>
         <input type="checkbox" id="chkCancel" />Show Cancel Only
@@ -233,6 +234,8 @@ End Code
             <div class="modal-dialog-lg">
                 <div class="modal-content">
                     <div class="modal-header">
+                        For <label id="lblHeader"></label>
+                        <br/>
                         Item No <input type="text" id="txtItemNo" disabled />
                         Calculate Type
                         <select id="txtCalculateType">
@@ -390,6 +393,24 @@ End Code
                     <div class="modal-footer">
                         <div style="float:left">
                             <button id="btnUpdateI" class="btn btn-primary" onclick="SaveItem()">Update</button>
+                        </div>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="frmCopy" class="modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Create Quotation Base From
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="txtBaseQNo" class="form-control" />
+                    </div>
+                    <div class="modal-footer">
+                        <div style="float:left">
+                            <button id="btnGen" class="btn btn-success" onclick="CreateData()">Create</button>
                         </div>
                         <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
@@ -610,6 +631,7 @@ End Code
             $('#txtApproveDate').val(chkmode == 'I' ? GetToday() : '');
             $('#txtApproveTime').val(chkmode == 'I' ? ShowTime(GetTime()) : '');
             if (row.DocStatus !== '99') $('#txtDocStatus').val(chkmode == 'I' ? '1' : '0');
+            $('#btnUpdate').removeAttr('disabled');
         } else {
             alert('you are not allow to approve quotation');
         }
@@ -652,6 +674,7 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
+                    ShowHeader();
                     $('#txtDocNo').val(response.result.data);
                     alert(response.result.data);
                     $('#frmHeader').modal('hide');
@@ -801,7 +824,7 @@ End Code
             alert('please enter customer');
             return;
         }
-        ClearHeader();
+        ShowHeader();
         $('#frmHeader').modal('show');
     }
     function ClearHeader() {
@@ -824,10 +847,25 @@ End Code
         $('#txtCancelReason').val('');
         $('#txtCancelBy').val('');
         $('#txtCancelDate').val('');        
-        $('#txtManagerCode').val('');
-        $('#txtManagerName').val('');
+        $('#txtManagerCode').val(user);
+        ShowUser(path, user, '#txtManagerName');
         $('#txtDescriptionH').val('');
         $('#txtDescriptionF').val('');
+
+        $('#btnUpdate').attr('disabled', 'disabled');
+        $('#btnUpdateI').attr('disabled', 'disabled');
+        $('#btnUpdateD').attr('disabled', 'disabled');
+        $('#btnDelItem').attr('disabled', 'disabled');
+        $('#btnDelDetail').attr('disabled', 'disabled');
+        if (userRights.indexOf('E') >= 0 || userRights.indexOf('I') >= 0) {
+            $('#btnUpdate').removeAttr('disabled');
+            $('#btnUpdateI').removeAttr('disabled');
+            $('#btnUpdateD').removeAttr('disabled');
+        }
+        if (userRights.indexOf('D') >= 0) {
+            $('#btnDelItem').removeAttr('disabled');
+            $('#btnDelDetail').removeAttr('disabled');
+        }
     }
     function ClearDetail() {
         $('#txtSeqNo').val('0');
@@ -836,6 +874,7 @@ End Code
         $('#txtDescription').val('');
     }
     function ClearItem() {
+        $('#lblHeader').text(row_d.Description);
         $('#txtItemNo').val('0');
         $('#txtSICode').val('');
         $('#txtSDescription').val('');
@@ -968,6 +1007,21 @@ End Code
         ShowUser(path, row.ManagerCode, '#txtManagerName');
         $('#txtDescriptionH').val(row.DescriptionH);
         $('#txtDescriptionF').val(row.DescriptionF);
+
+        $('#btnUpdate').attr('disabled', 'disabled');
+        $('#btnUpdateI').attr('disabled', 'disabled');
+        $('#btnUpdateD').attr('disabled', 'disabled');
+        $('#btnDelItem').attr('disabled', 'disabled');
+        $('#btnDelDetail').attr('disabled', 'disabled');
+        if (row.DocStatus == 0 && userRights.indexOf('E') >= 0) {
+            $('#btnUpdate').removeAttr('disabled');
+            $('#btnUpdateI').removeAttr('disabled');
+            $('#btnUpdateD').removeAttr('disabled');
+        }
+        if (row.DocStatus == 0 && userRights.indexOf('D') >= 0) {
+            $('#btnDelItem').removeAttr('disabled');
+            $('#btnDelDetail').removeAttr('disabled');
+        }
     }
     function ReadDetail() {
         $('#txtDocItemNo').val(row_d.SeqNo);
@@ -977,6 +1031,7 @@ End Code
         $('#txtDescription').val(row_d.Description);
     }
     function ReadItem() {
+        $('#lblHeader').text(row_d.Description);
         $('#txtItemNo').val(row_i.ItemNo);
         $('#txtSICode').val(row_i.SICode);
         ShowServiceCode(path, row_i.SICode, '#txtSDescription');
@@ -1046,7 +1101,17 @@ End Code
         $('#txtSICode').val(dt.SICode);
         $('#txtSDescription').val(dt.NameThai);
         $('#txtDescriptionThai').val(dt.NameThai);
-
+        $('#txtIsvat').val(dt.IsTaxCharge);
+        $('#txtIsTax').val(dt.Is50Tavi);
+        $('#txtVatRate').val(dt.IsTaxCharge == 1 ? CDbl(@ViewBag.PROFILE_VATRATE* 100, 0) : 0);
+        $('#txtTaxRate').val(dt.Rate50Tavi);
+        $('#txtUnitCheck').val(dt.UnitCharge);
+        $('#txtCurrencyCode').val(dt.CurrencyCode);
+        ShowCurrency(path, dt.CurrencyCode, '#txtCurrencyName');
+        $('#txtChargeAmt').val(dt.StdPrice);
+        $('#txtVenderCode').val(dt.DefaultVender);
+        ShowVender(path, dt.DefaultVender, '#txtVenderName');
+        CalAmount();
     }
     function ShowDiscount() {
         if ($('#txtDiscountType').val() == '1') {
@@ -1149,6 +1214,28 @@ End Code
         let amt = GetNetPrice();
         $('#txtBaseProfit').val(CDbl(amt - cost, 2));
         $('#txtNetProfit').val(CDbl(amt - comm - cost, 2));
+    }
+    function CopyData() {
+        if (userRights.indexOf('I') < 0) {
+            alert('you are not allow to add quotation');
+            return;
+        }
+        if ($('#txtBranchCode').val() == '') {
+            alert('please enter branch');
+            return;
+        }
+        if ($('#txtCustCode').val() == '') {
+            alert('please enter customer');
+            return;
+        }
+        $('#frmCopy').modal('show');
+    }
+    function CreateData() {
+        $.get(path + 'JobOrder/CopyQuotation?branch=' + $('#txtBranchCode').val() + '&cust=' + $('#txtCustCode').val() + '|'+$('#txtCustBranch').val()+'&code=' + $('#txtBaseQNo').val())
+            .done(function (r) {
+                alert(r.result);
+                ShowHeader();
+            });
     }
 </script>
 

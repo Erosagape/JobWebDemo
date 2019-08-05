@@ -87,6 +87,7 @@ End Code
                 ใบเสนอราคาเลขที่้<br />
                 <input type="text" style="width:150px" id="txtQNo" tabindex="8" />
                 <input type="text" style="width:50px" id="txtRevise" tabindex="9" />
+                <input type="hidden" id="txtManagerCode" />
             </td>
         </tr>
     </table>
@@ -216,6 +217,11 @@ End Code
         $('#txtCustBranch').focusout(function () {
             ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
         });
+        $('#txtCustCode').keydown(function (e) {
+            if (e.which == 13) {
+                GetQuotation();
+            }
+        });
         $('#txtConsignee').focusout(function () {
             ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
         });
@@ -304,6 +310,23 @@ End Code
         strParam += '&CustCode=' + $('#txtCustCode').val();
         return strParam;
     }
+    function GetQuotation() {
+        let branch = $('#txtBranchCode').val();
+        let cust = $('#txtCustCode').val();
+        let jtype = $('#cboJobType').val();
+        let sby = $('#cboShipBy').val();
+        $('#txtQNo').val('');
+        $('#txtRevise').val('');
+        $('#txtManagerCode').val('');
+        $.get(path + 'JobOrder/GetQuotationGrid?branch=' + branch + '&cust=' + cust + '&jtype=' + jtype + '&sby=' + sby + '&status=1')
+            .done(function (r) {
+                if (r.quotation.data.length > 0) {
+                    $('#txtQNo').val(r.quotation.data[0].QNo);
+                    $('#txtRevise').val(r.quotation.data[0].SeqNo);
+                    $('#txtManagerCode').val(r.quotation.data[0].ManagerCode);
+                }
+            });
+    }
     function CreateJob() {
         if ($('#txtBranchName').val() === '') {
             alert('Please select branch before create job');
@@ -366,7 +389,7 @@ End Code
                     data.CustRefNO = $('#txtCustPO').val();
                     data.HAWB = $('#txtHAWB').val();
                     data.MAWB = $('#txtMAWB').val();
-
+                    data.ManagerCode = $('#txtManagerCode').val();
                     PostData(data);
                 } else {
                     alert(r.job.result);

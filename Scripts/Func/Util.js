@@ -381,7 +381,7 @@ function CallBackQueryService(p, code, ev) {
     });
 }
 function CallBackQueryCustomer(p, cno, br, ev) {
-    $.get(p + 'master/getcompany?Code=' + cno + '&Branch' + br).done(function (r) {
+    $.get(p + 'master/getcompany?Code=' + cno + '&Branch=' + br).done(function (r) {
         let dr = r.company.data;
         if (dr.length > 0) {
             ev(dr[0]);

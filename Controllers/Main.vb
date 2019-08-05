@@ -977,6 +977,10 @@ FROM Job_Order j INNER JOIN (
         AND JobStatus<>99 AND NOT ISNULL(CancelReson,'')<>''
         UNION
         SELECT BranchCode,JNo,1 FROM Job_Order 
+        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NULL AND DutyDate IS NULL
+        AND JobStatus<>1 AND NOT ISNULL(CancelReson,'')<>''
+        UNION
+        SELECT BranchCode,JNo,1 FROM Job_Order 
         WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NULL AND NOT DutyDate<=GETDATE()
         AND JobStatus<>1 AND NOT ISNULL(CancelReson,'')<>''
         UNION
@@ -985,7 +989,7 @@ FROM Job_Order j INNER JOIN (
         AND JobStatus<>2 AND NOT ISNULL(CancelReson,'')<>'' 
         UNION
         SELECT BranchCode,JNo,3 FROM Job_Order 
-        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NOT NULL  
+        WHERE ConfirmDate IS NOT NULL AND CloseJobDate IS NOT NULL
         AND JobStatus<>3 AND NOT ISNULL(CancelReson,'')<>''
         UNION
         SELECT a.BranchCode,a.JNo,4 FROM Job_Order a 
@@ -1060,10 +1064,10 @@ FROM Job_Order j INNER JOIN (
         AND a.JobStatus<>99 AND NOT ISNULL(a.CancelReson,'')<>''
         UNION
         SELECT BranchCode,JNo,98 as JobStatus FROM Job_Order 
-        WHERE ISNULL(CancelReson,'')<>'' AND JobStatus<>99
+        WHERE ISNULL(CancelReson,'')<>'' AND JobStatus<>99 AND ISNULL(CancelProve,'')=''
         UNION
-        SELECT BranchCode,JNo,98 as JobStatus FROM Job_Order 
-        WHERE ISNULL(CancelReson,'')<>'' AND JobStatus=99
+        SELECT BranchCode,JNo,99 as JobStatus FROM Job_Order 
+        WHERE ISNULL(CancelReson,'')<>'' AND ISNULL(CancelProve,'')<>''
     ) s
     GROUP BY s.BranchCode,s.JNo
 ) c
@@ -1309,6 +1313,28 @@ LEFT JOIN Job_CashControlSub vd ON rd.BranchCode=vd.BranchCode AND rd.ControlNo=
 SELECT a.*,b.ID,b.TRemark,b.MaxAdvance,b.MaxCost,b.MinCharge,b.MinProfit,b.Active,b.LastUpdate,b.UpdateBy
 FROM Job_SrvSingle a LEFT JOIN Job_BudgetPolicy b
 ON a.SICode=b.SICode 
+"
+    End Function
+    Function SQLSelectQuotation() As String
+        Return "
+SELECT dbo.Job_QuotationHeader.BranchCode, dbo.Job_QuotationHeader.QNo, dbo.Job_QuotationHeader.ReferQNo, dbo.Job_QuotationHeader.CustCode, 
+    dbo.Job_QuotationHeader.CustBranch, dbo.Job_QuotationHeader.BillToCustCode, dbo.Job_QuotationHeader.BillToCustBranch, 
+    dbo.Job_QuotationHeader.ContactName, dbo.Job_QuotationHeader.DocDate, dbo.Job_QuotationHeader.ManagerCode, dbo.Job_QuotationHeader.DescriptionH, 
+    dbo.Job_QuotationHeader.DescriptionF, dbo.Job_QuotationHeader.TRemark, dbo.Job_QuotationHeader.DocStatus, dbo.Job_QuotationHeader.ApproveBy, 
+    dbo.Job_QuotationHeader.ApproveDate, dbo.Job_QuotationHeader.ApproveTime, dbo.Job_QuotationHeader.CancelBy, dbo.Job_QuotationHeader.CancelDate, 
+    dbo.Job_QuotationHeader.CancelReason, dbo.Job_QuotationDetail.JobType, dbo.Job_QuotationDetail.ShipBy, dbo.Job_QuotationDetail.Description, 
+    dbo.Job_QuotationDetail.SeqNo, dbo.Job_QuotationItem.ItemNo, dbo.Job_QuotationItem.IsRequired, dbo.Job_QuotationItem.NetProfit, dbo.Job_QuotationItem.CommissionAmt, 
+    dbo.Job_QuotationItem.CommissionPerc, dbo.Job_QuotationItem.BaseProfit, dbo.Job_QuotationItem.VenderCost, dbo.Job_QuotationItem.VenderCode, 
+    dbo.Job_QuotationItem.UnitDiscntAmt, dbo.Job_QuotationItem.UnitDiscntPerc, dbo.Job_QuotationItem.TotalCharge, dbo.Job_QuotationItem.TotalAmt, 
+    dbo.Job_QuotationItem.TaxAmt, dbo.Job_QuotationItem.TaxRate, dbo.Job_QuotationItem.IsTax, dbo.Job_QuotationItem.VatAmt, dbo.Job_QuotationItem.VatRate, 
+    dbo.Job_QuotationItem.Isvat, dbo.Job_QuotationItem.ChargeAmt, dbo.Job_QuotationItem.CurrencyRate, dbo.Job_QuotationItem.CurrencyCode, 
+    dbo.Job_QuotationItem.UnitCheck, dbo.Job_QuotationItem.QtyEnd, dbo.Job_QuotationItem.QtyBegin, dbo.Job_QuotationItem.CalculateType, 
+    dbo.Job_QuotationItem.DescriptionThai, dbo.Job_QuotationItem.SICode
+FROM dbo.Job_QuotationHeader INNER JOIN
+    dbo.Job_QuotationDetail ON dbo.Job_QuotationHeader.BranchCode = dbo.Job_QuotationDetail.BranchCode AND 
+    dbo.Job_QuotationHeader.QNo = dbo.Job_QuotationDetail.QNo INNER JOIN
+    dbo.Job_QuotationItem ON dbo.Job_QuotationDetail.BranchCode = dbo.Job_QuotationItem.BranchCode AND 
+    dbo.Job_QuotationDetail.QNo = dbo.Job_QuotationItem.QNo AND dbo.Job_QuotationDetail.SeqNo = dbo.Job_QuotationItem.SeqNo
 "
     End Function
     Function GetJobPrefix(data As CJobOrder) As String

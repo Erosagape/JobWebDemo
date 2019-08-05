@@ -828,3 +828,34 @@ function SetGridBookAccount(p, g, d, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridQuotation(p, g, t, d, ev) {
+    //popup for search data
+    $(g).DataTable({
+        ajax: {
+            url: p + 'JobOrder/GetQuotationGrid' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'quotation.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "QNo", title: "Quotation No" },
+            { data: "QtyBegin", title: "Qty Begin" },
+            { data: "QtyEnd", title: "Qty End" },
+            { data: "ChargeAmt", title: "Price" },
+            { data: "VenderCode", title: "Vender" },
+            { data: "VenderCost", title: "Cost" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}

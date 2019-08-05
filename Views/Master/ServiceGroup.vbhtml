@@ -145,7 +145,7 @@ End Code
         $('#chkIsHaveSlip').prop('checked', false);
         $('#chkIsCredit').prop('checked', false);
         $('#chkIsExpense').prop('checked', false);
-
+        row = {};
     }
     function DeleteData() {
         var code = $('#txtGroupCode').val();
@@ -192,7 +192,8 @@ End Code
             });
         });
     }
-    function GetDataSave(dt) {
+    function GetDataSave() {
+        let dt = row;
         dt.GroupCode = $('#txtGroupCode').val();
         dt.GroupName = $('#txtGroupName').val();
         dt.GLAccountCode= $('#txtGLAccountCode').val();
@@ -216,39 +217,35 @@ End Code
         return dt;
     }
     function SaveData() {
-        if (row.GroupCode != undefined) {
-            var obj = GetDataSave(row);
-            if (obj.GroupCode == '') {
-                alert('Please enter code');
-                return;
-            }
-            if (obj.GroupName == '') {
-                alert('Please enter name');
-                return;
-            }
-            var ask = confirm("Do you need to " + (row.GroupCode == "" ? "Add" : "Save") + " this data?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetServiceGroup", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data!=null) {
-                        $('#txtGroupCode').val(response.result.data);
-                        $('#txtGroupCode').focus();
-                    }
-                    alert(response.result.msg);
-                },
-                error: function (e) {
-                    alert(e);
-                }
-            });
-        } else {
-            alert('No data to save');
+        var obj = GetDataSave();
+        if (obj.GroupCode == '') {
+            alert('Please enter code');
+            return;
         }
+        if (obj.GroupName == '') {
+            alert('Please enter name');
+            return;
+        }
+        var ask = confirm("Do you need to " + (row.GroupCode == "" ? "Add" : "Save") + " this data?");
+        if (ask == false) return;
+        var jsonText = JSON.stringify({ data: obj });
+        //alert(jsonText);
+        $.ajax({
+            url: "@Url.Action("SetServiceGroup", "Master")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonText,
+            success: function (response) {
+                if (response.result.data!=null) {
+                    $('#txtGroupCode').val(response.result.data);
+                    $('#txtGroupCode').focus();
+                }
+                alert(response.result.msg);
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });        
     }
 
 </script>
