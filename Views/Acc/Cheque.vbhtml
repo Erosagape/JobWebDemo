@@ -862,7 +862,9 @@ End Code
         $('#txtJobTypeName').val('');
         $('#txtShipByName').val('');
         $('#txtInvNo').val('');
-        $('#txtForJNo').val('');
+        if (job == '') {
+            $('#txtForJNo').val('');
+        }
         $('#txtacType').val('');
         $('#cboacType').val('CU');
         $('#cboacType').change();

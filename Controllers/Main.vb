@@ -716,10 +716,10 @@ SELECT a.*,ISNULL(c.ChqUsed,0) AS AmountUsed,a.ChqAmount-ISNULL(c.ChqUsed,0) as 
 b.CustCode,b.CustBranch,b.VoucherDate
 FROM 
 (   
-    SELECT BranchCode,ControlNo,ChqNo," & If(pType = "CU", "RecvBank", "BankCode") & ",acType,PRType,
+    SELECT BranchCode,ControlNo,ChqNo,ChqDate,PayChqTo," & If(pType = "CU", "RecvBank,RecvBranch", "BankCode,BankBranch") & ",acType,PRType,
     SUM(ChqAmount) as ChqAmount
     FROM Job_CashControlSub
-    GROUP BY BranchCode,ControlNo,ChqNo," & If(pType = "CU", "RecvBank", "BankCode") & ",acType,PRType
+    GROUP BY BranchCode,ControlNo,ChqNo,ChqDate,PayChqTo," & If(pType = "CU", "RecvBank,RecvBranch", "BankCode,BankBranch") & ",acType,PRType
 ) a INNER JOIN Job_CashControl b
 ON a.BranchCode=b.BranchCode AND a.ControlNo=b.ControlNo
 LEFT JOIN (
@@ -735,7 +735,7 @@ LEFT JOIN (
     " & If(pType = "CU", ",h.RecvBank,h.RecvBranch", ",h.BankCode,h.BankBranch") & "
 ) c
 ON a.BranchCode=c.BranchCode
-AND a.ChqNo=c.ChqNo " & If(pType = "CU", "AND a.RecvBank=c.RecvBank ", "AND a.BankCode=c.BankCode ") & "
+AND a.ChqNo=c.ChqNo " & If(pType = "CU", "AND a.RecvBank=c.RecvBank AND a.RecvBranch=c.RecvBranch ", "AND a.BankCode=c.BankCode AND a.BankBranch=c.BankBranch ") & "
 WHERE a.acType='" & pType & "'
 AND a.PRType='R' AND a.ChqAmount>0 AND ISNULL(a.ChqNo,'')<>''
 "

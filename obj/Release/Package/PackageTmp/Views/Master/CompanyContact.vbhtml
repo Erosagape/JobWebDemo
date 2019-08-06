@@ -4,18 +4,38 @@ End Code
 <div class="panel-body">
     <div id="dvForm" class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-4">
                 Customer :<br />
-                <input type="text" id="txtCustCode" style="width:120px" disabled />
-                <input type="text" id="txtBranch" style="width:50px" disabled />
-                <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                <input type="text" id="txtCustName" style="width:100%" disabled />
+                <table>
+                    <tr>
+                        <td style="width:60%">
+                            <input type="text" id="txtCustCode" class="form-control" disabled />                            
+                        </td>
+                        <td style="width:30%">
+                            <input type="text" id="txtBranch" class="form-control" disabled />
+                        </td>
+                        <td style="width:10%">
+                            <button id="btnBrowseCust" onclick="SearchData('customer')" class="btn btn-default">...</button>
+                        </td>
+                    </tr>
+                </table>                
+            </div>
+            <div class="col-sm-6">
+                <br/>
+                <input type="text" id="txtCustName" class="form-control" disabled />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-2">
-                No :<br /><input type="text" id="txtItemNo" class="form-control" value="0" disabled>
-                <input type="button" id="btnAdd" value="Add" class="btn btn-default" onclick="ClearData()" />
+                No :<br />
+                    <div style="display:flex">
+                        <div style="flex:60%">
+                            <input type="text" id="txtItemNo" class="form-control" value="0" disabled>
+                        </div>
+                        <div style="flex:40%">
+                            <input type="button" id="btnAdd" value="Add" class="btn btn-default" onclick="ClearData()" />
+                        </div>
+                    </div>                                
             </div>
             <div class="col-sm-5">
                 Department :<br /><input type="text" id="txtDepartment" class="form-control">
@@ -54,6 +74,7 @@ End Code
     </div>
 </div>
 <div id="dvLOVs"></div>
+<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     let path = '@Url.Content("~")';
     let custcode = getQueryString("custcode");
@@ -108,6 +129,7 @@ End Code
             $('#txtCustCode').val(custcode);
             $('#txtBranch').val(custbranch);
             ShowCustomer(path, custcode, custbranch, '#txtCustName');
+            ShowData();
         }
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             let dv = document.getElementById("dvLOVs");
@@ -123,9 +145,10 @@ End Code
         let ask = confirm("Do you need to Delete " + item + "?");
         if (ask == false) return;
         $.get(path + 'master/delcompanycontact?branch=' + branch + '&code=' + code + '&item=' + item, function (r) {
-                alert(r.companycontact.result);
-                ClearData();
-            });
+            alert(r.companycontact.result);
+            ShowData();
+            ClearData();
+        });
     }
 	function ReadData(dr){		
         $('#txtItemNo').val(dr.ItemNo);

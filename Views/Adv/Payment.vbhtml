@@ -911,7 +911,7 @@ End Code
                 break;
             case 'chequecust':
                 if (type == 'chequecust') {
-                    SetGridCheque(path, '#tbChq', '#frmSearchChq', '?cancel=N& type=CU & branch=' + $('#txtBranchCode').val(), ReadCheque);
+                    SetGridCheque(path, '#tbChq', '#frmSearchChq', '?cancel=N&type=CU&branch=' + $('#txtBranchCode').val(), ReadCheque);
                 } else {
                     SetGridCheque(path, '#tbChq', '#frmSearchChq', '?cancel=N&type=CH&branch=' + $('#txtBranchCode').val(), ReadCheque);
                 }
@@ -936,7 +936,7 @@ End Code
             return;
         }
         $('#txtRefNoChq').val(dt.ChqNo);
-        $('#txtChqTranDate').val(CDateEN(dt.ChqDate));
+        $('#txtChqTranDate').val(CDateTH(dt.ChqDate));
         $('#chkIsLocal').prop('checked', dt.IsLocal == 1 ? true : false);
         $('#txtChqPayTo').val(dt.PayChqTo);
         $('#cboBankChq').val(dt.RecvBank);
