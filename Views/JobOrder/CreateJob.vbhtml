@@ -204,7 +204,7 @@ End Code
             CreateLOV(dv,'#frmSearchBranch','#tbBranch','Branch',response,2);
             //1 Fields
             //Contact Name
-            CreateLOV(dv,'#frmSearchContact','#tbContact','Contact Person',response,1);
+            CreateLOV(dv,'#frmSearchContact','#tbContact','Contact Person',response,3);
         });
     }
     function SetEvents() {
@@ -274,7 +274,7 @@ End Code
         $('#txtConsignee').focus();
     }
     function ReadContactName(dt) {
-        $('#txtContactPerson').val(dt.val);
+        $('#txtContactPerson').val(dt.ContactName);
         $('#txtContactPerson').focus();
     }
     function ReadJob(dt) {
@@ -295,7 +295,8 @@ End Code
                 SetGridCompany(path, '#tbCons', '#frmSearchCons', ReadConsignee);
                 break;
             case 'contact':
-                SetGridContactName(path, '#tbContact', '#frmSearchContact', ReadContactName);
+                let w = '?Branch=' + $('#txtCustBranch').val() + '&Code=' + $('#txtCustCode').val();
+                SetGridCustContact(path, '#tbContact', w,'#frmSearchContact', ReadContactName);
                 break;
             case 'job':
                 SetGridJob(path, '#tbJob', '#frmSearchJob', GetParam() , ReadJob);

@@ -134,6 +134,7 @@ End Code
                     <div class="col-sm-6">
                         Commercial Level :<br /><input type="text" id="txtCommLevel" class="form-control" disabled />
                         <br /><select id="cboCommLevel" class="form-control"></select>
+                        <br/><input type="button" value="Company Contact" class="btn btn-default" onclick="AddContact()" />
                     </div>
                 </div>
             </div>
@@ -579,5 +580,8 @@ End Code
             alert(r.company.result);
             ClearData();
         });
+    }
+    function AddContact() {
+        window.open(path + 'master/companycontact?custbranch=' + $('#txtBranch').val() + '&custcode=' + $('#txtCustCode').val(), '', '');
     }
 </script>

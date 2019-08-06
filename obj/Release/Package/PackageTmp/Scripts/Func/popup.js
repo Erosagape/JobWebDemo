@@ -449,6 +449,36 @@ function SetGridCompany(p, g, d, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridCustContact(p, g, t, d, ev) {
+    $.get(p + 'master/getcompanycontact' + t)
+        .done(function (r) {
+            let dr = r.companycontact.data;
+            if (dr.length > 0) {
+                $(g).DataTable({
+                    data: dr, //web service ที่จะ call ไปดึงข้อมูลมา
+                    selected: true, //ให้สามารถเลือกแถวได้
+                    columns: [ //กำหนด property ของ header column
+                        { data: null, title: "#" },
+                        { data: "ContactName", title: "ชื่อผู้ติดต่อ" },
+                        { data: "Department", title: "แผนก" },
+                        { data: "Position", title: "ตำแหน่ง" }
+                    ],
+                    "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+                        {
+                            "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                let html = "<button class='btn btn-warning'>Select</button>";
+                                return html;
+                            }
+                        }
+                    ],
+                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                });
+                BindEvent(g, d, ev);
+            }
+        });
+}
 function SetGridContactName(p, g, d, ev) {
     $.get(p + 'joborder/getjobdatadistinct?field=CustContactName')
         .done(function (r) {

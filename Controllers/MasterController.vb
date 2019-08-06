@@ -56,6 +56,72 @@ Namespace Controllers
         Function CustomsUnit() As ActionResult
             Return GetView("CustomsUnit", "MODULE_MAS")
         End Function
+        Function CompanyContact() As ActionResult
+            Return GetView("CompanyContact", "MODULE_MAS")
+        End Function
+        Function GetCompanyContact() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ItemNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND CustCode='{0}'", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND Branch='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format(" AND ItemNo={0}", Request.QueryString("Item").ToString)
+                End If
+                Dim oData = New CCompanyContact(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""companycontact"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetCompanyContact(<FromBody()> data As CCompanyContact) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.CustCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Customer""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE CustCode='{0}' AND Branch='{1}' AND ItemNo='{2}' ", data.CustCode, data.Branch, data.ItemNo))
+                    Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelCompanyContact() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ItemNo<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND CustCode='{0}'", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND Branch='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format(" AND ItemNo={0}", Request.QueryString("Item").ToString)
+                Else
+                    Return Content("{""companycontact"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CCompanyContact(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""companycontact"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+
         Function Vessel() As ActionResult
             Return GetView("Vessel", "MODULE_MAS")
         End Function

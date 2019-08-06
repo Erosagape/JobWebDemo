@@ -402,6 +402,7 @@
     <Compile Include="Models\CClrHeader.vb" />
     <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
+    <Compile Include="Models\CContact.vb" />
     <Compile Include="Models\CController.vb" />
     <Compile Include="Models\CCountry.vb" />
     <Compile Include="Models\CCreditNote.vb" />
@@ -579,6 +580,7 @@
     <Content Include="Views\Acc\Payment.vbhtml" />
     <Content Include="Views\Master\CustomsUnit.vbhtml" />
     <Content Include="Views\Master\Vessel.vbhtml" />
+    <Content Include="Views\Master\CompanyContact.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
