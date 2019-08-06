@@ -102,6 +102,20 @@ End Code
     if (branch != "" && code != "") {
         $('#txtBranchCode').val(branch);
         $('#txtJNo').val(code);
+        RefreshGrid();
+    }
+    $('#tbDetail tbody').on('dblclick', 'tr', function () {            
+        let clearno = $(this).find('td:eq(1)').text().split('#')[0];
+        //alert('you click ' + clearno);
+        window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
+    });
+    $('#btnPrintJobsum').on('click', function () {
+        window.open(path + 'JobOrder/FormJobSum?branchcode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(),'','');
+    });
+    $('#btnGenerateInv').on('click', function () {
+        window.open(path + 'Clr/GenerateInv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
+    });
+    function RefreshGrid() {
         $.get(path + 'clr/getclearingreport?branch=' + branch + '&job=' + code, function (r) {
             if (r.data[0].Table !== undefined) {
                 let h = r.data[0].Table[0];
@@ -208,17 +222,6 @@ End Code
             }
         });
     }
-    $('#tbDetail tbody').on('dblclick', 'tr', function () {            
-        let clearno = $(this).find('td:eq(1)').text().split('#')[0];
-        //alert('you click ' + clearno);
-        window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
-    });
-    $('#btnPrintJobsum').on('click', function () {
-        window.open(path + 'JobOrder/FormJobSum?branchcode=' + $('#txtBranchCode').val() + '&JNo=' + $('#txtJNo').val(),'','');
-    });
-    $('#btnGenerateInv').on('click', function () {
-        window.open(path + 'Clr/GenerateInv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
-    });
     function OpenInvoice(branch,code) {
         window.open(path + 'Acc/FormInv?Branch=' + branch + '&Code=' + code,'_blank');
     }
@@ -229,8 +232,30 @@ End Code
         $('#dvEditor').modal('show');
     }
     function UpdateInvoice() {
-        alert($('#txtInvoiceNo').val());
-        $('#dvEditor').modal('hide');
+        let clrno = $('#lblClrNo').text();
+        let item = $('#lblItemNo').text();
+        $.get(path + 'Clr/GetClrDetail?Branch=' + $('#txtBranchCode').val() + '&Code=' + clrno + '&Item=' + item)
+            .done(function (r) {
+                if (r.clr.detail.length > 0) {
+                    let dr = r.clr.detail[0];
+                    dr.LinkBillNo = $('#txtInvoiceNo').val();
+                    dr.LinkItem = 0;
+                    SaveClrDetail(dr);
+                }
+            });                
     }
-
+    function SaveClrDetail(dr) {
+        let jsonString = JSON.stringify({ data: dr });
+        $.ajax({
+            url: "@Url.Action("SetClrDetail", "Clr")",
+            type: "POST",
+            contentType: "application/json",
+            data: jsonString,
+            success: function (response) {
+                RefreshGrid();
+                alert(response.result.msg);
+                $('#dvEditor').modal('hide');
+            }
+        });
+    }
 </script>

@@ -308,6 +308,8 @@ End Code
                             <label for="txtAdvNo">Adv.No :</label>
                             <input type="text" id="txtAdvNo" style="width:150px" disabled /> Net
                             <input type="text" id="txtAdvAmount" style="width:60px" disabled />
+                            <input type="hidden" id="txtJobType" />
+                            <input type="hidden" id="txtShipBy" />
                         </div>
                         <div class="modal-footer">
                             <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
@@ -389,7 +391,9 @@ End Code
             <div class="modal-content">
                 <div class="modal-header">
                     Select Quotation<br />
-                    Customer :<input type="text" id="txtCustCode" style="width:100px" disabled /><input type="text" id="txtCustName" style="width:400px" disabled />
+                    Customer :<input type="text" id="txtCustCode" style="width:100px" disabled />
+                    <input type="text" id="txtCustBranch" style="width:50px" disabled />
+                    <input type="text" id="txtCustName" style="width:400px" disabled />
                 </div>
                 <div class="modal-body">
                     <table id="tbQuo" class="table table-responsive">
@@ -602,7 +606,15 @@ End Code
 
         $('#txtForJNo').keydown(function (event) {
             if (event.which == 13) {
-                ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+                //ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+                $('#txtInvNo').val('');
+                $('#txtQNo').val('');
+                $('#txtCustCode').val('');
+                $('#txtCustBranch').val('');
+                $('#txtCustName').val('');
+                $('#txtJobType').val('0');
+                $('#txtShipBy').val('0');
+                CallBackQueryJob(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), ReadJob);
             }
         });
 
@@ -1194,7 +1206,8 @@ End Code
                 $('#txtForJNo').val(dt.JobNo);
                 $('#txtInvNo').val('');
                 if ($('#txtForJNo').val()!= '') {
-                    ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+                    //ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+                    CallBackQueryJob(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), ReadJob);
                 }
             }
             $('#txtQty').val(dt.Qty);
@@ -1237,7 +1250,8 @@ End Code
             $('#txtForJNo').val(dt.JobNo);
             $('#txtInvNo').val('');
             if ($('#txtForJNo').val() != '') {
-                ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+                //ShowInvNo(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), '#txtInvNo');
+                CallBackQueryJob(path, $('#txtBranchCode').val(), $('#txtForJNo').val(), ReadJob);
             }
             $('#txtQty').val(dt.Qty);
             $('#txtCurRate').val(dt.CurRate);
@@ -1526,10 +1540,19 @@ End Code
         $('#txtWHT').removeAttr('disabled');
         CalVATWHT();
     }
-    function ReadJob(dt) {
+    function ReadJob(r) {
+        let dt = r;
+        if (r.length > 0) {
+            dt = r[0];
+        }
         $('#txtForJNo').val(dt.JNo);
         $('#txtInvNo').val(dt.InvNo);
         $('#txtQNo').val(dt.QNo);
+        $('#txtCustCode').val(dt.CustCode);
+        $('#txtCustBranch').val(dt.CustBranch);
+        $('#txtJobType').val(dt.JobType);
+        $('#txtShipBy').val(dt.ShipBy);
+        ShowCustomer(path, dt.CustCode, dt.CustBranch, '#txtCustName');
         $('#txtForJNo').focus();
     }
     
@@ -1658,7 +1681,7 @@ End Code
             }
         });
     }
-    function ReadQuotation(dr) {
+    function ReadQuotation(dt) {
         $('#txtSICode').val(dt.SICode);
         $('#cboSTCode').val('QUO');
         $('#txtSDescription').val(dt.DescriptionThai);
