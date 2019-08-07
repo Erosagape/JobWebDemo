@@ -858,6 +858,40 @@ function SetGridBookAccount(p, g, d, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridPayment(p, g, t, d, dv) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Acc/GetPaymentGrid' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'payment.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "DocNo", title: "Doc.No" },
+            { data: "VenCode", title: "Vender" },
+            {
+                data: "DocDate", title: "Due.Date",
+                render: function (data) {
+                    return CDateTH(data);
+                }
+            },
+            { data: "SDescription", title: "Expense" },
+            { data: "Total", title: "Total" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
 function SetGridQuotation(p, g, t, d, ev) {
     //popup for search data
     $(g).DataTable({

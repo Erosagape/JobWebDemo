@@ -174,9 +174,9 @@ End Code
     function SetGridAdv(isAlert) {
         arr = [];
 
-        let w = '';
+        let w = '&Show=ACTIVE';
         if ($('#txtCustCode').val() !== "") {
-            w = w + '&cust=' + $('#txtCustCode').val();
+            w = w + '&Cust=' + $('#txtCustCode').val();
         }
         if ($('#txtDocDateF').val() !== "") {
             w = w + '&DateFrom=' + CDateEN($('#txtDocDateF').val());

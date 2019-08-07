@@ -39,6 +39,7 @@ delete from Job_WHTaxDetail
 delete from Mas_BookAccount
 delete from Mas_Branch
 delete from Mas_Company
+delete from Mas_CompanyContact
 delete from Mas_CurrencyCode
 delete from MAS_GLACCOUNT
 delete from Mas_User where UserID<>'ADMIN'

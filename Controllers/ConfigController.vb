@@ -35,6 +35,50 @@ Namespace Controllers
             Dim json = "{""database"":" & JsonConvert.SerializeObject(oData) & ",""company"":""" & companyName & """}"
             Return Content(json, jsonContent)
         End Function
+        Function GetJSONResult(data As CResult) As ActionResult
+            Dim tSQL As String = data.Source
+            Dim tConn As String = ""
+            Select Case data.Param
+                Case "JOB"
+                    tConn = jobWebConn
+                Case "MAS"
+                    tConn = jobMasConn
+            End Select
+            Dim msg As String = "No Data Execute"
+            Dim fname As String = DateTime.Now.ToString("yyyyMMddHHMMss") + ".json"
+            Dim path = System.IO.Path.Combine(Server.MapPath("~/"), fname)
+            'Dim columns As String = "[]"
+            If tConn <> "" Then
+                Select Case data.Result
+                    Case "Y"
+                        Try
+                            Dim oUtil As New CUtil(tConn)
+                            Dim oTable = oUtil.GetTableFromSQL(data.Source)
+                            If oTable.Columns.Count > 0 Then
+                                'columns = "["
+                                'For Each col As DataColumn In oTable.Columns
+                                'If columns <> "[" Then columns &= ","
+                                'columns &= "{""data"":""" & col.ColumnName & """,""title"":""" & col.ColumnName & """}"
+                                'Next
+                                'columns &= "]"
+                                Dim json = "{""source"":""" & data.Source & """,""data"":" & JsonConvert.SerializeObject(oTable.Rows) & "}"
+                                Dim writer = New System.IO.StreamWriter(path, False, UTF8Encoding.UTF8)
+                                writer.WriteLine(json)
+                                writer.Close()
+                                msg = "OK (" & oTable.Rows.Count & " Rows inserted)"
+                            Else
+                                msg = oUtil.Message
+                            End If
+                        Catch ex As Exception
+                            msg = "[ERROR]" & ex.Message
+                        End Try
+                    Case Else
+                        msg = Main.DBExecute(tConn, data.Source)
+                End Select
+            End If
+            Return Content("{""result"":{""data"":""" & fname & """,""msg"":""" + msg + """}}", jsonContent)
+
+        End Function
         Function GetSQLResult(<FromBody> data As CResult) As ActionResult
             Dim tSQL As String = data.Source
             Dim tConn As String = ""
@@ -685,6 +729,21 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetTable() As ActionResult
+            Try
+                Dim conn As String = jobWebConn
+                If Not IsNothing(Request.QueryString("DB")) Then
+                    If Request.QueryString("DB").ToString = "MAS" Then
+                        conn = jobMasConn
+                    End If
+                End If
+                Dim oData = New CUtil(conn).GetTableFromSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' ")
+                Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.Rows) & ",""msg"":""""}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""data"":[],""msg"":""" & ex.Message & """}", jsonContent)
             End Try
         End Function
     End Class

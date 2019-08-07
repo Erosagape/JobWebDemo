@@ -138,7 +138,11 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\JOB_WEB.sql" />
     <Content Include="App_Data\mas_config.xml" />
+    <Content Include="App_Data\script_data.sql" />
+    <Content Include="App_Data\SQL_Delete_Data.sql" />
+    <Content Include="App_Data\SQL_TWTSchema.sql" />
     <Content Include="Sample\Advance.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -581,6 +585,8 @@
     <Content Include="Views\Master\CustomsUnit.vbhtml" />
     <Content Include="Views\Master\Vessel.vbhtml" />
     <Content Include="Views\Master\CompanyContact.vbhtml" />
+    <Content Include="Views\Report\Import.vbhtml" />
+    <Content Include="Views\Report\Export.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -723,7 +723,7 @@ End Code
         LoadService();        
 
         //3 Fields Show
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (response) {
             let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
@@ -1590,6 +1590,7 @@ End Code
         SaveHeader();
         let docno = dt.DocNo;
         let branch = dt.BranchCode;
+        $('#txtPaymentNo').val(docno);
         $.get(path + 'acc/getpayment?branch=' + branch + '&code=' + docno)
             .done(function (r) {
                 if (r.payment.detail.length > 0) {
