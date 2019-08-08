@@ -104,9 +104,9 @@ Namespace Controllers
                         tSqlw &= " AND ISNULL(h.CancelProve,'')<>'' "
                     End If
                 End If
-                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(tSqlw).AsEnumerable().ToList
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(tSqlw)
                 Dim json = JsonConvert.SerializeObject(oData)
-                Return Content("{""payment"":{""data"":" & json & ",""msg"":""" & oData.Count & """}}", jsonContent)
+                Return Content("{""payment"":{""data"":" & json & ",""msg"":""" & oData.Rows.Count & """}}", jsonContent)
             Catch ex As Exception
                 Return Content("{""payment"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try

@@ -42,22 +42,23 @@ End Code
             Param: $('#cboDBType').val(),
             Result: 'Y'
         };
-        var jsonText = JSON.stringify({ data: obj });
+        let jsonText = JSON.stringify({ data: obj });
 
-        $.ajax({
+        let func= $.ajax({
             url: "@Url.Action("GetJSONResult", "CONFIG")",
             type: "POST",
             contentType: "application/json",
             data: jsonText,
-            success: function (response) {
-                if (response.result.data !== "") {
-                    LoadData(response.result.data);
-                }
-                alert(response.result.msg);
-            },
-            error: function (e) {
-                alert(e);
+        });
+        func.done(function (response) {
+            if (response.result.data !== "") {
+                LoadData(response.result.data);
             }
+            alert(response.result.msg);
+        });
+        func.catch(function (e) {
+            let err = JSON.parse(e.responseText);
+            alert(err.result.msg);
         });
     }
     function LoadData(fname) {
@@ -66,7 +67,7 @@ End Code
             $('#tbResult').empty();
         }
         $.get('/' + fname).done(function (r) {
-            var tb = r.data;
+            var tb = r.data[0].Table;
             var cols = [];
             $.each(tb[0], function (key, value) {
                 var item = {};
@@ -80,6 +81,24 @@ End Code
                     data: tb
                 }
             );
+            Download(fname);
         });
+    }
+    function Download(fname) {
+        fetch('/'+ fname)
+            .then(resp => resp.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+    // the filename you want
+                a.download = fname;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert(fname +' has downloaded!'); // or you know, something with better UX...
+            })
+            .catch(() => alert('oh no!'));
     }
 </script>

@@ -1,18 +1,90 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿.panel-body {
+    background-color: papayawhip;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.nav:after,
+.nav:before {
+    content: "";
+    display: table;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.nav:after {
+    clear: both;
+    overflow: hidden;
 }
 
+.nav {
+    zoom: 1;
+    margin-left: 20px;
+}
+
+    .nav li {
+        list-style: none outside none;
+        float: left;
+        position: relative;
+    }
+
+    .nav .active {
+        z-index: 3;
+    }
+
+    .nav li:before,
+    .nav li:after,
+    .nav a:before,
+    .nav a:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+    }
+
+    .nav a {
+        float: left;
+        padding: 10px 40px;
+        text-decoration: none;
+        color: grey;
+        background: lightgrey;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .nav .active a {
+        background: grey;
+        color: wheat;
+    }
+
+        .nav .active a:before,
+        .nav .active a:after {
+            background: beige;
+        }
+
+    .nav a:before {
+        left: -20px;
+    }
+
+    .nav a:after {
+        right: -20px;
+    }
+
+    .nav .active:before,
+    .nav .active:after {
+        z-index: 1;
+        background: grey;
+    }
+
+.tab-content {
+    background: lavender;
+    padding: 20px;
+}
+
+.table {
+    background-color: white;
+    width:100% !important;
+    border:solid;
+    border-width:1px;
+}
+.table th {
+    background-color:lightblue;
+}
+
+.modal-content {
+    background-color: lavender !important;
+}

@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/Content/Site.css" />
     <link rel="stylesheet" href="~/Content/bootstrap.min.css">
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css">
     <link rel="stylesheet" href="~/Content/jquery.datatables.min.css">
@@ -27,24 +28,20 @@
 <body>
     <div Class="panel-primary">
         <div Class="panel-heading">
-            <div Class="panel-title">
-                <table width="100%">
-                    <tr>
-                        <td>
-                            <h5>@ViewBag.Title (@ViewBag.User)</h5>
-                        </td>
-                        <td align="right">
-                            <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="BackToMenu();" />
-                        </td>
-                    </tr>
-                </table>
+            <div Class="panel-title" style="display:flex">
+                <div>
+                    <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="BackToMenu();" />
+                </div>   
+                <div style="margin-left:10px">
+                    <h4>@ViewBag.Title</h4>
+                </div>
             </div>
         </div>
         <div class="panel-body">
             @RenderBody()
         </div>
         <div class="panel-footer">
-            <p>&copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
+            <p>&copy; @DateTime.Now.Year - Tawan Technology Co.,ltd (@ViewBag.User)</p> 
         </div>
     </div>
 </body>

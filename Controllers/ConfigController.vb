@@ -76,7 +76,7 @@ Namespace Controllers
                         msg = Main.DBExecute(tConn, data.Source)
                 End Select
             End If
-            Return Content("{""result"":{""data"":""" & fname & """,""msg"":""" + msg + """}}", jsonContent)
+            Return Content("{""result"":{""data"":""" & fname & """,""msg"":""" + msg.Replace("\", "\\") + """}}", jsonContent)
 
         End Function
         Function GetSQLResult(<FromBody> data As CResult) As ActionResult

@@ -858,7 +858,7 @@ function SetGridBookAccount(p, g, d, ev) {
     });
     BindEvent(g, d, ev);
 }
-function SetGridPayment(p, g, t, d, dv) {
+function SetGridPayment(p, g, t, d, ev) {
     $(g).DataTable({
         ajax: {
             url: p + 'Acc/GetPaymentGrid' + t, //web service ที่จะ call ไปดึงข้อมูลมา

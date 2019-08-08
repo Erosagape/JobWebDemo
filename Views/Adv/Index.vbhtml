@@ -29,340 +29,343 @@ End Code
                 </table>
             </div>
         </div>
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tabHeader">Advance Header</a></li>
-            <li><a data-toggle="tab" href="#tabDetail">Advance Detail</a></li>
-        </ul>
-        <div class="tab-content">
-            <div id="tabHeader" class="tab-pane fade in active">
-                <div class="row">
-                    <div class="col-sm-7">
-                        <table>
-                            <tr>
-                                <td>
-                                    Advance By :
-                                </td>
-                                <td>
-                                    <input type="text" id="txtAdvBy" style="width:100px" tabindex="2" />
-                                    <button id="btnBrowseEmp1" onclick="SearchData('advby')">...</button>
-                                    <input type="text" id="txtAdvName" style="width:300px" disabled />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Request By :
-                                </td>
-                                <td>
-                                    <input type="text" id="txtReqBy" style="width:100px" tabindex="3" />
-                                    <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                                    <input type="text" id="txtReqName" style="width:300px" disabled />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Advance For :
-                                </td>
-                                <td>
-                                    <input type="text" id="txtCustCode" style="width:120px" tabindex="4" />
-                                    <input type="text" id="txtCustBranch" style="width:50px" tabindex="5" />
-                                    <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                                    <input type="text" id="txtCustName" style="width:300px" disabled />
-                                </td>
-                            </tr>
-                        </table>
-                        <table>
-                            <tr>
-                                <td>
-                                    <a href="#" onclick="AutoGenWHTax()">WH-Tax No:</a>
-                                </td>
-                                <td>
-                                    <input type="text" id="txtDoc50Tavi" style="width:200px" tabindex="6" />
-                                </td>
-                                <td>
-                                    Bill A/P:
-                                </td>
-                                <td>
-                                    <input type="text" id="txtPaymentNo" style="width:200px" tabindex="7" disabled />
-                                    <button id="btnBrowsePay" onclick="SearchData('payment')">...</button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-sm-5">
-                        <table>
-                            <tr>
-                                <td>
-                                    Job Type :
-                                </td>
-                                <td>
-                                    <select id="cboJobType" style="width:200px" class="form-control dropdown" tabindex="8"></select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Ship By :
-                                </td>
-                                <td>
-                                    <select id="cboShipBy" style="width:200px" class="form-control dropdown" tabindex="9"></select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Status :
-                                </td>
-                                <td>
-                                    <select id="cboDocStatus" style="width:200px;" class="form-control dropdown" disabled></select>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-7">
-                        Advance Type:
-                        <select id="cboAdvType" class="form-control dropdown" style="width:100%" tabindex="10"></select>
-                        <br/>
-                        Remark:
-                        <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
-                    </div>
-                    <div class="col-sm-5">
-                        <a onclick="SearchData('subcurrency')">Request Currency:</a>
-                        <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled />
-                        <br />
-                        <table>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" id="chkCash" />
-                                    <label for="chkCash">Cash</label>
-                                </td>
-                                <td>
-                                    <input type="text" id="txtAdvCash" style="width:100px;text-align:right" disabled />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" id="chkChq" />
-                                    <label for="chkChq">Cashier Chq</label>
-                                </td>
-                                <td>
-                                    <input type="text" id="txtAdvChq" style="width:100px;text-align:right" disabled />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" id="chkChqCash" />
-                                    <label for="chkChqCash">Customer Chq</label>
-                                </td>
-                                <td>
-                                    <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" disabled />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" id="chkCred" />
-                                    <label for="chkCred">Credit</label>
-                                </td>
-                                <td>
-                                    <input type="text" id="txtAdvCred" style="width:100px;text-align:right" disabled />
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4" style="border-style:solid;border-width:1px">
-                        <input type="checkbox" id="chkApprove" />
-                        <label for="chkApprove">Approve By</label>
-                        <br />
-                        <input type="text" id="txtApproveBy" style="width:250px" disabled />
-                        <br />
-                        Date:
-                        <input type="date" id="txtApproveDate" disabled />
-                        Time:
-                        <input type="text" id="txtApproveTime" style="width:80px" disabled />
-                    </div>
-                    <div class="col-sm-4" style="border-style:solid;border-width:1px">
-                        <input type="checkbox" id="chkPayment" disabled />
-                        <label for="chkPayment">Payment By</label>
-                        <input type="text" id="txtPaymentBy" style="width:250px" disabled />
-                        <br />
-                        Date:
-                        <input type="date" id="txtPaymentDate" disabled />
-                        Time:
-                        <input type="text" id="txtPaymentTime" style="width:80px" disabled />
-                        <br />
-                        Payment Ref:<input type="text" id="txtPaymentRef" style="width:200px" disabled />
-                    </div>
-                    <div class="col-sm-4" style="border-style:solid;border-width:1px;color:red">
-                        <input type="checkbox" id="chkCancel" />
-                        <label for="chkCancel">Cancel By</label>
-                        <input type="text" id="txtCancelProve" style="width:250px" disabled />
-                        <br />
-                        Date:
-                        <input type="date" id="txtCancelDate" disabled />
-                        Time:
-                        <input type="text" id="txtCancelTime" style="width:80px" disabled />
-                        <br />
-                        Cancel Reason :<input type="text" id="txtCancelReson" style="width:250px" />
-                    </div>
-                </div>
-                <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
-                <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Document</button>
-                <button id="btnPrint" class="btn btn-info" onclick="PrintData()" disabled>Print Data</button>
-            </div>
-            <div id="tabDetail" class="tab-pane fade">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <table id="tbDetail" class="table table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>
-                                    <th>SICode</th>
-                                    <th>Description</th>
-                                    <th>Job No</th>
-                                    <th>Currency</th>
-                                    <th>Rate</th>
-                                    <th>Qty</th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
-                                    <th>Vat</th>
-                                    <th>WH-Tax</th>
-                                    <th>Net</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>                
-                <div class="row">
-                    <div class="col-sm-9">
-                        <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
-                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
-                        Main Currency:
-                        <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
-                        Exchange Rate:
-                        <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
-                        <buttom id="btnGetExcRate" class="btn btn-success" onclick="GetExchangeRate()">Get Rate</buttom>
-                    </div>
-                    <div class="col-sm-3" style="text-align:right">
-                        Amount :
-                        <input type="text" id="txtAdvAmount" style="width:100px;text-align:right" /><br />
-                        VAT :
-                        <input type="text" id="txtVatAmount" style="width:100px;text-align:right" /><br />
-                        WHT :
-                        <input type="text" id="txtWhtAmount" style="width:100px;text-align:right" /><br />
-                        Total :
-                        <input type="text" id="txtTotalAmount" style="width:100px;text-align:right" />
-                    </div>
-                </div>
-
-            </div>
-            <div id="frmDetail" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"></button>
-                            <h4 class="modal-title"><label id="lblHeader">Advance Detail</label></h4>
-                        </div>
-                        <div class="modal-body">
-                            <label for="txtItemNo">No :</label>
-                            <input type="text" id="txtItemNo" style="width:40px" disabled />
-                            <select id="cboSTCode" class="dropdown">
-                            </select>
-                            <input type="checkbox" id="chkDuplicate" />
-                            <label for="chkDuplicate">Can Partial Clear</label>
-                            <br />
-                            <label for="txtSICode">Code :</label>
-                            <input type="text" id="txtSICode" style="width:80px" tabindex="12" />
-                            <input type="button" id="btnBrowseS" value="..." onclick="SearchData('servicecode')" />
-                            Description : <input type="text" id="txtSDescription" style="width:230px" tabindex="13" />
-                            <br />
-                            <label for="txtForJNo">Job No :</label>
-                            <input type="text" id="txtForJNo" style="width:120px" tabindex="14" />
-                            <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
-                            Cust.Inv : <input type="text" id="txtInvNo" style="width:230px" disabled />
-                            <br />
-                            <a onclick="SearchData('detcurrency')">Currency :</a>
-                            <input type="text" id="txtCurrencyCode" style="width:50px" tabindex="15" />
-                            <input type="text" id="txtCurrencyName" style="width:200px" disabled />
-                            <label for="txtExcRate">Rate :</label>
-                            <input type="text" id="txtDetCurrency" style="width:50px" disabled />
-                            <input type="text" id="txtExcRate" style="width:80px;text-align:right" tabindex="16" />
-                            <br />
-                            <label for="txtAdvQty">Qty:</label>
-                            <input type="text" id="txtAdvQty" style="width:100px;text-align:right" tabindex="17" />
-                            <label id="lblUnitPrice" for="txtUnitPrice">Price :</label>
-                            <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="18" />
-                            <label id="lblAMTCal" for="txtAMTCal">Amount :</label>
-                            <input type="text" id="txtAMTCal" style="width:100px;text-align:right" disabled />
-                            <br />
-                            <label id="lblAmount" for="txtAmount">Amount :</label>
-                            <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="19" />
-                            <label id="lblVATRate" for="txtVATRate">VAT :</label>
-                            <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="20" />
-                            Type :
-                            <select id="txtVatType" class="dropdown" disabled>
-                                <option value="0">NO</option>
-                                <option value="1">EX</option>
-                                <option value="2">IN</option>
-                            </select>
-                            <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="21" />
-                            <br />
-                            <label id="lblWHTRate" for="txtWHTRate">WH-Tax :</label>
-                            <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="22" />
-                            <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="23" />
-                            <label id="lblNETAmount" for="txtNETAmount">Net Amount :</label>
-                            <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="24" />
-                            <br />
-                            WH-Tax No :
-                            <input type="text" id="txt50Tavi" style="width:200px" tabindex="25" />
-                            <br />
-                            Pay To Vender :
-                            <input type="text" id="txtVenCode" style="width:50px" tabindex="26" />
-                            <input type="button" id="btnBrowseVen" onclick="SearchData('vender')" value="..." />
-                            <input type="text" id="txtPayChqTo" style="width:200px" tabindex="27" />
-                            <br/>
-                            Remark :
-                            <textarea id="txtRemark" style="width:100%;height:80px" tabindex="28"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <div style="float:left">
-                                <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">New</button>
-                            </div>
-                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
-                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="frmHeader" class="modal modal-lg fade">
-                <div class="modal-dialog-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"></button>
-                            <h4 class="modal-title"><label id="lblHeader">Advance List</label></h4>
-                        </div>
-                        <div class="modal-body">
-                            <table id="tbHeader" class="table table-responsive">
-                                <thead>
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tabHeader">Advance Header</a></li>
+                    <li><a data-toggle="tab" href="#tabDetail">Advance Detail</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tabHeader" class="tab-pane fade in active">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <table>
                                     <tr>
-                                        <th>AdvNo</th>
-                                        <th>AdvDate</th>
-                                        <th>CustCode</th>
-                                        <th>ReqBy</th>
-                                        <th>Job</th>
-                                        <th>Inv No</th>
-                                        <th>Status</th>
-                                        <th>Amount</th>
-                                        <th>WT</th>
-                                        <th>WTDoc</th>
-                                        <th>APDoc</th>
-                                        <th>Remark</th>
+                                        <td>
+                                            Advance By :
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtAdvBy" style="width:100px" tabindex="2" />
+                                            <button id="btnBrowseEmp1" onclick="SearchData('advby')">...</button>
+                                            <input type="text" id="txtAdvName" style="width:300px" disabled />
+                                        </td>
                                     </tr>
-                                </thead>
-                            </table>
+                                    <tr>
+                                        <td>
+                                            Request By :
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtReqBy" style="width:100px" tabindex="3" />
+                                            <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
+                                            <input type="text" id="txtReqName" style="width:300px" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Advance For :
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtCustCode" style="width:120px" tabindex="4" />
+                                            <input type="text" id="txtCustBranch" style="width:50px" tabindex="5" />
+                                            <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
+                                            <input type="text" id="txtCustName" style="width:300px" disabled />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a href="#" onclick="AutoGenWHTax()">WH-Tax No:</a>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtDoc50Tavi" style="width:200px" tabindex="6" />
+                                        </td>
+                                        <td>
+                                            Bill A/P:
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtPaymentNo" style="width:200px" tabindex="7" disabled />
+                                            <button id="btnBrowsePay" onclick="SearchData('payment')">...</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm-5">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            Job Type :
+                                        </td>
+                                        <td>
+                                            <select id="cboJobType" style="width:200px" class="form-control dropdown" tabindex="8"></select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Ship By :
+                                        </td>
+                                        <td>
+                                            <select id="cboShipBy" style="width:200px" class="form-control dropdown" tabindex="9"></select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Status :
+                                        </td>
+                                        <td>
+                                            <select id="cboDocStatus" style="width:200px;" class="form-control dropdown" disabled></select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <div class="row">
+                            <div class="col-sm-7">
+                                Advance Type:
+                                <select id="cboAdvType" class="form-control dropdown" style="width:100%" tabindex="10"></select>
+                                <br />
+                                Remark:
+                                <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
+                            </div>
+                            <div class="col-sm-5">
+                                <a onclick="SearchData('subcurrency')">Request Currency:</a>
+                                <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled />
+                                <br />
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="chkCash" />
+                                            <label for="chkCash">Cash</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtAdvCash" style="width:100px;text-align:right" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="chkChq" />
+                                            <label for="chkChq">Cashier Chq</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtAdvChq" style="width:100px;text-align:right" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="chkChqCash" />
+                                            <label for="chkChqCash">Customer Chq</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" disabled />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="chkCred" />
+                                            <label for="chkCred">Credit</label>
+                                        </td>
+                                        <td>
+                                            <input type="text" id="txtAdvCred" style="width:100px;text-align:right" disabled />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4" style="border-style:solid;border-width:1px">
+                                <input type="checkbox" id="chkApprove" />
+                                <label for="chkApprove">Approve By</label>
+                                <br />
+                                <input type="text" id="txtApproveBy" style="width:250px" disabled />
+                                <br />
+                                Date:
+                                <input type="date" id="txtApproveDate" disabled />
+                                Time:
+                                <input type="text" id="txtApproveTime" style="width:80px" disabled />
+                            </div>
+                            <div class="col-sm-4" style="border-style:solid;border-width:1px">
+                                <input type="checkbox" id="chkPayment" disabled />
+                                <label for="chkPayment">Payment By</label>
+                                <input type="text" id="txtPaymentBy" style="width:250px" disabled />
+                                <br />
+                                Date:
+                                <input type="date" id="txtPaymentDate" disabled />
+                                Time:
+                                <input type="text" id="txtPaymentTime" style="width:80px" disabled />
+                                <br />
+                                Payment Ref:<input type="text" id="txtPaymentRef" style="width:200px" disabled />
+                            </div>
+                            <div class="col-sm-4" style="border-style:solid;border-width:1px;color:red">
+                                <input type="checkbox" id="chkCancel" />
+                                <label for="chkCancel">Cancel By</label>
+                                <input type="text" id="txtCancelProve" style="width:250px" disabled />
+                                <br />
+                                Date:
+                                <input type="date" id="txtCancelDate" disabled />
+                                Time:
+                                <input type="text" id="txtCancelTime" style="width:80px" disabled />
+                                <br />
+                                Cancel Reason :<input type="text" id="txtCancelReson" style="width:250px" />
+                            </div>
+                        </div>
+                        <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
+                        <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Document</button>
+                        <button id="btnPrint" class="btn btn-info" onclick="PrintData()" disabled>Print Data</button>
+                    </div>
+                    <div id="tabDetail" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="tbDetail" class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                            <th>SICode</th>
+                                            <th>Description</th>
+                                            <th>Job No</th>
+                                            <th>Currency</th>
+                                            <th>Rate</th>
+                                            <th>Qty</th>
+                                            <th>Price</th>
+                                            <th>Amount</th>
+                                            <th>Vat</th>
+                                            <th>WH-Tax</th>
+                                            <th>Net</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
+                                <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
+                                Main Currency:
+                                <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
+                                Exchange Rate:
+                                <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
+                                <buttom id="btnGetExcRate" class="btn btn-success" onclick="GetExchangeRate()">Get Rate</buttom>
+                            </div>
+                            <div class="col-sm-3" style="text-align:right">
+                                Amount :
+                                <input type="text" id="txtAdvAmount" style="width:100px;text-align:right" /><br />
+                                VAT :
+                                <input type="text" id="txtVatAmount" style="width:100px;text-align:right" /><br />
+                                WHT :
+                                <input type="text" id="txtWhtAmount" style="width:100px;text-align:right" /><br />
+                                Total :
+                                <input type="text" id="txtTotalAmount" style="width:100px;text-align:right" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="frmDetail" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"></button>
+                                    <h4 class="modal-title"><label id="lblHeader">Advance Detail</label></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="txtItemNo">No :</label>
+                                    <input type="text" id="txtItemNo" style="width:40px" disabled />
+                                    <select id="cboSTCode" class="dropdown"></select>
+                                    <input type="checkbox" id="chkDuplicate" />
+                                    <label for="chkDuplicate">Can Partial Clear</label>
+                                    <br />
+                                    <label for="txtSICode">Code :</label>
+                                    <input type="text" id="txtSICode" style="width:80px" tabindex="12" />
+                                    <input type="button" id="btnBrowseS" value="..." onclick="SearchData('servicecode')" />
+                                    Description : <input type="text" id="txtSDescription" style="width:230px" tabindex="13" />
+                                    <br />
+                                    <label for="txtForJNo">Job No :</label>
+                                    <input type="text" id="txtForJNo" style="width:120px" tabindex="14" />
+                                    <input type="button" id="btnBrowseJ" value="..." onclick="SearchData('job')" />
+                                    Cust.Inv : <input type="text" id="txtInvNo" style="width:230px" disabled />
+                                    <br />
+                                    <a onclick="SearchData('detcurrency')">Currency :</a>
+                                    <input type="text" id="txtCurrencyCode" style="width:50px" tabindex="15" />
+                                    <input type="text" id="txtCurrencyName" style="width:200px" disabled />
+                                    <label for="txtExcRate">Rate :</label>
+                                    <input type="text" id="txtDetCurrency" style="width:50px" disabled />
+                                    <input type="text" id="txtExcRate" style="width:80px;text-align:right" tabindex="16" />
+                                    <br />
+                                    <label for="txtAdvQty">Qty:</label>
+                                    <input type="text" id="txtAdvQty" style="width:100px;text-align:right" tabindex="17" />
+                                    <label id="lblUnitPrice" for="txtUnitPrice">Price :</label>
+                                    <input type="text" id="txtUnitPrice" style="width:100px;text-align:right" tabindex="18" />
+                                    <label id="lblAMTCal" for="txtAMTCal">Amount :</label>
+                                    <input type="text" id="txtAMTCal" style="width:100px;text-align:right" disabled />
+                                    <br />
+                                    <label id="lblAmount" for="txtAmount">Amount :</label>
+                                    <input type="text" id="txtAMT" style="width:100px;text-align:right" tabindex="19" />
+                                    <label id="lblVATRate" for="txtVATRate">VAT :</label>
+                                    <input type="text" id="txtVATRate" style="width:50px;text-align:right" tabindex="20" />
+                                    Type :
+                                    <select id="txtVatType" class="dropdown" disabled>
+                                        <option value="0">NO</option>
+                                        <option value="1">EX</option>
+                                        <option value="2">IN</option>
+                                    </select>
+                                    <input type="text" id="txtVAT" style="width:100px;text-align:right" tabindex="21" />
+                                    <br />
+                                    <label id="lblWHTRate" for="txtWHTRate">WH-Tax :</label>
+                                    <input type="text" id="txtWHTRate" style="width:50px;text-align:right" tabindex="22" />
+                                    <input type="text" id="txtWHT" style="width:100px;text-align:right" tabindex="23" />
+                                    <label id="lblNETAmount" for="txtNETAmount">Net Amount :</label>
+                                    <input type="text" id="txtNET" style="width:100px;text-align:right" tabindex="24" />
+                                    <br />
+                                    WH-Tax No :
+                                    <input type="text" id="txt50Tavi" style="width:200px" tabindex="25" />
+                                    <br />
+                                    Pay To Vender :
+                                    <input type="text" id="txtVenCode" style="width:50px" tabindex="26" />
+                                    <input type="button" id="btnBrowseVen" onclick="SearchData('vender')" value="..." />
+                                    <input type="text" id="txtPayChqTo" style="width:200px" tabindex="27" />
+                                    <br />
+                                    Remark :
+                                    <textarea id="txtRemark" style="width:100%;height:80px" tabindex="28"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <div style="float:left">
+                                        <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">New</button>
+                                    </div>
+                                    <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
+                                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="frmHeader" class="modal modal-lg fade">
+                        <div class="modal-dialog-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"></button>
+                                    <h4 class="modal-title"><label id="lblHeader">Advance List</label></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <table id="tbHeader" class="table table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>AdvNo</th>
+                                                <th>AdvDate</th>
+                                                <th>CustCode</th>
+                                                <th>ReqBy</th>
+                                                <th>Job</th>
+                                                <th>Inv No</th>
+                                                <th>Status</th>
+                                                <th>Amount</th>
+                                                <th>WT</th>
+                                                <th>WTDoc</th>
+                                                <th>APDoc</th>
+                                                <th>Remark</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -728,7 +731,7 @@ End Code
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
             //Payment
-            CreateLOV(dv, '#frmSearchPay', '#tbPay', 'Payment Bills', response, 3);
+            CreateLOV(dv, '#frmSearchPay', '#tbPay', 'Payment Bills', response, 5);
             //Venders
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response,4);
             //Job
@@ -1465,7 +1468,7 @@ End Code
                 SetGridAdv();
                 break;
             case 'payment':
-                SetGridPayment(path, '#tbPay', '#frmSearchPay', ReadPayment);
+                SetGridPayment(path, '#tbPay', '?branch='+ $('#txtBranchCode').val() +'&type=NOPAY', '#frmSearchPay', ReadPayment);
                 break;
             case 'branch':
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);

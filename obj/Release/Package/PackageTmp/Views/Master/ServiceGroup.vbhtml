@@ -50,6 +50,25 @@ End Code
             </thead>
             <tbody></tbody>
         </table>
+        <button id="btnAddDetail" class="btn btn-success" onclick="AddService()">Add Service Code</button>        
+    </div>
+    <div id="dvAdd" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Add Service Code
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="txtSICode" style="width:100px"/>
+                    <input type="button" value="..." class="btn btn-default" onclick="SearchService()" />
+                    <input type="text" id="txtSDescription" style="width:300px" disabled />
+                    <button id="btnSaveDetail" class="btn btn-success" onclick="SaveDetail()">Set Group</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div id="dvList"></div>
@@ -57,6 +76,7 @@ End Code
 <script type="text/javascript">
     var path = '@Url.Content("~")';
     var row = {}; //row pointer to current record show in buffer
+    var row_d = {};
     $(document).ready(function () {
         SetEvents();
         SetEnterToTab();
@@ -89,7 +109,8 @@ End Code
             var dv = document.getElementById("dvList");
             //2 Fields
             //Service Group
-            CreateLOV(dv,'#dvSearch','#tbGrid','Service Group',response,2);
+            CreateLOV(dv, '#dvSearch', '#tbGrid', 'Service Group', response, 2);
+            CreateLOV(dv, '#dvServ', '#tbServ', 'Service Charges', response, 2);
         });
     }
     function SetEvents() {
@@ -108,6 +129,12 @@ End Code
                 SearchData($('#txtGroupCode').val());
             }
         });
+        $('#txtSICode').keydown(function (e) {
+            if (e.which === 13) {
+                $('#txtSDescription').val('');
+                CallBackQueryService(path, $('#txtSICode').val(), ReadService);
+            }
+        });
     }
     function SearchData(code) {
         //function for query data from code
@@ -121,12 +148,23 @@ End Code
             }
         });
     }
+    function SearchService() {
+        SetGridSICodeFilter(path, '#tbServ', '', '#dvServ', ReadService);
+    }
+    function ReadService(dt) {
+        row_d = dt;
+        $('#txtSICode').val(dt.SICode);
+        $('#txtSDescription').val(dt.NameThai);
+    }
     function ShowData(dt) {
         LoadData(dt);
         $('#txtGroupCode').focus();
     }
     function RefreshGrid() {
         SetGridGroupCode( path, '#tbGrid', '#dvSearch' , ShowData);
+    }
+    function AddService() {
+        $('#dvAdd').modal('show');
     }
     function AddData() {
         $('#txtGroupCode').val('');
@@ -180,7 +218,10 @@ End Code
         $('#chkIsCredit').prop('checked', dt.IsCredit === 0 ? false : true);
         $('#chkIsExpense').prop('checked', dt.IsExpense === 0 ? false : true);
 
-        $.get(path + 'Master/GetServiceCode?Group=' + dt.GroupCode, function (r) {
+        ShowDetail()
+    }
+    function ShowDetail() {
+        $.get(path + 'Master/GetServiceCode?Group=' + row.GroupCode, function (r) {
             $('#tbDetail').dataTable({
                 data: r.servicecode.data,
                 columns: [
@@ -247,6 +288,29 @@ End Code
             }
         });        
     }
-
+    function SaveDetail() {
+        if (row_d !== null) {
+            row_d.GroupCode = $('#txtGroupCode').val();
+            var ask = confirm("Do you need to set " + (row_d.SICode) + " to this group?");
+            if (ask == false) return;
+            var jsonText = JSON.stringify({ data: row_d });
+            //alert(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetServiceCode", "Master")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    if (response.result.data != null) {
+                        ShowDetail();
+                    }
+                    alert(response.result.msg);
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        }
+    }
 </script>
 

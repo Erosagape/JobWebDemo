@@ -30,31 +30,75 @@ End Code
                 let html = '';
                 if (r.data.length > 0) {
                     for (let row of r.data[0].Table) {
-                        html += '<li><a style="display:block;" onclick="LoadData(' + "'" + row.TABLE_NAME + "'" + ')">' + row.TABLE_NAME + '</a></li>';
+                        html += '<li><a style="display:block;" onclick="SaveData(' + "'" + row.TABLE_NAME + "'" + ')">' + row.TABLE_NAME + '</a></li>';
                     }
                 }
                 ul.html(html);
             });
     }
-    function LoadData(tb) {
+    function SaveData(tb) {
         let obj = {
             Source: "SELECT * FROM " + tb + "",
             Param: $('#cboDBType').val(),
             Result: 'Y'
         };
-        var jsonText = JSON.stringify({ data: obj });
+        let jsonText = JSON.stringify({ data: obj });
 
-        $.ajax({
+        let func= $.ajax({
             url: "@Url.Action("GetJSONResult", "CONFIG")",
             type: "POST",
             contentType: "application/json",
             data: jsonText,
-            success: function (response) {
-                alert(response.result.msg);
-            },
-            error: function (e) {
-                alert(e);
-            }
         });
+        func.done(function (response) {
+            if (response.result.data !== "") {
+                LoadData(response.result.data);
+            }
+            alert(response.result.msg);
+        });
+        func.catch(function (e) {
+            let err = JSON.parse(e.responseText);
+            alert(err.result.msg);
+        });
+    }
+    function LoadData(fname) {
+         if (table != "") {
+            table.destroy();
+            $('#tbResult').empty();
+        }
+        $.get('/' + fname).done(function (r) {
+            var tb = r.data[0].Table;
+            var cols = [];
+            $.each(tb[0], function (key, value) {
+                var item = {};
+                item.data = key;
+                item.title = key;
+                cols.push(item);
+            });
+            table=$('#tbResult').DataTable(
+                {
+                    "columns": cols,
+                    data: tb
+                }
+            );
+            Download(fname);
+        });
+    }
+    function Download(fname) {
+        fetch('/'+ fname)
+            .then(resp => resp.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+    // the filename you want
+                a.download = fname;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert(fname +' has downloaded!'); // or you know, something with better UX...
+            })
+            .catch(() => alert('oh no!'));
     }
 </script>

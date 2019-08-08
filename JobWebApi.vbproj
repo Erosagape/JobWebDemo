@@ -179,8 +179,6 @@
     <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Content\responsive.dataTables.min.css" />
     <None Include="My Project\PublishProfiles\bizocean.pubxml" />
-    <None Include="My Project\PublishProfiles\jobdemo.pubxml" />
-    <None Include="My Project\PublishProfiles\jobtest.pubxml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
@@ -473,6 +471,7 @@
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
+    <None Include="My Project\PublishProfiles\jobbeta.pubxml" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>

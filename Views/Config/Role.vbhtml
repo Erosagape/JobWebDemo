@@ -64,8 +64,9 @@ End Code
 
                             </div>
                             <div class="tab-pane fade in active" id="tabPolicy">
+                                <label><a onclick="SearchData('module')">Module:</a></label>
+                                <input type="checkbox" id="chkAll" onclick="CheckAll()" /> Allow All
                                 <div style="display:flex;flex-direction:column">
-                                    <label><a onclick="SearchData('module')">Module:</a></label>
                                     <div style="display:flex;">
                                         <input type="hidden" id="txtModuleID" class="form-control" />
                                         <input type="text" style="flex:1" id="txtModuleName" class="form-control" disabled />
@@ -392,5 +393,22 @@ End Code
     function ReadModule(dr) {
         $('#txtModuleID').val(dr.ConfigCode +'/'+dr.ConfigKey);
         $('#txtModuleName').val(dr.ConfigValue);
+    }
+    function CheckAll() {
+        if ($('#chkAll').prop('checked')) {
+            $('#chkManage').prop('checked', true);
+            $('#chkInsert').prop('checked', true);
+            $('#chkEdit').prop('checked', true);
+            $('#chkDelete').prop('checked', true);
+            $('#chkRead').prop('checked', true);
+            $('#chkPrint').prop('checked', true);
+        } else {
+            $('#chkManage').prop('checked', false);
+            $('#chkInsert').prop('checked', false);
+            $('#chkEdit').prop('checked', false);
+            $('#chkDelete').prop('checked', false);
+            $('#chkRead').prop('checked', false);
+            $('#chkPrint').prop('checked', false);
+        }
     }
 </script>

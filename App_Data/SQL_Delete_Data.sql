@@ -30,7 +30,7 @@ delete from Job_QuotationHeader
 delete from Job_QuotationItem
 delete from Job_ReceiptDetail
 delete from Job_ReceiptHeader
-delete from Job_SrvGroup
+--delete from Job_SrvGroup
 delete from Job_SrvSingle
 delete from Job_Transport
 delete from Job_TruckOrder

@@ -71,6 +71,7 @@ function loadDatabaseList(e) {
                 $(e).append($('<option>', { value: (i+ 1) })
                     .text(dr.company + '->' + dr.database[i].trim()));
             }            
+            $(e).val(1);
         }
     });
 }
