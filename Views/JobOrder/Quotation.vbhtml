@@ -28,77 +28,74 @@ End Code
             </div>
             <div class="col-sm-6">
                 <br />
-                <input type="button" class="btn btn-primary" value="Show" onclick="ShowHeader()" id="btnShow" />
-                <button class="btn btn-success" onclick="AddHeader()">New Quotation</button>
-                <button class="btn btn-warning" onclick="CopyData()">Copy Quotation</button>
+                <a href="#" class="btn btn-primary" id="btnSearch" onclick="ShowHeader()">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
+                <input type="checkbox" id="chkCancel" /><b><label style="color:red">Show Cancel Only</label></b>
             </div>
         </div>
-        <input type="checkbox" id="chkCancel" />Show Cancel Only
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a data-toggle="tab" href="#tabHeader">Headers</a>
-            </li>
-            <li>
-                <a data-toggle="tab" href="#tabDetail">Details</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="tabHeader">
-                <table id="tbHeader" class="table table-responsive">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>QNo</th>
-                            <th>DocDate</th>
-                            <th>CustCode</th>
-                            <th>BillToCustCode</th>
-                            <th>TRemark</th>
-                            <th>ContactName</th>
-                            <th>ManagerCode</th>
-                            <th>ApproveDate</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="tabDetail">
-                <p>
-                    Details of Quotation No:<input type="text" id="txtDocNo" style="width:10%" disabled />
-                    <button id="btnAddDetail" class="btn btn-success" onclick="AddDetail()">Add Section</button>
-                    <table id="tbDetail" class="table table-responsive">
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#tabHeader">Headers</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#tabDetail">Details</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="tabHeader">
+                    <table id="tbHeader" class="table table-responsive">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>SeqNo</th>
-                                <th>JobType</th>
-                                <th>ShipBy</th>
-                                <th>Description</th>
+                                <th>QNo</th>
+                                <th>DocDate</th>
+                                <th class="all">CustCode</th>
+                                <th class="desktop">BillToCustCode</th>
+                                <th class="desktop">TRemark</th>
+                                <th class="desktop">ContactName</th>
+                                <th class="desktop">ManagerCode</th>
+                                <th class="desktop">ApproveDate</th>
                             </tr>
                         </thead>
                     </table>
-                    <input type="button" id="btnDelDetail" class="btn btn-danger" onclick="DeleteDetail()" value="Delete Section" />
-                </p>
-                <p>
-                    Lists of Item <input type="text" id="txtDocItemNo" style="width:10%" disabled /> Expenses:<button id="btnAddItem" class="btn btn-success" onclick="AddItem()">Add Expense</button> <br />
-                    <table id="tbItem" class="table table-responsive" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>ItemNo</th>
-                                <th>SICode</th>
-                                <th>Description</th>
-                                <th>QtyBegin-QtyEnd/Unit</th>
-                                <th>Total</th>
-                                <th>Disc</th>
-                                <th>Net</th>
-                                <th>Commission</th>
-                                <th>Profit</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    <input type="button" id="btnDelItem" class="btn btn-danger" onclick="DeleteItem()" value="Delete Expense" />
-                </p>
+                </div>
+                <div class="tab-pane fade" id="tabDetail">
+                    <p>
+                        Details of Quotation No:<input type="text" id="txtDocNo" style="width:10%" disabled />
+                        <a href="#" class="btn btn-default" id="btnAddDetail" onclick="AddDetail()">
+                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Section</b>
+                        </a>
+                        <table id="tbDetail" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>SeqNo</th>
+                                    <th>JobType</th>
+                                    <th>ShipBy</th>
+                                    <th class="desktop">Description</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <a href="#" class="btn btn-danger" id="btnDelDetail" onclick="DeleteDetail()">
+                            <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Section</b>
+                        </a>
+                    </p>
+                </div>
             </div>
         </div>
+        <p>
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="AddHeader()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New Quotation</b>
+            </a>
+            <a href="#" class="btn btn-warning" id="btnCancel" onclick="CopyData()">
+                <i class="fa fa-lg fa-close"></i>&nbsp;<b>Copy Quotation</b>
+            </a>
+            <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Quotation</b>
+            </a>
+        </p>
         <div id="frmHeader" class="modal fade">
             <div class="modal-dialog-lg">
                 <div class="modal-content">
@@ -111,15 +108,15 @@ End Code
                                 Issue Date:<br /> <input type="date" id="txtDocDate" class="form-control" />
                             </div>
                             <div class="col-sm-3">
-                                Status :<br/>
-                                        <select id="txtDocStatus" class="form-control dropdown" disabled>
-                                            <option value="0">REQUEST</option>
-                                            <option value="1">APPROVE</option>
-                                            <option value="99">CANCEL</option>
-                                        </select>
+                                Status :<br />
+                                <select id="txtDocStatus" class="form-control dropdown" disabled>
+                                    <option value="0">REQUEST</option>
+                                    <option value="1">APPROVE</option>
+                                    <option value="99">CANCEL</option>
+                                </select>
                             </div>
                             <div class="col-sm-3">
-                                Refer Q.No : <br/>
+                                Refer Q.No : <br />
                                 <input type="text" id="txtReferQNo" class="form-control" />
                             </div>
                         </div>
@@ -195,37 +192,73 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
-                            <button onclick="PrintData()" class="btn btn-default">Print</button>
+                            <a href="#" class="btn btn-success" id="btnUpdate" onclick="SaveData()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update Quotation</b>
+                            </a>
                         </div>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
         </div>
         <div id="frmDetail" class="modal">
-            <div class="modal-dialog">
+            <div class="modal-dialog-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        Sequence No <input type="text" id="txtSeqNo" disabled />
-                    </div>
-                    <div class="modal-body">
-                        <div style="display:flex">
-                            <div style="flex:1">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                Section No<br /><input type="text" id="txtSeqNo" class="form-control" disabled />
+                            </div>
+                            <div class="col-sm-3">
                                 Job Type :<br /><select id="txtJobType" class="form-control dropdown" value="0"></select>
                             </div>
-                            <div style="flex:1">
+                            <div class="col-sm-3">
                                 Ship By :<br /><select id="txtShipBy" class="form-control dropdown" value="0"></select>
                             </div>
+                            <div class="col-sm-5">
+                                Description<br />
+                                <textarea id="txtDescription" class="form-control"></textarea>
+                            </div>
                         </div>
-                        Description<br/>
-                        <textarea id="txtDescription" style="width:100%"></textarea>
+                        <div>
+                            <div style="float:left">
+                                <a href="#" class="btn btn-default" id="btnAddDetail" onclick="AddDetail()">
+                                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Section</b>
+                                </a>
+                                <a href="#" class="btn btn-success" id="btnUpdateD" onclick="SaveDetail()">
+                                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update Section</b>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        Lists of Expenses:
+                        <input type="hidden" id="txtDocItemNo" />
+                        <table id="tbItem" class="table table-responsive" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ItemNo</th>
+                                    <th class="desktop">SICode</th>
+                                    <th class="all">Description</th>
+                                    <th class="desktop">QtyBegin-QtyEnd/Unit</th>
+                                    <th class="desktop">Total</th>
+                                    <th class="desktop">Disc</th>
+                                    <th class="desktop">Net</th>
+                                    <th class="desktop">Commission</th>
+                                    <th class="desktop">Profit</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <a href="#" class="btn btn-default" id="btnAddItem" onclick="AddItem()">
+                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Expenses</b>
+                        </a>
+                        <a href="#" class="btn btn-danger" id="btnDelItem" onclick="DeleteItem()">
+                            <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Expense</b>
+                        </a>
                     </div>
                     <div class="modal-footer">
-                        <div style="float:left">
-                            <button id="btnUpdateD" class="btn btn-primary" onclick="SaveDetail()">Update</button>
-                        </div>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -235,7 +268,7 @@ End Code
                 <div class="modal-content">
                     <div class="modal-header">
                         For <label id="lblHeader"></label>
-                        <br/>
+                        <br />
                         Item No <input type="text" id="txtItemNo" disabled />
                         Calculate Type
                         <select id="txtCalculateType">
@@ -323,7 +356,7 @@ End Code
                                             Cost Amount <input type="text" id="txtVenderCost" onchange="CalProfit()" />
                                         </div>
                                     </div>
-                                    <br/>
+                                    <br />
                                     <div style="display:flex">
                                         <div style="flex:1">
                                             Commission Type
@@ -392,9 +425,14 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <button id="btnUpdateI" class="btn btn-primary" onclick="SaveItem()">Update</button>
+                            <a href="#" class="btn btn-default" id="btnAddItem" onclick="AddItem()">
+                                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Expenses</b>
+                            </a>
+                            <a href="#" class="btn btn-success" id="btnUpdateI" onclick="SaveItem()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update Expenses</b>
+                            </a>
                         </div>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -412,7 +450,7 @@ End Code
                         <div style="float:left">
                             <button id="btnGen" class="btn btn-success" onclick="CreateData()">Create</button>
                         </div>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -452,7 +490,7 @@ End Code
         ClearItem();
         $.get(path + 'joborder/getquotation?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.quotation.header.length == 0) {                
-                alert('data not found');
+                //alert('data not found');
                 return;
             }
             let h = r.quotation.header;
@@ -489,6 +527,7 @@ End Code
                         }
                     }                    
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -542,6 +581,7 @@ End Code
                         { data: "CommissionAmt", title: "Commission" },
                         { data: "NetProfit", title: "Profit" }
                     ],
+                    responsive:true,
                     destroy:true
                 });
                 $('#tbItem tbody').on('click', 'tr', function () {
@@ -549,15 +589,21 @@ End Code
                     row_i = $('#tbItem').DataTable().row(this).data();
                     ReadItem();
                 });
+                $('#tbItem tbody').on('dblclick', 'tr', function () {
+                    EditItem();
+                });
                 $('#tbItem tbody').on('click', 'button', function () {
-                    if (userRights.indexOf('E') > 0) {
-                        $('#frmItem').modal('show');
-                    } else {
-                        alert('you are not allow to edit quotation');
-                    }
+                    EditItem();
                 });
             }
         });
+    }
+    function EditItem() {
+        if (userRights.indexOf('E') > 0) {
+            $('#frmItem').modal('show');
+        } else {
+            alert('you are not allow to edit quotation item');
+        }
     }
     function ShowDetail(branch, code) {
         $('#tbDetail').DataTable().clear().draw();
@@ -582,6 +628,7 @@ End Code
                         { data: "ShipByName", title: "Ship By" },
                         { data: "Description", title: "Description" }
                     ],
+                    responsive:true,
                     destroy:true
                 });
                 $('#tbDetail tbody').on('click', 'tr', function () {
@@ -590,15 +637,21 @@ End Code
                     ShowItem(row_d.BranchCode, row_d.QNo, row_d.SeqNo);
                     ReadDetail();
                 });
+                $('#tbDetail tbody').on('dblclick', 'tr', function () {
+                    EditDetail();
+                });
                 $('#tbDetail tbody').on('click', 'button', function () {
-                    if (userRights.indexOf('E') > 0) {
-                        $('#frmDetail').modal('show');
-                    } else {
-                        alert('you are not allow to edit quotation');
-                    }
+                    EditDetail();                    
                 });
             }
         });
+    }
+    function EditDetail() {
+        if (userRights.indexOf('E') > 0) {
+            $('#frmDetail').modal('show');
+        } else {
+            alert('you are not allow to edit quotation');
+        }
     }
     function PrintData() {
         let code = row.QNo;
@@ -705,9 +758,9 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
-                    ShowDetail(row.BranchCode, row.QNo);
+                    ShowDetail($('#txtBranchCode').val(), $('#txtDocNo').val());
                     alert(response.result.data);
-                    $('#frmDetail').modal('hide');
+                    //$('#frmDetail').modal('hide');
                     return;
                 }
                 alert(response.result.msg);
@@ -759,7 +812,7 @@ End Code
                 if (response.result.data !== null) {
                     ShowItem($('#txtBranchCode').val(), $('#txtDocNo').val(), $('#txtDocItemNo').val());
                     alert(response.result.data);
-                    $('#frmItem').modal('hide');
+                    //$('#frmItem').modal('hide');
                     return;
                 }
                 alert(response.result.msg);

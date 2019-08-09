@@ -5,7 +5,10 @@ End Code
     <div id="dvForm" class="container" style="width:100%">
         <div class="form-group row">
 
-            <div class="col-sm-3"><a onclick="RefreshGrid()">Group Code :</a><br /><input type="text" id="txtGroupCode" class="form-control" tabIndex="1"></div>
+            <div class="col-sm-3">
+                Group Code :<br />
+                <input type="text" id="txtGroupCode" class="form-control" tabIndex="1">
+            </div>
             <div class="col-sm-5">Group Name :<br /><input type="text" id="txtGroupName" class="form-control" tabIndex="2"></div>
             <div class="col-sm-4">GL Account :<br /><input type="text" id="txtGLAccountCode" class="form-control" tabIndex="3"></div>
         </div>
@@ -37,9 +40,20 @@ End Code
                 <label for="chkIsShowPrice">Apply Policy To all Code</label>
             </div>
         </div>
-        <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <div id="dvCommand">
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="AddData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="RefreshGrid()">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+            </a>
+        </div>
         <table class="table table-responsive" id="tbDetail">
             <thead>
                 <tr>
@@ -50,7 +64,9 @@ End Code
             </thead>
             <tbody></tbody>
         </table>
-        <button id="btnAddDetail" class="btn btn-success" onclick="AddService()">Add Service Code</button>        
+        <a href="#" class="btn btn-warning" id="btnSearch" onclick="AddService()">
+            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Code To Group</b>
+        </a>
     </div>
     <div id="dvAdd" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -59,13 +75,15 @@ End Code
                     Add Service Code
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="txtSICode" style="width:100px"/>
+                    <input type="text" id="txtSICode" style="width:100px" />
                     <input type="button" value="..." class="btn btn-default" onclick="SearchService()" />
                     <input type="text" id="txtSDescription" style="width:300px" disabled />
-                    <button id="btnSaveDetail" class="btn btn-success" onclick="SaveDetail()">Set Group</button>
+                    <a href="#" class="btn btn-success" id="btnSaveDetail" onclick="SaveDetail()">
+                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Add To Group</b>
+                    </a>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button class="btn btn-danger" data-dismiss="modal">X</button>
                 </div>
             </div>
         </div>

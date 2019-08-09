@@ -9,14 +9,12 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    $(document).ready(function () {
-        SetEvents();
-        SetEnterToTab();
-        ClearData();
-    });
+    const path = '@Url.Content("~")';
+    SetEvents();
+    SetEnterToTab();
+    ClearData();
     function SetEvents() {
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (response) {
             var dv = document.getElementById("dvLOVs");
             CreateLOV(dv, '#frmSearchCode', '#tbCode', 'Search Data', response, 2);
         });

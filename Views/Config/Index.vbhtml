@@ -11,9 +11,6 @@ End Code
                 <td>
                     <input type="text" class="form-control" id="txtCode" />
                 </td>
-                <td>
-                    <input type="button" id="btnBrowse" value="..." onclick="SearchData()" />
-                </td>
             </tr>
             <tr>
                 <td>
@@ -22,7 +19,6 @@ End Code
                 <td>
                     <input type="text" class="form-control" id="txtKey" />
                 </td>
-                <td></td>
             </tr>
             <tr>
                 <td>
@@ -31,12 +27,22 @@ End Code
                 <td>
                     <textarea class="form-control" id="txtValue"></textarea>
                 </td>
-                <td></td>
             </tr>
         </table>
-        <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <div id="dvCommand">
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData()">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+            </a>
+        </div>
     </div>
     <div id="dvLOVs"></div>
     <hr />

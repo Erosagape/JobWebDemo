@@ -6,7 +6,7 @@ End Code
         <div id="dvForm">
             <div class="row">
                 <div class="col-sm-2">
-                    <a href="#" onclick="SearchData('code')">Declare Type :</a><br />
+                    Declare Type :<br />
                     <input type="text" id="txtType" class="form-control" tabIndex="1">
                 </div>
                 <div class="col-sm-7">
@@ -34,9 +34,18 @@ End Code
             </div>
         </div>
         <div id="dvCommand">
-            <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-            <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('code')">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>                
+            </a>
         </div>
     </div>
     <div id="dvLOVs"></div>

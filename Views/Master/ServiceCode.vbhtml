@@ -6,11 +6,10 @@ End Code
         <div class="form-group row">
             <div class="col-sm-2">
                 Choose Type:
-                <select id="cboType" class="form-control dropdown">
-                </select>
+                <select id="cboType" class="form-control dropdown"></select>
             </div>
             <div class="col-sm-2">
-                <a onclick="ShowSearch('sicode')">Service Code:</a>
+                Service Code:
                 <input type="text" id="txtSICode" class="form-control" tabindex="0" />
             </div>
             <div class="col-sm-4">
@@ -28,14 +27,37 @@ End Code
                 <input type="text" id="txtStdPrice" class="form-control" tabindex="3" />
             </div>
             <div class="col-sm-3">
-                <a onclick="ShowSearch('currency')">Currency:</a>
-                <input type="text" id="txtCurrencyCode" class="form-control" tabindex="4" />
+                Currency:
+                <div style="display:flex">
+                    <div style="flex:1">
+                        <input type="text" id="txtCurrencyCode" class="form-control" tabindex="4" />
+                    </div>
+                    <div>
+                        <input type="button" value="..." class="btn btn-default" onclick="ShowSearch('currency')" />
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                <a onclick="ShowSearch('unit')">Unit:</a><input type="text" id="txtUnitCharge" class="form-control" tabindex="5" />
+                Unit:
+                <div style="display:flex">
+                    <div style="flex:1">
+                        <input type="text" id="txtUnitCharge" class="form-control" tabindex="5" />
+                    </div>
+                    <div>
+                        <input type="button" value="..." class="btn btn-default" onclick="ShowSearch('unit')" />
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                <a onclick="ShowSearch('vender')">Vender</a><input type="text" id="txtDefaultVender" class="form-control" tabindex="6" />
+                Vender:
+                <div style="display:flex">
+                    <div style="flex:1">
+                        <input type="text" id="txtDefaultVender" class="form-control" tabindex="6" />
+                    </div>
+                    <div>
+                        <input type="button" value="..." class="btn btn-default" onclick="ShowSearch('vender')" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-group row">
@@ -46,7 +68,7 @@ End Code
                 GL-Cost<br /><input type="text" id="txtGLAccountCodeCost" class="form-control" tabindex="8" />
             </div>
             <div class="col-sm-8">
-                Process Desc:<textarea id="txtProcessDesc" class="form-control" tabindex="9" ></textarea>
+                Process Desc:<textarea id="txtProcessDesc" class="form-control" tabindex="9"></textarea>
             </div>
         </div>
         <div class="form-group row">
@@ -80,10 +102,20 @@ End Code
                 <label for="chkIsUsedCoSlip">Used for Co-operation</label>
             </div>
         </div>
-        <button id="btnAdd" class="btn btn-default" onclick="AddData()">Add</button>
-        <input type="checkbox" id="chkCopyMode" /> Copy Mode
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <a href="#" class="btn btn-default" id="btnAdd" onclick="AddData()">
+            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+        </a>
+        <input type="checkbox" id="chkCopyMode" /><b>Copy Mode</b>
+        <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+            <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+        </a>
+        <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+            <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+        </a>
+        <a href="#" class="btn btn-primary" id="btnSearch" onclick="ShowSearch('sicode')">
+            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+        </a>
+
     </div>
 </div>
 <div id="dvList"></div>

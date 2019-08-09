@@ -5,7 +5,7 @@ End Code
     <div id="dvForms" class="container">
         <div class="row">
             <div class="col-sm-2">
-                <a onclick="SearchData('user')"> User ID :</a><br /><input type="text" id="txtUserID" class="form-control" tabIndex="1">
+                User ID :<br /><input type="text" id="txtUserID" class="form-control" tabIndex="1">
             </div>
             <div class="col-sm-4">
                 Password :<br /><input type="password" id="txtUPassword" class="form-control" tabIndex="2">
@@ -30,7 +30,15 @@ End Code
                 User Level :<br /><select id="txtUPosition" class="form-control dropdown" tabIndex="6"></select>
             </div>
             <div class="col-sm-4">
-                <a onclick="SearchData('sup')"> Supervisor :</a><br /><input type="text" id="txtUserUpline" class="form-control" tabIndex="7">                
+                Supervisor :<br />
+                <div style="display:flex">
+                    <div style="flex:1">
+                        <input type="text" id="txtUserUpline" class="form-control" tabIndex="7">
+                    </div>
+                    <div>
+                        <input type="button" value="..." class="btn btn-default" onclick="SearchData('sup')" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -45,11 +53,23 @@ End Code
                 <select id="txtUsedLanguage" class="form-control dropdown" tabindex="10"></select>
             </div>
         </div>
-        <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
-        <div style="display:flex">
-            <div style="flex:1">
+        <div id="dvCommand">
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('user')">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+            </a>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <b>Role of This User <br /></b>
                 <table id="tbRole" class="table table-responsive">
                     <thead>
                         <tr>
@@ -60,17 +80,20 @@ End Code
                     <tbody></tbody>
                 </table>
             </div>
-            <table id="tbAuthor" class="table table-responsive">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+            <div class="col-sm-6">
+                <b>Module Authorized of This User <br /></b>
+                <table id="tbAuthor" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>

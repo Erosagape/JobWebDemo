@@ -5,15 +5,24 @@ End Code
     <div class="container">
         <!-- HTML BOOTSTRAP CONTROLS -->
         <div id="dvForm">
-            <a href="#" onclick="SearchData('code')">Bank Code:</a><br />
+            Bank Code:
             <input type="text" id="txtCode" class="form-control" tabIndex="1">
             Name :<br /><input type="text" id="txtBName" class="form-control" tabIndex="2">
             Customs Code :<br /><input type="text" id="txtCustomsCode" class="form-control" tabIndex="3">
         </div>
         <div id="dvCommand">
-            <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-            <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('code')">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+            </a>
         </div>
     </div>
     <div id="dvLOVs"></div>

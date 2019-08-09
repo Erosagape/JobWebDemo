@@ -12,9 +12,15 @@ End Code
                     <div style="flex:1">Role Group :<br /><select id="txtRoleGroup" class="form-control dropdown"></select></div>
                 </div>
                 <div id="dvCommand">
-                    <button id="btnAdd" class="btn btn-default" onclick="ClearHeader()">Add</button>
-                    <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save</button>
-                    <button id="btnDel" class="btn btn-danger" onclick="DeleteHeader()">Delete</button>
+                    <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearHeader()">
+                        <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+                    </a>
+                    <a href="#" class="btn btn-success" id="btnSave" onclick="SaveHeader()">
+                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                    </a>
+                    <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteHeader()">
+                        <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                    </a>
                 </div>
             </div>
             <div style="flex:1">
@@ -40,14 +46,20 @@ End Code
                             <div class="tab-pane fade" id="tabUser">
                                 <div style="display:flex;flex-direction:row;">
                                     <div style="flex:2">
-                                        <a href="#" onclick="SearchData('user')">UserID :</a><br /><input type="text" id="txtUserID" class="form-control" tabIndex="1" />
+                                        UserID :<br /><input type="text" id="txtUserID" class="form-control" tabIndex="1" />
+                                    </div>
+                                    <div>
+                                        <br/>
+                                        <input type="button" class="btn btn-default" value="..." onclick="SearchData('user')" />
                                     </div>
                                     <div style="flex:5">
                                         <br /><input type="text" id="txtUserName" class="form-control" disabled>
                                     </div>
                                     <div style="flex:1">
                                         <br />
-                                        <button id="btnSaveUser" class="btn btn-success" onclick="SaveUser()">Apply Role</button>
+                                        <a href="#" class="btn btn-success" id="btnSaveUser" onclick="SaveUser()">
+                                            <i class="fa fa-lg fa-save"></i>&nbsp;<b>Apply Role</b>
+                                        </a>
                                     </div>
                                 </div>
                                 <label>User in this role:</label>
@@ -60,16 +72,18 @@ End Code
                                     </thead>
                                     <tbody />
                                 </table>
-                                <button id="btnDelUser" class="btn btn-danger" onclick="DeleteUser()">Delete Role</button>
-
+                                <a href="#" class="btn btn-danger" id="btnDeleteUser" onclick="DeleteUser()">
+                                    <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Remove User</b>
+                                </a>
                             </div>
                             <div class="tab-pane fade in active" id="tabPolicy">
-                                <label><a onclick="SearchData('module')">Module:</a></label>
+                                Module:                             
                                 <input type="checkbox" id="chkAll" onclick="CheckAll()" /> Allow All
                                 <div style="display:flex;flex-direction:column">
                                     <div style="display:flex;">
                                         <input type="hidden" id="txtModuleID" class="form-control" />
                                         <input type="text" style="flex:1" id="txtModuleName" class="form-control" disabled />
+                                        <input type="button" class="btn btn-default" value="..." onclick="SearchData('module')" />
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -87,7 +101,9 @@ End Code
                                             <label for="chkPrint">Print</label>
                                         </div>
                                     </div>
-                                    <button id="btnSavePolicy" class="btn btn-success" onclick="SavePolicy()">Apply Policy</button>
+                                    <a href="#" class="btn btn-success" id="btnSavePolicy" onclick="SavePolicy()">
+                                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Apply Policy</b>
+                                    </a>
                                     <table id="tbPolicy" class="table table-responsive">
                                         <thead>
                                             <tr>
@@ -239,23 +255,27 @@ End Code
     }
     function DeleteHeader() {
         var code = $('#txtRoleID').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
+        if (code !== '') {
+            var ask = confirm("Do you need to Delete " + code + "?");
+            if (ask == false) return;
             $.get(path + 'config/deluserrole?code=' + code, function (r) {
                 alert(r.userrole.result);
                 ClearHeader();
                 LoadGrid();
             });
+        }
     }
     function DeleteUser() {
         var code = $('#txtRoleID').val();
         var id = $('#txtUserID').val();
-        var ask = confirm("Do you need to Delete "+id+" from role " + code + "?");
-        if (ask == false) return;
-        $.get(path + 'config/deluserroledetail?code=' + code +'&id='+ id, function (r) {
-            alert(r.userrole.result);
-            LoadUser($('#txtRoleID').val());
-        });
+        if (id !== '') {
+            var ask = confirm("Do you need to Delete "+id+" from role " + code + "?");
+            if (ask == false) return;
+            $.get(path + 'config/deluserroledetail?code=' + code +'&id='+ id, function (r) {
+                alert(r.userrole.result);
+                LoadUser($('#txtRoleID').val());
+            });
+        }
     }
     function SaveUser() {
         var obj={			

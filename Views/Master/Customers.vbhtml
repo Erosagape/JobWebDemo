@@ -6,7 +6,7 @@ End Code
     <div class="container">
         <div class="row">
             <div class="col-sm-3">
-                <a href="#" onclick="SearchData('customer')">Customer Code</a> :<br /><input type="text" id="txtCustCode" class="form-control" tabIndex="0">
+                Customer Code:<br /><input type="text" id="txtCustCode" class="form-control" tabIndex="0">
             </div>
             <div class="col-sm-3">
                 Branch :<br /><input type="text" id="txtBranch" class="form-control" tabIndex="1">
@@ -96,7 +96,15 @@ End Code
                 <div class="row">
                     <div class="col-sm-6">
                         GL Code :<br /><input type="text" id="txtGLAccountCode" class="form-control" tabIndex="23">
-                        <a href="#" onclick="SearchData('billing')">Billing To</a>:<br /><input type="text" id="txtBillToCustCode" class="form-control" tabIndex="24">
+                        Billing To:<br />
+                        <div style="display:flex">
+                            <div style="flex:1">
+                                <input type="text" id="txtBillToCustCode" class="form-control" tabIndex="24">
+                            </div>
+                            <div>
+                                <input type="button" value="..." class="btn btn-default" onclick="SearchData('billing')" />
+                            </div>
+                        </div>                        
                         Billing Branch :<br /><input type="text" id="txtBillToBranch" class="form-control" tabIndex="25">
                         Billing Name :<input type="text" id="txtBillToCustName" class="form-control" disabled />
                         Billing Address :<textarea id="txtBillToAddress" class="form-control" disabled></textarea>
@@ -114,34 +122,77 @@ End Code
             <div id="tabCust3" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-3">
-                        <a href="#" onclick="SearchData('sales')">Sales</a>:<br /><input type="text" id="txtManagerCode" class="form-control" tabIndex="31">
+                        Sales:<br />
+                        <div style="display:flex">
+                            <div style="flex:1">
+                                <input type="text" id="txtManagerCode" class="form-control" tabIndex="31">
+                            </div>
+                            <div>
+                                <input type="button" value="..." class="btn btn-default" onclick="SearchData('sales')" />
+                            </div>
+                        </div>                        
                     </div>
                     <div class="col-sm-3">
-                        <a href="#" onclick="SearchData('csimport')">CS Import</a> :<br /><input type="text" id="txtCSCodeIM" class="form-control" tabIndex="32">
+                        CS Import :<br />
+                        <div style="display:flex">
+                            <div style="flex:1">
+                                <input type="text" id="txtCSCodeIM" class="form-control" tabIndex="32">
+                            </div>
+                            <div>
+                                <input type="button" value="..." class="btn btn-default" onclick="SearchData('csimport')" />
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-3">
-                        <a href="#" onclick="SearchData('csexport')">CS Export</a> :<br /><input type="text" id="txtCSCodeEX" class="form-control" tabIndex="33">
+                        CS Export :<br />
+                        <div style="display:flex">
+                            <div style="flex:1">
+                                <input type="text" id="txtCSCodeEX" class="form-control" tabIndex="33">
+                            </div>
+                            <div>
+                                <input type="button" value="..." class="btn btn-default" onclick="SearchData('csexport')" />
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-3">
-                        <a href="#" onclick="SearchData('csother')">CS Others</a> :<br /><input type="text" id="txtCSCodeOT" class="form-control" tabIndex="34">
+                        CS Others :<br />
+                        <div style="display:flex">
+                            <div style="flex:1">
+                                <input type="text" id="txtCSCodeOT" class="form-control" tabIndex="34">
+                            </div>
+                            <div>
+                                <input type="button" value="..." class="btn btn-default" onclick="SearchData('csother')" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        Consign Status :<br /><input type="text" id="txtConsStatus" class="form-control" disabled/>
-                        <br/><select id="cboCompanyType" class="form-control" style="height:300px" multiple></select>
+                        Consign Status :<br /><input type="text" id="txtConsStatus" class="form-control" disabled />
+                        <br /><select id="cboCompanyType" class="form-control" style="height:300px" multiple></select>
                     </div>
                     <div class="col-sm-6">
                         Commercial Level :<br /><input type="text" id="txtCommLevel" class="form-control" disabled />
                         <br /><select id="cboCommLevel" class="form-control"></select>
-                        <br/><input type="button" value="Company Contact" class="btn btn-default" onclick="AddContact()" />
+                        <br /><input type="button" value="Company Contact" class="btn btn-default" onclick="AddContact()" />
                     </div>
                 </div>
             </div>
         </div>
-        <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <div id="dvCommand">
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('customer')">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+            </a>
+        </div>
         <div id="dvLOVs"></div>
         <div id="dvHidden" style="display:none">
             <input type="hidden" id="txtLoginName" class="form-control">

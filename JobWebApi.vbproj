@@ -268,6 +268,7 @@
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
     <Content Include="Scripts\Func\combo.js" />
+    <Content Include="Scripts\Func\menu.js" />
     <Content Include="Scripts\Func\popup.js" />
     <Content Include="Scripts\Func\reports.js" />
     <Content Include="Scripts\Func\util.js" />
@@ -586,6 +587,8 @@
     <Content Include="Views\Master\CompanyContact.vbhtml" />
     <Content Include="Views\Report\Import.vbhtml" />
     <Content Include="Views\Report\Export.vbhtml" />
+    <Content Include="Views\Shared\MasterPage.vbhtml" />
+    <Content Include="Views\Menu\_Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

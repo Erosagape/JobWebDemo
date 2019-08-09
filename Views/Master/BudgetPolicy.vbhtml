@@ -24,7 +24,9 @@ End Code
                 </div>
             </div>
         </div>
-        <button class="btn btn-primary" onclick="ShowData()">Show Data</button>
+        <a href="#" class="btn btn-primary" id="btnSearch" onclick="ShowData()">
+            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Show Configuration</b>
+        </a>
         <table id="tbDetail" class="table table-responsive" style="width:100%">
             <thead>
                 <tr>
@@ -73,8 +75,15 @@ End Code
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-                        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+                        <div style="float:left">
+                            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                            </a>
+                            <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteData()">
+                                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                            </a>
+                        </div>
+                        <button class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>

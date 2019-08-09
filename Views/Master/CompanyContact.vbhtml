@@ -56,8 +56,12 @@ End Code
             </div>
         </div>
         <div id="dvCommand">
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-            <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
         </div>
         <table id="tbHeader" class="table table-responsive">
             <thead>

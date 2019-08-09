@@ -5,7 +5,7 @@ End Code
     <div id="dvForm">
         <div class="row">
             <div class="col-sm-3">
-                <a href="#" onclick="SearchData('country')">Country Code</a> :<br />
+                Country Code :<br/>
                 <input type="text" id="txtCTYCODE" class="form-control" tabIndex="1">
             </div>
             <div class="col-sm-9">
@@ -13,13 +13,20 @@ End Code
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-2">
-                <a href="#" onclick="SearchData('currency')">Currency Code </a>
-                <br /><input type="text" id="txtCURCODE" class="form-control" tabIndex="3">
-            </div>
-            <div class="col-sm-6">
-                Currency Name:
-                <br /><input type="text" id="txtCURNAME" class="form-control" disabled>
+            <div class="col-sm-8">
+                Currency Code:
+                <br />
+                <div style="display:flex">
+                    <div style="flex:20%">
+                        <input type="text" id="txtCURCODE" class="form-control" tabIndex="3">
+                    </div>
+                    <div>
+                        <input type="button" value="..." class="btn btn-default" onclick="SearchData('currency')" />
+                    </div>
+                    <div style="flex:60%">
+                        <input type="text" id="txtCURNAME" class="form-control" disabled>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-2">
                 FT CODE :<br /><input type="number" id="txtFTCODE" class="form-control" tabIndex="4" value="0">
@@ -30,9 +37,18 @@ End Code
         </div>
     </div>
     <div id="dvCommand">
-        <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+        </a>
+        <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('country')">
+            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+        </a>
+        <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+            <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+        </a>
+        <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteData()">
+            <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+        </a>
     </div>
 </div>
 <div id="dvLOVs"></div>

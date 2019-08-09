@@ -6,10 +6,10 @@ End Code
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
-                <a href="#" onclick="SearchData('vender')">Vender Code</a>:<br /><input type="text" id="txtVenCode" Class="form-control" tabIndex="0">
+                Vender Code:<br /><input type="text" id="txtVenCode" Class="form-control" tabIndex="0">
             </div>
             <div class="col-sm-4">
-                Branch :<br/>
+                Branch :<br />
                 <input type="text" id="txtBranchCode" Class="form-control" tabIndex="1" />
             </div>
             <div class="col-sm-4">
@@ -62,11 +62,22 @@ End Code
                 <br />DOMESTIC :<input type="text" id="txtContactSupport3" Class="form-control" tabIndex="17">
             </div>
         </div>
+        <div id="dvCommand">
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('vender')">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+            </a>
+        </div>
         <input type="hidden" id="txtLoginName">
         <input type="hidden" id="txtLoginPassword">
-        <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-        <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-        <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
     </div>
 </div>
 <div id="dvLOVs"></div>

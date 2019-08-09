@@ -1,94 +1,106 @@
 ﻿@Code
     ViewBag.Title = "Book Account"
 End Code
-<div class="panel-body">
-    <div class="container">
-        <!-- HTML BOOTSTRAP CONTROLS -->
-        <div id="dvForm">
-            <div class="row">
-                <div class="col-sm-5">
-                    Branch :<br />
-                    <input type="text" id="txtBranchCode" style="width:50px" tabindex="1" />
-                    <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                    <input type="text" id="txtBranchName" style="width:200px" disabled />
+    <div class="panel-body">
+        <div class="container">
+            <!-- HTML BOOTSTRAP CONTROLS -->
+            <div id="dvForm">
+                Branch:
+                <div class="row">
+                    <div class="col-sm-4" style="display:flex;flex-direction:row;">
+                        <input type="text" class="form-control" id="txtBranchCode" style="width:15%" />
+                        <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                        <input type="text" class="form-control" id="txtBranchName" style="width:60%" disabled />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        Book No:<br /><input type="text" id="txtBookCode" class="form-control" tabIndex="2">
+                    </div>
+                    <div class="col-sm-6">
+                        Account Name :<br /><input type="text" id="txtBookName" class="form-control" tabIndex="3">
+                    </div>
+                    <div class="col-sm-3">
+                        Account Type :<br />
+                        <select id="txtACType" class="form-control dropdown" tabIndex="4">
+                            <option value="C">Current</option>
+                            <option value="S">Saving</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <a onclick="SearchData('bank')">Bank Code :</a><br />
+                        <input type="text" id="txtBankCode" class="form-control" tabIndex="5">
+                    </div>
+                    <div class="col-sm-4">
+                        Bank Name:<br />
+                        <input type="text" id="txtBankName" class="form-control" disabled>
+                    </div>
+                    <div class="col-sm-4">
+                        Bank Branch :<br /><input type="text" id="txtBankBranch" class="form-control" tabIndex="6" />
+                    </div>
+                    <div class="col-sm-2">
+                        <br />
+                        <input type="checkbox" id="chkIsLocal" tabIndex="7">
+                        <label for="chkIsLocal">Is Local Bank?</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Address (TH) :<br /><input type="text" id="txtTAddress1" class="form-control" tabIndex="8">
+                        <br /><input type="text" id="txtTAddress2" class="form-control" tabIndex="9">
+                    </div>
+                    <div class="col-sm-6">
+                        Address (EN) :<br /><input type="text" id="txtEAddress1" class="form-control" tabIndex="10">
+                        <br /><input type="text" id="txtEAddress2" class="form-control" tabIndex="11">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        Phone :<br /><input type="text" id="txtPhone" class="form-control" tabIndex="12">
+                    </div>
+                    <div class="col-sm-4">
+                        Fax :<br /><input type="text" id="txtFaxNumber" class="form-control" tabIndex="13">
+                    </div>
+                    <div class="col-sm-4">
+                        Minimum Balance :<br /><input type="number" id="txtLimitBalance" class="form-control" tabIndex="14">
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <a onclick="SearchData('book');">Book No :</a><br /><input type="text" id="txtBookCode" class="form-control" tabIndex="2">
-                </div>
-                <div class="col-sm-6">
-                    Account Name :<br /><input type="text" id="txtBookName" class="form-control" tabIndex="3">
-                </div>
-                <div class="col-sm-3">
-                    Account Type :<br />
-                    <select id="txtACType" class="form-control dropdown" tabIndex="4">
-                        <option value="C">Current</option>
-                        <option value="S">Saving</option>
-                    </select>
-                </div>
+            <br />
+            <div id="dvCommand" class="col-sm-12">
+                <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+                </a>
+                <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                </a>
+                <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteData()">
+                    <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                </a>
+                <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('book')">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
             </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <a onclick="SearchData('bank')">Bank Code :</a><br />
-                    <input type="text" id="txtBankCode" class="form-control" tabIndex="5">
-                </div>
-                <div class="col-sm-4">
-                    Bank Name:<br />
-                    <input type="text" id="txtBankName" class="form-control" disabled>
-                </div>
-                <div class="col-sm-4">
-                    Bank Branch :<br /><input type="text" id="txtBankBranch" class="form-control" tabIndex="6" />
-                </div>
-                <div class="col-sm-2">
-                    <br />
-                    <input type="checkbox" id="chkIsLocal" tabIndex="7">
-                    <label for="chkIsLocal">Is Local Bank?</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    Address (TH) :<br /><input type="text" id="txtTAddress1" class="form-control" tabIndex="8">
-                    <br /><input type="text" id="txtTAddress2" class="form-control" tabIndex="9">
-                </div>
-                <div class="col-sm-6">
-                    Address (EN) :<br /><input type="text" id="txtEAddress1" class="form-control" tabIndex="10">
-                    <br /><input type="text" id="txtEAddress2" class="form-control" tabIndex="11">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    Phone :<br /><input type="text" id="txtPhone" class="form-control" tabIndex="12">
-                </div>
-                <div class="col-sm-4">
-                    Fax :<br /><input type="text" id="txtFaxNumber" class="form-control" tabIndex="13">
-                </div>
-                <div class="col-sm-4">
-                    Minimum Balance :<br /><input type="number" id="txtLimitBalance" class="form-control" tabIndex="14">
-                </div>
-            </div>
+            <br/>
+            <table id="tbBalance" class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Cash on hand</th>
+                        <th class="all">Cash avaiable</th>
+                        <th class="desktop">Chq on hand</th>
+                        <th class="desktop">Chq return</th>
+                        <th class="desktop">Credit</th>
+                        <th class="desktop">Balance</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
-        <div id="dvCommand">
-            <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-            <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
-        </div>
+        <div id="dvLOVs"></div>
     </div>
-    <table id="tbBalance" class="table table-responsive">
-        <thead>
-            <tr>
-                <th>Cash on hand</th>
-                <th>Cash avaiable</th>
-                <th>Chq on hand</th>
-                <th>Chq return</th>
-                <th>Credit</th>
-                <th>Balance</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <div id="dvLOVs"></div>
-</div>
+
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     var path = '@Url.Content("~")';
@@ -200,7 +212,11 @@ End Code
         $('#txtPhone').val(dr.Phone);
         $('#txtFaxNumber').val(dr.FaxNumber);        
         $('#txtLimitBalance').val(dr.LimitBalance);   
-        $.get(path + 'Master/GetBookBalance?code=' + dr.BookCode, function (r) {
+        ShowBalance();
+    }
+    function ShowBalance() {
+        $('#tbBalance').DataTable().clear().draw();
+        $.get(path + 'Master/GetBookBalance?code=' + $('#txtBookCode').val(), function (r) {
             if (r.bookaccount.data.length > 0) {
                 let tb = r.bookaccount.data[0].Table;
                 $('#tbBalance').DataTable({
@@ -213,6 +229,7 @@ End Code
                         { data: "SumCredit" },
                         { data: "SumBal" }
                     ],
+                    responsive:true,
                     destroy:true
                 });
             }
@@ -278,5 +295,6 @@ End Code
         $('#txtFaxNumber').val('');
         $('#txtBookCode').focus();
         $('#txtLimitBalance').val(0);   
+        $('#tbBalance').DataTable().clear().draw();
     }
 </script>

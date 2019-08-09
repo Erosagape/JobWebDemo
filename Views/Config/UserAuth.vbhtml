@@ -21,7 +21,15 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-4">
-                    <a href="#" onclick="SearchData('user')">UserID :</a><br /><input type="text" id="txtUserID" class="form-control" tabIndex="1" />
+                    UserID :<br />
+                    <div style="display:flex">
+                        <div style="flex:1">
+                            <input type="text" id="txtUserID" class="form-control" tabIndex="1" />
+                        </div>
+                        <div>
+                            <input type="button" value="..." class="btn btn-default" onclick="SearchData('user')" />
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-8">
                     <br /><input type="text" id="txtUserName" class="form-control" disabled>
@@ -48,8 +56,12 @@ End Code
                     Summary : <input type="text" id="txtAuthor" class="form-control">
                 </div>
                 <div class="col-sm-8">
-                    <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-                    <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+                    <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                    </a>
+                    <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
+                        <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                    </a>
                 </div>
             </div>
         </div>

@@ -4,13 +4,23 @@ End Code
 <div class="panel-body">
     <div class="container">
         <div id="dvForm">
-            <a href="#" onclick="SearchData('branch')">Branch Code</a> :<br /><input type="text" id="txtCode" class="form-control" tabIndex="1">
+            Branch Code :<br /><input type="text" id="txtCode" class="form-control" tabIndex="1">
             Branch Name :<br /><input type="text" id="txtBrName" class="form-control" tabIndex="2">
         </div>
-        <div id="dvCommand">
-            <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Add</button>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-            <button id="btnDel" class="btn btn-danger" onclick="DeleteData()">Delete</button>
+        <br />
+        <div id="dvCommand" class="col-sm-12">
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteData()">
+                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+            </a>
+            <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData('branch')">
+                <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+            </a>
         </div>
     </div>
     <div id="dvLOVs"></div>
