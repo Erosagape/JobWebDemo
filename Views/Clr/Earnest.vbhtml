@@ -5,18 +5,21 @@ End Code
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
-                Branch :<br />
-                <input type="text" id="txtBranchCode" style="width:50px" />
-                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
+                Branch
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
             </div>
             <div class="col-sm-2">
                 Clear Date From:<br />
-                <input type="date" id="txtClrDateF" />
+                <input type="date" class="form-control" id="txtClrDateF" />
             </div>
             <div class="col-sm-2">
                 Clear Date To:<br />
-                <input type="date" id="txtClrDateT" />
+                <input type="date" class="form-control" id="txtClrDateT" />
             </div>
             <div class="col-sm-2">
                 Job Type: <br />
@@ -25,19 +28,27 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-6">
-                Clear By :<br />
-                <input type="text" id="txtClrBy" style="width:100px" />
-                <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                <input type="text" id="txtClrByName" style="width:300px" disabled />
+                Clear By :
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtClrBy" style="width:100px" />
+                    <button id="btnBrowseEmp2" class="btn btn-default" onclick="SearchData('reqby')">...</button>
+                    <input type="text" id="txtClrByName" class="form-control" style="width:100%" disabled />
+                </div>
             </div>
             <div class="col-sm-6">
-                Expense Code:<br />
-                <input type="text" id="txtSICode" style="width:100px" />
-                <button id="btnBrowseEmp3" onclick="SearchData('servicecode')">...</button>
-                <input type="text" id="txtSDescription" style="width:300px" disabled />
+                Expense Code:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" id="txtSICode" class="form-control" style="width:100px" />
+                    <button id="btnBrowseEmp3" class="btn btn-default" onclick="SearchData('servicecode')">...</button>
+                    <input type="text" id="txtSDescription" class="form-control" style="width:100%" disabled />
+                </div>
             </div>
         </div>
-        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridClr(true)">Show</button>
+        <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridClr(true)">
+            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+        </a>
         <div class="row">
             <div class="col-sm-12">
                 Approve Document : <input type="text" id="txtListApprove" class="form-control" value="" disabled />
@@ -49,20 +60,22 @@ End Code
                     <thead>
                         <tr>
                             <th>Clr.No</th>
-                            <th>Clr.date</th>
+                            <th class="desktop">Clr.date</th>
                             <th>Job No</th>
-                            <th>Inv.No</th>
-                            <th>Customer</th>
-                            <th>Adv.No</th>
-                            <th>Adv.Total</th>
-                            <th>Clr.Total</th>
-                            <th>WH-Tax</th>
+                            <th class="desktop">Inv.No</th>
+                            <th class="desktop">Customer</th>
+                            <th class="desktop">Adv.No</th>
+                            <th class="desktop">Adv.Total</th>
+                            <th class="all">Clr.Total</th>
+                            <th class="all">WH-Tax</th>
                         </tr>
                     </thead>
                 </table>
                 Expenses Total : <input type="text" id="txtSumApprove" class="form-control" value="" />
                 <br />
-                <input type="button" class="btn btn-success" value="Approve" onclick="ApproveData()" />
+                <a href="#" class="btn btn-success" id="btnSave" onclick="ApproveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Clearing</b>
+                </a>
             </div>
         </div>
     </div>
@@ -191,9 +204,12 @@ End Code
                             <input type="text" id="txtExpUnit" class="form-control" />
                         </div>
                         <div class="col-sm-5">
-                            <br />
-                            <button class="btn btn-success" id="btnSaveExpenses" onclick="SaveExpense()">Confirm</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <div style="float:left">
+                                <a href="#" class="btn btn-success" id="btnUpdatePay" onclick="SaveExpense()">
+                                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Expense</b>
+                                </a>
+                            </div>
+                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                         </div>
                     </div>
                 </div>
@@ -314,6 +330,7 @@ End Code
                     { data: "ClrNet", title: "Total.Clr" },
                     { data: "SlipNO", title: "Slip No" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {

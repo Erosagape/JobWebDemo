@@ -13,10 +13,13 @@ End Code
             <div id="tab1" class="tab-pane fade in active">
                 <div class="row">
                     <div class="col-sm-4">
-                        Branch :<br />
-                        <input type="text" id="txtBranchCode" style="width:50px" />
-                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                        <input type="text" id="txtBranchName" style="width:200px" disabled />
+                        Branch
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                            <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-2">
                         Job Type: <br />
@@ -29,37 +32,47 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        Request By :<br />
-                        <input type="text" id="txtReqBy" style="width:100px" />
-                        <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                        <input type="text" id="txtReqName" style="width:300px" disabled />
+                        Request By :
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtReqBy" style="width:100px" />
+                            <button id="btnBrowseEmp2" class="btn btn-default" onclick="SearchData('reqby')">...</button>
+                            <input type="text" id="txtReqName" class="form-control" style="width:100%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         Advance For :<br />
-                        <input type="text" id="txtCustCode" style="width:120px" />
-                        <input type="text" id="txtCustBranch" style="width:50px" />
-                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                        <input type="text" id="txtCustName" style="width:300px" disabled />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" id="txtCustCode" class="form-control" style="width:130px" />
+                            <input type="text" id="txtCustBranch" class="form-control" style="width:70px" />
+                            <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                            <input type="text" id="txtCustName" class="form-control" style="width:100%" disabled />
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        Request Currency :<br />
-                        <input type="text" id="txtCurrencyCode" style="width:100px" />
-                        <button id="btnBrowseCur" onclick="SearchData('currency')">...</button>
-                        <input type="text" id="txtCurrencyName" style="width:300px" disabled />
+                        Request Currency :
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtCurrencyCode" style="width:20%" />
+                            <button id="btnBrowseCur" class="btn btn-default" onclick="SearchData('currency')">...</button>
+                            <input type="text" class="form-control" id="txtCurrencyName" style="width:100%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-2">
                         Request Date From:<br />
-                        <input type="date" id="txtAdvDateF" />
+                        <input type="date" class="form-control" id="txtAdvDateF" />
                     </div>
                     <div class="col-sm-2">
                         Request Date To:<br />
-                        <input type="date" id="txtAdvDateT" />
+                        <input type="date" class="form-control" id="txtAdvDateT" />
                     </div>
                     <div class="col-sm-2">
                         <br />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                        </a>
                     </div>
                 </div>
                 <div class="row">
@@ -68,17 +81,17 @@ End Code
                             <thead>
                                 <tr>
                                     <th>Adv.No</th>
-                                    <th>Req.date</th>
+                                    <th class="desktop">Req.date</th>
                                     <th>Job No</th>
-                                    <th>Inv.No</th>
-                                    <th>customer</th>
-                                    <th>Cash/Transfer</th>
-                                    <th>Company Chq</th>
-                                    <th>Customer Chq</th>
-                                    <th>Credit</th>
-                                    <th>Total</th>
-                                    <th>W-Tax</th>
-                                    <th>Req.By</th>
+                                    <th class="desktop">Inv.No</th>
+                                    <th class="desktop">customer</th>
+                                    <th class="desktop">Cash/Transfer</th>
+                                    <th class="desktop">Company Chq</th>
+                                    <th class="desktop">Customer Chq</th>
+                                    <th class="desktop">Credit</th>
+                                    <th class="all">Total</th>
+                                    <th class="all">W-Tax</th>
+                                    <th class="desktop">Req.By</th>
                                 </tr>
                             </thead>
                         </table>
@@ -189,13 +202,13 @@ End Code
                             <thead>
                                 <tr>
                                     <th>Doc.No</th>
-                                    <th>Doc.Type</th>
-                                    <th>Doc.Date</th>
-                                    <th>Pay.Type</th>
-                                    <th>For</th>
-                                    <th>Branch</th>
-                                    <th>Doc.Total</th>
-                                    <th>Paid.Total</th>
+                                    <th class="desktop">Doc.Type</th>
+                                    <th class="all">Doc.Date</th>
+                                    <th class="desktop">Pay.Type</th>
+                                    <th class="desktop">For</th>
+                                    <th class="desktop">Branch</th>
+                                    <th class="desktop">Doc.Total</th>
+                                    <th class="all">Paid.Total</th>
                                 </tr>
                             </thead>
                         </table>
@@ -215,7 +228,9 @@ End Code
                         Remark : <input type="text" id="txtTRemark" class="form-control" value="" />
                     </div>
                 </div>
-                <input type="button" class="btn btn-success" value="Payment" onclick="ApproveData()" />
+                <a href="#" class="btn btn-success" id="btnSave" onclick="ApproveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Payment</b>
+                </a>
             </div>
         </div>
     </div>
@@ -232,10 +247,10 @@ End Code
                              <tr>
                                  <th>#</th>
                                  <th>ChqNo</th>
-                                 <th>ChqDate</th>
-                                 <th>ChqAmount</th>
-                                 <th>AmountUsed</th>
-                                 <th>AmountRemain</th>
+                                 <th class="all">ChqDate</th>
+                                 <th class="desktop">ChqAmount</th>
+                                 <th class="desktop">AmountUsed</th>
+                                 <th class="all">AmountRemain</th>
                              </tr>
                          </thead>
                          <tbody></tbody>
@@ -250,11 +265,11 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var arr = [];
-    var list = [];
-    var docno = '';
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    let arr = [];
+    let list = [];
+    let docno = '';
     //$(document).ready(function () {
         SetEvents();
     //});
@@ -419,7 +434,9 @@ End Code
                     { data: "TotalAdvance", title: "Total" },
                     { data: "Total50Tavi", title: "W/T Amt" },
                     { data: "EmpCode", title: "Request By" }
-                ]
+                ],
+                responsive:true,
+                destroy:true
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected') == true) {
@@ -570,6 +587,7 @@ End Code
                 { data: "TotalAmount", title: "Doc.Total" },
                 { data: "PaidAmount", title: "Paid" }
             ],
+            responsive:true,
             destroy:true
         });
 

@@ -3,18 +3,24 @@
 End Code
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-4" style="display:flex;flex-direction:row">
-                <label style="display:block;width:20%">Branch:</label>
-                <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
-                <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
-                <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+            <div class="col-sm-4">
+                Branch
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
+
             </div>
-            <div class="col-sm-6" style="display:flex;flex-direction:row">
-                <label style="display:block;width:20%">Customer:</label>
-                <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
-                <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
-                <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
-                <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+            <div class="col-sm-6">
+                Customer :<br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" id="txtCustCode" class="form-control" style="width:130px" />
+                    <input type="text" id="txtCustBranch" class="form-control" style="width:70px" />
+                    <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                    <input type="text" id="txtCustName" class="form-control" style="width:100%" disabled />
+                </div>
             </div>
         </div>
         <div class="row">

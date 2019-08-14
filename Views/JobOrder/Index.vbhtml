@@ -7,7 +7,7 @@ End Code
             <label for="cboBranch" id="lblBranch">Branch</label>
             <select id="cboBranch" class="form-control dropdown"></select>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <label for="cboStatus" id="lblStatus">Status</label>
             <select id="cboStatus" class="form-control dropdown"></select>
         </div>
@@ -27,26 +27,31 @@ End Code
             <label for="cboMonth" id="lblMonth">Month</label>
             <select id="cboMonth" class="form-control dropdown"></select>
         </div>
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             <div class="btn-group-vertical">
-                <button class="btn btn-warning" id="btnRefresh" onclick="getJobdata()">Show</button>
-                <button class="btn btn-danger" id="btnGenJob" onclick="CreateNewJob()">New</button>
+                <br />
+                <a href="#" class="btn btn-default" id="btnGenJob" onclick="CreateNewJob()">
+                    <i class="fa fa-lg fa-file-o"></i> &nbsp;<b>Create Job</b>
+                </a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
+            <a href="#" class="btn btn-primary" id="btnRefresh" onclick="getJobdata()">
+                <i class="fa fa-lg fa-filter"></i> &nbsp;<b>Search</b>
+            </a>
             <table id="tblJob" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>JobNo</th>
-                        <th>DocDate</th>
-                        <th>JobStatus</th>
-                        <th>InspectDate</th>
-                        <th>Inv.Customer</th>
-                        <th>Customer</th>
+                        <th class="desktop">DocDate</th>
+                        <th class="desktop">JobStatus</th>
+                        <th class="all">InspectDate</th>
+                        <th class="all">Inv.Customer</th>
+                        <th class="desktop">Customer</th>
                         <th>DeclareNo</th>
-                        <th>Commodity</th>
+                        <th class="desktop">Commodity</th>
                     </tr>
                 </thead>
             </table>
@@ -60,8 +65,10 @@ End Code
         <div class="col-sm-2">
             <br />
             <div class="btn-group">
-                <button id="btnJobSlip" class="btn btn-success" onclick="OpenJob()">View</button>
-                <button class="btn btn-info" id="btnPrnJob" onclick="PrintJob()">Print</button>
+                <button id="btnJobSlip" class="btn btn-success" onclick="OpenJob()">Show</button>
+                <a href="#" class="btn btn-info" id="btnPrnJob" onclick="PrintJob()">
+                    <i class="fa fa-lg fa-print"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -105,6 +112,7 @@ End Code
                     "dataSrc": "job.data"
                 },
                 "destroy": true,
+                "responsive":true,
                 "columns": [
                     { "data": "JNo", "title": "Job Number" },
                     {
@@ -152,6 +160,7 @@ End Code
                     "dataSrc": "job.data"
                 },
                 "destroy": true,
+                "responsive":true,
                 "columns": [
                     { "data": "JNo", "title": "Job Number" },
                     {

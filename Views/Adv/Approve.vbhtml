@@ -5,18 +5,21 @@ End Code
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
-                Branch :<br />
-                <input type="text" id="txtBranchCode" style="width:50px" />
-                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
+                Branch
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
             </div>
             <div class="col-sm-2">
                 Request Date From:<br />
-                <input type="date" id="txtAdvDateF" />
+                <input type="date" class="form-control" id="txtAdvDateF" />
             </div>
             <div class="col-sm-2">
                 Request Date To:<br />
-                <input type="date" id="txtAdvDateT" />
+                <input type="date" class="form-control" id="txtAdvDateT" />
             </div>
             <div class="col-sm-2">
                 Job Type: <br />
@@ -29,22 +32,29 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-6">
-                Request By :<br />
-                <input type="text" id="txtReqBy" style="width:100px" />
-                <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                <input type="text" id="txtReqName" style="width:300px" disabled />
+                Request By :
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtReqBy" style="width:100px" />
+                    <button id="btnBrowseEmp2" class="btn btn-default" onclick="SearchData('reqby')">...</button>
+                    <input type="text" id="txtReqName" class="form-control" style="width:100%" disabled />
+                </div>
             </div>
             <div class="col-sm-6">
                 Advance For :<br />
-                <input type="text" id="txtCustCode" style="width:120px" />
-                <input type="text" id="txtCustBranch" style="width:50px"  />
-                <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                <input type="text" id="txtCustName" style="width:300px" disabled />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" id="txtCustCode" class="form-control" style="width:130px" />
+                    <input type="text" id="txtCustBranch" class="form-control" style="width:70px" />
+                    <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                    <input type="text" id="txtCustName" class="form-control" style="width:100%" disabled />
+                </div>
             </div>
-        </div>
+            </div>
         <div class="row">
             <div class="col-sm-2">
-                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
             </div>
             <div class="col-sm-10">
                 Approve Document : <input type="text" id="txtListApprove" class="form-control" value="" disabled/>
@@ -55,20 +65,22 @@ End Code
                 <table id="tbHeader" class="table table-responsive">
                     <thead>
                         <tr>
-                            <th>Adv.No</th>
-                            <th>Req.date</th>
-                            <th>Job No</th>
-                            <th>Inv.No</th>
+                            <th class="all">Adv.No</th>
+                            <th class="all">Req.date</th>
+                            <th class="desktop">Job No</th>
+                            <th class="desktop">Inv.No</th>
                             <th>customer</th>
-                            <th>Total</th>
-                            <th>W-Tax</th>
-                            <th>Req.By</th>
+                            <th class="all">Total</th>
+                            <th class="desktop">W-Tax</th>
+                            <th class="desktop">Req.By</th>
                         </tr>
                     </thead>
                 </table>
                 Approve Total : <input type="text" id="txtSumApprove" class="form-control" value="" />
                 <br />
-                <input type="button" class="btn btn-success" value="Approve" onclick="ApproveData()" />
+                <a href="#" class="btn btn-success" id="btnSave" onclick="ApproveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Approve</b>
+                </a>
             </div>
         </div>
     </div>
@@ -171,6 +183,7 @@ End Code
                     { data: "Total50Tavi", title: "W/T Amt" },
                     { data: "EmpCode", title: "Request By" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {

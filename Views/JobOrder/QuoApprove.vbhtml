@@ -5,38 +5,47 @@ End Code
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-                Branch :<br />
-                <input type="text" id="txtBranchCode" style="width:50px" />
-                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
+                Branch
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
             </div>
             <div class="col-sm-3">
                 Date From:<br />
-                <input type="date" id="txtAdvDateF" />
+                <input type="date" class="form-control" id="txtAdvDateF" />
             </div>
             <div class="col-sm-3">
                 Date To:<br />
-                <input type="date" id="txtAdvDateT" />
+                <input type="date" class="form-control" id="txtAdvDateT" />
             </div>            
         </div>
         <div class="row">
             <div class="col-sm-6">
                 Manager By :<br />
-                <input type="text" id="txtReqBy" style="width:100px" />
-                <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                <input type="text" id="txtReqName" style="width:300px" disabled />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtReqBy" style="width:100px" />
+                    <button id="btnBrowseEmp2" class="btn btn-default" onclick="SearchData('reqby')">...</button>
+                    <input type="text" id="txtReqName" class="form-control" style="width:100%" disabled />
+                </div>
             </div>
             <div class="col-sm-6">
                 Customer :<br />
-                <input type="text" id="txtCustCode" style="width:120px" />
-                <input type="text" id="txtCustBranch" style="width:50px" />
-                <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                <input type="text" id="txtCustName" style="width:300px" disabled />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" id="txtCustCode" class="form-control" style="width:130px" />
+                    <input type="text" id="txtCustBranch" class="form-control" style="width:70px" />
+                    <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                    <input type="text" id="txtCustName" class="form-control" style="width:100%" disabled />
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-2">
-                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
             </div>
             <div class="col-sm-10">
                 Approve Document : <input type="text" id="txtListApprove" class="form-control" value="" disabled />
@@ -48,17 +57,19 @@ End Code
                     <thead>
                         <tr>
                             <th>QNo</th>
-                            <th>DocDate</th>
-                            <th>ManagerCode</th>
-                            <th>TRemark</th>
-                            <th>ContactName</th>
-                            <th>BillToCustCode</th>
-                            <th>ReferQNo</th>
+                            <th class="all">DocDate</th>
+                            <th class="all">ManagerCode</th>
+                            <th class="desktop">TRemark</th>
+                            <th class="all">ContactName</th>
+                            <th class="desktop">BillToCustCode</th>
+                            <th class="desktop">ReferQNo</th>
                         </tr>
                     </thead>
                 </table>
                 <br />
-                <input type="button" class="btn btn-success" value="Approve" onclick="ApproveData()" />
+                <a href="#" class="btn btn-success" id="btnSave" onclick="ApproveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Approve</b>
+                </a>
             </div>
         </div>
     </div>
@@ -151,6 +162,7 @@ End Code
                     { data: "BillToCustCode", title: "Billing To" },
                     { data: "ReferQNo", title: "Refer Q.No" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {

@@ -5,29 +5,28 @@ End Code
     <div id="dvHeader" class="container">
         <div class="row">
             <div class="col-sm-5">
-                Branch :
-                <input type="text" id="txtBranchCode" style="width:50px" />
-                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
-                <br/>
+                Branch:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
                 <div id="dvJob"></div>
+            </div>
+            <div class="col-sm-4" style="text-align:left">
+                <b>Clearing No:</b>
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtClrNo" style="font-weight:bold;font-size:20px;text-align:center;background-color:navajowhite;color:brown" tabindex="1" />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('clearing')" />
+                </div>
             </div>
             <div class="col-sm-3">
                 Document Date :
-                <input type="date" id="txtClrDate" tabindex="1" />
+                <input type="date" class="form-control" id="txtClrDate" tabindex="1" />
             </div>
-            <div class="col-sm-4" style="text-align:left">
-                <table border="1">
-                    <tr>
-                        <td>
-                            <b>Clearing No:</b>
-                            <br />
-                            <input type="text" id="txtClrNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
-                            <input type="button" value="..." style="font-size:20px" onclick="SearchData('clearing')" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
+
         </div>
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tabHeader">Clearing Header</a></li>
@@ -37,15 +36,15 @@ End Code
             <div id="tabHeader" class="tab-pane fade in active">
                 <div class="row">
                     <div class="col-sm-7">
-                        <table>
+                        <table style="width:100%">
                             <tr>
                                 <td>
                                     Clear By :
                                 </td>
-                                <td>
-                                    <input type="text" id="txtEmpCode" style="width:100px" disabled />
-                                    <button id="btnBrowseEmp1" onclick="SearchData('clrby')" tabindex="2">...</button>
-                                    <input type="text" id="txtEmpName" style="width:300px" disabled />
+                                <td style="display:flex;flex-direction:row">
+                                    <input type="text" id="txtEmpCode" class="form-control" style="width:100px" disabled />
+                                    <button id="btnBrowseEmp1" class="btn btn-default" onclick="SearchData('clrby')" tabindex="2">...</button>
+                                    <input type="text" id="txtEmpName" class="form-control" style="width:100%" disabled />
                                 </td>
                             </tr>
                             <tr>
@@ -57,47 +56,47 @@ End Code
                                 </td>
                             </tr>
                         </table>
-                        <table>
+                        <table style="width:100%">
                             <tr>
                                 <td>
                                     Container No:
                                 </td>
-                                <td>
-                                    <input type="text" id="txtCTN_NO" style="width:200px" tabindex="6" />
+                                <td style="display:flex;flex-direction:row">
+                                    <input type="text" id="txtCTN_NO" class="form-control" tabindex="6" />
                                 </td>
                                 <td>
                                     Clearance Date :
                                 </td>
-                                <td>
-                                    <input type="date" id="txtClearanceDate" />
+                                <td style="display:flex;flex-direction:row">
+                                    <input type="date" id="txtClearanceDate" class="form-control" />
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="col-sm-5">
-                        <table>
+                        <table style="width:100%">
                             <tr>
                                 <td>
                                     Job Type :
                                 </td>
-                                <td>
-                                    <select id="cboJobType" style="width:200px" class="form-control dropdown" tabindex="8"></select>
+                                <td style="display:flex;flex-direction:row">
+                                    <select id="cboJobType" class="form-control dropdown" tabindex="8"></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     Clear From :
                                 </td>
-                                <td>
-                                    <select id="cboClrFrom" style="width:200px" class="form-control dropdown" tabindex="9"></select>
+                                <td style="display:flex;flex-direction:row">
+                                    <select id="cboClrFrom" class="form-control dropdown" tabindex="9"></select>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     Status :
                                 </td>
-                                <td>
-                                    <select id="cboDocStatus" style="width:200px;" class="form-control dropdown" disabled></select>
+                                <td style="display:flex;flex-direction:row">
+                                    <select id="cboDocStatus" class="form-control dropdown" disabled></select>
                                 </td>
                             </tr>
                         </table>
@@ -105,11 +104,15 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-7">
-                        Co-person Reference:
-                        <input type="text" id="txtCoPersonCode" />
-                        <br />
+                        Co-person Reference:br/>
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtCoPersonCode" />
+                        </div>
                         Remark:
-                        <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <textarea id="txtTRemark" class="form-control" tabindex="11"></textarea>
+                        </div>
                     </div>
                     <div class="col-sm-5">
                         <table>
@@ -117,24 +120,24 @@ End Code
                                 <td>
                                     <label>Advance Total</label>
                                 </td>
-                                <td>
-                                    <input type="text" id="txtAdvTotal" style="width:100px;text-align:right" disabled />
+                                <td style="display:flex;flex-direction:row">
+                                    <input type="text" id="txtAdvTotal" class="form-control" style="width:100%;text-align:right" disabled />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label>Expenses Total</label>
                                 </td>
-                                <td>
-                                    <input type="text" id="txtTotalExpense" style="width:100px;text-align:right" disabled />
+                                <td style="display:flex;flex-direction:row">
+                                    <input type="text" id="txtTotalExpense" class="form-control" style="width:100%;text-align:right" disabled />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <label>Clear Total</label>
                                 </td>
-                                <td>
-                                    <input type="text" id="txtClearTotal" style="width:100px;text-align:right" disabled />
+                                <td style="display:flex;flex-direction:row">
+                                    <input type="text" id="txtClearTotal" class="form-control" style="width:100%;text-align:right" disabled />
                                 </td>
                             </tr>
                         </table>
@@ -177,29 +180,39 @@ End Code
                         Cancel Reason :<input type="text" id="txtCancelReson" style="width:250px" />
                     </div>
                 </div>
-                <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
-                <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Document</button>
-                <button id="btnPrint" class="btn btn-info" onclick="PrintData()" disabled>Print Data</button>
+                <div id="dvCommand">
+                    <a href="#" class="btn btn-default" id="btnNew" onclick="AddHeader()">
+                        <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New Document</b>
+                    </a>
+                    <a href="#" class="btn btn-success" id="btnSave" onclick="SaveHeader()">
+                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Document</b>
+                    </a>
+                    <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                        <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Document</b>
+                    </a>
+                </div>
             </div>
             <div id="tabDetail" class="tab-pane fade">
-                <button id="btnChooseAdv" class="btn btn-success" onclick="LoadAdvance()">Choose Advance</button>
+                <a href="#" class="btn btn-warning" id="btnChooseAdv" onclick="LoadAdvance()">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Choose Advance</b>
+                </a>
                 <div class="row">
                     <div class="col-sm-12">
                         <table id="tbDetail" class="table table-responsive">
                             <thead>
                                 <tr>
                                     <th>
-                                    <th>SICode</th>
+                                    <th class="all">SICode</th>
                                     <th>Description</th>
-                                    <th>Job.No</th>
-                                    <th>Adv.No</th>
-                                    <th>Advance</th>
-                                    <th>Clear</th>
-                                    <th>Vat</th>
-                                    <th>WH-Tax</th>
-                                    <th>Net</th>
-                                    <th>Currency</th>
-                                    <th>Remark</th>
+                                    <th class="desktop">Job.No</th>
+                                    <th class="desktop">Adv.No</th>
+                                    <th class="desktop">Advance</th>
+                                    <th class="desktop">Clear</th>
+                                    <th class="desktop">Vat</th>
+                                    <th class="desktop">WH-Tax</th>
+                                    <th class="all">Net</th>
+                                    <th class="desktop">Currency</th>
+                                    <th class="desktop">Remark</th>
                                 </tr>
                             </thead>
                         </table>
@@ -207,8 +220,12 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-9">
-                        <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
-                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
+                        <a href="#" class="btn btn-default" id="btnAdd" onclick="AddDetail()">
+                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
+                        </a>
+                        <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
+                            <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Detail</b>
+                        </a>
                         <p>
                             Customers Chargable :
                             <input type="text" id="txtSumCharge" style="width:100px;text-align:right" /><br />
@@ -233,7 +250,6 @@ End Code
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"></button>
                             <h4 class="modal-title"><label id="lblHeader">Clear Detail</label></h4>
                         </div>
                         <div class="modal-body">
@@ -312,8 +328,15 @@ End Code
                             <input type="hidden" id="txtShipBy" />
                         </div>
                         <div class="modal-footer">
-                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
-                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <div style="float:left">
+                                <a href="#" class="btn btn-default" id="btnAdd" onclick="AddDetail()">
+                                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+                                </a>
+                                <a href="#" class="btn btn-success" id="btnUpdate" onclick="SaveDetail()">
+                                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                                </a>
+                            </div>
+                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                         </div>
                     </div>
                 </div>
@@ -322,7 +345,6 @@ End Code
                 <div class="modal-dialog-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"></button>
                             <h4 class="modal-title"><label id="lblHeader">Clearing List</label></h4>
                         </div>
                         <div class="modal-body">
@@ -330,23 +352,23 @@ End Code
                                 <thead>
                                     <tr>
                                         <th>ClrNo</th>
-                                        <th>ClrDate</th>
-                                        <th>CustCode</th>
-                                        <th>ReqBy</th>
+                                        <th class="desktop">ClrDate</th>
+                                        <th class="desktop">CustCode</th>
+                                        <th class="desktop">ReqBy</th>
                                         <th>Job</th>
-                                        <th>Inv No</th>
-                                        <th>Status</th>
-                                        <th>ClrAmount</th>
-                                        <th>Currency</th>
-                                        <th>AdvNo</th>
-                                        <th>AdvAmount</th>
-                                        <th>Remark</th>
+                                        <th class="desktop">Inv No</th>
+                                        <th class="desktop">Status</th>
+                                        <th class="all">ClrAmount</th>
+                                        <th class="desktop">Currency</th>
+                                        <th class="desktop">AdvNo</th>
+                                        <th class="all">AdvAmount</th>
+                                        <th class="desktop">Remark</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                         </div>
                     </div>
                 </div>
@@ -355,7 +377,6 @@ End Code
                 <div class="modal-dialog-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"></button>
                             <h4 class="modal-title"><label id="lblHeader">Advance List</label></h4>
                         </div>
                         <div class="modal-body">
@@ -363,23 +384,23 @@ End Code
                                 <thead>
                                     <tr>
                                         <th>AdvNo</th>
-                                        <th>AdvDate</th>
-                                        <th>ItemNo</th>
-                                        <th>SICode</th>
+                                        <th class="desktop">AdvDate</th>
+                                        <th class="all">ItemNo</th>
+                                        <th class="desktop">SICode</th>
                                         <th>Description</th>
-                                        <th>JobNo</th>
-                                        <th>Currency</th>
-                                        <th>ExcRate</th>
-                                        <th>Qty</th>
-                                        <th>Unit</th>
-                                        <th>AdvNet</th>
-                                        <th>50Tavi</th>
+                                        <th class="desktop">JobNo</th>
+                                        <th class="desktop">Currency</th>
+                                        <th class="desktop">ExcRate</th>
+                                        <th class="desktop">Qty</th>
+                                        <th class="desktop">Unit</th>
+                                        <th class="all">AdvNet</th>
+                                        <th class="all">50Tavi</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                         </div>
                     </div>
                 </div>
@@ -404,14 +425,14 @@ End Code
                                 <th>QtyBegin</th>
                                 <th>QtyEnd</th>
                                 <th>Unit Price</th>
-                                <th>Vender</th>
-                                <th>Cost</th>
+                                <th class="desktop">Vender</th>
+                                <th class="desktop">Cost</th>
                             </tr>
                         </thead>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                 </div>
             </div>
         </div>
@@ -1129,6 +1150,7 @@ End Code
                     }
                 }
             ],
+            responsive:true,
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
         $('#tbDetail tbody').on('click', 'tr', function () {
@@ -1374,6 +1396,7 @@ End Code
                     { data: "AdvNet", title: "Adv.Total" },
                     { data: "TRemark", title: "Remark" },
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -1658,6 +1681,7 @@ End Code
                         { data: "AdvBalance", title: "Balance" },
                         { data: "UsedAmount", title: "Used" },
                     ],
+                    responsive:true,
                     destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                 });
                 $('#tbAdvance tbody').on('click', 'tr', function () {

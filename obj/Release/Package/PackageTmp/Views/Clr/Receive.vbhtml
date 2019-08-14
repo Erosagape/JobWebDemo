@@ -98,37 +98,45 @@ End Code
             <div id="tab2" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-4">
-                        Branch :<br />
-                        <input type="text" id="txtBranchCode" style="width:50px" />
-                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                        <input type="text" id="txtBranchName" style="width:200px" disabled />
+                        Branch
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                            <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-2">
                         Job Type: <br />
                         <select id="cboJobType" class="form-control dropdown"></select>
                     </div>
                     <div class="col-sm-6">
-                        Entry By :<br />
-                        <input type="text" id="txtReqBy" style="width:100px" />
-                        <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                        <input type="text" id="txtReqName" style="width:300px" disabled />
+                        Entry By :
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtReqBy" style="width:100px" />
+                            <button id="btnBrowseEmp2" class="btn btn-default" onclick="SearchData('reqby')">...</button>
+                            <input type="text" id="txtReqName" class="form-control" style="width:100%" disabled />
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
                         Customer :<br />
-                        <input type="text" id="txtCustCode" style="width:120px" />
-                        <input type="text" id="txtCustBranch" style="width:50px" />
-                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                        <input type="text" id="txtCustName" style="width:300px" disabled />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" id="txtCustCode" class="form-control" style="width:130px" />
+                            <input type="text" id="txtCustBranch" class="form-control" style="width:70px" />
+                            <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                            <input type="text" id="txtCustName" class="form-control" style="width:100%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-2">
                         Payment Date From:<br />
-                        <input type="date" id="txtAdvDateF" />
+                        <input type="date" class="form-control" id="txtAdvDateF" />
                     </div>
                     <div class="col-sm-2">
                         Payment Date To:<br />
-                        <input type="date" id="txtAdvDateT" />
+                        <input type="date" class="form-control" id="txtAdvDateT" />
                     </div>
                     <div class="col-sm-2">
                         <br />
@@ -138,22 +146,24 @@ End Code
                 <div class="row">
                     <div class="col-sm-12">
                         Clearing Document:<input type="text" id="txtAdvNo" />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                        </a>
                         <br />
                         <table id="tbHeader" class="table table-responsive">
                             <thead>
                                 <tr>
                                     <th>Clr.No</th>
-                                    <th>Clr.date</th>
-                                    <th>Job No</th>
-                                    <th>Inv.No</th>
-                                    <th>customer</th>
-                                    <th>Adv.No</th>
-                                    <th>Adv.Total</th>
-                                    <th>Used</th>
-                                    <th>Balance</th>
-                                    <th>W-Tax</th>
-                                    <th>Clr.By</th>
+                                    <th class="desktop">Clr.date</th>
+                                    <th class="all">Job No</th>
+                                    <th class="desktop">Inv.No</th>
+                                    <th class="desktop">customer</th>
+                                    <th class="desktop">Adv.No</th>
+                                    <th class="all">Adv.Total</th>
+                                    <th class="all">Used</th>
+                                    <th class="desktop">Balance</th>
+                                    <th class="desktop">W-Tax</th>
+                                    <th class="desktop">Clr.By</th>
                                 </tr>
                             </thead>
                         </table>
@@ -172,13 +182,13 @@ End Code
                             <thead>
                                 <tr>
                                     <th>Doc.No</th>
-                                    <th>Doc.Type</th>
-                                    <th>Doc.Date</th>
-                                    <th>Pay.Type</th>
-                                    <th>For</th>
-                                    <th>Branch</th>
-                                    <th>Doc.Total</th>
-                                    <th>Paid.Total</th>
+                                    <th class="desktop">Doc.Type</th>
+                                    <th class="all">Doc.Date</th>
+                                    <th class="desktop">Pay.Type</th>
+                                    <th class="desktop">For</th>
+                                    <th class="desktop">Branch</th>
+                                    <th class="desktop">Doc.Total</th>
+                                    <th class="all">Paid.Total</th>
                                 </tr>
                             </thead>
                         </table>
@@ -198,7 +208,9 @@ End Code
                         Remark : <input type="text" id="txtTRemark" class="form-control" value="" />
                     </div>
                 </div>
-                <input type="button" class="btn btn-success" value="Payment" onclick="ApproveData()" />
+                <a href="#" class="btn btn-success" id="btnSave" onclick="ApproveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Payment</b>
+                </a>
             </div>
         </div>
     </div>
@@ -382,7 +394,9 @@ End Code
                     { data: "ClrVat", title: "VAT" },
                     { data: "Clr50Tavi", title: "WT" },
                     { data: "ClrBal", title: "Balance" }
-                ]
+                ],
+                responsive: true,
+                destroy:true
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected') == true) {
@@ -487,6 +501,7 @@ End Code
                 { data: "TotalAmount", title: "Doc.Total" },
                 { data: "PaidAmount", title: "Paid" }
             ],
+            responsive:true,
             destroy:true
         });
         $('#txtAdvCash').val(CDbl(sum_ca, 2));

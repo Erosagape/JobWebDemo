@@ -131,7 +131,9 @@ End Code
                 โอนข้อมูลค่าบริการและค่าใช้จ่ายมาด้วย
             </td>
             <td>
-                <input type="button" class="btn btn-success" id="btnCreateJob" onclick="CreateJob()" tabindex="15" value="สร้างหมายเลขงานใหม่" />
+                <a href="#" class="btn btn-success" id="btnCreateJob" onclick="CreateJob()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>สร้างหมายเลขงานใหม่</b>
+                </a>
             </td>
         </tr>
     </table>
@@ -147,7 +149,7 @@ End Code
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" id="btnViewJob" onclick="OpenJob()">View Job</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">X</button>
             </div>
         </div>
     </div>

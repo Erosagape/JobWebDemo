@@ -1,274 +1,302 @@
 ﻿@Code
     ViewBag.Title = "สร้างใบแจ้งหนี้"
 End Code
-    <div class="panel-body">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <a href="#" onclick="SearchData('branch')"> Branch :</a><br />
-                    <input type="text" id="txtBranchCode" style="width:50px" />
-                    <input type="text" id="txtBranchName" style="width:200px" disabled />
-                </div>
-                <div class="col-sm-3">
-                    Job Type: <br />
-                    <select id="cboJobType" class="form-control dropdown"></select>
-                </div>
-                <div class="col-sm-3">
-                    Ship By:<br />
-                    <select id="cboShipBy" class="form-control dropdown"></select>
+<div class="panel-body">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                Branch:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <a href="#" onclick="SearchData('customer')"> Customer :</a><br />
+            <div class="col-sm-3">
+                Job Type: <br />
+                <select id="cboJobType" class="form-control dropdown"></select>
+            </div>
+            <div class="col-sm-3">
+                Ship By:<br />
+                <select id="cboShipBy" class="form-control dropdown"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                Customer:
+                <br />
+                <div style="display:flex;flex-direction:row">
                     <input type="text" id="txtCustCode" style="width:120px" />
                     <input type="text" id="txtCustBranch" style="width:50px" />
-                    <input type="text" id="txtCustName" style="width:300px" disabled />
-                </div>
-                <div class="col-sm-3">
-                    <a href="#" onclick="SearchData('job')">Job No :</a><br />
-                    <input type="text" id="txtJobNo" class="form-control" disabled />
-                </div>
-                <div class="col-sm-3">
-                    <br />
-                    <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                    <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                    <input type="text" id="txtCustName" style="width:100%" disabled />
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <table id="tbHeader" class="table table-responsive">
-                        <thead>
-                            <tr>
-                                <th>JobNo</th>
-                                <th>ClrNo</th>
-                                <th>CustCode</th>
-                                <th>Description</th>
-                                <th>Cost</th>
-                                <th>Advance</th>
-                                <th>Charge</th>
-                                <th>VAT</th>
-                                <th>WHT</th>
-                                <th>Net</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    <br />
-                    <input type="button" class="btn btn-success" value="Create Invoice" onclick="ShowSummary()" />
-                    <input type="button" class="btn btn-default" value="Reset Data" onclick="ResetData()" />
-                </div>
+            <div class="col-sm-3">
+                <a href="#" onclick="SearchData('job')">Job No :</a><br />
+                <input type="text" id="txtJobNo" class="form-control" disabled />
+            </div>
+            <div class="col-sm-3">
+                <br />
+                <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
             </div>
         </div>
-        <div id="dvCreate" class="modal modal-lg fade">
-            <div class="modal-dialog-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <table>
-                            <tr>
-                                <td>
-                                    Invoice Date :<br />
-                                    <input type="date" id="txtDocDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
-                                </td>
-                                <td>
-                                    Invoice Type :<br />
-                                    <select id="cboDocType">
-                                        <option value="IVS-">Service</option>
-                                        <option value="IVT-">Transport</option>
-                                        <option value="IVF-">Freight</option>
-                                    </select>
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="tbHeader" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>JobNo</th>
+                            <th class="desktop">ClrNo</th>
+                            <th class="desktop">CustCode</th>
+                            <th>Description</th>
+                            <th class="desktop">Cost</th>
+                            <th class="desktop">Advance</th>
+                            <th class="desktop">Charge</th>
+                            <th class="desktop">VAT</th>
+                            <th class="desktop">WHT</th>
+                            <th class="all">Net</th>
+                        </tr>
+                    </thead>
+                </table>
+                <br />
+                <a href="#" class="btn btn-success" id="btnGen" onclick="ShowSummary()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Create Invoice</b>
+                </a>
+                <a href="#" class="btn btn-default" id="btnAdd" onclick="ResetData()">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Reset Select</b>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="dvCreate" class="modal modal-lg fade">
+        <div class="modal-dialog-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <table>
+                        <tr>
+                            <td>
+                                Invoice Date :<br />
+                                <input type="date" id="txtDocDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                            </td>
+                            <td>
+                                Invoice Type :<br />
+                                <select id="cboDocType">
+                                    <option value="IVS-">Service</option>
+                                    <option value="IVT-">Transport</option>
+                                    <option value="IVF-">Freight</option>
+                                </select>
 
-                                </td>
-                                <td>
-                                    <a href="#" onclick="SearchData('invoice')"> Replace Invoice No :</a><br />
-                                    <input type="text" id="txtDocNo" disabled />
-                                </td>
-                                <td>
-                                    <br />
-                                    <input type="button" onclick="PrintInvoice()" class="btn btn-success" value="Print Invoice" />
-                                </td>
-                                <td>
-                                    Discount Rate:<br /><input type="number" id="txtDiscountRate" onchange="SetDiscount()" />%
-                                </td>
-                                <td>
-                                    Discount Amt:<br/><input type="number" id="txtCalDiscount" onchange="SumDiscount()" />
-                                </td>
-                            </tr>
-                        </table>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <a href="#" onclick="SearchData('chequecust')">Customer Cheque Used</a> <br />
-                                            <input type="text" id="txtChqNo" class="form-control" disabled />
-                                        </td>
-                                        <td>
-                                            Cheque Amount<br />
-                                            <input type="number" id="txtChqAmount" class="form-control" />
-                                        </td>
-                                        <td>
-                                            <br />
-                                            <input type="button" id="btnAddCheque" value="Add" class="btn" onclick="AddCheque()" />
-                                        </td>
-                                    </tr>
-                                </table>
-                                <b>Cheque Used</b><br />
-                                <input type="hidden" id="txtControlNo" />
-                                <table id="tbCheque" class="table table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Cheque No</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                            <div class="col-sm-6">
-                                <b>Costing of Invoice:</b><br />
-                                <table id="tbCost" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>Job No</th>
-                                            <th>Description</th>
-                                            <th>SlipNo</th>
-                                            <th>Expense</th>
-                                            <th>VAT</th>
-                                            <th>WH-Tax</th>
-                                            <th>Net</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <b>Invoice Summary:</b><br />
-                                                       <table style="width:100%">
-                                                           <tr><td>Advance </td><td><input type="text" id="txtTotalAdvance" disabled /></td></tr>
-                                                           <tr><td>Charge</td><td><input type="text" id="txtTotalCharge" disabled /></td></tr>
-                                                           <tr><td>Line Discount</td><td><input type="text" id="txtSumDiscount" disabled /></td></tr>
-                                                           <tr><td>Vatable</td><td><input type="text" id="txtTotalIsTaxCharge" disabled /></td></tr>
-                                                           <tr><td>Taxable</td><td><input type="text" id="txtTotalIs50Tavi" disabled /></td></tr>
-                                                           <tr><td>VAT</td><td><input type="text" id="txtTotalVat" disabled /></td></tr>
-                                                           <tr><td>After VAT</td><td><input type="text" id="txtTotalAfter" disabled /></td></tr>
-                                                           <tr><td>WHT</td><td><input type="text" id="txtTotal50Tavi" disabled /></td></tr>
-                                                           <tr><td>After WHT</td><td><input type="text" id="txtTotalService" disabled /></td></tr>
-                                                           <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" disabled /></td></tr>
-                                                           <tr><td>Sum Discount</td><td><input type="text" id="txtTotalDiscount" disabled /></td></tr>
-                                                           <tr><td>NET</td><td><input type="text" id="txtTotalNet" disabled /></td></tr>
-                                                           <tr>
-                                                               <td>Currency</td>
-                                                               <td>
-                                                                   <input type="text" id="txtCurrencyCode" disabled />
-                                                                   <input type="button" value="..." onclick="SearchData('currency')" />
-                                                               </td>
-                                                           </tr>
-                                                           <tr><td>Exc.Rate</td><td><input type="text" id="txtExchangeRate" onchange="CalForeign()" /></td></tr>
-                                                           <tr><td>Invoiced</td><td><input type="text" id="txtForeignNet" disabled /></td></tr>
-                                                           <tr><td>Cost</td><td><input type="text" id="txtTotalCost" disabled /></td></tr>
-                                                           <tr><td>Profit</td><td><input type="text" id="txtTotalProfit" disabled /></td></tr>
-                                                       </table>
-                                <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Invoice</button>
-                            </div>
-                            <div class="col-sm-6">
-                                <b>Invoice Detail:</b>
-                                <button id="btnMerge" class="btn btn-default" onclick="MergeData()">Group Same Expenses</button>
+                            </td>
+                            <td>
+                                Replace Invoice No:<br />
+                                <div style="display:flex;flex-direction:row">
+                                    <input type="text" id="txtDocNo" style="width:100%" disabled />
+                                    <input type="button" onclick="SearchData('invoice')" value="..." />
+                                </div>
+                            </td>
+                            <td>
                                 <br />
-                                <table id="tbDetail" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>JobNo</th>
-                                            <th>Description</th>
-                                            <th>SlipNo</th>
-                                            <th>Advance</th>
-                                            <th>Charge</th>
-                                            <th>VAT</th>
-                                            <th>WH-Tax</th>
-                                            <th>Net</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                                <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintInvoice()">
+                                    <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Invoice</b>
+                                </a>
+                            </td>
+                            <td>
+                                Discount Rate:<br /><input type="number" id="txtDiscountRate" onchange="SetDiscount()" />%
+                            </td>
+                            <td>
+                                Discount Amt:<br /><input type="number" id="txtCalDiscount" onchange="SumDiscount()" />
+                            </td>
+                        </tr>
+                    </table>
+                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                 </div>
-            </div>
-        </div>
-        <div id="dvLOVs"></div>
-        <div>
-            <div id="dvEditor" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            Clearing No : <label id="lblClrNo"></label>
-                            Job No : <label id="lblJobNo"></label>
-                            <br/>
-                            Code : <label id="lblSICode"></label>
-                            Description : <label id="lblSDescription"></label>
-                        </div>
-                        <div class="modal-body">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4">
                             <table>
-                                <tr style="width:100%">
-                                    <td style="width:20%">
-                                        Advance :<br />
-                                        <input type="text" class="form-control" id="txtAmtAdvance" onchange="CalNetAmount()" />
-                                    </td>
-                                    <td style="width:20%">
-                                        Charges :<br />
-                                        <input type="text" class="form-control" id="txtAmtCharge" onchange="CalVATWHT(0)" />
-                                    </td>
-                                    <td style="width:10%">
-                                        Disc (%)<br />
-                                        <input type="number" id="txtAmtDiscountPerc" class="form-control" value="0" onchange="CalDiscount()">
-                                    </td>
-                                    <td style="width:15%">
-                                        Discount:<br/>
-                                        <input type="text" id="txtAmtDiscount" value="0" class="form-control" onchange="CalNetAmount()">
-                                    </td>
-                                </tr>
                                 <tr>
-                                    <td style="width:5%">
-                                        VAT Rate:<br /><input type="number" id="txtAmtVATRate" class="form-control" value="0" onchange="CalVATWHT(0)">
+                                    <td>
+                                        Use Cheque:
+                                        <br />
+                                        <div style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtChqNo" class="form-control" disabled />
+                                            <input type="button" onclick="SearchData('chequecust')" value="..." />
+                                        </div>
                                     </td>
-                                    <td style="width:10%">
-                                        VAT:<br />
-                                        <input type="text" class="form-control" id="txtAmtVAT" onchange="CalNetAmount()" />
+                                    <td>
+                                        Cheque Amount<br />
+                                        <input type="number" id="txtChqAmount" class="form-control" />
                                     </td>
-                                    <td style="width:5%">
-                                        W/T :<br /><input type="number" id="txtAmtWHTRate" class="form-control" value="0" onchange="CalVATWHT(1)">
-                                    </td>
-                                    <td style="width:10%">
-                                        WH-Tax:<br />
-                                        <input type="text" class="form-control" id="txtAmtWHT" onchange="CalNetAmount()" />
-                                    </td>
-                                </tr>
-                                <tr>                                    
-                                    <td style="width:20%">
-                                        NET :<br />
-                                        <input type="text" class="form-control" id="txtAmtNET" onchange="CalNetAmount()" />
-                                    </td>
-                                    <td style="width:10%">
-                                        <br/>
-                                        <input type="button" class="btn btn-default" value="Update" onclick="UpdateData()" id="btnSplit" />
+                                    <td>
+                                        <br />
+                                        <input type="button" id="btnAddCheque" value="Add" class="btn" onclick="AddCheque()" />
                                     </td>
                                 </tr>
                             </table>
+                            <b>Cheque Used</b><br />
+                            <input type="hidden" id="txtControlNo" />
+                            <table id="tbCheque" class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Cheque No</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <div class="col-sm-6">
+                            <b>Costing of Invoice:</b><br />
+                            <table id="tbCost" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Job No</th>
+                                        <th class="all">Description</th>
+                                        <th class="desktop">SlipNo</th>
+                                        <th class="desktop">Expense</th>
+                                        <th class="desktop">VAT</th>
+                                        <th class="desktop">WH-Tax</th>
+                                        <th class="all">Net</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <b>Invoice Summary:</b>
+                            <br />
+                            <table style="width:100%">
+                                <tr><td>Advance </td><td><input type="text" id="txtTotalAdvance" disabled /></td></tr>
+                                <tr><td>Charge</td><td><input type="text" id="txtTotalCharge" disabled /></td></tr>
+                                <tr><td>Line Discount</td><td><input type="text" id="txtSumDiscount" disabled /></td></tr>
+                                <tr><td>Vatable</td><td><input type="text" id="txtTotalIsTaxCharge" disabled /></td></tr>
+                                <tr><td>Taxable</td><td><input type="text" id="txtTotalIs50Tavi" disabled /></td></tr>
+                                <tr><td>VAT</td><td><input type="text" id="txtTotalVat" disabled /></td></tr>
+                                <tr><td>After VAT</td><td><input type="text" id="txtTotalAfter" disabled /></td></tr>
+                                <tr><td>WHT</td><td><input type="text" id="txtTotal50Tavi" disabled /></td></tr>
+                                <tr><td>After WHT</td><td><input type="text" id="txtTotalService" disabled /></td></tr>
+                                <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" disabled /></td></tr>
+                                <tr><td>Sum Discount</td><td><input type="text" id="txtTotalDiscount" disabled /></td></tr>
+                                <tr><td>NET</td><td><input type="text" id="txtTotalNet" disabled /></td></tr>
+                                <tr>
+                                    <td>Currency</td>
+                                    <td>
+                                        <input type="text" id="txtCurrencyCode" disabled />
+                                        <input type="button" value="..." onclick="SearchData('currency')" />
+                                    </td>
+                                </tr>
+                                <tr><td>Exc.Rate</td><td><input type="text" id="txtExchangeRate" onchange="CalForeign()" /></td></tr>
+                                <tr><td>Invoiced</td><td><input type="text" id="txtForeignNet" disabled /></td></tr>
+                                <tr><td>Cost</td><td><input type="text" id="txtTotalCost" disabled /></td></tr>
+                                <tr><td>Profit</td><td><input type="text" id="txtTotalProfit" disabled /></td></tr>
+                            </table>
+                            <a href="#" class="btn btn-success" id="btnGen" onclick="ApproveData()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Invoice</b>
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <b>Invoice Detail:</b>
+                            <button id="btnMerge" class="btn btn-default" onclick="MergeData()">Group Same Expenses</button>
+                            <br />
+                            <table id="tbDetail" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="all">JobNo</th>
+                                        <th>Description</th>
+                                        <th class="desktop">SlipNo</th>
+                                        <th class="desktop">Advance</th>
+                                        <th class="desktop">Charge</th>
+                                        <th class="desktop">VAT</th>
+                                        <th class="desktop">WH-Tax</th>
+                                        <th class="all">Net</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div>
+        <div id="dvEditor" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Clearing No : <label id="lblClrNo"></label>
+                        Job No : <label id="lblJobNo"></label>
+                        <br />
+                        Code : <label id="lblSICode"></label>
+                        Description : <label id="lblSDescription"></label>
+                    </div>
+                    <div class="modal-body">
+                        <table>
+                            <tr style="width:100%">
+                                <td style="width:20%">
+                                    Advance :<br />
+                                    <input type="text" class="form-control" id="txtAmtAdvance" onchange="CalNetAmount()" />
+                                </td>
+                                <td style="width:20%">
+                                    Charges :<br />
+                                    <input type="text" class="form-control" id="txtAmtCharge" onchange="CalVATWHT(0)" />
+                                </td>
+                                <td style="width:10%">
+                                    Disc (%)<br />
+                                    <input type="number" id="txtAmtDiscountPerc" class="form-control" value="0" onchange="CalDiscount()">
+                                </td>
+                                <td style="width:15%">
+                                    Discount:<br />
+                                    <input type="text" id="txtAmtDiscount" value="0" class="form-control" onchange="CalNetAmount()">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%">
+                                    VAT Rate:<br /><input type="number" id="txtAmtVATRate" class="form-control" value="0" onchange="CalVATWHT(0)">
+                                </td>
+                                <td style="width:10%">
+                                    VAT:<br />
+                                    <input type="text" class="form-control" id="txtAmtVAT" onchange="CalNetAmount()" />
+                                </td>
+                                <td style="width:5%">
+                                    W/T :<br /><input type="number" id="txtAmtWHTRate" class="form-control" value="0" onchange="CalVATWHT(1)">
+                                </td>
+                                <td style="width:10%">
+                                    WH-Tax:<br />
+                                    <input type="text" class="form-control" id="txtAmtWHT" onchange="CalNetAmount()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%">
+                                    NET :<br />
+                                    <input type="text" class="form-control" id="txtAmtNET" onchange="CalNetAmount()" />
+                                </td>
+                                <td style="width:10%">
+                                    <br />
+                                    <a href="#" class="btn btn-success" id="btnSplit" onclick="UpdateData()">
+                                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update Data</b>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" data-dismiss="modal">X</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     const path = '@Url.Content("~")';
@@ -303,7 +331,7 @@ End Code
             ShowCustomer(path, custcode, custbranch, '#txtCustName');
         } else {
             $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
-            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME'); 
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
         }
     }
     //});
@@ -332,7 +360,7 @@ End Code
             let dv = document.getElementById("dvLOVs");
             //Customers
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', response, 3);
-            
+
             CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job', response, 3);
             CreateLOV(dv, '#frmSearchInv', '#tbInv', 'Cancelled Invoice', response, 3);
             //Branch
@@ -385,6 +413,7 @@ End Code
                     { data: "Amt50Tavi", title: "WHT" },
                     { data: "AmtNet", title: "NET" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -398,7 +427,7 @@ End Code
                 let data = $('#tbHeader').DataTable().row(this).data(); //read current row selected
                 AddData(data); //callback function from caller
             });
-            $('#tbHeader tbody').on('dblclick', 'tr', function () {            
+            $('#tbHeader tbody').on('dblclick', 'tr', function () {
                 let clearno = $(this).find('td:eq(1)').text();
                 //alert('you click ' + clearno);
                 window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
@@ -464,7 +493,7 @@ End Code
             alert('No data selected');
             return;
         }
-        
+
         CalSummary();
 
         $('#txtDocNo').val('');
@@ -495,6 +524,7 @@ End Code
                 { data: "Amt50Tavi", title: "WHT" },
                 { data: "TotalAmt", title: "NET" }
             ],
+            responsive:true,
             destroy: true, //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             columnDefs: [ //กำหนด control เพิ่มเติมในแต่ละแถว
             {
@@ -533,6 +563,7 @@ End Code
                 { data: "Amt50Tavi", title: "WHT" },
                 { data: "AmtNet", title: "NET" }
             ],
+            responsive:true,
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
     }
@@ -639,7 +670,7 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
-                    alert(response.result.msg);                    
+                    alert(response.result.msg);
                     arr.splice(arr.indexOf(arr_split), 1);
                     CalSummary();
                     $('#dvEditor').modal('hide');
@@ -923,7 +954,7 @@ End Code
         $('#cboShipBy').val(CCode(dt.ShipBy));
         ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
     }
-    function ReadCheque(dt) {        
+    function ReadCheque(dt) {
         if (dt.AmountRemain > 0) {
             $('#txtChqNo').val(dt.ChqNo);
             if (dt.AmountRemain <= CNum($('#txtTotalNet').val())) {
@@ -935,7 +966,7 @@ End Code
             return;
         } else {
             alert('Cheque amount is zero');
-        }        
+        }
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
@@ -1182,9 +1213,10 @@ End Code
                 }
             }
             ],
+            responsive:true,
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
-        $('#tbCheque tbody').on('click', 'button', function () {            
+        $('#tbCheque tbody').on('click', 'button', function () {
             let dt = GetSelect('#tbCheque', this); //read current row selected
             if (chq.indexOf(dt) >= 0) {
                 chq.splice(chq.indexOf(dt));

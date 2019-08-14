@@ -4,19 +4,33 @@
 End Code
 <div class="row">
     <div class="col-sm-3">
-        Branch :
-        <br/>
-        <input type="text" id="txtBranchCode" style="width:50px" disabled />
-        <input type="text" id="txtBranchName" style="width:200px" disabled />
+        Branch
+        <br />
+        <div style="display:flex;flex-direction:row">
+            <input type="text" class="form-control" id="txtBranchCode" style="width:60px" disabled />
+            <input type="text" class="form-control" id="txtBranchName" style="width:100%" disabled />
+        </div>
     </div>
     <div class="col-sm-2">
-        <label for="txtJNo">Job No :<input type="text" class="form-control" id="txtJNo" disabled /></label>
+        Job No:
+        <br/>
+        <div style="display:flex;flex-direction:row">
+            <input type="text" class="form-control" id="txtJNo" disabled />
+        </div>
     </div>
     <div class="col-sm-3">
-        <label for="txtCloseDate">Close Date :<input type="date" id="txtCloseDate" class="form-control" disabled /> </label>
+        Close Date :
+        <br />
+        <div style="display:flex;flex-direction:row">
+            <input type="date" id="txtCloseDate" class="form-control" disabled />
+        </div>
     </div>
     <div class="col-sm-4">
-        <label for="txtJobStatus">Job Status :<input type="text" class="form-control" id="txtJobStatus" disabled /></label>
+        Job Status:
+        <br />
+        <div style="display:flex;flex-direction:row">
+            <input type="text" class="form-control" id="txtJobStatus" disabled />
+        </div>
     </div>
 </div>
 <table id="tbDetail" class="table table-responsive">
@@ -24,7 +38,7 @@ End Code
         <tr>
             <th width="5%">#</th>
             <th width="10%">Clear.No</th>
-            <th width="8%">Exp.Code</th>            
+            <th width="8%">Exp.Code</th>
             <th width="30%">Description</th>
             <th width="10%">Inv.No</th>
             <th width="8%">Advance</th>
@@ -77,8 +91,12 @@ End Code
         Pending :<input type="text" id="txtSumPending" class="form-control" disabled />
     </div>
 </div>
-<button id="btnGenerateInv" class="btn btn-success">Generate Invoice</button>
-<button id="btnPrintJobsum" class="btn btn-info">Print Summary</button>
+<a href="#" class="btn btn-success" id="btnGenerateInv">
+    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Generate Invoice</b>
+</a>
+<a href="#" class="btn btn-info" id="btnPrintJobsum">
+    <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Summary</b>
+</a>
 <div class="modal fade" id="dvEditor" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -86,7 +104,10 @@ End Code
                 Set Invoice To <label id="lblClrNo"></label> # <label id="lblItemNo"></label>
             </div>
             <div class="modal-body">
-                <input type="text" id="txtInvoiceNo" /><button id="btnUpdateInv" onclick="UpdateInvoice()">Update Invoice</button>
+                <input type="text" id="txtInvoiceNo" />
+                <a href="#" class="btn btn-success" id="btnUpdateInv" onclick="UpdateInvoice()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update Invoice</b>
+                </a>
             </div>
             <div class="modal-footer">
                 <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -104,7 +125,7 @@ End Code
         $('#txtJNo').val(code);
         RefreshGrid();
     }
-    $('#tbDetail tbody').on('dblclick', 'tr', function () {            
+    $('#tbDetail tbody').on('dblclick', 'tr', function () {
         let clearno = $(this).find('td:eq(1)').text().split('#')[0];
         //alert('you click ' + clearno);
         window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
@@ -167,7 +188,7 @@ End Code
                             slipNo += '<br/>WH-Tax ' + d[i].Tax50TaviRate + '%=' + d[i].Tax50Tavi;
                         }
                     }
-                        
+
 
                     html += '<tr>';
                     if ((d[i].LinkBillNo == null || d[i].LinkBillNo == '') && cost > 0) {
@@ -216,7 +237,7 @@ End Code
                 $('#txtSumCharge').val(CDbl(amttotal, 2));
                 $('#txtSumInvoice').val(CDbl(amtinv, 2));
                 $('#txtSumClear').val(CDbl(amtclear, 2));
-                
+
                 $('#txtSumPending').val(CDbl(amtpending, 2));
 
             }
@@ -242,7 +263,7 @@ End Code
                     dr.LinkItem = 0;
                     SaveClrDetail(dr);
                 }
-            });                
+            });
     }
     function SaveClrDetail(dr) {
         let jsonString = JSON.stringify({ data: dr });

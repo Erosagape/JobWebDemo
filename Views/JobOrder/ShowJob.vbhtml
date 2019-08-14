@@ -3,12 +3,34 @@
 End Code
 <div Class="panel-body">
     <div class="container">
-        <label for="txtBranchCode">Branch :</label><input type="text" style="width:30px" id="txtBranchCode" disabled />
-        <input type="text" style="width:130px" id="txtBranchName" disabled />
-        <label for="txtJNo">Job No :</label><input type="text" style="width:130px;background-color:yellow;color:red;font-weight:bold" id="txtJNo" disabled />
-        <label for="txtRevised">Revised :</label><input type="text" style="width:30px" id="txtRevised" disabled />
-        <label for="txtDocDate">Open Date :</label><input type="date" style="width:130px" id="txtDocDate" disabled />
-        <label for="txtJobStatus">Job Status :</label><input type="text" style="width:180px;background-color:aquamarine;font-weight:bold" id="txtJobStatus" disabled />
+        <div class="row">
+            <div class="col-sm-3">                               
+                <div style="display:flex;flex-direction:row">
+                    Branch Code:
+                    <input type="text" class="form-control" style="width:50px" id="txtBranchCode" disabled />
+                    <input type="text" class="form-control" style="width:100%" id="txtBranchName" disabled />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div style="display:flex;flex-direction:row">
+                    Job Number:
+                    <input type="text" class="form-control" style="width:100%;background-color:yellow;color:red;font-weight:bold" id="txtJNo" disabled />
+                    <input type="text" class="form-control" style="width:50px" id="txtRevised" disabled />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div style="display:flex;flex-direction:row">
+                    Open Date:
+                    <input type="date" class="form-control" id="txtDocDate" disabled />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div style="display:flex;flex-direction:row">
+                    Job Status:
+                    <input type="text" class="form-control" style="width:100%;background-color:aquamarine;font-weight:bold" id="txtJobStatus" disabled />
+                </div>
+            </div>
+        </div>               
         <p>
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#tabinfo">Job Descriptions</a></li>
@@ -485,9 +507,12 @@ End Code
                     </div>
                 </div>
             </div>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save</button>
-            <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print</button>
-
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+            </a>
+            <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print</b>
+            </a>
         </p>
         <div id="frmContainerEdit" class="modal fade" role="dialog">
             <div class="modal-dialog">

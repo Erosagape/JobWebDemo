@@ -6,27 +6,26 @@ End Code
     <div id="dvHeader" class="container">
         <div class="row">
             <div class="col-sm-5">
-                Branch :
-                <input type="text" id="txtBranchCode" style="width:50px" />
-                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
+                Branch:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
                 <div id="dvJob"></div>
             </div>
-            <div class="col-sm-3">
-                Request Date :
-                <input type="date" id="txtAdvDate" tabindex="1"/>
-            </div>
             <div class="col-sm-4" style="text-align:left">
-                <table border="1">
-                    <tr>
-                        <td>
-                            <b>Advance No:</b>
-                            <br />
-                            <input type="text" id="txtAdvNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
-                            <input type="button" value="..." style="font-size:20px" onclick="SearchData('advance')" />
-                        </td>
-                    </tr>
-                </table>
+                <b>Advance No:</b>
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtAdvNo" style="font-weight:bold;font-size:20px;text-align:center;background-color:navajowhite;color:brown" tabindex="1" />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('advance')" />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                Request Date :<br />
+                <input type="date" class="form-control" id="txtAdvDate" tabindex="1" />
             </div>
         </div>
         <div class="row">
@@ -36,7 +35,7 @@ End Code
                     <li><a data-toggle="tab" href="#tabDetail">Advance Detail</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div id="tabHeader" class="tab-pane fade in active">
+                    <div id="tabHeader" class="tab-pane fade in active" style="width:100%">
                         <div class="row">
                             <div class="col-sm-7">
                                 <table>
@@ -44,48 +43,49 @@ End Code
                                         <td>
                                             Advance By :
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtAdvBy" style="width:100px" tabindex="2" />
-                                            <button id="btnBrowseEmp1" onclick="SearchData('advby')">...</button>
-                                            <input type="text" id="txtAdvName" style="width:300px" disabled />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtAdvBy" class="form-control" style="width:120px" tabindex="2" />
+                                            <button id="btnBrowseEmp1" class="btn btn-default" onclick="SearchData('advby')">...</button>
+                                            <input type="text" id="txtAdvName" class="form-control" style="width:100%" disabled />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             Request By :
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtReqBy" style="width:100px" tabindex="3" />
-                                            <button id="btnBrowseEmp2" onclick="SearchData('reqby')">...</button>
-                                            <input type="text" id="txtReqName" style="width:300px" disabled />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtReqBy" class="form-control" style="width:120px" tabindex="3" />
+                                            <button id="btnBrowseEmp2" class="btn btn-default" onclick="SearchData('reqby')">...</button>
+                                            <input type="text" id="txtReqName" class="form-control" style="width:100%" disabled />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             Advance For :
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtCustCode" style="width:120px" tabindex="4" />
-                                            <input type="text" id="txtCustBranch" style="width:50px" tabindex="5" />
-                                            <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                                            <input type="text" id="txtCustName" style="width:300px" disabled />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtCustCode" class="form-control" style="width:130px" tabindex="4" />
+                                            <input type="text" id="txtCustBranch" class="form-control" style="width:70px" tabindex="5" />
+                                            <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                                            <input type="text" id="txtCustName" class="form-control" style="width:100%" disabled />
                                         </td>
                                     </tr>
                                 </table>
                                 <table>
                                     <tr>
                                         <td>
-                                            <a href="#" onclick="AutoGenWHTax()">WH-Tax No:</a>
+                                            WH-Tax No:
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtDoc50Tavi" style="width:200px" tabindex="6" />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtDoc50Tavi" class="form-control" style="width:100%" tabindex="6" />
+                                            <input type="button" class="btn btn-default" value="Add" onclick="AutoGenWHTax()" />
                                         </td>
                                         <td>
                                             Bill A/P:
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtPaymentNo" style="width:200px" tabindex="7" disabled />
-                                            <button id="btnBrowsePay" onclick="SearchData('payment')">...</button>
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtPaymentNo" class="form-control" style="width:200px" tabindex="7" disabled />
+                                            <button id="btnBrowsePay" class="btn btn-default" onclick="SearchData('payment')">...</button>
                                         </td>
                                     </tr>
                                 </table>
@@ -125,20 +125,26 @@ End Code
                                 <select id="cboAdvType" class="form-control dropdown" style="width:100%" tabindex="10"></select>
                                 <br />
                                 Remark:
-                                <textarea id="txtTRemark" style="width:100%;height:80px" tabindex="11"></textarea>
+                                <textarea id="txtTRemark" class="form-control-lg" style="width:100%;height:80px" tabindex="11"></textarea>
                             </div>
                             <div class="col-sm-5">
-                                <a onclick="SearchData('subcurrency')">Request Currency:</a>
-                                <input type="text" id="txtSubCurrency" style="width:100px" value="@ViewBag.PROFILE_CURRENCY" disabled />
-                                <br />
                                 <table>
+                                    <tr>
+                                        <td>
+                                            Request Currency:
+                                        </td>
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtSubCurrency" style="width:100%" value="@ViewBag.PROFILE_CURRENCY" disabled />
+                                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('subcurrency')" />
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
                                             <input type="checkbox" id="chkCash" />
                                             <label for="chkCash">Cash</label>
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtAdvCash" style="width:100px;text-align:right" disabled />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtAdvCash" class="form-control" style="width:100%;text-align:right" disabled />
                                         </td>
                                     </tr>
                                     <tr>
@@ -146,8 +152,8 @@ End Code
                                             <input type="checkbox" id="chkChq" />
                                             <label for="chkChq">Cashier Chq</label>
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtAdvChq" style="width:100px;text-align:right" disabled />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtAdvChq" class="form-control" style="width:100%;text-align:right" disabled />
                                         </td>
                                     </tr>
                                     <tr>
@@ -155,8 +161,8 @@ End Code
                                             <input type="checkbox" id="chkChqCash" />
                                             <label for="chkChqCash">Customer Chq</label>
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtAdvChqCash" style="width:100px;text-align:right" disabled />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtAdvChqCash" class="form-control" style="width:100%;text-align:right" disabled />
                                         </td>
                                     </tr>
                                     <tr>
@@ -164,8 +170,8 @@ End Code
                                             <input type="checkbox" id="chkCred" />
                                             <label for="chkCred">Credit</label>
                                         </td>
-                                        <td>
-                                            <input type="text" id="txtAdvCred" style="width:100px;text-align:right" disabled />
+                                        <td style="display:flex;flex-direction:row">
+                                            <input type="text" id="txtAdvCred" class="form-control" style="width:100%;text-align:right" disabled />
                                         </td>
                                     </tr>
                                 </table>
@@ -208,9 +214,17 @@ End Code
                                 Cancel Reason :<input type="text" id="txtCancelReson" style="width:250px" />
                             </div>
                         </div>
-                        <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
-                        <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Document</button>
-                        <button id="btnPrint" class="btn btn-info" onclick="PrintData()" disabled>Print Data</button>
+                        <div id="dvCommand">
+                            <a href="#" class="btn btn-default" id="btnNew" onclick="AddHeader()">
+                                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New Document</b>
+                            </a>
+                            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveHeader()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Document</b>
+                            </a>
+                            <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                                <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Document</b>
+                            </a>
+                        </div>
                     </div>
                     <div id="tabDetail" class="tab-pane fade">
                         <div class="row">
@@ -219,17 +233,17 @@ End Code
                                     <thead>
                                         <tr>
                                             <th>
-                                            <th>SICode</th>
-                                            <th>Description</th>
+                                            <th class="desktop">SICode</th>
+                                            <th class="all">Description</th>
                                             <th>Job No</th>
-                                            <th>Currency</th>
-                                            <th>Rate</th>
-                                            <th>Qty</th>
-                                            <th>Price</th>
-                                            <th>Amount</th>
-                                            <th>Vat</th>
-                                            <th>WH-Tax</th>
-                                            <th>Net</th>
+                                            <th class="all">Currency</th>
+                                            <th class="desktop">Rate</th>
+                                            <th class="desktop">Qty</th>
+                                            <th class="desktop">Price</th>
+                                            <th class="desktop">Amount</th>
+                                            <th class="desktop">Vat</th>
+                                            <th class="desktop">WH-Tax</th>
+                                            <th class="all">Net</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -237,8 +251,12 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-9">
-                                <button id="btnAdd" class="btn btn-default" onclick="AddDetail()" disabled>Add</button>
-                                <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()" disabled>Delete</button>
+                                <a href="#" class="btn btn-default" id="btnAdd" onclick="AddDetail()">
+                                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
+                                </a>
+                                <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
+                                    <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Detail</b>
+                                </a>
                                 Main Currency:
                                 <input type="text" id="txtMainCurrency" style="width:50px" value="@ViewBag.PROFILE_CURRENCY" disabled />
                                 Exchange Rate:
@@ -261,8 +279,7 @@ End Code
                     <div id="frmDetail" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"></button>
+                                <div class="modal-header">                                    
                                     <h4 class="modal-title"><label id="lblHeader">Advance Detail</label></h4>
                                 </div>
                                 <div class="modal-body">
@@ -327,10 +344,14 @@ End Code
                                 </div>
                                 <div class="modal-footer">
                                     <div style="float:left">
-                                        <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">New</button>
+                                        <a href="#" class="btn btn-default" id="btnAdd" onclick="AddDetail()">
+                                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+                                        </a>
+                                        <a href="#" class="btn btn-success" id="btnUpdate" onclick="SaveDetail()">
+                                            <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                                        </a>
                                     </div>
-                                    <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
-                                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                                 </div>
                             </div>
                         </div>
@@ -347,23 +368,23 @@ End Code
                                         <thead>
                                             <tr>
                                                 <th>AdvNo</th>
-                                                <th>AdvDate</th>
-                                                <th>CustCode</th>
-                                                <th>ReqBy</th>
+                                                <th class="all">AdvDate</th>
+                                                <th class="desktop">CustCode</th>
+                                                <th class="desktop">ReqBy</th>
                                                 <th>Job</th>
-                                                <th>Inv No</th>
-                                                <th>Status</th>
-                                                <th>Amount</th>
-                                                <th>WT</th>
-                                                <th>WTDoc</th>
-                                                <th>APDoc</th>
-                                                <th>Remark</th>
+                                                <th class="desktop">Inv No</th>
+                                                <th class="desktop">Status</th>
+                                                <th class="all">Amount</th>
+                                                <th class="all">WT</th>
+                                                <th class="desktop">WTDoc</th>
+                                                <th class="desktop">APDoc</th>
+                                                <th class="desktop">Remark</th>
                                             </tr>
                                         </thead>
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                                 </div>
                             </div>
                         </div>
@@ -376,15 +397,15 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var userRights = '@ViewBag.UserRights';
-    var serv = []; //must be array of object
-    var hdr = {}; //simple object
-    var dtl = {}; //simple object
-    var job = '';
-    var isjobmode = false;
-    var chkmode = false;
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    let serv = []; //must be array of object
+    let hdr = {}; //simple object
+    let dtl = {}; //simple object
+    let job = '';
+    let isjobmode = false;
+    let chkmode = false;
     //$(document).ready(function () {       
     SetLOVs();
     SetEvents();
@@ -1220,6 +1241,7 @@ End Code
                     }
                 }
             ],
+            responsive:true,
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
         $('#tbDetail tbody').on('click', 'tr', function () {
@@ -1446,6 +1468,7 @@ End Code
                         }
                     },
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
