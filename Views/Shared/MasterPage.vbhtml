@@ -110,7 +110,7 @@
         <div class="w3-container" style="margin-bottom:10px">
             <!-- Page Content -->
             <div Class="panel-primary">
-                <div Class="panel-heading">
+                <div Class="panel-heading w3-indigo">
                     <div Class="panel-title" style="display:flex">
                         <div>
                             <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="w3_open();" />
@@ -234,7 +234,7 @@
             </div>
         </div>
     </div>
-    <div id="dvCommands" class="w3-card w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px;">
+    <div id="dvCommands" class="w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px">
         <label id="lblCompanyName" onclick="CheckDatabase()">Tawan Technology Co.,ltd</label>
     </div>
     <script type="text/javascript">

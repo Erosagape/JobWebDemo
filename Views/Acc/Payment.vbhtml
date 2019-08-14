@@ -13,36 +13,47 @@ End Code
             <div id="tab1" class="tab-pane fade in active">
                 <div class="row">
                     <div class="col-sm-4">
-                        Branch :<br />
-                        <input type="text" id="txtBranchCode" style="width:50px" />
-                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                        <input type="text" id="txtBranchName" style="width:200px" disabled />
+                        Branch
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                            <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-4">
                         Due Date From:<br />
-                        <input type="date" id="txtDocDateF" />
+                        <input type="date" class="form-control" id="txtDocDateF" />
                     </div>
                     <div class="col-sm-4">
                         Due Date To:<br />
-                        <input type="date" id="txtDocDateT" />
+                        <input type="date" class="form-control" id="txtDocDateT" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        Request Currency :<br />
-                        <input type="text" id="txtCurrencyCode" style="width:100px" />
-                        <button id="btnBrowseCur" onclick="SearchData('currency')">...</button>
-                        <input type="text" id="txtCurrencyName" style="width:300px" disabled />
+                        Request Currency :
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtCurrencyCode" style="width:20%" />
+                            <button id="btnBrowseCur" class="btn btn-default" onclick="SearchData('currency')">...</button>
+                            <input type="text" class="form-control" id="txtCurrencyName" style="width:100%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-6">
-                        Vender :<br />
-                        <input type="text" id="txtVenCode" style="width:170px" />
-                        <button id="btnBrowseCust" onclick="SearchData('vender')">...</button>
-                        <input type="text" id="txtVenName" style="width:300px" disabled />
+                        Vender :
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtVenCode" style="width:20%" />
+                            <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('vender')">...</button>
+                            <input type="text" class="form-control" id="txtVenName" style="width:100%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-2">
                         <br />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                        </a>
                     </div>
                 </div>
                 <div class="row">
@@ -51,15 +62,15 @@ End Code
                             <thead>
                                 <tr>
                                     <th>DocNo</th>
-                                    <th>DocDate</th>
-                                    <th>VenCode</th>
-                                    <th>EmpCode</th>
-                                    <th>Ref</th>
-                                    <th>PoNo</th>
-                                    <th>Amount</th>
-                                    <th>WT</th>
-                                    <th>VAT</th>
-                                    <th>NET</th>
+                                    <th class="desktop">DocDate</th>
+                                    <th class="desktop">VenCode</th>
+                                    <th class="desktop">EmpCode</th>
+                                    <th class="all">Ref</th>
+                                    <th class="desktop">PoNo</th>
+                                    <th class="desktop">Amount</th>
+                                    <th class="desktop">WT</th>
+                                    <th class="desktop">VAT</th>
+                                    <th class="all">NET</th>
                                 </tr>
                             </thead>
                         </table>
@@ -170,13 +181,13 @@ End Code
                             <thead>
                                 <tr>
                                     <th>Doc.No</th>
-                                    <th>Doc.Type</th>
-                                    <th>Doc.Date</th>
-                                    <th>Pay.Type</th>
-                                    <th>For</th>
-                                    <th>Branch</th>
-                                    <th>Doc.Total</th>
-                                    <th>Paid.Total</th>
+                                    <th class="desktop">Doc.Type</th>
+                                    <th class="all">Doc.Date</th>
+                                    <th class="desktop">Pay.Type</th>
+                                    <th class="desktop">For</th>
+                                    <th class="desktop">Branch</th>
+                                    <th class="desktop">Doc.Total</th>
+                                    <th class="all">Paid.Total</th>
                                 </tr>
                             </thead>
                         </table>
@@ -196,7 +207,9 @@ End Code
                         Remark : <input type="text" id="txtTRemark" class="form-control" value="" />
                     </div>
                 </div>
-                <input type="button" class="btn btn-success" value="Payment" onclick="ApproveData()" />
+                <a href="#" class="btn btn-success" id="btnSave" onclick="ApproveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Payment</b>
+                </a>
             </div>
         </div>
     </div>
@@ -213,10 +226,10 @@ End Code
                             <tr>
                                 <th>#</th>
                                 <th>ChqNo</th>
-                                <th>ChqDate</th>
-                                <th>ChqAmount</th>
-                                <th>AmountUsed</th>
-                                <th>AmountRemain</th>
+                                <th class="all">ChqDate</th>
+                                <th class="desktop">ChqAmount</th>
+                                <th class="desktop">AmountUsed</th>
+                                <th class="all">AmountRemain</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -231,13 +244,13 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var arr = [];
-    var list = [];
-    var docno = '';
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    let arr = [];
+    let list = [];
+    let docno = '';
     //$(document).ready(function () {
-        SetEvents();
+    SetEvents();
     //});
     function SetEvents() {
 
@@ -376,7 +389,9 @@ End Code
                     { data: "TotalVAT", title: "VAT" },
                     { data: "TotalTax", title: "Tax" },
                     { data: "TotalNet", title: "Net" }
-                ]
+                ],
+                responsive: true,
+                destroy:true
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected') == true) {
@@ -476,6 +491,7 @@ End Code
                 { data: "TotalAmount", title: "Doc.Total" },
                 { data: "PaidAmount", title: "Paid" }
             ],
+            responsive:true,
             destroy:true
         });
 

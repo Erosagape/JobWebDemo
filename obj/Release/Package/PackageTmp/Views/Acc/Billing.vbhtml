@@ -28,8 +28,12 @@ End Code
             </div>
             <div class="col-sm-3">
                 <br />
-                <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
-                <button class="btn btn-success" onclick="CreateBilling()">Generate Billing</button>
+                <a href="#" class="btn btn-primary" id="btnShow">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
+                <a href="#" class="btn btn-default" id="btnAdd" onclick="CreateBilling()">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New Billing</b>
+                </a>
             </div>
         </div>
         <input type="checkbox" id="chkCancel" />Show Cancel Only
@@ -48,16 +52,16 @@ End Code
                         <tr>
                             <th>#</th>
                             <th>BillNo</th>
-                            <th>BillDate</th>
-                            <th>CustCode</th>
-                            <th>BillRemark</th>
-                            <th>BillRecvDate</th>
+                            <th class="desktop">BillDate</th>
+                            <th class="desktop">CustCode</th>
+                            <th class="desktop">BillRemark</th>
+                            <th class="desktop">BillRecvDate</th>
                             <th>DuePayment</th>
-                            <th>Advance</th>
-                            <th>Charge</th>
-                            <th>VAT</th>
-                            <th>WHT</th>
-                            <th>Net</th>
+                            <th class="desktop">Advance</th>
+                            <th class="desktop">Charge</th>
+                            <th class="desktop">VAT</th>
+                            <th class="desktop">WHT</th>
+                            <th class="all">Net</th>
                         </tr>
                     </thead>
                 </table>
@@ -68,19 +72,21 @@ End Code
                     <thead>
                         <tr>
                             <th>InvNo</th>
-                            <th>InvDate</th>
-                            <th>CustAdv</th>
-                            <th>Adv</th>
-                            <th>Charge</th>
-                            <th>ChargeVat</th>
-                            <th>Disc</th>
-                            <th>WH</th>
-                            <th>VAT</th>
-                            <th>Total</th>
+                            <th class="desktop">InvDate</th>
+                            <th class="desktop">CustAdv</th>
+                            <th class="desktop">Adv</th>
+                            <th class="desktop">Charge</th>
+                            <th class="desktop">ChargeVat</th>
+                            <th class="desktop">Disc</th>
+                            <th class="desktop">WH</th>
+                            <th class="desktop">VAT</th>
+                            <th class="all">Total</th>
                         </tr>
                     </thead>
                 </table>
-                <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
+                    <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                </a>
             </div>
         </div>
         <div id="frmHeader" class="modal fade">
@@ -203,11 +209,15 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
-                            <button onclick="PrintData()" class="btn btn-default">Print</button>
+                            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update</b>
+                            </a>
+                            <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                                <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print</b>
+                            </a>
                             Last update <label id="lblEmpCode"></label> At <label id="lblRecDateTime"></label>
                         </div>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -288,6 +298,7 @@ End Code
                     { data: "TotalWH", title: "WHT" },
                     { data: "TotalNet", title: "NET" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -415,6 +426,7 @@ End Code
                         { data: "AmtVAT", title: "VAT" },
                         { data: "AmtTotal", title: "Total" }
                     ],
+                    responsive:true,
                     destroy:true
                 });
                 $('#tbDetail tbody').on('click', 'tr', function () {

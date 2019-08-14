@@ -5,65 +5,70 @@ End Code
     <div class="container">
         <div id="dvForm">
             <div class="row">
-                <div class="col-xs-5">
-                    Branch<br />
-                    <input type="text" id="txtBranchCode" style="width:50px" tabindex="2" />
-                    <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                    <input type="text" id="txtBranchName" style="width:200px" disabled />
+                <div class="col-sm-4">
+                    Branch:
+                    <br />
+                    <div style="display:flex;flex-direction:row">
+                        <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                        <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                        <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                    </div>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-sm-4">
+                    <b>Reference No:</b>
+                    <br />
+                    <div style="display:flex;flex-direction:row">
+                        <input type="text" class="form-control" id="txtControlNo" style="font-weight:bold;font-size:20px;text-align:center;background-color:navajowhite;color:brown" tabindex="1" />
+                        <input type="button" class="btn btn-default" value="..." onclick="SearchData('controlno')" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
                     Record Date<br /> <input type="date" id="txtVoucherDate" class="form-control" tabIndex="3">
                 </div>
-                <div class="col-xs-2">
+                <div class="col-sm-2">
                     Cheque Type<br />
-                             <select id="cboPRType" class="form-control dropdown">
-                                 <option value="P">Paid</option>
-                                 <option value="R">Received</option>
-                             </select>
-                </div>
-                <div class="col-xs-3">
-                    <table border="1">
-                        <tr>
-                            <td>
-                                <b><a onclick="SearchData('controlno')">Reference No:</a></b>
-                                <br />
-                                <input type="text" id="txtControlNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="1" />
-                            </td>
-                        </tr>
-                    </table>
+                    <select id="cboPRType" class="form-control dropdown">
+                        <option value="P">Paid</option>
+                        <option value="R">Received</option>
+                    </select>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-6">
-                    Note<br /><input type="text" id="txtTRemark" class="form-control" tabIndex="4">
+                <div class="col-sm-6">
+                    Cheque Note<br /><input type="text" id="txtTRemark" class="form-control" tabIndex="4">
                 </div>
-                <div class="col-xs-6">
-                    Cheque For :<br />
-                    <input type="text" id="txtCustCode" style="width:120px" />
-                    <input type="text" id="txtCustBranch" style="width:50px" />
-                    <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                    <input type="text" id="txtCustName" style="width:300px" disabled />
+                <div class="col-sm-6">
+                    Cheque Issue by:
+                    <br/>
+                    <div style="display:flex;flex-direction:row">
+                        <input type="text" id="txtCustCode" style="width:120px" />
+                        <input type="text" id="txtCustBranch" style="width:50px" />
+                        <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                        <input type="text" id="txtCustName" style="width:100%" disabled />
+                    </div>
                 </div>
             </div>
             <div>
-                <button id="btnAddPay" class="btn btn-warning" onclick="AddPayment()">Add New</button>
+                <a href="#" class="btn btn-warning" id="btnAdd" onclick="AddPayment()">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
+                </a>
             </div>
-            <table id="tbHeader" class="table table-bordered">
+            <table id="tbHeader" class="table table-responsive table-bordered">
                 <thead>
                     <tr>
                         <th>Chq</th>
-                        <th>VCNo</th>
-                        <th>BookAcc</th>
-                        <th>RefChqNo</th>
-                        <th>RefDate</th>
-                        <th>Bank</th>
-                        <th>Branch</th>
-                        <th>PayChqTo</th>
+                        <th class="desktop">VCNo</th>
+                        <th class="desktop">BookAcc</th>
+                        <th class="desktop">RefChqNo</th>
+                        <th class="all">RefDate</th>
+                        <th class="all">Bank</th>
+                        <th class="desktop">Branch</th>
+                        <th class="desktop">PayChqTo</th>
                     </tr>
                 </thead>
             </table>
             <div class="row">
-                <div class="col-xs-4" style="border-style:solid;border-width:1px">
+                <div class="col-xs-4" style="border-style:solid;border-width:1px;background:white;">
                     <label>Issue By</label>
                     <br />
                     <input type="text" id="txtRecUser" style="width:250px" disabled />
@@ -73,7 +78,7 @@ End Code
                     Time:
                     <input type="text" id="txtRecTime" style="width:80px" disabled />
                 </div>
-                <div class="col-xs-4" style="border-style:solid;border-width:1px">
+                <div class="col-xs-4" style="border-style:solid;border-width:1px;background:lightgreen;">
                     <input type="checkbox" id="chkPosted" />
                     <label for="chkPosted">Posted By</label><br />
                     <input type="text" id="txtPostedBy" style="width:250px" disabled />
@@ -83,7 +88,7 @@ End Code
                     Time:
                     <input type="text" id="txtPostedTime" style="width:80px" disabled />
                 </div>
-                <div class="col-xs-4" style="border-style:solid;border-width:1px;color:red">
+                <div class="col-xs-4" style="border-style:solid;border-width:1px;color:red;background:lightyellow;">
                     <input type="checkbox" id="chkCancel" />
                     <label for="chkCancel">Cancel By</label>
                     <input type="text" id="txtCancelProve" style="width:250px" disabled />
@@ -109,21 +114,21 @@ End Code
                             <thead>
                                 <tr>
                                     <th>ControlNo</th>
-                                    <th>VoucherDate</th>
-                                    <th>CustCode</th>
-                                    <th>Remark</th>
-                                    <th>VoucherNo</th>
-                                    <th>ChqNo</th>
-                                    <th>ChqDate</th>
-                                    <th>ChqAmount</th>
-                                    <th>Currency</th>
-                                    <th>DocNo</th>
+                                    <th class="desktop">VoucherDate</th>
+                                    <th class="all">CustCode</th>
+                                    <th class="desktop">Remark</th>
+                                    <th class="desktop">VoucherNo</th>
+                                    <th class="all">ChqNo</th>
+                                    <th class="desktop">ChqDate</th>
+                                    <th class="all">ChqAmount</th>
+                                    <th class="desktop">Currency</th>
+                                    <th class="desktop">DocNo</th>
                                 </tr>
                             </thead>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -311,17 +316,29 @@ End Code
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnUpdatePay" class="btn btn-primary" onclick="SavePayment()">Save</button>
-                        <button id="btnDelPay" class="btn btn-warning" onclick="DeletePayment()">Delete</button>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <div style="float:left">
+                            <a href="#" class="btn btn-success" id="btnUpdatePay" onclick="SavePayment()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Detail</b>
+                            </a>
+                            <a href="#" class="btn btn-danger" id="btnDelPay" onclick="DeletePayment()">
+                                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Detail</b>
+                            </a>
+                        </div>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
         </div>
         <div id="dvCommand">
-            <button id="btnAdd" class="btn btn-default" onclick="ClearForm()">Clear Data</button>
-            <button id="btnSave" class="btn btn-success" onclick="SaveData()">Save Data</button>
-            <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print Data</button>
+            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearForm()">
+                <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Clear Data</b>
+            </a>
+            <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
+                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Data</b>
+            </a>
+            <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Data</b>
+            </a>
         </div>
     </div>
 </div>
@@ -678,6 +695,7 @@ End Code
                     { data: "CurrencyCode", title: "Currency" },
                     { data: "ControlNo", title: "Control No" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbControl tbody').on('click', 'tr', function () {
@@ -715,6 +733,7 @@ End Code
                 { data: "BankBranch", title: "Branch" },
                 { data: "PayChqTo", title: "Pay From/To" }
             ],
+            responsive:true,
             destroy: true
         });
         $('#tbHeader tbody').on('click', 'tr', function () {

@@ -5,29 +5,39 @@ End Code
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
-                <a href="#" onclick="SearchData('branch')"> Branch :</a><br />
-                <input type="text" id="txtBranchCode" style="width:50px" />
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
+                Branch:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
             </div>
             <div class="col-sm-2">
                 Invoice Date From:<br />
-                <input type="date" id="txtDocDateF" />
+                <input type="date" class="form-control" id="txtDocDateF" />
             </div>
             <div class="col-sm-2">
                 Invoice Date To:<br />
-                <input type="date" id="txtDocDateT" />
+                <input type="date" class="form-control" id="txtDocDateT" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <a href="#" onclick="SearchData('customer')"> Customer :</a><br />
-                <input type="text" id="txtCustCode" style="width:120px" />
-                <input type="text" id="txtCustBranch" style="width:50px" />
-                <input type="text" id="txtCustName" style="width:300px" disabled />
+                Customer:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" id="txtCustCode" style="width:120px" />
+                    <input type="text" id="txtCustBranch" style="width:50px" />
+                    <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                    <input type="text" id="txtCustName" style="width:100%" disabled />
+                </div>
             </div>
             <div class="col-sm-3">
                 <br />
-                <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
             </div>
         </div>
         <div class="row">
@@ -36,20 +46,22 @@ End Code
                     <thead>
                         <tr>
                             <th>DocNo</th>
-                            <th>DocDate</th>
-                            <th>CustCode</th>
-                            <th>Remark</th>
-                            <th>Cust.Adv</th>
-                            <th>Advance</th>
-                            <th>Charge</th>
-                            <th>VAT</th>
-                            <th>WHT</th>
-                            <th>Net</th>
+                            <th class="desktop">DocDate</th>
+                            <th class="desktop">CustCode</th>
+                            <th class="desktop">Remark</th>
+                            <th class="desktop">Cust.Adv</th>
+                            <th class="all">Advance</th>
+                            <th class="all">Charge</th>
+                            <th class="desktop">VAT</th>
+                            <th class="desktop">WHT</th>
+                            <th class="all">Net</th>
                         </tr>
                     </thead>
                 </table>
                 <br />
-                <input type="button" class="btn btn-success" value="Create Billing" onclick="ShowSummary()" />
+                <a href="#" class="btn btn-success" id="btnGen" onclick="ShowSummary()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Create Billing</b>
+                </a>
             </div>
         </div>
     </div>
@@ -77,7 +89,6 @@ End Code
                             </td>
                         </tr>
                     </table>
-                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
                 <div class="modal-body">
                     <b>Billing Summary:</b><br />
@@ -95,7 +106,9 @@ End Code
                                 <tr><td>Cust.Advance</td><td><input type="text" id="txtTotalCustAdv" disabled /></td></tr>
                                 <tr><td>NET</td><td><input type="text" id="txtTotalNet" disabled /></td></tr>
                             </table>
-                            <button id="btnGen" class="btn btn-success" onclick="ApproveData()">Save Billing</button>
+                            <a href="#" class="btn btn-success" id="btnGen" onclick="ApproveData()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Billing</b>
+                            </a>
                         </div>
                         <div class="col-sm-6">
                             <b>Billing Detail:</b><br />
@@ -103,24 +116,28 @@ End Code
                                 <thead>
                                     <tr>
                                         <th>InvNo</th>
-                                        <th>InvDate</th>
-                                        <th>Advance</th>
-                                        <th>Charge</th>
-                                        <th>VAT</th>
-                                        <th>WH-Tax</th>
-                                        <th>Net</th>
+                                        <th class="desktop">InvDate</th>
+                                        <th class="all">Advance</th>
+                                        <th class="all">Charge</th>
+                                        <th class="desktop">VAT</th>
+                                        <th class="desktop">WH-Tax</th>
+                                        <th class="all">Net</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
                         </div>
                     </div>
-                    Billing No : <input type="text" id="txtDocNo" ondblclick="PrintBilling()" disabled />
-                    <input type="button" onclick="PrintBilling()" class="btn btn-success" value="Print Billing" />
+                    Billing No : <input type="text" id="txtDocNo" disabled />
+                    <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintBilling()">
+                        <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Billing</b>
+                    </a>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                 </div>
             </div>
         </div>
-
     </div>
     <div id="dvLOVs"></div>
 </div>
@@ -174,7 +191,7 @@ End Code
     function SetGridAdv(isAlert) {
         arr = [];
 
-        let w = '&Show=ACTIVE';
+        let w = '';
         if ($('#txtCustCode').val() !== "") {
             w = w + '&Cust=' + $('#txtCustCode').val();
         }
@@ -211,6 +228,7 @@ End Code
                     { data: "Total50Tavi", title: "WHT" },
                     { data: "TotalNet", title: "NET" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -288,6 +306,7 @@ End Code
                 { data: "Total50Tavi", title: "WHT" },
                 { data: "TotalNet", title: "NET" }
             ],
+            responsive:true,
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
     }

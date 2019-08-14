@@ -4,18 +4,24 @@
 End Code
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-4" style="display:flex;flex-direction:row">
-                <label style="display:block;width:20%">Branch:</label>
-                <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
-                <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
-                <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+            <div class="col-sm-4">
+                Branch
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
             </div>
-            <div class="col-sm-6" style="display:flex;flex-direction:row">
-                <label style="display:block;width:20%">Customer:</label>
-                <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
-                <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
-                <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
-                <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+            <div class="col-sm-6">
+                Customer:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
+                    <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
+                    <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+                </div>
             </div>
         </div>
         <div class="row">
@@ -29,11 +35,14 @@ End Code
             </div>
             <div class="col-sm-3">
                 <br />
-                <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
-                <button class="btn btn-success" onclick="CreateInvoice()">Generate Invoice</button>
+                <a href="#" class="btn btn-primary" id="btnShow">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
+                <a href="#" class="btn btn-success" id="btnGen" onclick="CreateInvoice()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Create Invoice</b>
+                </a>
             </div>
         </div>
-        <input type="checkbox" id="chkCancel" />Show Cancel Only
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#tabHeader">Headers</a>
@@ -43,22 +52,23 @@ End Code
             </li>
         </ul>
         <div class="tab-content">
+            <input type="checkbox" id="chkCancel" />Show Cancel Only
             <div class="tab-pane fade in active" id="tabHeader">
                 <table id="tbHeader" class="table table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>DocNo</th>
-                            <th>DocDate</th>
-                            <th>CustCode</th>
+                            <th class="all">DocNo</th>
+                            <th class="desktop">DocDate</th>
+                            <th class="desktop">CustCode</th>
                             <th>Remark</th>
-                            <th>Discount</th>
-                            <th>Cust.Adv</th>
-                            <th>Advance</th>
-                            <th>Charge</th>
-                            <th>VAT</th>
-                            <th>WHT</th>
-                            <th>Net</th>
+                            <th class="desktop">Discount</th>
+                            <th class="desktop">Cust.Adv</th>
+                            <th class="desktop">Advance</th>
+                            <th class="desktop">Charge</th>
+                            <th class="desktop">VAT</th>
+                            <th class="desktop">WHT</th>
+                            <th class="all">Net</th>
                         </tr>
                     </thead>
                 </table>
@@ -69,17 +79,17 @@ End Code
                     <thead>
                         <tr>
                             <th>ItemNo</th>
-                            <th>SICode</th>
-                            <th>SDescription</th>
-                            <th>ExpSlipNo</th>
-                            <th>AmtAdvance</th>
-                            <th>AmtCharge</th>
-                            <th>Currency</th>
-                            <th>Amt</th>
-                            <th>AmtDiscount</th>
-                            <th>AmtVAT</th>
-                            <th>Amt50Tavi</th>
-                            <th>TotalAmt</th>
+                            <th class="desktop">SICode</th>
+                            <th class="all">SDescription</th>
+                            <th class="desktop">ExpSlipNo</th>
+                            <th class="desktop">AmtAdvance</th>
+                            <th class="desktop">AmtCharge</th>
+                            <th class="desktop">Currency</th>
+                            <th class="desktop">Amt</th>
+                            <th class="desktop">AmtDiscount</th>
+                            <th class="desktop">AmtVAT</th>
+                            <th class="desktop">Amt50Tavi</th>
+                            <th class="all">TotalAmt</th>
                         </tr>
                     </thead>
                 </table>
@@ -188,10 +198,14 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
-                            <button onclick="PrintData()" class="btn btn-default">Print</button>
+                            <a href="#" class="btn btn-success" id="btnUpdate" onclick="SaveData()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                            </a>
+                            <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                                <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print</b>
+                            </a>
                         </div>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -346,10 +360,14 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <button id="btnUpd" class="btn btn-primary" onclick="SaveDetail()">Update</button>
-                            <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                            <a href="#" class="btn btn-success" id="btnUpd" onclick="SaveDetail()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                            </a>
+                            <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
+                                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                            </a>
                         </div>
-                        <button id="btnHid" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHid" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -419,6 +437,7 @@ End Code
                     { data: "Total50Tavi", title: "WHT" },
                     { data: "TotalNet", title: "NET" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page,
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -472,6 +491,7 @@ End Code
                         { data: "Amt50Tavi", title: "WHT" },
                         { data: "TotalAmt", title: "NET" }
                     ],
+                    responsive:true,
                     destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                 });
                 $('#tbDetail tbody').on('click', 'tr', function () {

@@ -164,28 +164,36 @@ End Code
                     </div>
                 </p>
                 <div id="dvCommand">
-                    <button id="btnAdd" class="btn btn-default" onclick="ClearData()">Clear Data</button>
-                    <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Data</button>
-                    <button id="btnPrint" class="btn btn-info" onclick="PrintData()">Print Data</button>
+                    <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                        <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Clear Data</b>
+                    </a>
+                    <a href="#" class="btn btn-success" id="btnSave" onclick="SaveHeader()">
+                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Data</b>
+                    </a>
+                    <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                        <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Data</b>
+                    </a>
                 </div>
             </div>
             <div class="tab-pane fade" id="tabDetail">
                 <p>
-                    <button id="btnAddDoc" class="btn btn-default" onclick="ClearDetail()">Add Detail</button>
+                    <a href="#" class="btn btn-warning" id="btnAddDoc" onclick="ClearDetail()">
+                        <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
+                    </a>
                 </p>
                 <p>
                     <table id="tbDetail" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>ItemNo</th>
-                                <th>IncType</th>
-                                <th>PayDate</th>
-                                <th>PayAmount</th>
-                                <th>IncRate</th>
-                                <th>PayTax</th>
-                                <th>PayTaxDesc</th>
-                                <th>JNo</th>
-                                <th>DocRefNo</th>
+                                <th class="desktop">IncType</th>
+                                <th class="all">PayDate</th>
+                                <th class="all">PayAmount</th>
+                                <th class="desktop">IncRate</th>
+                                <th class="all">PayTax</th>
+                                <th class="desktop">PayTaxDesc</th>
+                                <th class="desktop">JNo</th>
+                                <th class="desktop">DocRefNo</th>
                             </tr>
                         </thead>
                     </table>
@@ -385,12 +393,17 @@ End Code
 
                     </div>
                     <div class="modal-footer">
-                        <button id="btnUpdateDoc" class="btn btn-primary" onclick="SaveDetail()">Save</button>
-                        <button id="btnDelDoc" class="btn btn-warning" onclick="DeleteDetail()">Delete</button>
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <div style="float:left">
+                            <a href="#" class="btn btn-success" id="btnUpdateDoc" onclick="SaveDetail()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Detail</b>
+                            </a>
+                            <a href="#" class="btn btn-danger" id="btnDelDoc" onclick="DeleteDetail()">
+                                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Detail</b>
+                            </a>
+                        </div>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -407,21 +420,21 @@ End Code
                     <thead>
                         <tr>
                             <th>DocNo</th>
-                            <th>DocDate</th>
-                            <th>TName1</th>
-                            <th>TName2</th>
-                            <th>TName3</th>
-                            <th>JNo</th>
-                            <th>InvNo</th>
-                            <th>DocRefNo</th>
-                            <th>PayAmount</th>
-                            <th>PayTax</th>
+                            <th class="desktop">DocDate</th>
+                            <th class="desktop">TName1</th>
+                            <th class="desktop">TName2</th>
+                            <th class="desktop">TName3</th>
+                            <th class="all">JNo</th>
+                            <th class="desktop">InvNo</th>
+                            <th class="desktop">DocRefNo</th>
+                            <th class="all">PayAmount</th>
+                            <th class="all">PayTax</th>
                         </tr>
                     </thead>
                 </table>
             </div>
             <div class="modal-footer">
-                <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
             </div>
         </div>
     </div>
@@ -554,6 +567,7 @@ End Code
                     { data: "PayAmount", title: "Amount" },                    
                     { data: "PayTax", title: "Tax" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbControl tbody').on('click', 'tr', function () {
@@ -651,6 +665,7 @@ End Code
                                 }
                             }
                         ],
+                        responsive:true,
                         destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                     });
                     $('#tbDoc tbody').on('click', 'button', function () {
@@ -687,6 +702,7 @@ End Code
                                 }
                             }
                         ],
+                        responsive:true,
                         destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                     });
                     BindEvent('#tbDoc', '#frmSearchDoc', ReadClr);
@@ -764,6 +780,7 @@ End Code
                 { data: "JNo", title: "Job No" },
                 { data: "DocRefNo", title: "Ref No" }                
             ],
+            responsive:true,
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
         $('#tbDetail tbody').on('click', 'tr', function () {

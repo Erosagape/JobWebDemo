@@ -6,26 +6,25 @@ End Code
     <div id="dvHeader" class="container">
         <div class="row">
             <div class="col-sm-5">
-                Branch :
-                <input type="text" id="txtBranchCode" style="width:50px" />
-                <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                <input type="text" id="txtBranchName" style="width:200px" disabled />
-            </div>
-            <div class="col-sm-3">
-                Due Date :
-                <input type="date" id="txtDocDate" tabindex="1" />
+                Branch:
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
             </div>
             <div class="col-sm-4" style="text-align:left">
-                <table border="1">
-                    <tr>
-                        <td>
-                            <b>Payment No:</b>
-                            <br />
-                            <input type="text" id="txtDocNo" style="font-weight:bold;font-size:20px;text-align:center" tabindex="0" />
-                            <input type="button" value="..." style="font-size:20px" onclick="SearchData('payment')" />
-                        </td>
-                    </tr>
-                </table>
+                <b>Payment No:</b>
+                <br />
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtDocNo" style="font-weight:bold;font-size:20px;text-align:center;background-color:navajowhite;color:brown" tabindex="1" />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('payment')" />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                Due Date :<br />
+                <input type="date" class="form-control" id="txtDocDate" tabindex="1" />
             </div>
         </div>
         <ul class="nav nav-tabs">
@@ -71,7 +70,7 @@ End Code
                         <table>
                             <tr>
                                 <td>
-                                    Reference No:
+                                    Ref No.1:
                                 </td>
                                 <td>
                                     <input type="text" id="txtRefNo" style="width:200px" tabindex="6" />
@@ -79,7 +78,7 @@ End Code
                             </tr>
                             <tr>
                                 <td>
-                                    P/O No:
+                                    Ref No.2:
                                 </td>
                                 <td>
                                     <input type="text" id="txtPoNo" style="width:200px" tabindex="7" />
@@ -108,7 +107,7 @@ End Code
                         Exchange Rate:
                         <input type="text" id="txtExchangeRate" style="width:50px" value="1" />
                         <br />
-                        <buttom id="btnGetExcRate" class="btn btn-success" onclick="GetExchangeRate()">Get Rate</buttom>                                                
+                        <buttom id="btnGetExcRate" class="btn btn-warning" onclick="GetExchangeRate()">Get Rate</buttom>                                                
                     </div>
                 </div>
                 <div class="row">
@@ -130,8 +129,14 @@ End Code
                         Pay Type :<select id="txtPayType"></select>
                     </div>
                 </div>
-                <button id="btnNew" class="btn btn-default" onclick="AddHeader()">New Document</button>
-                <button id="btnSave" class="btn btn-success" onclick="SaveHeader()">Save Document</button>
+                <div id="dvCommand">
+                    <a href="#" class="btn btn-default" id="btnAdd" onclick="AddHeader()">
+                        <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Clear Data</b>
+                    </a>
+                    <a href="#" class="btn btn-success" id="btnSave" onclick="SaveHeader()">
+                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Data</b>
+                    </a>
+                </div>
             </div>
             <div id="tabDetail" class="tab-pane fade">
                 <div class="row">
@@ -141,13 +146,13 @@ End Code
                                 <tr>
                                     <th>
                                     <th>SICode</th>
-                                    <th>Description</th>
-                                    <th>Qty</th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
-                                    <th>Vat</th>
-                                    <th>WH-Tax</th>
-                                    <th>Net</th>
+                                    <th class="all">Description</th>
+                                    <th class="desktop">Qty</th>
+                                    <th class="desktop">Price</th>
+                                    <th class="desktop">Amount</th>
+                                    <th class="desktop">Vat</th>
+                                    <th class="desktop">WH-Tax</th>
+                                    <th class="all">Net</th>
                                 </tr>
                             </thead>
                         </table>
@@ -155,8 +160,12 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-9">
-                        <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">Add</button>
-                        <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                        <a href="#" class="btn btn-default" id="btnAdd" onclick="AddDetail()">
+                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
+                        </a>
+                        <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
+                            <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Detail</b>
+                        </a>
                     </div>
                     <div class="col-sm-3" style="text-align:right">
                         Amount :
@@ -217,10 +226,14 @@ End Code
                         </div>
                         <div class="modal-footer">
                             <div style="float:left">
-                                <button id="btnAdd" class="btn btn-default" onclick="AddDetail()">New</button>
+                                <a href="#" class="btn btn-default" id="btnAddDet" onclick="AddDetail()">
+                                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
+                                </a>
+                                <a href="#" class="btn btn-success" id="btnSaveDet" onclick="SaveDetail()">
+                                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                                </a>
                             </div>
-                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveDetail()">Save</button>
-                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                         </div>
                     </div>
                 </div>
@@ -237,21 +250,21 @@ End Code
                                 <thead>
                                     <tr>
                                         <th>DocNo</th>
-                                        <th>DocDate</th>
-                                        <th>VenCode</th>
-                                        <th>EmpCode</th>
-                                        <th>Ref</th>
-                                        <th>PoNo</th>
-                                        <th>Amount</th>
-                                        <th>WT</th>
-                                        <th>VAT</th>
-                                        <th>NET</th>
+                                        <th class="desktop">DocDate</th>
+                                        <th class="desktop">VenCode</th>
+                                        <th class="desktop">EmpCode</th>
+                                        <th class="all">Ref</th>
+                                        <th class="desktop">PoNo</th>
+                                        <th class="desktop">Amount</th>
+                                        <th class="desktop">WT</th>
+                                        <th class="desktop">VAT</th>
+                                        <th class="all">NET</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                         </div>
                     </div>
                 </div>
@@ -262,15 +275,15 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var user = '@ViewBag.User';
-    var userRights = '@ViewBag.UserRights';
-    var serv = []; //must be array of object
-    var hdr = {}; //simple object
-    var dtl = {}; //simple object
-    var job = '';
-    var isjobmode = false;
-    var chkmode = false;
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    let serv = []; //must be array of object
+    let hdr = {}; //simple object
+    let dtl = {}; //simple object
+    let job = '';
+    let isjobmode = false;
+    let chkmode = false;
     //$(document).ready(function () {
     SetLOVs();
     SetEvents();
@@ -555,10 +568,12 @@ End Code
                 alert('you are not authorize to delete');
                 return;
             }
-            $.get(path + 'acc/delpaydetail?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val() + '&item=' + dtl.ItemNo, function (r) {
-                alert(r.payment.result);
-                ShowData($('#txtBranchCode').val(), $('#txtDocNo').val());
-            });
+            if (confirm('are you sure to delete this data?') == true) {
+                $.get(path + 'acc/delpaydetail?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val() + '&item=' + dtl.ItemNo, function (r) {
+                    alert(r.payment.result);
+                    ShowData($('#txtBranchCode').val(), $('#txtDocNo').val());
+                });
+            }
         } else {
             alert('No data to delete');
         }
@@ -650,6 +665,7 @@ End Code
                     }
                 }
             ],
+            responsive:true,
             destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
         });
         $('#tbDetail tbody').on('click', 'tr', function () {
@@ -782,6 +798,7 @@ End Code
                     { data: "TotalTax", title: "Tax" },
                     { data: "TotalNet", title: "Net" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {

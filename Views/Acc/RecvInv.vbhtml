@@ -98,10 +98,13 @@ End Code
             <div id="tab2" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-6">
-                        Branch :<br />
-                        <input type="text" id="txtBranchCode" style="width:50px" />
-                        <button id="btnBrowseBranch" onclick="SearchData('branch')">...</button>
-                        <input type="text" id="txtBranchName" style="width:200px" disabled />
+                        Branch
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                            <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <input type="checkbox" id="chkUseDue" /> Select by Payment Due Date
@@ -109,40 +112,45 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        Customer :<br />
-                        <input type="text" id="txtCustCode" style="width:120px" />
-                        <input type="text" id="txtCustBranch" style="width:50px" />
-                        <button id="btnBrowseCust" onclick="SearchData('customer')">...</button>
-                        <input type="text" id="txtCustName" style="width:300px" disabled />
+                        Customer :
+                        <br />
+                        <div style="display:flex;flex-direction:row">
+                            <input type="text" class="form-control" id="txtCustCode" style="width:120px" />
+                            <input type="text" class="form-control" id="txtCustBranch" style="width:50px" />
+                            <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
+                            <input type="text" class="form-control" id="txtCustName" style="width:100%" disabled />
+                        </div>                        
                     </div>
                     <div class="col-sm-2">
                         Date From:<br />
-                        <input type="date" id="txtDocDateF" />
+                        <input type="date" class="form-control" id="txtDocDateF" />
                     </div>
                     <div class="col-sm-2">
                         Date To:<br />
-                        <input type="date" id="txtDocDateT" />
+                        <input type="date" class="form-control" id="txtDocDateT" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
                         Tax-Invoice:<input type="text" id="txtTaxInvNo" />
-                        <button class="btn btn-warning" id="btnRefresh" onclick="SetGridAdv(true)">Show</button>
+                        <a href="#" class="btn btn-primary" id="btnSearch" onclick="SetGridAdv(true)">
+                            <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                        </a>
                         <br />
                         <table id="tbHeader" class="table table-responsive">
                             <thead>
                                 <tr>
                                     <th>Inv.No</th>
-                                    <th>Inv.date</th>
-                                    <th>Bill.No</th>
-                                    <th>Rec.No</th>
-                                    <th>Expenses</th>
-                                    <th>Advance</th>
-                                    <th>Charge</th>
-                                    <th>Amt</th>
-                                    <th>VAT</th>
-                                    <th>W-Tax</th>
-                                    <th>Net</th>
+                                    <th class="desktop">Inv.date</th>
+                                    <th class="desktop">Bill.No</th>
+                                    <th class="desktop">Rec.No</th>
+                                    <th class="all">Expenses</th>
+                                    <th class="desktop">Advance</th>
+                                    <th class="desktop">Charge</th>
+                                    <th class="desktop">Amt</th>
+                                    <th class="desktop">VAT</th>
+                                    <th class="desktop">W-Tax</th>
+                                    <th class="all">Net</th>
                                 </tr>
                             </thead>
                         </table>
@@ -160,15 +168,15 @@ End Code
                         <table id="tbDetail" class="table table-responsive" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Type</th>
-                                    <th>Doc.No</th>
-                                    <th>Doc.Type</th>
-                                    <th>Doc.Date</th>
-                                    <th>Pay.Type</th>
-                                    <th>For</th>
-                                    <th>Branch</th>
-                                    <th>Doc.Total</th>
-                                    <th>Paid.Total</th>
+                                    <th class="desktop">Type</th>
+                                    <th class="all">Doc.No</th>
+                                    <th class="desktop">Doc.Type</th>
+                                    <th class="desktop">Doc.Date</th>
+                                    <th class="desktop">Pay.Type</th>
+                                    <th class="desktop">For</th>
+                                    <th class="desktop">Branch</th>
+                                    <th class="desktop">Doc.Total</th>
+                                    <th class="all">Paid.Total</th>
                                 </tr>
                             </thead>
                         </table>
@@ -188,7 +196,9 @@ End Code
                         Remark : <input type="text" id="txtTRemark" class="form-control" value="" />
                     </div>
                 </div>
-                <input type="button" class="btn btn-success" value="Payment" onclick="ApproveData()" />
+                <a href="#" class="btn btn-success" id="btnSave" onclick="ApproveData()">
+                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Payment</b>
+                </a>
             </div>
         </div>
     </div>
@@ -355,7 +365,9 @@ End Code
                     { data: "AmtVAT", title: "Vat" },
                     { data: "Amt50Tavi", title: "WH-Tax" },
                     { data: "Net", title: "Net" }
-                ]
+                ],
+                responsive:true,
+                destroy:true
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected') == true) {
@@ -456,6 +468,7 @@ End Code
                 { data: "TotalAmount", title: "Doc.Total" },
                 { data: "PaidAmount", title: "Paid" }
             ],
+            responsive:true,
             destroy:true
         });
         $('#txtAdvCash').val(CDbl(sum_ca, 2));

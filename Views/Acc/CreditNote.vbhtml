@@ -3,18 +3,24 @@
 End Code
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-4" style="display:flex;flex-direction:row">
-                <label style="display:block;width:20%">Branch:</label>
-                <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
-                <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
-                <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+            <div class="col-sm-4">
+                Branch
+                <br/>
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
+                    <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                </div>
             </div>
-            <div class="col-sm-6" style="display:flex;flex-direction:row">
-                <label style="display:block;width:20%">Customer:</label>
-                <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
-                <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
-                <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
-                <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+            <div class="col-sm-6">
+                Customer:
+                <br/>
+                <div style="display:flex;flex-direction:row">
+                    <input type="text" class="form-control" id="txtCustCode" style="width:20%" disabled />
+                    <input type="text" class="form-control" id="txtCustBranch" style="width:10%" disabled />
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('customer');" />
+                    <input type="text" class="form-control" id="txtCustName" style="width:60%" disabled />
+                </div>
             </div>
         </div>
         <div class="row">
@@ -28,11 +34,14 @@ End Code
             </div>
             <div class="col-sm-3">
                 <br />
-                <input type="button" class="btn btn-primary" value="Show" id="btnShow" />
-                <input type="button" class="btn btn-default" value="Add CN/DN" id="btnNew" />
+                <a href="#" class="btn btn-primary" id="btnShow">
+                    <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
+                </a>
+                <a href="#" class="btn btn-default" id="btnNew">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Create New</b>
+                </a>
             </div>
         </div>
-        <input type="checkbox" id="chkCancel" />Show Cancel Only
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#tabHeader">Headers</a>
@@ -43,37 +52,40 @@ End Code
         </ul>
         <div class="tab-content">
             <div class="tab-pane fade in active" id="tabHeader">
+                <input type="checkbox" id="chkCancel" />Show Cancel Only
                 <table id="tbHeader" class="table table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>DocNo</th>
-                            <th>DocDate</th>
-                            <th>CustCode</th>
-                            <th>Reference</th>
-                            <th>Remark</th>
-                            <th>Total</th>
+                            <th class="desktop">DocDate</th>
+                            <th class="all">CustCode</th>
+                            <th class="desktop">Reference</th>
+                            <th class="desktop">Remark</th>
+                            <th class="all">Total</th>
                         </tr>
                     </thead>
                 </table>
             </div>
             <div class="tab-pane fade" id="tabDetail">
-                <input type="button" class="btn btn-default" value="Add Invoice" id="btnAdd" />
+                <a href="#" class="btn btn-warning" id="btnAdd">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Invoice</b>
+                </a>
                 <table id="tbDetail" class="table table-responsive">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>InvNo</th>
-                            <th>SICode</th>
-                            <th>SDescription</th>
-                            <th>Original</th>
-                            <th>Correct</th>
-                            <th>Diff</th>
-                            <th>Vat</th>
-                            <th>Net</th>
-                            <th>Currency</th>
-                            <th>Rate</th>
-                            <th>Total</th>
+                            <th class="desktop">SICode</th>
+                            <th class="all">SDescription</th>
+                            <th class="desktop">Original</th>
+                            <th class="desktop">Correct</th>
+                            <th class="desktop">Diff</th>
+                            <th class="desktop">Vat</th>
+                            <th class="all">Net</th>
+                            <th class="desktop">Currency</th>
+                            <th class="desktop">Rate</th>
+                            <th class="desktop">Total</th>
                         </tr>
                     </thead>
                 </table>
@@ -143,11 +155,15 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <button id="btnUpdate" class="btn btn-primary" onclick="SaveData()">Update</button>
-                            <button onclick="PrintData()" class="btn btn-default">Print</button>
+                            <a href="#" class="btn btn-success" id="btnUpdate" onclick="SaveData()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
+                            </a>
+                            <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                                <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print</b>
+                            </a>
                         </div>
                         Last update:<input type="date" id="txtLastupDate" disabled />
-                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHide" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -268,10 +284,14 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <button id="btnUpd" class="btn btn-primary" onclick="SaveDetail()">Update</button>
-                            <button id="btnDel" class="btn btn-danger" onclick="DeleteDetail()">Delete</button>
+                            <a href="#" class="btn btn-success" id="btnUpd" onclick="SaveDetail()">
+                                <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update</b>
+                            </a>
+                            <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
+                                <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                            </a>
                         </div>
-                        <button id="btnHid" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnHid" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -287,19 +307,19 @@ End Code
                             <thead>
                                 <tr>
                                     <th>InvNo</th>
-                                    <th>Item</th>
-                                    <th>Description</th>
-                                    <th>Service</th>
-                                    <th>Vat</th>
-                                    <th>Wh-Tax</th>
-                                    <th>Net</th>
+                                    <th class="desktop">Item</th>
+                                    <th class="all">Description</th>
+                                    <th class="desktop">Service</th>
+                                    <th class="desktop">Vat</th>
+                                    <th class="desktop">Wh-Tax</th>
+                                    <th class="all">Net</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button id="btnClose" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id="btnClose" class="btn btn-danger" data-dismiss="modal">X</button>
                     </div>
                 </div>
             </div>
@@ -549,6 +569,7 @@ End Code
                     { data: "Remark", title: "Remark" },
                     { data: "TotalNet", title: "Total" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbHeader tbody').on('click', 'tr', function () {
@@ -605,6 +626,7 @@ End Code
                 { data: "ExchangeRate", title: "Rate" },
                 { data: "ForeignNet", title: "Total" }
             ],
+            responsive:true,
             destroy:true
         });
         $('#tbDetail tbody').on('click', 'tr', function () {
@@ -797,6 +819,7 @@ End Code
                     { data: "Inv50Tavi", title: "W-Tax" },
                     { data: "InvTotal", title: "NET" }
                 ],
+                responsive:true,
                 destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             });
             $('#tbInvoice tbody').on('click', 'tr', function () {
