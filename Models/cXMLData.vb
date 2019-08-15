@@ -23,6 +23,6 @@ Public Class CXMLData
     End Function
 End Class
 Public Class CJsonData
-    Public Property Name As String
-    Public Property Rows As ArrayList
+    Public Property source As String
+    Public Property data As Object
 End Class

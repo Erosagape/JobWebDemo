@@ -424,6 +424,32 @@ Namespace Controllers
             End If
             Return Content(msg, textContent)
         End Function
+        Function ImportData() As ActionResult
+            Dim path As String = ""
+            If Not Request.QueryString("Path") Is Nothing Then
+                path = Request.QueryString("Path").ToString
+            End If
+            Dim msg As String = "No data processed"
+            Try
+                Dim fileName = System.IO.Path.Combine(Server.MapPath("~"), path)
+                Dim fReader = New System.IO.StreamReader(fileName, UTF8Encoding.UTF8)
+                Dim obj = JsonConvert.DeserializeObject(Of CJsonData)(fReader.ReadToEnd)
+                Select Case obj.source
+                    Case "CBranch"
+                        msg = "{""result"":"""
+                        For Each o In obj.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CBranch)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [Code]='{0}'", oData.Code))
+                        Next
+                        msg &= """}"
+                End Select
+                Return Content(msg, jsonContent)
+            Catch ex As Exception
+                Return Content("{""result"":""" & ex.Message & """}", jsonContent)
+            End Try
+        End Function
         Function UploadJson() As ActionResult
             Dim msg As String = ""
             Dim exts As String = ".json"
@@ -435,28 +461,28 @@ Namespace Controllers
                     If File.ContentLength > 0 Then
                         If exts.IndexOf(System.IO.Path.GetExtension(filename).ToLower) >= 0 Then
                             Try
-                                Dim path = System.IO.Path.Combine(Server.MapPath("~/Resource/uploads"), filename)
+                                Dim path = System.IO.Path.Combine(Server.MapPath("~"), filename)
                                 File.SaveAs(path)
                                 msg = msg + "Upload " + filename + " successfully" + vbCrLf
                             Catch ex As Exception
-                                msg = msg + "[Error]" + filename + "=>" + ex.Message + vbCrLf
+                                msg = msg + "[Error] " + filename + "=>" + ex.Message + vbCrLf
                             End Try
                         Else
-                            msg = msg + "[Error]" + filename + " is not allowed to upload" + vbCrLf
+                            msg = msg + "[Error] " + filename + " Is Not allowed To upload" + vbCrLf
                         End If
                     Else
-                        msg = msg + "[Error]" + filename + " cannot upload" + vbCrLf
+                        msg = msg + "[Error] " + filename + " cannot upload" + vbCrLf
                     End If
                 Next
             Catch e As Exception
                 msg = "[Error]" + e.Message
             End Try
-            If msg = "" Then msg = "No File To Upload"
+            If msg = "" Then msg = "[Error] No File To Upload"
             Return Content(msg, textContent)
         End Function
         Function UploadPicture() As ActionResult
             Dim msg As String = ""
-            Dim exts As String = ".jpg,.jpeg,.png,.bmp,.gif,.tiff,.svg"
+            Dim exts As String = ".jpg, .jpeg, .png, .bmp, .gif, .tiff, .svg"
 
             Try
                 For Each fileIdx As String In Request.Files
@@ -465,23 +491,26 @@ Namespace Controllers
                     If File.ContentLength > 0 Then
                         If exts.IndexOf(System.IO.Path.GetExtension(filename).ToLower) >= 0 Then
                             Try
+                                If System.IO.Directory.Exists(Server.MapPath("~/Resource/uploads")) = False Then
+                                    IO.Directory.CreateDirectory(Server.MapPath("~/Resource/uploads"))
+                                End If
                                 Dim path = System.IO.Path.Combine(Server.MapPath("~/Resource/uploads"), filename)
                                 File.SaveAs(path)
                                 msg = msg + "Upload " + filename + " successfully" + vbCrLf
                             Catch ex As Exception
-                                msg = msg + "[Error]" + filename + "=>" + ex.Message + vbCrLf
+                                msg = msg + "[Error] " + filename + "=>" + ex.Message + vbCrLf
                             End Try
                         Else
-                            msg = msg + "[Error]" + filename + " is not allowed to upload" + vbCrLf
+                            msg = msg + "[Error] " + filename + " Is Not allowed to upload" + vbCrLf
                         End If
                     Else
-                        msg = msg + "[Error]" + filename + " cannot upload" + vbCrLf
+                        msg = msg + "[Error] " + filename + " cannot upload" + vbCrLf
                     End If
                 Next
             Catch e As Exception
-                msg = "[Error]" + e.Message
+                msg = "[Error] " + e.Message
             End Try
-            If msg = "" Then msg = "No File To Upload"
+            If msg = "" Then msg = "[Error] No File To Upload"
             Return Content(msg, textContent)
         End Function
         Function GetFileList() As ActionResult
@@ -489,13 +518,17 @@ Namespace Controllers
             If Not Request.QueryString("Path") Is Nothing Then
                 path = Request.QueryString("Path").ToString
             End If
-            Dim data = JsonConvert.SerializeObject(GetUploadFiles(path))
+            Dim ext As String = "*"
+            If Not Request.QueryString("Ext") Is Nothing Then
+                ext = Request.QueryString("Ext").ToString
+            End If
+            Dim data = JsonConvert.SerializeObject(GetUploadFiles(path, ext))
             Return Content(data, jsonContent)
         End Function
-        Private Function GetUploadFiles(path As String) As List(Of String)
+        Private Function GetUploadFiles(path As String, Optional ext As String = "*") As List(Of String)
             Dim lst As New List(Of String)
             Dim files As New System.IO.DirectoryInfo(Server.MapPath("~/" + path))
-            For Each file As System.IO.FileInfo In files.GetFiles("*.*", IO.SearchOption.AllDirectories)
+            For Each file As System.IO.FileInfo In files.GetFiles("*." + ext, IO.SearchOption.TopDirectoryOnly)
                 lst.Add(file.Name)
             Next
             Return lst

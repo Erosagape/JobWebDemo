@@ -45,7 +45,7 @@ Public Class CBranch
                             dr("BrName") = Me.BrName
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
-                            msg = "Save Complete"
+                            msg = "Save Branch " & Me.Code & " Complete"
                         End Using
                     End Using
                 End Using

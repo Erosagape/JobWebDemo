@@ -1,6 +1,5 @@
 ﻿@Code
     ViewData("Title") = "Export"
-    Layout = "~/Views/Shared/_Layout.vbhtml"
 End Code
 <p>
     SELECT DATABASE :
@@ -19,22 +18,22 @@ End Code
     </div>
 </div>
 <script type="text/javascript">
+    let path = '/';
     let table = "";
     $('#cboDBType').on('click', LoadTables);
     LoadTables();
     function LoadTables() {
         var ul = $('#lstTables');
         ul.empty();
-        $.get('/Config/GetTable?DB=' + $('#cboDBType').val())
-            .done(function (r) {
-                let html = '';
-                if (r.data.length > 0) {
-                    for (let row of r.data[0].Table) {
-                        html += '<li><a style="display:block;" onclick="SaveData(' + "'" + row.TABLE_NAME + "'" + ')">' + row.TABLE_NAME + '</a></li>';
-                    }
+        $.get('/Config/GetTable?DB=' + $('#cboDBType').val(),function (r) {
+            let html = '';
+            if (r.data.length > 0) {
+                for (let row of r.data[0].Table) {
+                    html += '<li><a style="display:block;" onclick="SaveData(' + "'" + row.TABLE_NAME + "'" + ')">' + row.TABLE_NAME + '</a></li>';
                 }
-                ul.html(html);
-            });
+            }
+            ul.html(html);
+        });
     }
     function SaveData(tb) {
         let obj = {
@@ -66,7 +65,7 @@ End Code
             table.destroy();
             $('#tbResult').empty();
         }
-        $.get('/' + fname).done(function (r) {
+        $.get('/' + fname,function (r) {
             var tb = r.data[0].Table;
             var cols = [];
             $.each(tb[0], function (key, value) {

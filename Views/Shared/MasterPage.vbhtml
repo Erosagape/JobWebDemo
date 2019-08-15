@@ -20,7 +20,6 @@
     <script src="~/Scripts/Func/popup.js"></script>
     <script src="~/Scripts/Func/menu.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/Module/Message.js"></script>
 </head>
 <body style="background:#e6e6e6;color:black;">
     <!-- Sidebar -->
