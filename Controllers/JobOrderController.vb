@@ -653,5 +653,54 @@ Namespace Controllers
             Dim tResult = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(tSqlW))
             Return Content(tResult, textContent)
         End Function
+        Function GetDashboardSQL() As ActionResult
+            Dim json1 = SQLDashboard1("")
+            Dim json2 = SQLDashboard2("")
+            Dim json3 = SQLDashboard3("")
+            Return Content("{""result"":[{""data1"":""" & json1 & """,""data2"":""" & json2 & """,""data3"":""" & json3 & """}]}", jsonContent)
+        End Function
+        Function GetDashboard() As ActionResult
+            Dim msg As String = "STEP1"
+            Try
+                Dim tSqlw1 As String = ""
+                If Not Request.QueryString("Period") Is Nothing Then
+                    Dim yy = Request.QueryString("Period").ToString().Split("/")(1)
+                    Dim mm = Convert.ToInt16(Request.QueryString("Period").ToString().Split("/")(0))
+                    tSqlw1 = " WHERE Year(j.DocDate)=" & yy & " AND Month(j.DocDate)=" & mm & " "
+                End If
+
+                Dim oData1 = New CUtil(jobWebConn).GetTableFromSQL(SQLDashboard1(tSqlw1))
+                oData1.Columns.Add("JobStatusName", Type.GetType("System.String"))
+                msg = SQLDashboard1(tSqlw1)
+                'If oData1.Rows.Count>1 Then
+                For i As Integer = 0 To oData1.Rows.Count - 1
+                    Dim status As String = Convert.ToInt16(oData1.Rows(i)("JobStatus")).ToString("00")
+                    msg = "DATA1-" & status
+                    oData1.Rows(i)("JobStatusName") = GetValueConfig("JOB_STATUS", status)
+                Next
+                oData1.Columns.Remove("JobStatus")
+                'End If
+                Dim oData2 = New CUtil(jobWebConn).GetTableFromSQL(SQLDashboard2(tSqlw1))
+                msg = SQLDashboard2(tSqlw1)
+                oData2.Columns.Add("JobTypeName", Type.GetType("System.String"))
+                'If oData2.Rows.Count > 0 Then
+                For i As Integer = 0 To oData2.Rows.Count - 1
+                    Dim status As String = Convert.ToInt16(oData2.Rows(i)("JobType")).ToString("00")
+                    msg = "DATA2-" & status
+                    oData2.Rows(i)("JobTypeName") = GetValueConfig("JOB_TYPE", status)
+                Next
+                oData2.Columns.Remove("JobType")
+                'End If
+                Dim oData3 = New CUtil(jobWebConn).GetTableFromSQL(SQLDashboard3(tSqlw1))
+                msg = SQLDashboard3(tSqlw1)
+                Dim json1 = JsonConvert.SerializeObject(oData1)
+                Dim json2 = JsonConvert.SerializeObject(oData2)
+                Dim json3 = JsonConvert.SerializeObject(oData3)
+                'msg = "ODATA4"
+                Return Content("{""result"":[{""data1"":" & json1 & ",""data2"":" & json2 & ",""data3"":" & json3 & "}]}", jsonContent)
+            Catch ex As Exception
+                Return Content("{""result"":[],""msg"":""" & msg & " " & ex.Message & """}", jsonContent)
+            End Try
+        End Function
     End Class
 End Namespace

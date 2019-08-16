@@ -1,96 +1,85 @@
 ﻿@Code
-    ViewBag.Title = "Main Page"
+    ViewBag.Title = "Main Dashboard"
 End Code
-<!--Div that will hold the dashboard-->
-<div id="programmatic_dashboard_div" style="border: 1px solid #ccc">
-    <table class="columns">
-        <tr>
-            <td>
-                <div id="programmatic_control_div" style="padding-left: 2em; min-width: 250px"></div>
-                <div>
-                    <button style="margin: 1em 1em 1em 2em" onclick="changeRange();">
-                        Select range [2, 5]
-                    </button><br />
-                    <button style="margin: 1em 1em 1em 2em" onclick="changeOptions();">
-                        Make the pie chart 3D
-                    </button>
-                </div>
-                <script type="text/javascript">
-
-                </script>
-            </td>
-            <td>
-                <div id="programmatic_chart_div"></div>
-            </td>
-        </tr>
-    </table>
+<div class="row">
+    <div class="col-md-6">
+        Volume By Status:
+        <div id="chartVol"></div>
+    </div>
+    <div class="col-md-6">
+        Volume By Month:
+        <div id="chartStatus"></div>
+    </div>
 </div>
-<!--Load the AJAX API-->
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        Volume By Customer:
+        <div id="chartCust"></div>
+    </div>
+</div>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-    let path = '@Url.Content("~")';
-    google.charts.load('current', { 'packages': ['corechart', 'controls'] });
-    google.charts.setOnLoadCallback(drawStuff);
+    var path = '/';
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart);
 
-    function drawStuff() {
-
-        var dashboard = new google.visualization.Dashboard(
-            document.getElementById('programmatic_dashboard_div'));
-
-        // We omit "var" so that programmaticSlider is visible to changeRange.
-        var programmaticSlider = new google.visualization.ControlWrapper({
-            'controlType': 'NumberRangeFilter',
-            'containerId': 'programmatic_control_div',
-            'options': {
-                'filterColumnLabel': 'Donuts eaten',
-                'ui': { 'labelStacking': 'vertical' }
-            }
-        });
-
-        var programmaticChart = new google.visualization.ChartWrapper({
-            'chartType': 'PieChart',
-            'containerId': 'programmatic_chart_div',
-            'options': {
-                'width': 300,
-                'height': 300,
-                'legend': 'none',
-                'chartArea': { 'left': 15, 'top': 15, 'right': 0, 'bottom': 0 },
-                'pieSliceText': 'value'
-            }
-        });
-
-        var data = google.visualization.arrayToDataTable([
-            ['Name', 'Donuts eaten'],
-            ['Michael', 5],
-            ['Elisa', 7],
-            ['Robert', 3],
-            ['John', 2],
-            ['Jessica', 6],
-            ['Aaron', 1],
-            ['Margareth', 8]
+    window.onresize = () => {
+        drawChart();
+    }
+    function drawChart() {
+        var dataVol = google.visualization.arrayToDataTable([
+            ['Type', 'Volume'],
+            ['IMPORT/AIR', 11],
+            ['IMPORT/SEA', 2],
+            ['EXPORT/AIR', 2],
+            ['EXPORT/SEA', 2],
+            ['DOMESTIC/TRUCK', 7]
         ]);
 
-        dashboard.bind(programmaticSlider, programmaticChart);
-        dashboard.draw(data);
-
-        changeRange = function () {
-            programmaticSlider.setState({ 'lowValue': 2, 'highValue': 5 });
-            programmaticSlider.draw();
+        var volOptions = {
+            title: 'Total Jobs This Month',
+            pieHole: 0.4,
         };
 
-        changeOptions = function () {
-            programmaticChart.setOption('is3D', true);
-            programmaticChart.draw();
-        };
-    }
-    function changeRange() {
-        programmaticSlider.setState({ 'lowValue': 2, 'highValue': 5 });
-        programmaticSlider.draw();
-    }
+        var chartVol = new google.visualization.PieChart(document.getElementById('chartVol'));
+        chartVol.draw(dataVol, volOptions);
 
-    function changeOptions() {
-        programmaticChart.setOption('is3D', true);
-        programmaticChart.draw();
+        var dataStatus = google.visualization.arrayToDataTable([
+        ['Type', 'Wait Confirm', 'Wait Operation', 'Wait Clear', 'Wait Bill',
+         'Wait Payment', 'Completed', { role: 'annotation' } ],
+        ['IMPORT', 10, 24, 20, 32, 18, 5, ''],
+        ['EXPORT', 16, 22, 23, 30, 16, 9, ''],
+        ['DOMESTIC', 28, 19, 29, 30, 12, 13, '']
+        ]);
+
+        var statusOptions = {
+            legend: { position: 'top', maxLines: 3 },
+            isStacked: 'percent',
+            hAxis: {
+                minValue: 0,
+                ticks: [0, .25, .5, .75, 1]
+          }
+        };
+
+        var chartStatus = new google.visualization.ColumnChart(document.getElementById('chartStatus'));
+        chartStatus.draw(dataStatus, statusOptions);
+
+        var dataCust = google.visualization.arrayToDataTable([
+            ['Status', 'Wait Confirm', 'Wait Operation', 'Wait Clear', 'Wait Bill',
+                'Wait Payment', 'Completed', { role: 'annotation' }],
+            ['APL', 10, 24, 20, 32, 18, 5, ''],
+            ['TAWAN', 16, 22, 23, 30, 16, 9, ''],
+            ['BSAT', 28, 19, 29, 30, 12, 10, ''],
+            ['KGM', 20, 15, 10, 15,21, 8, ''],
+        ]);
+
+        var custOptions = {
+            legend: { position: 'top', maxLines: 3 },
+            isStacked: true,
+        };
+
+        var chartCust = new google.visualization.BarChart(document.getElementById('chartCust'));
+        chartCust.draw(dataCust, custOptions);
     }
 </script>
-
