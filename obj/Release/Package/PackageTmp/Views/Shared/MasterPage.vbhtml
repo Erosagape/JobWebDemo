@@ -31,6 +31,9 @@
             <div style="width:100%;text-align:center;background-color:white;color:black">
                 <label id="lblUserID">Please Login</label>
             </div>
+            <div id="mainBoard" class="w3-bar-item w3-button" onclick="OpenMenu('Dashboard')">
+                Dashboard
+            </div>
             <div id="mainMkt" class="w3-bar-item w3-button" onclick="w3_accordion('mnuMkt')">
                 Marketing Works
             </div>
@@ -236,6 +239,15 @@
     <div id="dvCommands" class="w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px">
         <label id="lblCompanyName" onclick="CheckDatabase()">Tawan Technology Co.,ltd</label>
     </div>
+    <div id="dvWaiting" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-body">Please wait...</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
     let userID = '';
     let compID = '';
@@ -248,8 +260,10 @@
     }
     function CheckLogin() {
         if (userID === '') {
+            ShowWait();
             $.get(path + 'Config/GetLogin')
                 .done(function (r) {
+                    CloseWait();
                     if (r.user.data.UserID !== null) {
                         userID = r.user.data.UserID;
                         compID = '@ViewBag.LICENSE_NAME';
@@ -261,14 +275,17 @@
                 });
         } else {
             var c = confirm('Do you need to log out?');
-            if (c == true) {
+            if (c == true) {            
+                ShowWait();
                 $.get(path + 'Config/SetLogOut')
                     .done(function (r) {
+                        CloseWait();
                         if (r == 'Y') {
                             alert('Log out successfully');
                             userID = '';
                             window.location.href='/index.html';
                         }
+
                     });
             }
         }

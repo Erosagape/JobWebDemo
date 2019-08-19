@@ -104,7 +104,9 @@ End Code
         loadMonth('#cboMonth');
     }
     function getJobdata() {
+        ShowWait();
         $.get(path + 'joborder/updatejobstatus' + GetCliteria(), function (r) {
+            CloseWait();
             $('#tblJob').DataTable({
                 "ajax": {
                     //"url": "joborder/getjobjson" + strParam,

@@ -2,6 +2,9 @@
     let mnuPath = '';
     let path = '/';
     switch (mnuID) {
+        case 'Dashboard':
+            mnuPath = path + 'Menu/Index';
+            break;
         case 'Advance':
             mnuPath = path + 'Adv/Index';
             break;
