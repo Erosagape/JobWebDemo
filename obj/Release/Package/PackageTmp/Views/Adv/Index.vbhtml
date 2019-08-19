@@ -1609,6 +1609,10 @@ End Code
         CalVATWHT();
     }
     function ReadJob(dt) {
+        if (ShowDate(dt.CloseJobDate) !== '-') {
+            alert('This job is closed,Please re-open first!');
+            return;
+        }
         $('#txtForJNo').val(dt.JNo);
         $('#txtInvNo').val(dt.InvNo);
     }

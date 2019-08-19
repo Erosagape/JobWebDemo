@@ -660,15 +660,34 @@ Namespace Controllers
             Return Content("{""result"":[{""data1"":""" & json1 & """,""data2"":""" & json2 & """,""data3"":""" & json3 & """}]}", jsonContent)
         End Function
         Function GetDashboard() As ActionResult
-            Dim msg As String = "STEP1"
+            Dim msg As String = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(""))
             Try
                 Dim tSqlw1 As String = ""
+                Dim bCheck As Boolean = False
                 If Not Request.QueryString("Period") Is Nothing Then
+                    bCheck = True
                     Dim yy = Request.QueryString("Period").ToString().Split("/")(1)
                     Dim mm = Convert.ToInt16(Request.QueryString("Period").ToString().Split("/")(0))
                     tSqlw1 = " WHERE Year(j.DocDate)=" & yy & " AND Month(j.DocDate)=" & mm & " "
                 End If
-
+                If Not Request.QueryString("ShipBy") Is Nothing Then
+                    If bCheck Then
+                        tSqlw1 &= " AND "
+                    Else
+                        tSqlw1 &= " WHERE "
+                        bCheck = True
+                    End If
+                    tSqlw1 &= " j.ShipBy=" & Request.QueryString("ShipBy").ToString & " "
+                End If
+                If Not Request.QueryString("JobType") Is Nothing Then
+                    If bCheck Then
+                        tSqlw1 &= " AND "
+                    Else
+                        tSqlw1 &= " WHERE "
+                        bCheck = True
+                    End If
+                    tSqlw1 &= " j.JobType=" & Request.QueryString("JobType").ToString & " "
+                End If
                 Dim oData1 = New CUtil(jobWebConn).GetTableFromSQL(SQLDashboard1(tSqlw1))
                 msg = SQLDashboard1(tSqlw1)
                 Dim json1 As String = ""

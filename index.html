@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Content/bootstrap.min.css">
+    <link rel="stylesheet" href="Content/Site.css">
     <link rel="stylesheet" href="Content/jquery.datatables.min.css">
     <script src="Scripts/jquery-3.3.1.min.js"></script>
     <script src="Scripts/DataTables/jquery.dataTables.min.js"></script>
@@ -16,19 +17,19 @@
     <div class="panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
-                    <table style="width:100%">
-                        <tr>
-                            <td>
-                                <img src="Resource/logo-tawan.jpg" style="width:100px" />
-                            </td>
-                            <td align="right">
-                                <h5><label id="lblCompanyName" style="text-align:right">Shipping Control System</label></h5>
-                            </td>
-                        </tr>
-                    </table>
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <img src="Resource/logo-tawan.jpg" style="width:100px" />
+                        </td>
+                        <td align="right">
+                            <h5><label id="lblCompanyName" style="text-align:right">Shipping Control System</label></h5>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
-        <div class="panel-body" >
+        <div class="panel-body">
             <div id="dvLogin" style="width:100%;background:url('Resource/jobtawan_bg.jpg');background-position:center;background-repeat:round;background-size:contain">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -53,75 +54,84 @@
             <p>&copy; Tawan Technology Co.,ltd</p>
         </div>
     </div>
+    <div id="dvWaiting" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-body">Please wait...</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
-    let userID = '';
-    let openURL = getQueryString("redirect");
-    let msg = getQueryString("message");
+        let userID = '';
+        let openURL = getQueryString("redirect");
+        let msg = getQueryString("message");
         //$(document).ready(function () {
-    if (msg !== '') {
-        alert(msg);
-    }
-    CheckLogin();
-    loadDatabaseList('#txtDatabaseID'); 
-    SetEvents();
-    $('#txtUserID').focus();
-        //});
-    function SetEvents() {
-        $('#dvLogin').on('shown.bs.modal', function () {
-            $('#txtUserID').focus();
-        });
-        $('#txtUserID').keydown(function (event) {
-            if (event.which === 13) {
-                $('#txtPassword').focus();
-            }
-        });
-        $('#txtPassword').keydown(function (event) {
-            if (event.which === 13) {
-                Login();
-            }
-        });
-    }
-    function CheckLogin() {
-        if (userID === '') {
-            $.get('Config/GetLogin')
-                .done(function (r) {
-                    if (r.user.data.UserID !== null) {
-                        OpenMenu();
-                    } else {
-                        userID = '';
-                    }
-                });
+        if (msg !== '') {
+            alert(msg);
         }
-    }
-    function Login() {
-        userID = $('#txtUserID').val();
-        if (userID !== '') {
-            var Password = $('#txtPassword').val();
-            var dbName = $('#txtDatabaseID').val();
-            if (dbName == '') {
-                alert('Please choose database first');
+        CheckLogin();
+        SetEvents();
+        $('#txtUserID').focus();
+        //});
+        function SetEvents() {
+            $('#dvLogin').on('shown.bs.modal', function () {
+                $('#txtUserID').focus();
+            });
+            $('#txtUserID').keydown(function (event) {
+                if (event.which === 13) {
+                    $('#txtPassword').focus();
+                }
+            });
+            $('#txtPassword').keydown(function (event) {
+                if (event.which === 13) {
+                    Login();
+                }
+            });
+        }
+        function CheckLogin() {
+            if (userID === '') {
+                $.get('Config/GetLogin')
+                    .done(function (r) {
+                        if (r.user.data.UserID !== null) {
+                            OpenMenu();
+                        } else {
+                            userID = '';
+                            loadDatabaseList('#txtDatabaseID');
+                        }
+                    });
+            }
+        }
+        function Login() {
+            userID = $('#txtUserID').val();
+            if (userID !== '') {
+                var Password = $('#txtPassword').val();
+                var dbName = $('#txtDatabaseID').val();
+                if (dbName == '') {
+                    alert('Please choose database first');
+                    return;
+                }
+                $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password + '&Database=' + dbName)
+                    .done(function (r) {
+                        if (r.user.data.length > 0) {
+                            OpenMenu();
+                        } else {
+                            userID = '';
+                            alert('User ID or Password Incorrect');
+                        }
+                    });
+            } else {
+                userID = '';
+            }
+        }
+        function OpenMenu() {
+            if (openURL !== '') {
+                window.location.href = openURL;
                 return;
             }
-            $.get('Config/SetLogin?Code=' + userID + '&Pass=' + Password + '&Database=' +dbName)
-                .done(function (r) {
-                    if (r.user.data.length > 0) {
-                        OpenMenu();
-                    } else {
-                        userID = '';
-                        alert('User ID or Password Incorrect');
-                    }
-                });
-        } else {
-            userID = '';
+            window.location.href = 'Menu/Index';
         }
-    }
-    function OpenMenu() {
-        if (openURL !== '') {
-            window.location.href = openURL;
-            return;
-        }
-        window.location.href = 'Menu/Index';
-    }
     </script>
 </body>
 </html>

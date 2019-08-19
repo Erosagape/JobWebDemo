@@ -1162,7 +1162,17 @@ End Code
         alert('This job already cancelled');
     }
     function CloseJob() {
-        if ($('#txtCloseBy').val()=='') {
+        if ($('#txtCloseBy').val() == '') {
+            if ($('#txtDutyDate').val()=='') {
+                alert('Please Entry Duty Date before close job');
+                $('#txtDutyDate').focus();
+                return;
+            }
+            if ($('#txtConfirmDate').val()=='') {
+                alert('Please Entry Confirm Date before close job');
+                $('#txtConfirmDate').focus();
+                return;
+            }
             if (rec.JobStatus < 3) {
                 rec.JobStatus = 3;
             }

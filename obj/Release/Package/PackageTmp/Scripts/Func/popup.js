@@ -34,6 +34,15 @@ function BindEvent(t, d, ev) {
     });
     $(d).modal('show');
 }
+function ShowWait() {
+    if ($('#dvWaiting').is(':visible')) {
+        return;
+    }
+    $('#dvWaiting').modal('show');
+}
+function CloseWait() {
+    $('#dvWaiting').modal('hide');  
+}
 //Function for loading data to Grid for popup selection
 function SetGridConfigList(p, g, d, ev) {
     $(g).DataTable({
