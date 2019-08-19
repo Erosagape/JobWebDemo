@@ -670,34 +670,74 @@ Namespace Controllers
                 End If
 
                 Dim oData1 = New CUtil(jobWebConn).GetTableFromSQL(SQLDashboard1(tSqlw1))
-                oData1.Columns.Add("JobStatusName", Type.GetType("System.String"))
                 msg = SQLDashboard1(tSqlw1)
-                'If oData1.Rows.Count>1 Then
+                Dim json1 As String = ""
                 For i As Integer = 0 To oData1.Rows.Count - 1
+                    If i = 0 Then
+                        json1 = "[""Status"",""Volume""]"
+                    End If
                     Dim status As String = Convert.ToInt16(oData1.Rows(i)("JobStatus")).ToString("00")
-                    msg = "DATA1-" & status
-                    oData1.Rows(i)("JobStatusName") = GetValueConfig("JOB_STATUS", status)
+                    json1 &= ",[""" & GetValueConfig("JOB_STATUS", status) & """," & oData1.Rows(i)("TotalJob") & "]"
                 Next
-                oData1.Columns.Remove("JobStatus")
-                'End If
+
                 Dim oData2 = New CUtil(jobWebConn).GetTableFromSQL(SQLDashboard2(tSqlw1))
                 msg = SQLDashboard2(tSqlw1)
-                oData2.Columns.Add("JobTypeName", Type.GetType("System.String"))
-                'If oData2.Rows.Count > 0 Then
+                Dim json2 As String = ""
                 For i As Integer = 0 To oData2.Rows.Count - 1
-                    Dim status As String = Convert.ToInt16(oData2.Rows(i)("JobType")).ToString("00")
-                    msg = "DATA2-" & status
-                    oData2.Rows(i)("JobTypeName") = GetValueConfig("JOB_TYPE", status)
+                    If i = 0 Then
+                        json2 = "["
+                        For j As Integer = 0 To oData2.Columns.Count - 1
+                            If json2 <> "[" Then
+                                json2 &= ","
+                            End If
+                            json2 &= """" & oData2.Columns(j).ColumnName & """"
+                        Next
+                        json2 &= "]"
+                    End If
+                    json2 &= ",["
+                    For j As Integer = 0 To oData2.Columns.Count - 1
+                        If j > 0 Then
+                            json2 &= ","
+                        End If
+                        If oData2.Columns(j).ColumnName = "JobType" Then
+                            Dim status As String = Convert.ToInt16(oData2.Rows(i)("JobType")).ToString("00")
+                            json2 &= """" & GetValueConfig("JOB_TYPE", status) & """"
+                        Else
+                            json2 &= "" & oData2.Rows(i)(j)
+                        End If
+                    Next
+                    json2 &= "]"
                 Next
-                oData2.Columns.Remove("JobType")
-                'End If
+
                 Dim oData3 = New CUtil(jobWebConn).GetTableFromSQL(SQLDashboard3(tSqlw1))
                 msg = SQLDashboard3(tSqlw1)
-                Dim json1 = JsonConvert.SerializeObject(oData1)
-                Dim json2 = JsonConvert.SerializeObject(oData2)
-                Dim json3 = JsonConvert.SerializeObject(oData3)
-                'msg = "ODATA4"
-                Return Content("{""result"":[{""data1"":" & json1 & ",""data2"":" & json2 & ",""data3"":" & json3 & "}]}", jsonContent)
+
+                Dim json3 As String = ""
+                For i As Integer = 0 To oData3.Rows.Count - 1
+                    If i = 0 Then
+                        json3 = "["
+                        For j As Integer = 0 To oData3.Columns.Count - 1
+                            If json3 <> "[" Then
+                                json3 &= ","
+                            End If
+                            json3 &= """" & oData3.Columns(j).ColumnName & """"
+                        Next
+                        json3 &= "]"
+                    End If
+                    json3 &= ",["
+                    For j As Integer = 0 To oData3.Columns.Count - 1
+                        If j > 0 Then
+                            json3 &= ","
+                        End If
+                        If oData3.Columns(j).ColumnName = "CustCode" Then
+                            json3 &= """" & oData3.Rows(i)(j) & """"
+                        Else
+                            json3 &= "" & oData3.Rows(i)(j)
+                        End If
+                    Next
+                    json3 &= "]"
+                Next
+                Return Content("{""result"":[{""data1"":[" & json1 & "],""data2"":[" & json2 & "],""data3"":[" & json3 & "]}]}", jsonContent)
             Catch ex As Exception
                 Return Content("{""result"":[],""msg"":""" & msg & " " & ex.Message & """}", jsonContent)
             End Try

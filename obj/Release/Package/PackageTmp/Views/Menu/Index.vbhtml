@@ -28,58 +28,45 @@ End Code
         drawChart();
     }
     function drawChart() {
-        var dataVol = google.visualization.arrayToDataTable([
-            ['Type', 'Volume'],
-            ['IMPORT/AIR', 11],
-            ['IMPORT/SEA', 2],
-            ['EXPORT/AIR', 2],
-            ['EXPORT/SEA', 2],
-            ['DOMESTIC/TRUCK', 7]
-        ]);
+        $.get(path + 'JobOrder/GetDashBoard', function (r) {
+            if (r.result.length > 0) {
+                var dataVol = google.visualization.arrayToDataTable(r.result[0].data1);
 
-        var volOptions = {
-            title: 'Total Jobs This Month',
-            pieHole: 0.4,
-        };
+                var volOptions = {
+                    title: 'Total Job By Status',
+                    pieHole: 0.4,
+                };
 
-        var chartVol = new google.visualization.PieChart(document.getElementById('chartVol'));
-        chartVol.draw(dataVol, volOptions);
+                var chartVol = new google.visualization.PieChart(document.getElementById('chartVol'));
+                chartVol.draw(dataVol, volOptions);
 
-        var dataStatus = google.visualization.arrayToDataTable([
-        ['Type', 'Wait Confirm', 'Wait Operation', 'Wait Clear', 'Wait Bill',
-         'Wait Payment', 'Completed', { role: 'annotation' } ],
-        ['IMPORT', 10, 24, 20, 32, 18, 5, ''],
-        ['EXPORT', 16, 22, 23, 30, 16, 9, ''],
-        ['DOMESTIC', 28, 19, 29, 30, 12, 13, '']
-        ]);
+                var dataStatus = google.visualization.arrayToDataTable(r.result[0].data2);
 
-        var statusOptions = {
-            legend: { position: 'top', maxLines: 3 },
-            isStacked: 'percent',
-            hAxis: {
-                minValue: 0,
-                ticks: [0, .25, .5, .75, 1]
-          }
-        };
+                var statusOptions = {
+                    legend: { position: 'top', maxLines: 3 },
+                    isStacked: 'percent',
+                    hAxis: {
+                        minValue: 0,
+                        ticks: [0, .25, .5, .75, 1]
+                    }
+                };
 
-        var chartStatus = new google.visualization.ColumnChart(document.getElementById('chartStatus'));
-        chartStatus.draw(dataStatus, statusOptions);
+                var chartStatus = new google.visualization.ColumnChart(document.getElementById('chartStatus'));
+                chartStatus.draw(dataStatus, statusOptions);
 
-        var dataCust = google.visualization.arrayToDataTable([
-            ['Status', 'Wait Confirm', 'Wait Operation', 'Wait Clear', 'Wait Bill',
-                'Wait Payment', 'Completed', { role: 'annotation' }],
-            ['APL', 10, 24, 20, 32, 18, 5, ''],
-            ['TAWAN', 16, 22, 23, 30, 16, 9, ''],
-            ['BSAT', 28, 19, 29, 30, 12, 10, ''],
-            ['KGM', 20, 15, 10, 15,21, 8, ''],
-        ]);
+                var dataCust = google.visualization.arrayToDataTable(r.result[0].data3);
 
-        var custOptions = {
-            legend: { position: 'top', maxLines: 3 },
-            isStacked: true,
-        };
+                var custOptions = {
+                    legend: { position: 'top', maxLines: 3 },
+                    isStacked: true,
+                };
 
-        var chartCust = new google.visualization.BarChart(document.getElementById('chartCust'));
-        chartCust.draw(dataCust, custOptions);
+                var chartCust = new google.visualization.BarChart(document.getElementById('chartCust'));
+                chartCust.draw(dataCust, custOptions);
+
+            }
+        });
+
+
     }
 </script>
