@@ -82,7 +82,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delbranch?code=' + code, function (r) {
-            alert(r.branch.result);
+            ShowMessage(r.branch.result);
             ClearData();
         });
     }
@@ -94,13 +94,13 @@ End Code
         };
         if (obj.Code != "") {
             if (obj.BrName == '') {
-                alert('Please enter branch name');
+                ShowMessage('Please enter branch name');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.Code + "/" + obj.BrName +"?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetBranch", "Master")",
                 type: "POST",
@@ -111,14 +111,14 @@ End Code
                         $('#txtCode').val(response.result.data);
                         $('#txtCode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function SearchData(type) {

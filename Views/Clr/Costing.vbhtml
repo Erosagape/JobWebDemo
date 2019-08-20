@@ -127,7 +127,7 @@ End Code
     }
     $('#tbDetail tbody').on('dblclick', 'tr', function () {
         let clearno = $(this).find('td:eq(1)').text().split('#')[0];
-        //alert('you click ' + clearno);
+        //ShowMessage('you click ' + clearno);
         window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
     });
     $('#btnPrintJobsum').on('click', function () {
@@ -137,6 +137,7 @@ End Code
         window.open(path + 'Clr/GenerateInv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtJNo').val(),'','');
     });
     function RefreshGrid() {
+        ShowWait();
         $.get(path + 'clr/getclearingreport?branch=' + branch + '&job=' + code, function (r) {
             if (r.data[0].Table !== undefined) {
                 let h = r.data[0].Table[0];
@@ -241,13 +242,14 @@ End Code
                 $('#txtSumPending').val(CDbl(amtpending, 2));
 
             }
+            CloseWait();
         });
     }
     function OpenInvoice(branch,code) {
         window.open(path + 'Acc/FormInv?Branch=' + branch + '&Code=' + code,'_blank');
     }
     function OpenEditor(clrno, item) {
-        //alert('you click ' + clrno + '/' + item);
+        //ShowMessage('you click ' + clrno + '/' + item);
         $('#lblClrNo').text(clrno);
         $('#lblItemNo').text(item);
         $('#dvEditor').modal('show');
@@ -274,7 +276,7 @@ End Code
             data: jsonString,
             success: function (response) {
                 RefreshGrid();
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
                 $('#dvEditor').modal('hide');
             }
         });

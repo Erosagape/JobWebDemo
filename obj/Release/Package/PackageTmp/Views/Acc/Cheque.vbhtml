@@ -516,7 +516,7 @@ End Code
             $('#txtPostedTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'Post voucher!' : 'cancel post!'));
+        ShowMessage('You are not allow to ' + (b ? 'Post voucher!' : 'cancel post!'));
         $('#chkPosted').prop('checked', !chkmode);
     }
     function SetCancel(b) {
@@ -526,7 +526,7 @@ End Code
             $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'cancel voucher!' : 'do this!'));
+        ShowMessage('You are not allow to ' + (b ? 'cancel voucher!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
     }
     function LoadData() {
@@ -600,7 +600,7 @@ End Code
     }
     function AddPayment() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not authorize to add payment');
+            ShowMessage('you are not authorize to add payment');
             return;
         }
         ClearPayment();
@@ -640,7 +640,7 @@ End Code
         let ask = confirm("Do you need to Save " + $('#txtControlNo').val() + "?");
         if (ask == false) return;
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetVoucherHeader", "Acc")",
             type: "POST",
@@ -651,10 +651,10 @@ End Code
                     $('#txtControlNo').val(response.result.data);
                     $('#txtControlNo').focus();
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
 
@@ -666,7 +666,7 @@ End Code
         }
         $.get(path + 'acc/getvouchergrid?branch=' + code + '&type=CHQ' + $('#cboPRType').val(), function (r) {
             if (r.voucher.data.length == 0) {
-                alert('data not found on this branch');
+                ShowMessage('data not found on this branch');
                 return;
             }
             let h = r.voucher.data[0].Table;
@@ -934,7 +934,7 @@ End Code
             ForJNo:$('#txtForJNo').val()
         };
         let jsonText = JSON.stringify({ data:[ obj ]});
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetVoucherSub", "Acc")",
             type: "POST",
@@ -944,7 +944,7 @@ End Code
                 LoadData();
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -955,7 +955,7 @@ End Code
         let branch = $('#txtBranchCode').val();
 
         $.get(path + 'acc/delvouchersub?branch=' + branch + '&code=' + code + '&item=' + itemno, function (r) {
-            alert(r.voucher.result);
+            ShowMessage(r.voucher.result);
         });
     }
 
@@ -1018,7 +1018,7 @@ End Code
     }
     function PrintData() {
         if (userRights.indexOf('P') < 0) {
-            alert('you are not authorize to print');
+            ShowMessage('you are not authorize to print');
             return;
         }
         window.open(path + 'Acc/FormVoucher?branch=' + $('#txtBranchCode').val() + '&controlno=' + $('#txtControlNo').val());

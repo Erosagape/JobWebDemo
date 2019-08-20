@@ -120,13 +120,13 @@ End Code
         };
         if (obj.Type != "") {
             if (obj.Description == '') {
-                alert('Please enter description');
+                ShowMessage('Please enter description');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.Type + "/" + obj.Description +"?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetDeclareType", "Master")",
                 type: "POST",
@@ -137,14 +137,14 @@ End Code
                         $('#txtType').val(response.result.data);
                         $('#txtType').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData() {
@@ -164,7 +164,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/deldeclaretype?code=' + code, function (r) {
-            alert(r.RFDCT.result);
+            ShowMessage(r.RFDCT.result);
             ClearData();
         });
     }

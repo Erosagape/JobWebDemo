@@ -161,7 +161,7 @@ End Code
         $.get(path + 'adv/getadvancegrid?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.adv.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if (isAlert==true) alert('data not found');
+                if (isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.adv.data[0].Table;
@@ -228,7 +228,7 @@ End Code
     }
     function ApproveData() {
         if (arr.length < 0) {
-            alert('no data to approve');
+            ShowMessage('no data to approve');
             return;
         }
         let dataApp = [];
@@ -244,10 +244,10 @@ End Code
             data: jsonString,
             success: function (response) {
                 SetGridAdv(false);
-                response ? alert("Approve Completed!") : alert("Cannot Approve");
+                response ? ShowMessage("Approve Completed!") : ShowMessage("Cannot Approve");
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;

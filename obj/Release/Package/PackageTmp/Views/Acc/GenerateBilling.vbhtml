@@ -204,7 +204,7 @@ End Code
         $.get(path + 'acc/getinvforbill?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.invdetail.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if (isAlert==true) alert('data not found');
+                if (isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.invdetail.data;
@@ -246,11 +246,11 @@ End Code
     }
     function ShowSummary() {
         if ($('#txtCustCode').val() == '') {
-            alert('Please select Customer first');
+            ShowMessage('Please select Customer first');
             return;
         }
         if (arr.length == 0) {
-            alert('no data to approve');
+            ShowMessage('no data to approve');
             return;
         }
         let totaladv = 0;
@@ -327,7 +327,7 @@ End Code
     }
     function ApproveData() {
         if ($('#txtBillToCustCode').val() == '') {
-            alert('Please select billing Place');
+            ShowMessage('Please select billing Place');
             return;
         }
         let dataInv = {
@@ -358,10 +358,10 @@ End Code
                     SaveDetail(response.result.data);
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;
@@ -370,7 +370,7 @@ End Code
         $('#txtDocNo').val(docno);
         let list = GetDataDetail(arr,docno);
         let jsonText = JSON.stringify({ data: list });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetBillDetail", "Acc")",
                 type: "POST",
@@ -378,15 +378,15 @@ End Code
                 data: jsonText,
                 success: function (response) {
                     if (response.result.data !== null) {
-                        alert(response.result.msg+'\n->'+response.result.data);
+                        ShowMessage(response.result.msg+'\n->'+response.result.data);
                         SetGridAdv(false);
                         $('#btnGen').hide();
                         return;
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
     }

@@ -54,10 +54,10 @@ End Code
                 }
                 var json = JSON.stringify(tb);
                 $('#txtJsonResult').val(json);
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }

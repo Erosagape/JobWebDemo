@@ -108,7 +108,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delcurrency?code=' + code, function (r) {
-            alert(r.currency.result);
+            ShowMessage(r.currency.result);
             ClearData();
         });
     }
@@ -122,13 +122,13 @@ End Code
         };
         if (obj.Code != "") {
             if (obj.TName == '') {
-                alert('Please enter currency name');
+                ShowMessage('Please enter currency name');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.Code +"?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetCurrency", "Master")",
                 type: "POST",
@@ -139,14 +139,14 @@ End Code
                         $('#txtCode').val(response.result.data);
                         $('#txtCode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function SearchData(type) {

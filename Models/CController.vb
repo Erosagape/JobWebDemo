@@ -32,17 +32,24 @@ Public Class CController
             If CheckSession("CurrUser") Then
                 Session("CurrUser") = ""
             End If
-            If CheckSession("CurrLicense") Then
-                Session("CurrLicense") = ""
-            End If
             ViewBag.User = Session("CurrUser").ToString
-            ViewBag.LICENSE_NAME = Session("CurrLicense").ToString
             If ViewBag.User = "" Then
                 Return Redirect("~/index.html?redirect=" + baseURL)
             End If
+            ViewBag.UserName = ""
+            If CheckSession("UserProfiles") Then
+                Return Redirect("~/index.html?redirect=" + baseURL)
+            Else
+                ViewBag.UserName = DirectCast(Session("UserProfiles"), CUser).TName
+            End If
+            If CheckSession("CurrLicense") Then
+                Session("CurrLicense") = ""
+            End If
+            ViewBag.LICENSE_NAME = Session("CurrLicense").ToString
             If ViewBag.LICENSE_NAME = "" Then
                 Return Redirect("~/index.html?redirect=" + baseURL)
             End If
+
             If CheckSession("ConnJob") Then
                 jobWebConn = ""
                 Return Redirect("~/index.html?redirect=" + baseURL)
@@ -57,13 +64,13 @@ Public Class CController
                 jobMasConn = Session("ConnMas").ToString
                 ViewBag.CONNECTION_MAS = jobMasConn
             End If
+
             If CheckSession("CurrForm") Then
                 Session("CurrForm") = ""
             End If
             If CheckSession("CurrRights") Then
                 Session("CurrRights") = "*MIREDP"
             End If
-            LoadCompanyProfile()
             If modName <> "" Then
                 Session("CurrForm") = modName & "/" & vName
                 Session("CurrRights") = Main.GetAuthorize(ViewBag.User, modName, vName)
@@ -71,6 +78,7 @@ Public Class CController
                     Return RedirectToAction("AuthError", "Menu")
                 End If
             End If
+            LoadCompanyProfile()
             ViewBag.Module = Session("CurrForm").ToString()
             ViewBag.UserRights = Session("CurrRights").ToString()
             Return View(vName)

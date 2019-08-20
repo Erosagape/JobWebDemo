@@ -136,7 +136,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delcountry?code=' + code, function (r) {
-            alert(r.country.result);
+            ShowMessage(r.country.result);
             ClearData();
         });
     }
@@ -150,13 +150,13 @@ End Code
         };
         if (obj.CTYCODE != "") {
             if (obj.CTYName == '') {
-                alert('Please enter country name');
+                ShowMessage('Please enter country name');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.CTYCODE + "/" + obj.CTYName +"?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetCountry", "Master")",
                 type: "POST",
@@ -167,14 +167,14 @@ End Code
                         $('#txtCTYCODE').val(response.result.data);
                         $('#txtCTYCODE').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function SearchData(type) {

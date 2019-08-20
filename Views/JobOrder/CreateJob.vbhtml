@@ -332,32 +332,32 @@ End Code
     }
     function CreateJob() {
         if ($('#txtBranchName').val() === '') {
-            alert('Please select branch before create job');
+            ShowMessage('Please select branch before create job');
             $('#txtBranchCode').focus();
             return;
         }
         if ($('#cboJobType').val() === '') {
-            alert('Please select job type before create job');
+            ShowMessage('Please select job type before create job');
             $('#cboJobType').focus();
             return;
         }
         if ($('#cboShipBy').val() === '') {
-            alert('Please select ship by before create job');
+            ShowMessage('Please select ship by before create job');
             $('#cboShipBy').focus();
             return;
         }
         if ($('#txtCSName').val() === '') {
-            alert('Please select CS before create job');
+            ShowMessage('Please select CS before create job');
             $('#txtCSCode').focus();
             return;
         }
         if ($('#txtCustName').val() === '') {
-            alert('Please select customer before create job');
+            ShowMessage('Please select customer before create job');
             $('#txtCustCode').focus();
             return;
         }
         if ($('#txtCustInv').val() === '') {
-            alert('Please select customer invoice before create job');
+            ShowMessage('Please select customer invoice before create job');
             $('#txtCustInv').focus();
             return;
         }
@@ -374,7 +374,7 @@ End Code
         $.get(strParam)
             .done(function (r) {
                 if (r.length == 0) {
-                    alert(strParam);
+                    ShowMessage(strParam);
                     return;
                 }
                 if (r.job.status == "Y") {
@@ -395,10 +395,10 @@ End Code
                     data.ManagerCode = $('#txtManagerCode').val();
                     PostData(data);
                 } else {
-                    alert(r.job.result);
+                    ShowMessage(r.job.result);
                 }
                 return;
-                //alert(r.job.result + '=>' + data.JNo);
+                //ShowMessage(r.job.result + '=>' + data.JNo);
             });
     }
     function OpenJob() {
@@ -406,14 +406,14 @@ End Code
     }
     function PostData(obj) {
         let jsonString = JSON.stringify({ data: obj });
-        //alert(jsonString);
+        //ShowMessage(jsonString);
         $.ajax({
             url: "@Url.Action("SaveJobData", "JobOrder")",
             type: "POST",
             contentType: "application/json",
             data: jsonString,
             success: function (response) {                
-                //alert(response);
+                //ShowMessage(response);
                 $('#txtJNo').val(obj.JNo);
                 $('#dvResp').html(response);
                 $('#frmShowJob').modal('show');

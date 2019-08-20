@@ -152,7 +152,7 @@ End Code
         var ask = confirm("Do you need to Delete " + code + "?");
         if (ask == false) return;
             $.get(path + 'master/delbudgetpolicy?code=' + code, function (r) {
-                alert(r.budgetpolicy.result);
+                ShowMessage(r.budgetpolicy.result);
                 ClearData();
             });
     }
@@ -191,7 +191,7 @@ End Code
             var ask = confirm("Do you need to Save " + obj.ID + "?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetBudgetPolicy", "Master")",
                 type: "POST",
@@ -204,14 +204,14 @@ End Code
                         $('#dvEditor').modal('hide');
                         ShowData();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
 	}
     function ClearData() {

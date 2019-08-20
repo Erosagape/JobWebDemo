@@ -254,7 +254,7 @@ End Code
         $.get(path + 'acc/getbillheader?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.billheader.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if (isAlert==true) alert('data not found');
+                if (isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.billheader.data;
@@ -315,7 +315,7 @@ End Code
                 if (userRights.indexOf('E') > 0) {
                     $('#frmHeader').modal('show');
                 } else {
-                    alert('you are not allow to edit billing document');
+                    ShowMessage('you are not allow to edit billing document');
                 }
             });
         });
@@ -357,7 +357,7 @@ End Code
     function CancelData() {
         if (userRights.indexOf('D') > 0) {
             if ($('#txtCancelReson').val() == '') {
-                alert('Please enter reason for cancel');
+                ShowMessage('Please enter reason for cancel');
                 $('#txtCancelReson').focus();
                 return;
             }
@@ -365,7 +365,7 @@ End Code
             $('#txtCancelTime').val(ShowTime(GetTime()));
             $('#txtCancelProve').val(user);
         } else {
-            alert('you are not allow to cancel billing Document');
+            ShowMessage('you are not allow to cancel billing Document');
         }
     }
     function SaveData() {
@@ -390,14 +390,14 @@ End Code
                 success: function (response) {
                     if (response.result.data !== null) {
                         
-                        alert(response.result.data);
+                        ShowMessage(response.result.data);
                         $('#frmHeader').modal('hide');
                         return;
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         }
@@ -444,11 +444,11 @@ End Code
                         if (r.billdetail.data !== null) {
                             ShowDetail(row.BranchCode, row.BillAcceptNo);
                         }
-                        alert(r.billdetail.result);
+                        ShowMessage(r.billdetail.result);
                     });
             }
         } else {
-            alert('no data to delete');
+            ShowMessage('no data to delete');
         }
 
     }

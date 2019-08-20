@@ -161,7 +161,7 @@ End Code
                 LoadData(r.servicegroup.data[0]);
                 return;
             } else {
-                alert('Data not found');
+                ShowMessage('Data not found');
                 AddData();
             }
         });
@@ -209,7 +209,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delservicegroup?code=' + code, function (r) {
-            alert(r.servicegroup.result);
+            ShowMessage(r.servicegroup.result);
             ShowData(r.servicegroup.data[0]);
         });
     }
@@ -278,17 +278,17 @@ End Code
     function SaveData() {
         var obj = GetDataSave();
         if (obj.GroupCode == '') {
-            alert('Please enter code');
+            ShowMessage('Please enter code');
             return;
         }
         if (obj.GroupName == '') {
-            alert('Please enter name');
+            ShowMessage('Please enter name');
             return;
         }
         var ask = confirm("Do you need to " + (row.GroupCode == "" ? "Add" : "Save") + " this data?");
         if (ask == false) return;
         var jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetServiceGroup", "Master")",
             type: "POST",
@@ -299,10 +299,10 @@ End Code
                     $('#txtGroupCode').val(response.result.data);
                     $('#txtGroupCode').focus();
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });        
     }
@@ -312,7 +312,7 @@ End Code
             var ask = confirm("Do you need to set " + (row_d.SICode) + " to this group?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: row_d });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetServiceCode", "Master")",
                 type: "POST",
@@ -322,10 +322,10 @@ End Code
                     if (response.result.data != null) {
                         ShowDetail();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         }

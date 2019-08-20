@@ -108,7 +108,7 @@ End Code
         var ask = confirm("Do you need to Delete " + code + " of "+key+"?");
         if (ask == false) return;
             $.get(path + 'master/delinterport?code=' + code + '&key='+key, function (r) {
-                alert(r.interport.result);
+                ShowMessage(r.interport.result);
                 ClearData();
         });
     }
@@ -132,17 +132,17 @@ End Code
         };
         if (obj.PortCode !== "") {
             if (obj.CountryCode === "") {
-                alert('Please enter country code');
+                ShowMessage('Please enter country code');
                 return;
             }
             if (obj.PortName === "") {
-                alert('Please enter port name');
+                ShowMessage('Please enter port name');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.PortCode + "?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetInterPort", "Master")",
                 type: "POST",
@@ -153,14 +153,14 @@ End Code
                         $('#txtPortCode').val(response.result.data);
                         $('#txtPortCode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData(){   

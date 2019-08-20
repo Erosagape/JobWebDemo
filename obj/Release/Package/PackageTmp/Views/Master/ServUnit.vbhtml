@@ -87,7 +87,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delservunit?code=' + code, function (r) {
-            alert(r.servunit.result);
+            ShowMessage(r.servunit.result);
             ClearData();
         });
     }
@@ -100,14 +100,14 @@ End Code
         };
         if (obj.UnitType != "") {
             if (obj.UName == '') {
-                alert('Please enter unit name');
+                ShowMessage('Please enter unit name');
                 $('#txtUName').focus();
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.UnitType + "?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetServUnit", "Master")",
                 type: "POST",
@@ -118,14 +118,14 @@ End Code
                         $('#txtUnitType').val(response.result.data);
                         $('#txtUnitType').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData() {

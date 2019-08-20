@@ -418,7 +418,7 @@ End Code
             $('#chkCancel').prop('checked', !chkmode);
             return;
         }
-        alert('You are not allow to ' + (b ? 'cancel payment!' : 'do this!'));
+        ShowMessage('You are not allow to ' + (b ? 'cancel payment!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
     }
     function SetLOVs() {
@@ -445,7 +445,7 @@ End Code
     }
     function ShowData(branchcode, docno) {
         if (userRights.indexOf('R') < 0) {
-            alert('you are not authorize to view data');
+            ShowMessage('you are not authorize to view data');
             return;
         }
         $.get(path + 'acc/getpayment?branch'+branchcode+'&code='+ docno, function (r) {
@@ -459,12 +459,12 @@ End Code
         let obj = GetDataHeader();
         if (obj.DocNo == '') {
             if (userRights.indexOf('I') < 0) {
-                alert('you are not authorize to add');
+                ShowMessage('you are not authorize to add');
                 return;
             }
         }
         if (userRights.indexOf('E') < 0) {
-            alert('you are not authorize to save');
+            ShowMessage('you are not authorize to save');
             return;
         }
         let jsonString = JSON.stringify({ data: obj });
@@ -474,14 +474,14 @@ End Code
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
                 if (response.result.data !== null) {
                     $('#txtDocNo').val(response.result.data);
                     ShowData($('#txtBranchCode').val(), $('#txtDocNo').val());
                 }
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -548,7 +548,7 @@ End Code
     }
     function AddHeader() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not authorize to add');
+            ShowMessage('you are not authorize to add');
             return;
         }
         $('#txtDocNo').val('');
@@ -556,7 +556,7 @@ End Code
     }
     function AddDetail() {
         if ($('#txtDocNo').val() == '') {
-            alert('Please save document before add detail');
+            ShowMessage('Please save document before add detail');
             return;
         }
         ClearDetail();
@@ -565,17 +565,17 @@ End Code
     function DeleteDetail() {
         if (dtl != undefined) {
             if (userRights.indexOf('D') < 0) {
-                alert('you are not authorize to delete');
+                ShowMessage('you are not authorize to delete');
                 return;
             }
             if (confirm('are you sure to delete this data?') == true) {
                 $.get(path + 'acc/delpaydetail?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val() + '&item=' + dtl.ItemNo, function (r) {
-                    alert(r.payment.result);
+                    ShowMessage(r.payment.result);
                     ShowData($('#txtBranchCode').val(), $('#txtDocNo').val());
                 });
             }
         } else {
-            alert('No data to delete');
+            ShowMessage('No data to delete');
         }
     }
     function ClearHeader() {
@@ -609,33 +609,33 @@ End Code
     function SaveDetail() {
 
         if (hdr == undefined) {
-            alert('Please add header before');
+            ShowMessage('Please add header before');
             return;
         }
         if (hdr.DocNo == '') {
-            alert('Please save header first');
+            ShowMessage('Please save header first');
             return;
         }
         let obj = GetDataDetail();
         if (obj.ItemNo == 0) {
             if (userRights.indexOf('I') < 0) {
-                alert('you are not authorize to add');
+                ShowMessage('you are not authorize to add');
                 return;
             }
         }
         if (userRights.indexOf('E') < 0) {
-            alert('you are not authorize to edit');
+            ShowMessage('you are not authorize to edit');
             return;
         }
         let jsonString = JSON.stringify({ data: obj });
-        //alert(jsonString);
+        //ShowMessage(jsonString);
         $.ajax({
             url: "@Url.Action("SetPayDetail", "Acc")",
             type: "POST",
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
                 ShowData($('#txtBranchCode').val(), $('#txtDocNo').val());
             }
         });
@@ -774,7 +774,7 @@ End Code
         }
         $.get(path + 'acc/getpayment?branch=' +  w, function (r) {
             if (r.payment.header.length == 0) {
-                alert('data not found on this branch');
+                ShowMessage('data not found on this branch');
                 return;
             }
             let h = r.payment.header;

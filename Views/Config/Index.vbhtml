@@ -120,15 +120,15 @@ End Code
         //post data input to web API
         var obj = GetInput();
         if (obj.ConfigCode == '') {
-            alert('please enter config code');
+            ShowMessage('please enter config code');
             return;
         }
         if (obj.ConfigKey == '') {
-            alert('please enter config key');
+            ShowMessage('please enter config key');
             return;
         }
         if (obj.ConfigValue == '') {
-            alert('please enter config value');
+            ShowMessage('please enter config value');
             return;
         }
         var ask = confirm("Do you need to Save " + obj.ConfigCode + "/" + obj.ConfigKey + "?");
@@ -139,7 +139,7 @@ End Code
             contentType: "application/json",
             data: JSON.stringify({ data: obj }),
             success: function (response) {
-                response ? alert("Save Completed!") : alert("Cannot Save data");
+                response ? ShowMessage("Save Completed!") : ShowMessage("Cannot Save data");
                 ShowData($('#txtCode').val(), "");
                 $("#txtCode").focus();
             }
@@ -170,7 +170,7 @@ End Code
         var ask = confirm("Do you need to Delete " + code + "/" + key + "?");
         if (ask == false) return;
         $.get(path + 'config/delconfig' + GetParam(code,key), function (r) {
-            alert(r.config.result);
+            ShowMessage(r.config.result);
             ShowData($('#txtCode').val(), "");
         });
     }

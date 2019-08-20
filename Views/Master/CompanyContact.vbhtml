@@ -97,7 +97,7 @@ End Code
         $.get(path + 'master/getcompanycontact?branch=' + $('#txtBranch').val() + '&code=' + $('#txtCustCode').val(), function (r) {
             if (r.companycontact.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if (isAlert==true) alert('data not found');
+                if (isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.companycontact.data;
@@ -149,7 +149,7 @@ End Code
         let ask = confirm("Do you need to Delete " + item + "?");
         if (ask == false) return;
         $.get(path + 'master/delcompanycontact?branch=' + branch + '&code=' + code + '&item=' + item, function (r) {
-            alert(r.companycontact.result);
+            ShowMessage(r.companycontact.result);
             ShowData();
             ClearData();
         });
@@ -174,14 +174,14 @@ End Code
             Phone:$('#txtPhone').val(),
         };
         if (obj.CustCode == '' || obj.Branch == '') {
-            alert('Please select customer');
+            ShowMessage('Please select customer');
             return;
         }
         if (obj.ItemNo != "") {
             let ask = confirm("Do you need to Save " + obj.ItemNo + "?");
             if (ask == false) return;
             let jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetCompanyContact", "Master")",
                 type: "POST",
@@ -192,14 +192,14 @@ End Code
                         ShowData();
                         ClearData();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
 	}
 	function ClearData(){		

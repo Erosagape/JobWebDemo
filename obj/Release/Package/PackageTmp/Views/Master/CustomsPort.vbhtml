@@ -95,7 +95,7 @@ End Code
         };
         if (obj.AreaCode != "") {
             if (obj.AreaName == '') {
-                alert('Please enter area name');
+                ShowMessage('Please enter area name');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.AreaCode +"?");
@@ -112,14 +112,14 @@ End Code
                         $('#txtAreaCode').val(response.result.data);
                         $('#txtAreaCode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData() {
@@ -139,7 +139,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delcustomsport?code=' + code, function (r) {
-            alert(r.RFARS.result);
+            ShowMessage(r.RFARS.result);
             ClearData();
         });
     }

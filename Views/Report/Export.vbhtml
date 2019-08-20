@@ -53,11 +53,11 @@ End Code
             if (response.result.data !== "") {
                 LoadData(response.result.data);
             }
-            alert(response.result.msg);
+            ShowMessage(response.result.msg);
         });
         func.catch(function (e) {
             let err = JSON.parse(e.responseText);
-            alert(err.result.msg);
+            ShowMessage(err.result.msg);
         });
     }
     function LoadData(fname) {
@@ -96,8 +96,8 @@ End Code
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
-                alert(fname +' has downloaded!'); // or you know, something with better UX...
+                ShowMessage(fname +' has downloaded!'); // or you know, something with better UX...
             })
-            .catch(() => alert('oh no!'));
+            .catch(() => ShowMessage('oh no!'));
     }
 </script>

@@ -191,7 +191,7 @@ End Code
         var ask = confirm("Do you need to Delete " + code + "?");
         if (ask == false) return;
         $.get(path + 'master/delbookaccount?branch='+branch+'&code=' + code, function (r) {
-            alert(r.bookaccount.result);
+            ShowMessage(r.bookaccount.result);
             ClearData();
         });
     }
@@ -267,14 +267,14 @@ End Code
                         $('#txtBookCode').val(response.result.data);
                         $('#txtBookCode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData(){

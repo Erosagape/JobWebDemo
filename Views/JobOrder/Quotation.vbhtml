@@ -496,7 +496,7 @@ End Code
         ClearItem();
         $.get(path + 'joborder/getquotation?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.quotation.header.length == 0) {                
-                //alert('data not found');
+                //ShowMessage('data not found');
                 return;
             }
             let h = r.quotation.header;
@@ -550,7 +550,7 @@ End Code
                 if (userRights.indexOf('E') > 0) {
                     $('#frmHeader').modal('show');
                 } else {
-                    alert('you are not allow to edit quotation');
+                    ShowMessage('you are not allow to edit quotation');
                 }
             });
         });
@@ -608,7 +608,7 @@ End Code
         if (userRights.indexOf('E') > 0) {
             $('#frmItem').modal('show');
         } else {
-            alert('you are not allow to edit quotation item');
+            ShowMessage('you are not allow to edit quotation item');
         }
     }
     function ShowDetail(branch, code) {
@@ -656,7 +656,7 @@ End Code
         if (userRights.indexOf('E') > 0) {
             $('#frmDetail').modal('show');
         } else {
-            alert('you are not allow to edit quotation');
+            ShowMessage('you are not allow to edit quotation');
         }
     }
     function PrintData() {
@@ -669,7 +669,7 @@ End Code
     function CancelData() {
         if (userRights.indexOf('D') > 0) {
             if ($('#txtCancelReason').val() == '') {
-                alert('Please enter reason for cancel');
+                ShowMessage('Please enter reason for cancel');
                 $('#txtCancelReason').focus();
                 return;
             }
@@ -677,7 +677,7 @@ End Code
             $('#txtCancelBy').val(user);
             $('#txtDocStatus').val('99');
         } else {
-            alert('you are not allow to cancel Quotation');
+            ShowMessage('you are not allow to cancel Quotation');
         }
     }
     function ApproveData() {
@@ -692,16 +692,16 @@ End Code
             if (row.DocStatus !== '99') $('#txtDocStatus').val(chkmode == 'I' ? '1' : '0');
             $('#btnUpdate').removeAttr('disabled');
         } else {
-            alert('you are not allow to approve quotation');
+            ShowMessage('you are not allow to approve quotation');
         }
     }
     function SaveData() {
         if ($('#txtBCustCode').val() == '') {
-            alert('please enter billing place');
+            ShowMessage('please enter billing place');
             return;
         }
         if ($('#txtManagerCode').val() == '') {
-            alert('please enter manager code');
+            ShowMessage('please enter manager code');
             return;
         }
         row.BranchCode = $('#txtBranchCode').val();
@@ -735,14 +735,14 @@ End Code
                 if (response.result.data !== null) {
                     ShowHeader();
                     $('#txtDocNo').val(response.result.data);
-                    alert(response.result.data);
+                    ShowMessage(response.result.data);
                     $('#frmHeader').modal('hide');
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -765,14 +765,14 @@ End Code
             success: function (response) {
                 if (response.result.data !== null) {
                     ShowDetail($('#txtBranchCode').val(), $('#txtDocNo').val());
-                    alert(response.result.data);
+                    ShowMessage(response.result.data);
                     //$('#frmDetail').modal('hide');
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -817,20 +817,20 @@ End Code
             success: function (response) {
                 if (response.result.data !== null) {
                     ShowItem($('#txtBranchCode').val(), $('#txtDocNo').val(), $('#txtDocItemNo').val());
-                    alert(response.result.data);
+                    ShowMessage(response.result.data);
                     //$('#frmItem').modal('hide');
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
     function DeleteDetail() {
         if (userRights.indexOf('D') < 0) {
-            alert('you are not allow to delete section');
+            ShowMessage('you are not allow to delete section');
             return;
         }
         if (row_d.SeqNo !== undefined) {
@@ -843,16 +843,16 @@ End Code
                             row_i = {};
                             $('#tbItem').DataTable().clear().draw();
                         }
-                        alert(r.quodetail.result);
+                        ShowMessage(r.quodetail.result);
                     });
             }
         } else {
-            alert('no selected section to delete');
+            ShowMessage('no selected section to delete');
         }
     }
     function DeleteItem() {
         if (userRights.indexOf('D') < 0) {
-            alert('you are not allow to delete item');
+            ShowMessage('you are not allow to delete item');
             return;
         }
         if (row_i.ItemNo !== undefined) {
@@ -863,24 +863,24 @@ End Code
                             ShowItem(row_d.BranchCode, row_d.QNo, row_d.SeqNo);
                             row_i = {};
                         }
-                        alert(r.quoitem.result);
+                        ShowMessage(r.quoitem.result);
                     });
             }
         } else {
-            alert('no selected item to delete');
+            ShowMessage('no selected item to delete');
         }
     }
     function AddHeader() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not allow to add quotation');
+            ShowMessage('you are not allow to add quotation');
             return;
         }
         if ($('#txtBranchCode').val() == '') {
-            alert('please enter branch');
+            ShowMessage('please enter branch');
             return;
         }
         if ($('#txtCustCode').val() == '') {
-            alert('please enter customer');
+            ShowMessage('please enter customer');
             return;
         }
         ShowHeader();
@@ -972,11 +972,11 @@ End Code
     }
     function AddDetail() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not allow to add section');
+            ShowMessage('you are not allow to add section');
             return;
         }
         if ($('#txtDocNo').val() == '') {
-            alert('please select quotation first');
+            ShowMessage('please select quotation first');
             return;
         }
         row_d = {};
@@ -985,11 +985,11 @@ End Code
     }
     function AddItem() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not allow to add item');
+            ShowMessage('you are not allow to add item');
             return;
         }
         if ($('#txtDocItemNo').val() == '') {
-            alert('please select some from section above first');
+            ShowMessage('please select some from section above first');
             return;
         }
         row_i = {};
@@ -1276,15 +1276,15 @@ End Code
     }
     function CopyData() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not allow to add quotation');
+            ShowMessage('you are not allow to add quotation');
             return;
         }
         if ($('#txtBranchCode').val() == '') {
-            alert('please enter branch');
+            ShowMessage('please enter branch');
             return;
         }
         if ($('#txtCustCode').val() == '') {
-            alert('please enter customer');
+            ShowMessage('please enter customer');
             return;
         }
         $('#frmCopy').modal('show');
@@ -1292,7 +1292,7 @@ End Code
     function CreateData() {
         $.get(path + 'JobOrder/CopyQuotation?branch=' + $('#txtBranchCode').val() + '&cust=' + $('#txtCustCode').val() + '|'+$('#txtCustBranch').val()+'&code=' + $('#txtBaseQNo').val())
             .done(function (r) {
-                alert(r.result);
+                ShowMessage(r.result);
                 ShowHeader();
             });
     }

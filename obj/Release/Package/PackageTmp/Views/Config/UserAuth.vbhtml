@@ -142,7 +142,7 @@ End Code
         var ask = confirm("Do you need to Delete " + code + "?");
         if (ask == false) return;
         $.get(path + 'master/deluserauth?code=' + code + '&app='+key+'&menu='+menu, function (r) {
-            alert(r.userauth.result);
+            ShowMessage(r.userauth.result);
             ClearData();
         });
     }
@@ -173,12 +173,12 @@ End Code
         };
         if (obj.UserID !== "") {
             if (obj.AppID === "") {
-                alert('Please select Application');
+                ShowMessage('Please select Application');
                 return;
             }
             obj.AppID = "MODULE_" + $('#txtAppID').val();
             if (obj.MenuID === "") {
-                alert('Please select Menu');
+                ShowMessage('Please select Menu');
                 return;
             }
             var ask = confirm("Do you need to Save This Authorize '" + obj.Author +"' for " + obj.UserID + " ("+ obj.AppID +"/" + obj.MenuID + ")?");
@@ -190,14 +190,14 @@ End Code
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData(){

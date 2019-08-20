@@ -80,7 +80,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delvessel?code=' + code, function (r) {
-            alert(r.vessel.result);
+            ShowMessage(r.vessel.result);
             ClearData();
         });
     }
@@ -92,14 +92,14 @@ End Code
         };
         if (obj.RegsNumber != "") {
             if (obj.TName == '') {
-                alert('Please enter vessel name');
+                ShowMessage('Please enter vessel name');
                 $('#txtTName').focus();
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.TName + "?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetVessel", "Master")",
                 type: "POST",
@@ -110,14 +110,14 @@ End Code
                         $('#txtRegsNumber').val(response.result.data);
                         $('#txtRegsNumber').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData() {

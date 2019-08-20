@@ -1,4 +1,7 @@
 ﻿//basic function tools for binding
+function ShowMessage(str) {
+    bootbox.alert(str);
+}
 function CreateLOV(dv, frm, tb, name, html, c) {
     if (c <= 4) html = html.replace('<th>desc2</th>', '');
     if (c <= 3) html = html.replace('<th>desc1</th>', '');

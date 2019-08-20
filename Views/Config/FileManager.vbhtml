@@ -40,7 +40,7 @@ End Code
     function RemoveFile(fname) {
         $.get(path + 'Config/RemovePicture?Path=' + imgpath + '&Name=' + fname, function (r) {
             ShowAllPic();
-            alert(r);
+            ShowMessage(r);
         });
     }
     //Used for upload image automatically

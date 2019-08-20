@@ -420,7 +420,7 @@ End Code
                 $('#cboCompanyType').val(cons);
             }
         } else {
-            alert('Data Not Found');
+            ShowMessage('Data Not Found');
             ClearData();
         }
     }
@@ -590,17 +590,17 @@ End Code
         };
         if (obj.CustCode != "") {
             if (obj.Branch == '') {
-                alert('Please enter branch');
+                ShowMessage('Please enter branch');
                 return;
             }
             if (obj.NameThai == '') {
-                alert('Please enter customer name');
+                ShowMessage('Please enter customer name');
                 return;
             }
             var ask = confirm("Do you need to Save " + obj.CustCode + "/" + obj.Branch +"?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetCompany", "Master")",
                 type: "POST",
@@ -611,14 +611,14 @@ End Code
                         $('#txtCustCode').val(response.result.data);
                         $('#txtCustCode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function DeleteData() {
@@ -628,7 +628,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delcompany?code=' + code + '&branch=' + branch, function (r) {
-            alert(r.company.result);
+            ShowMessage(r.company.result);
             ClearData();
         });
     }

@@ -389,7 +389,7 @@ End Code
         $.get(path + 'acc/getclearforinv?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.invdetail.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if (isAlert==true) alert('data not found');
+                if (isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.invdetail.data;
@@ -429,7 +429,7 @@ End Code
             });
             $('#tbHeader tbody').on('dblclick', 'tr', function () {
                 let clearno = $(this).find('td:eq(1)').text();
-                //alert('you click ' + clearno);
+                //ShowMessage('you click ' + clearno);
                 window.open(path + 'Clr/Index?BranchCode=' + $('#txtBranchCode').val() + '&ClrNo=' + clearno);
             });
         });
@@ -486,11 +486,11 @@ End Code
     }
     function ShowSummary() {
         if ($('#txtCustCode').val() == '') {
-            alert('Please Select Customer Before');
+            ShowMessage('Please Select Customer Before');
             return;
         }
         if (arr.length == 0) {
-            alert('No data selected');
+            ShowMessage('No data selected');
             return;
         }
 
@@ -662,7 +662,7 @@ End Code
         arr.push(dr);
 
         let jsonString = JSON.stringify({ data: arr_clr });
-        //alert(jsonString);
+        //ShowMessage(jsonString);
         $.ajax({
             url: "@Url.Action("SaveClearDetail", "Clr")",
             type: "POST",
@@ -670,14 +670,14 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                     arr.splice(arr.indexOf(arr_split), 1);
                     CalSummary();
                     $('#dvEditor').modal('hide');
                 }
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -748,15 +748,15 @@ End Code
     }
     function ApproveData() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not authorize to create invoice');
+            ShowMessage('you are not authorize to create invoice');
             return;
         }
         if (arr.length==0) {
-            alert('no data to approve');
+            ShowMessage('no data to approve');
             return;
         }
         if ($('#txtCustCode').val() == '') {
-            alert('Please select Customer first!');
+            ShowMessage('Please select Customer first!');
             return;
         }
 
@@ -826,16 +826,16 @@ End Code
                     } else {
                         SaveDetail(response.result.data);
                     }
-                    alert(response.result.data);
+                    ShowMessage(response.result.data);
                     PrintInvoice();
                     $('#dvCreate').modal('hide');
                     ResetData();
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;
@@ -872,7 +872,7 @@ End Code
         }
 
         let jsonText = JSON.stringify({ data: list });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetVoucherDoc", "Acc")",
             type: "POST",
@@ -880,13 +880,13 @@ End Code
             data: jsonText,
             success: function (response) {
                 if (response.result.document !== null) {
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -901,7 +901,7 @@ End Code
         $('#txtDocNo').val(docno);
         let list = GetDataDetail(arr,docno);
         let jsonText = JSON.stringify({ data: list });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SaveInvDetail", "Acc")",
                 type: "POST",
@@ -909,15 +909,15 @@ End Code
                 data: jsonText,
                 success: function (response) {
                     if (response.result.data !== null) {
-                        alert(response.result.msg + '\n=>' + response.result.data);
+                        ShowMessage(response.result.msg + '\n=>' + response.result.data);
                         SetGridAdv(false);
                         $('#btnGen').hide();
                         return;
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
     }
@@ -965,7 +965,7 @@ End Code
             $('#txtControlNo').val(dt.ControlNo);
             return;
         } else {
-            alert('Cheque amount is zero');
+            ShowMessage('Cheque amount is zero');
         }
     }
     function ReadBranch(dt) {
@@ -1179,13 +1179,13 @@ End Code
         if (c.ChqAmount <= CNum($('#txtTotalNet').val())) {
             $('#txtChqAmount').val(c.ChqAmount);
         } else {
-            alert('Cheque Amount is more than total invoices');
+            ShowMessage('Cheque Amount is more than total invoices');
             return;
         }
         if (chq.indexOf(c) < 0) {
             chq.push(c);
         } else {
-            alert('This amount has been added');
+            ShowMessage('This amount has been added');
             return;
         }
         $('#txtChqNo').val('');

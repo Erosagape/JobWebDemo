@@ -212,7 +212,7 @@ End Code
                 LoadData(r.servicecode.data[0]);
                 return;
             } else {
-                alert('Data not found');
+                ShowMessage('Data not found');
                 AddData();
             }
         });
@@ -274,7 +274,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delservicecode?code=' + code, function (r) {
-            alert(r.servicecode.result);
+            ShowMessage(r.servicecode.result);
             ShowData(r.servicecode.data[0]);
         });
     }
@@ -347,17 +347,17 @@ End Code
         if (row.SICode != undefined) {
             var obj = GetDataSave(row);
             if (obj.GroupCode == null) {
-                alert('Please enter service type');
+                ShowMessage('Please enter service type');
                 return;
             }
             if (obj.NameThai == '') {
-                alert('Please enter service name');
+                ShowMessage('Please enter service name');
                 return;
             }
             var ask = confirm("Do you need to " + (row.SICode == "" ? "Add" : "Save") + " this data?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetServiceCode", "Master")",
                 type: "POST",
@@ -368,16 +368,16 @@ End Code
                         $('#txtSICode').val(response.result.data);
                         $('#txtSICode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
-        //alert('VAT=' + $('#chkIsTaxCharge').prop('checked') + ' (' + $('input:radio[name=optVAT]:checked').val() + ') TAX=' + $('#chkIs50Tavi').prop('checked') + ' (' + $('input:radio[name=optWHT]:checked').val()+')');
+        //ShowMessage('VAT=' + $('#chkIsTaxCharge').prop('checked') + ' (' + $('input:radio[name=optVAT]:checked').val() + ') TAX=' + $('#chkIs50Tavi').prop('checked') + ' (' + $('input:radio[name=optWHT]:checked').val()+')');
     }
 
 </script>

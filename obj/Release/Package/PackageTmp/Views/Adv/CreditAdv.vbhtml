@@ -541,7 +541,7 @@ End Code
             $('#txtPostedTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'Post voucher!' : 'cancel post!'));
+        ShowMessage('You are not allow to ' + (b ? 'Post voucher!' : 'cancel post!'));
         $('#chkPosted').prop('checked', !chkmode);
     }
     function SetCancel(b) {
@@ -551,7 +551,7 @@ End Code
             $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'cancel voucher!' : 'do this!'));
+        ShowMessage('You are not allow to ' + (b ? 'cancel voucher!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
     }
     function LoadData() {
@@ -625,7 +625,7 @@ End Code
     }
     function AddPayment() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not authorize to add payment');
+            ShowMessage('you are not authorize to add payment');
             return;
         }
         ClearPayment();
@@ -662,7 +662,7 @@ End Code
         let ask = confirm("Do you need to Save " + $('#txtControlNo').val() + "?");
         if (ask == false) return;
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetVoucherHeader", "Acc")",
             type: "POST",
@@ -673,10 +673,10 @@ End Code
                     $('#txtControlNo').val(response.result.data);
                     $('#txtControlNo').focus();
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
 
@@ -688,7 +688,7 @@ End Code
         }
         $.get(path + 'acc/getvouchergrid?branch=' + code + '&type=TACC', function (r) {
             if (r.voucher.data.length == 0) {
-                alert('data not found on this branch');
+                ShowMessage('data not found on this branch');
                 return;
             }
             let h = r.voucher.data[0].Table;
@@ -995,7 +995,7 @@ End Code
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
     }
@@ -1065,7 +1065,7 @@ End Code
         };
         if (obj.DocNo != "") {
             let jsonText = JSON.stringify({ data:[ obj ]});
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetVoucherSub", "Acc")",
                 type: "POST",
@@ -1077,11 +1077,11 @@ End Code
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function SaveDetailAdv() {
@@ -1114,7 +1114,7 @@ End Code
         };
         if (obj.DocNo!= "") {
             let jsonText = JSON.stringify({ data:[ obj ]});
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetVoucherDoc", "Acc")",
                 type: "POST",
@@ -1124,14 +1124,14 @@ End Code
                     let branch = $('#txtBranchCode').val();
                     let code = $('#txtControlNo').val();
                     CallBackQueryVoucher(path, branch, code, ReadData);
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No document to save');
+            ShowMessage('No document to save');
         }
     }
     function DeleteAdvance() {
@@ -1166,7 +1166,7 @@ End Code
                 LoadData();
                 $('#frmPayment').modal('hide');                
             }
-            alert(r.voucher.result);
+            ShowMessage(r.voucher.result);
         });  
     }
 
@@ -1229,7 +1229,7 @@ End Code
     }
     function PrintData() {
         if (userRights.indexOf('P') < 0) {
-            alert('you are not authorize to print');
+            ShowMessage('you are not authorize to print');
             return;
         }
         window.open(path + 'Adv/FormCreditAdv?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtControlNo').val());

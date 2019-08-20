@@ -405,7 +405,7 @@ End Code
         {
             if (r.invdetail.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                alert('data not found');
+                ShowMessage('data not found');
                 return;
             }
             let h = r.invdetail.data;
@@ -454,7 +454,7 @@ End Code
                 if (userRights.indexOf('E') > 0) {
                     $('#frmHeader').modal('show');
                 } else {
-                    alert('you are not allow to edit invoice document');
+                    ShowMessage('you are not allow to edit invoice document');
                 }
             });
         });
@@ -500,7 +500,7 @@ End Code
                         let data = $('#tbDetail').DataTable().row(this).data();
                         LoadDetail(data);
                     } else {
-                        alert('you are not allow to edit invoice');
+                        ShowMessage('you are not allow to edit invoice');
                     }
                 });
             }
@@ -581,7 +581,7 @@ End Code
             row_d.AmtCharge = CNum($('#txtAmtCharge').val());
 
             let jsonText = JSON.stringify({ data: row_d });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetInvDetail", "Acc")",
                 type: "POST",
@@ -590,18 +590,18 @@ End Code
                 success: function (response) {
                     if (response.result.data !== null) {
                         ShowDetail(row.BranchCode, row.DocNo);
-                        alert(response.result.msg + '\n=>' + response.result.data);
+                        ShowMessage(response.result.msg + '\n=>' + response.result.data);
                         $('#frmDetail').modal('hide');
                         return;
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('no data to save');
+            ShowMessage('no data to save');
         }
     }
     function DeleteDetail() {
@@ -611,10 +611,10 @@ End Code
                     if (r.invdetail.data !== null) {
                         ShowDetail(row.BranchCode, row.DocNo);
                     }
-                    alert(r.invdetail.result);
+                    ShowMessage(r.invdetail.result);
                 });
         } else {
-            alert('no data to delete');
+            ShowMessage('no data to delete');
         }
 
     }
@@ -697,21 +697,21 @@ End Code
             success: function (response) {
                 if (response.result.data !== null) {
                     ShowHeader();
-                    alert(response.result.data);
+                    ShowMessage(response.result.data);
                     $('#frmHeader').modal('hide');
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
     function CancelData() {
         if (userRights.indexOf('D') > 0) {
             if ($('#txtCancelReson').val() == '') {
-                alert('Please enter reason for cancel');
+                ShowMessage('Please enter reason for cancel');
                 $('#txtCancelReson').focus();
                 return;
             }
@@ -719,7 +719,7 @@ End Code
             $('#txtCancelTime').val(ShowTime(GetTime()));
             $('#txtCancelProve').val(user);
         } else {
-            alert('you are not allow to cancel invoice');
+            ShowMessage('you are not allow to cancel invoice');
         }
     }
     function ReadData() {

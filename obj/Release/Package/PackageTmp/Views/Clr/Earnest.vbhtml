@@ -307,7 +307,7 @@ End Code
         $.get(path + 'clr/getclearingreport?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if (isAlert==true) alert('data not found');
+                if (isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.data[0].Table;
@@ -371,7 +371,7 @@ End Code
     }
     function ApproveData(docno) {
         if (arr.length < 0) {
-            alert('no data to approve');
+            ShowMessage('no data to approve');
             return;
         }
         let dataApp = [];
@@ -387,10 +387,10 @@ End Code
             data: jsonString,
             success: function (response) {
                 SetGridClr(false);
-                response ? alert("Clearing Completed!") : alert("Cannot Approve");
+                response ? ShowMessage("Clearing Completed!") : ShowMessage("Cannot Approve");
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;
@@ -537,7 +537,7 @@ End Code
             CustBranch: ''
         };
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetVoucherHeader", "Acc")",
             type: "POST",
@@ -549,10 +549,10 @@ End Code
                     SaveDocument(response.result.data);
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
 
@@ -732,7 +732,7 @@ End Code
         };
 
             let jsonText = JSON.stringify({ data:[ obj ]});
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetVoucherSub", "Acc")",
                 type: "POST",
@@ -742,10 +742,10 @@ End Code
                     if (response.result.data !== null) {                        
                         return;
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
     }
@@ -765,7 +765,7 @@ End Code
             acType: $('#txtDocacType').val()
         };
         let jsonText = JSON.stringify({ data:[ obj ]});
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetVoucherDoc", "Acc")",
             type: "POST",
@@ -779,17 +779,17 @@ End Code
                     ApproveData(response.result.data);
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
     function SaveClearHeader(controlno) {
         let obj = GetDataHeader(controlno);
         let jsonString = JSON.stringify({ data: obj });
-        //alert(jsonString);
+        //ShowMessage(jsonString);
         $.ajax({
             url: "@Url.Action("SetClrHeader", "Clr")",
             type: "POST",
@@ -801,7 +801,7 @@ End Code
                 }
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;
@@ -811,7 +811,7 @@ End Code
             dtl[i].ClrNo = docno;
         }
         let jsonString = JSON.stringify({ data: dtl });
-        //alert(jsonString);
+        //ShowMessage(jsonString);
         $.ajax({
             url: "@Url.Action("SaveClearDetail", "Clr")",
             type: "POST",
@@ -819,11 +819,11 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
-                    alert(response.result.msg);                    
+                    ShowMessage(response.result.msg);                    
                 }
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }

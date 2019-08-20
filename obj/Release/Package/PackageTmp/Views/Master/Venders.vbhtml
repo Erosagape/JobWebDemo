@@ -148,24 +148,24 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/delvender?code=' + code, function (r) {
-            alert(r.vender.result);
+            ShowMessage(r.vender.result);
             ClearData();
         });
     }
     function SaveData() {
         let obj = GetDataSave();
         if (obj.VenCode == '') {
-            alert('Please enter vender code');
+            ShowMessage('Please enter vender code');
             return;
         }
         if (obj.TName == '') {
-            alert('Please enter vender name');
+            ShowMessage('Please enter vender name');
             return;
         }
         let ask = confirm("Do you need to " + (obj.VenCode == "" ? "Add" : "Save") + " this data?");
         if (ask == false) return;
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetVender", "Master")",
             type: "POST",
@@ -176,10 +176,10 @@ End Code
                     $('#txtVenCode').val(response.result.data);
                     $('#txtVenCode').focus();
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });        
     }
@@ -215,7 +215,7 @@ End Code
                 $('#btnDel').attr('disabled', 'disabled');
             }
         } else {
-            alert('Data Not Found');
+            ShowMessage('Data Not Found');
             ClearData();
         }
         //$('#txtVenCode').focus();

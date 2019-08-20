@@ -522,7 +522,7 @@ End Code
             }
             let val = GetTotal();
             if (val <= 0) {
-                alert('Total not Balance,Please check');
+                ShowMessage('Total not Balance,Please check');
                 $('#txtAdv' + id.substr(3)).val(0);
                 $('#txtAdv' + id.substr(3)).attr('disabled', 'disabled');
                 this.checked = false;
@@ -535,7 +535,7 @@ End Code
         $('#txtAdvCash,#txtAdvChq,#txtAdvChqCash,#txtAdvCred').keydown(function (e) {
             if (e.which == 13) {
                 if (GetTotal() < 0) {
-                    alert('Total not Balance,Please check');
+                    ShowMessage('Total not Balance,Please check');
                     $('#' + this.id).val(0);
                 }
                 let amt = $('#' + this.id).val();
@@ -553,7 +553,7 @@ End Code
                         $('#' + this.id).val(0);
                         $('#chk' + this.id.substr(6)).prop('checked', false);
                         $('#' + this.id).attr('disabled', 'disabled');
-                        alert('Total not Balance,Please check');
+                        ShowMessage('Total not Balance,Please check');
                     }
                 }
                 return;
@@ -684,15 +684,15 @@ End Code
                         data: jsonString,
                         success: function (response) {
                             if (response) {
-                                alert("Approve Completed!");
+                                ShowMessage("Approve Completed!");
                                 ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
                             } else {
-                                alert("Cannot Approve");
+                                ShowMessage("Cannot Approve");
                             }
                             return;
                         },
                         error: function (e) {
-                            alert(e);
+                            ShowMessage(e);
                             return;
                         }
                     });
@@ -708,7 +708,7 @@ End Code
             $('#txtApproveTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
+        ShowMessage('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
         $('#chkApprove').prop('checked', !chkmode);
     }
     function GetStatus() {
@@ -732,7 +732,7 @@ End Code
             $('#chkCancel').prop('checked', !chkmode);
             return;
         }
-        alert('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
+        ShowMessage('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
     }
     function SetLOVs() {
@@ -771,15 +771,15 @@ End Code
     }
     function ShowData(branchcode, advno) {
         if (branchcode == '') {
-            //alert('Please select branch');
+            //ShowMessage('Please select branch');
             return;
         }
         if (advno == '') {
-            //alert('Please enter advance no');
+            //ShowMessage('Please enter advance no');
             return;
         }
         if (userRights.indexOf('R') < 0) {
-            alert('you are not authorize to view data');
+            ShowMessage('you are not authorize to view data');
             return;
         }
         $.get(path + 'adv/getadvance?branchcode='+branchcode+'&advno='+ advno, function (r) {
@@ -791,7 +791,7 @@ End Code
     }
     function PrintData() {
         if (userRights.indexOf('P') < 0) {
-            alert('you are not authorize to print');
+            ShowMessage('you are not authorize to print');
             return;
         }
         window.open(path + 'Adv/FormAdv?branch=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val());
@@ -801,56 +801,56 @@ End Code
             let obj = GetDataHeader(hdr);
             if (obj.AdvNo == '') {
                 if (userRights.indexOf('I') < 0) {
-                    alert('you are not authorize to add');
+                    ShowMessage('you are not authorize to add');
                     return;
                 }
             }
             if (userRights.indexOf('E') < 0) {
-                alert('you are not authorize to save');
+                ShowMessage('you are not authorize to save');
                 return;
             }
             if (Number($('#txtTotalAmount').val()) > 0) {
                 if (SumTotal() == 0) {
-                    alert('please select type of receive advancing money');
+                    ShowMessage('please select type of receive advancing money');
                     return;
                 }
             }
             if ($('#cboJobType').val() == 0) {
-                alert('please select job type');
+                ShowMessage('please select job type');
                 $('#cboJobType').focus();
                 return;
             }
             if ($('#cboShipBy').val() == 0) {
-                alert('please select ship by');
+                ShowMessage('please select ship by');
                 $('#cboShipBy').focus();
                 return;
             }
             if ($('#cboAdvType').val() == 0) {
-                alert('please select advance type');
+                ShowMessage('please select advance type');
                 $('#cboAdvType').focus();
                 return;
             }
             let jsonString = JSON.stringify({ data: obj });
-            //alert(jsonString);
+            //ShowMessage(jsonString);
             $.ajax({
                 url: "@Url.Action("SaveAdvanceHeader", "Adv")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonString,
                 success: function (response) {                
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                     if (response.result.data !== null) {
                         $('#txtAdvNo').val(response.result.data);
                         ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
             return;
         }
-        alert('No data to save');
+        ShowMessage('No data to save');
     }
     function GetDataHeader() {
         let dt = {
@@ -1022,7 +1022,7 @@ End Code
     }
     function AddHeader() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not authorize to add');
+            ShowMessage('you are not authorize to add');
             return;
         }
         $('#txtAdvNo').val('');
@@ -1050,7 +1050,7 @@ End Code
     }
     function AddDetail() {
         if ($('#txtAdvNo').val() == '') {
-            alert('Please save document before add detail');
+            ShowMessage('Please save document before add detail');
             return;
         }
         $.get(path + 'adv/getnewadvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val(), function (r) {
@@ -1068,15 +1068,15 @@ End Code
     function DeleteDetail() {
         if (dtl != undefined) {
             if (userRights.indexOf('D') < 0) {
-                alert('you are not authorize to delete');
+                ShowMessage('you are not authorize to delete');
                 return;
             }
             $.get(path + 'adv/deladvancedetail?branchcode=' + $('#txtBranchCode').val() + '&advno=' + $('#txtAdvNo').val() + '&itemno=' + dtl.ItemNo, function (r) {
-                alert(r.adv.result);
+                ShowMessage(r.adv.result);
                 ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
             });
         } else {
-            alert('No data to delete');
+            ShowMessage('No data to delete');
         }
     }
     function ClearHeader() {
@@ -1167,44 +1167,44 @@ End Code
     function SaveDetail() {
 
         if (hdr == undefined) {
-            alert('Please add header before');
+            ShowMessage('Please add header before');
             return;
         }
         if (hdr.AdvNo == '') {
-            alert('Please save header first');
+            ShowMessage('Please save header first');
             return;
         }
         if (dtl != undefined) {
             let obj = GetDataDetail();
             if (obj.ItemNo == 0) {
                 if (userRights.indexOf('I') < 0) {
-                    alert('you are not authorize to add');
+                    ShowMessage('you are not authorize to add');
                     return;
                 }
             }
             if (userRights.indexOf('E') < 0) {
-                alert('you are not authorize to edit');
+                ShowMessage('you are not authorize to edit');
                 return;
             }
             if (CheckDuplicate(obj) == true) {
-                alert('This data is duplicate!');
+                ShowMessage('This data is duplicate!');
                 return;
             }
             let jsonString = JSON.stringify({ data: obj });
-            //alert(jsonString);
+            //ShowMessage(jsonString);
             $.ajax({
                 url: "@Url.Action("SaveAdvanceDetail", "Adv")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonString,
                 success: function (response) {                
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                     ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
                 }
             });
             return;
         }
-        alert('No data to save');
+        ShowMessage('No data to save');
     }
     function CheckDuplicate(o) {
         let rows = $('#tbDetail').DataTable().rows().data();
@@ -1437,7 +1437,7 @@ End Code
         }
         $.get(path + 'adv/getadvancegrid?branchcode=' +  w, function (r) {
             if (r.adv.data.length == 0) {
-                alert('data not found on this branch');
+                ShowMessage('data not found on this branch');
                 return;
             }
             let h = r.adv.data[0].Table;
@@ -1610,7 +1610,7 @@ End Code
     }
     function ReadJob(dt) {
         if (ShowDate(dt.CloseJobDate) !== '-') {
-            alert('This job is closed,Please re-open first!');
+            ShowMessage('This job is closed,Please re-open first!');
             return;
         }
         $('#txtForJNo').val(dt.JNo);
@@ -1637,7 +1637,7 @@ End Code
             contentType: "application/json",
             data: jsonString,
             success: function (response) {                
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
                 ShowData($('#txtBranchCode').val(), $('#txtAdvNo').val());
             }
         });
@@ -1746,12 +1746,12 @@ End Code
     }
     function SaveWHTax(dt) {
         if ($('#btnSave').attr('disabled') == 'disabled') {
-            alert('Cannot Save WH-Tax because document has been locked');
+            ShowMessage('Cannot Save WH-Tax because document has been locked');
             return;
         }
         let obj = GetWHTaxHeader(dt);
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetWHTaxHeader", "Acc")",
             type: "POST",
@@ -1760,15 +1760,15 @@ End Code
             success: function (response) {
                 if (response.result.data != null) {
                     SetWHTaxDetail(response.result.data);
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                     $('#txtDoc50Tavi').val(response.result.data);
                     $('#txtDoc50Tavi').focus();
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -1802,7 +1802,7 @@ End Code
     }
     function SaveWHTaxDetail(obj) {
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetWHTaxDetail", "Acc")",
             type: "POST",
@@ -1815,7 +1815,7 @@ End Code
                 }                                
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }

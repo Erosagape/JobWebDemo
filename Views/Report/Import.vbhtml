@@ -25,7 +25,7 @@ End Code
         if (fname !== null) {
             $.get('/Config/ImportData?Path=' + fname,function (r) {
                 if (r.result !== '') {
-                    alert(r.result);
+                    ShowMessage(r.result);
                 }
             });
         }
@@ -36,7 +36,7 @@ End Code
         if (fname !== null) {
             $.get('/Config/RemovePicture?Name=' + fname,function (r) {
                 if (r !== '') {
-                    alert(r);
+                    ShowMessage(r);
                     LoadFileList();
                 }
             });
@@ -69,7 +69,7 @@ End Code
     function UploadFile() {
         let count = $('#objFile')[0].files.length;
         if (count == 0) {
-            alert('no file selected');
+            ShowMessage('no file selected');
             return;
         }
         for (let file of $('#objFile')[0].files) {
@@ -86,10 +86,10 @@ End Code
                             $('#objFile').val('');
                             LoadFileList();
                         }
-                        alert(fname);
+                        ShowMessage(fname);
                         return;
                     }
-                    alert(xhr.responseText);
+                    ShowMessage(xhr.responseText);
                 }
             }
         }

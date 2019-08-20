@@ -666,14 +666,14 @@ End Code
                     success: function (response) {
                         if (response) {
                             ShowData($('#txtBranchCode').val(), $('#txtClrNo').val());
-                            alert("Approve Completed!");
+                            ShowMessage("Approve Completed!");
                         } else {
-                            alert("Cannot Approve");
+                            ShowMessage("Cannot Approve");
                         }
                         return;
                     },
                     error: function (e) {
-                        alert(e);
+                        ShowMessage(e);
                         return;
                     }
                 });
@@ -688,7 +688,7 @@ End Code
             $('#txtApproveTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
+        ShowMessage('You are not allow to ' + (b ? 'approve Advance!' : 'cancel approve!'));
         $('#chkApprove').prop('checked', !chkmode);
     }
 
@@ -699,7 +699,7 @@ End Code
             $('#txtReceiveTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'Clear!' : 'cancel clear!'));
+        ShowMessage('You are not allow to ' + (b ? 'Clear!' : 'cancel clear!'));
         $('#chkReceive').prop('checked', !chkmode);
     }
 
@@ -711,7 +711,7 @@ End Code
             $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
+        ShowMessage('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
     }
 
@@ -747,15 +747,15 @@ End Code
     }
     function ShowData(branchcode, clrno) {
         if (branchcode == '') {
-            alert('Please select branch');
+            ShowMessage('Please select branch');
             return;
         }
         if (clrno == '') {
-            alert('Please enter clear no');
+            ShowMessage('Please enter clear no');
             return;
         }
         if (userRights.indexOf('R') < 0) {
-            alert('you are not authorize to view data');
+            ShowMessage('you are not authorize to view data');
             return;
         }
         ClearHeader();
@@ -770,7 +770,7 @@ End Code
     }
     function PrintData() {
         if (userRights.indexOf('P') < 0) {
-            alert('you are not authorize to print');
+            ShowMessage('you are not authorize to print');
             return;
         }
         window.open(path + 'Clr/FormClr?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtClrNo').val());
@@ -778,57 +778,57 @@ End Code
     function SaveHeader() {
         if (hdr != undefined) {
             if ($('#txtBranchName').val() == '') {
-                alert('please select branch code');
+                ShowMessage('please select branch code');
                 $('#txtBranchCode').focus();
                 return;
             }
             if ($('#cboJobType').val() == 0) {
-                alert('please select job type');
+                ShowMessage('please select job type');
                 $('#cboJobType').focus();
                 return;
             }
             if ($('#cboClrType').val() == 0) {
-                alert('please select clear type');
+                ShowMessage('please select clear type');
                 $('#cboClrType').focus();
                 return;
             }
             if ($('#cboClrFrom').val() == 0) {
-                alert('please select clear from');
+                ShowMessage('please select clear from');
                 $('#cboClrFrom').focus();
                 return;
             }
             if (userRights.indexOf('E') < 0) {
-                alert('you are not authorize to save');
+                ShowMessage('you are not authorize to save');
                 return;
             }
             let obj = GetDataHeader();
             if (obj.ClrNo == '') {
                 if (userRights.indexOf('I') < 0) {
-                    alert('you are not authorize to add');
+                    ShowMessage('you are not authorize to add');
                     return;
                 }
             }
             let jsonString = JSON.stringify({ data: obj });
-            //alert(jsonString);
+            //ShowMessage(jsonString);
             $.ajax({
                 url: "@Url.Action("SetClrHeader", "Clr")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonString,
                 success: function (response) {
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                     if (response.result.data !== null) {
                         $('#txtClrNo').val(response.result.data);
                         ShowData($('#txtBranchCode').val(), $('#txtClrNo').val());
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
             return;
         }
-        alert('No data to save');
+        ShowMessage('No data to save');
     }
     function GetDataHeader() {
         let dt = {
@@ -951,7 +951,7 @@ End Code
     }
     function AddHeader() {
         if (userRights.indexOf('I') < 0) {
-            alert('you are not authorize to add');
+            ShowMessage('you are not authorize to add');
             return;
         }
         $('#txtClrNo').val('');
@@ -991,15 +991,15 @@ End Code
     function DeleteDetail() {
         if (dtl != undefined) {
             if (userRights.indexOf('D') < 0) {
-                alert('you are not authorize to delete');
+                ShowMessage('you are not authorize to delete');
                 return;
             }
             $.get(path + 'clr/delclrdetail?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtClrNo').val() + '&item=' + dtl.ItemNo, function (r) {
-                alert(r.clr.result);
+                ShowMessage(r.clr.result);
                 ShowData($('#txtBranchCode').val(), $('#txtClrNo').val());
             });
         } else {
-            alert('No data to delete');
+            ShowMessage('No data to delete');
         }
     }
     function ClearHeader() {
@@ -1077,49 +1077,49 @@ End Code
     function SaveDetail() {
 
         if (hdr == undefined) {
-            alert('Please add header before');
+            ShowMessage('Please add header before');
             return;
         }
         if (hdr.ClrNo == '') {
-            alert('Please save header first');
+            ShowMessage('Please save header first');
             return;
         }
         if ($('#txtUnitCode').val() == '') {
-            alert('Please select unit');
+            ShowMessage('Please select unit');
             return;
         }
         if ($('#txtSlipNo').val().length<2 && $('#txtSlipNo').prop('disabled')==false) {
-            alert('Please enter slip number');
+            ShowMessage('Please enter slip number');
             return;
         }
         if (dtl != undefined) {
             let obj = GetDataDetail();
             if (obj.ItemNo == 0) {
                 if (userRights.indexOf('I') < 0) {
-                    alert('you are not authorize to add');
+                    ShowMessage('you are not authorize to add');
                     return;
                 }
             }
             if (userRights.indexOf('E') < 0) {
-                alert('you are not authorize to edit');
+                ShowMessage('you are not authorize to edit');
                 return;
             }
             let jsonString = JSON.stringify({ data: obj });
-            //alert(jsonString);
+            //ShowMessage(jsonString);
             $.ajax({
                 url: "@Url.Action("SetClrDetail", "Clr")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonString,
                 success: function (response) {
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                     ShowData($('#txtBranchCode').val(), $('#txtClrNo').val());
                     $('#frmDetail').modal('hide');
                 }
             });
             return;
         }
-        alert('No data to save');
+        ShowMessage('No data to save');
     }
 
     function ReadClrDetail(dt) {
@@ -1370,7 +1370,7 @@ End Code
 
         $.get(path + 'clr/getclearinggrid?branchcode=' +  w, function (r) {
             if (r.clr.data.length == 0) {
-                alert('data not found on this branch');
+                ShowMessage('data not found on this branch');
                 return;
             }
             let h = r.clr.data[0].Table;
@@ -1701,7 +1701,7 @@ End Code
                 });
                 $('#frmAdvance').modal('show');
             } else {
-                alert("Not found data for clear");
+                ShowMessage("Not found data for clear");
             }
         });
     }

@@ -368,7 +368,7 @@ End Code
         $.get(path + 'clr/getclearingsum?branchcode=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.clr.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if(isAlert==true) alert('data not found');
+                if(isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.clr.data[0].Table;
@@ -694,7 +694,7 @@ End Code
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
@@ -719,12 +719,12 @@ End Code
                             ReceiveClearing(response.result.data);
                         }
                         SetGridAdv(false);
-                        alert(response.result.msg);
+                        ShowMessage(response.result.msg);
                         PrintVoucher($('#txtBranchCode').val(), $('#txtControlNo').val());
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         }
@@ -744,16 +744,16 @@ End Code
             contentType: "application/json",
             data: jsonString,
             success: function (response) {
-                response ? alert(msg) : alert("Cannot Clear Document");
+                response ? ShowMessage(msg) : ShowMessage("Cannot Clear Document");
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
     function ApproveData() {
         if (arr.length < 0) {
-            alert('no data to approve');
+            ShowMessage('no data to approve');
             return;
         }
         let oHeader = {
@@ -791,7 +791,7 @@ End Code
                 }
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;

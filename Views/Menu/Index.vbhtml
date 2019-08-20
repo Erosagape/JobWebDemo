@@ -46,6 +46,7 @@ Transport By : <select id="cboShipBy" onchange="drawChart()"></select>
             w += (w !== '' ? '&' : '?');
             w += 'ShipBy=' + $('#cboShipBy').val();
         }
+        ShowWait();
         $.get(path + 'JobOrder/GetDashBoard' + w, function (r) {
             if (r.result.length > 0) {
                 var dataVol = google.visualization.arrayToDataTable(getDataTable(r.result[0].data1));
@@ -81,6 +82,7 @@ Transport By : <select id="cboShipBy" onchange="drawChart()"></select>
                 chartCust.draw(custView, custOptions);
 
             }
+            CloseWait();
         });
     }
     function getDataTable(dt) {

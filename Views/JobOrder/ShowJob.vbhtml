@@ -1138,7 +1138,7 @@ End Code
                 SaveData();
                 return;
             } else {
-                alert('Please enter reason of canceling');
+                ShowMessage('Please enter reason of canceling');
                 return;
             }
         } else {
@@ -1159,17 +1159,17 @@ End Code
                 return;
             }
         }
-        alert('This job already cancelled');
+        ShowMessage('This job already cancelled');
     }
     function CloseJob() {
         if ($('#txtCloseBy').val() == '') {
             if ($('#txtDutyDate').val()=='') {
-                alert('Please Entry Duty Date before close job');
+                ShowMessage('Please Entry Duty Date before close job');
                 $('#txtDutyDate').focus();
                 return;
             }
             if ($('#txtConfirmDate').val()=='') {
-                alert('Please Entry Confirm Date before close job');
+                ShowMessage('Please Entry Confirm Date before close job');
                 $('#txtConfirmDate').focus();
                 return;
             }
@@ -1201,28 +1201,28 @@ End Code
                 }
             }
         }
-        alert('job is already closed');
+        ShowMessage('job is already closed');
     }
     function SaveData() {
         if (rec.JNo != undefined) {
             let obj = GetDataSave(rec);
 
             let jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SaveJobData", "JobOrder")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    alert(response);
+                    ShowMessage(response);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     //This section is for Total Container Editing

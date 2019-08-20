@@ -543,7 +543,7 @@ End Code
         let code = $('#txtBranchCode').val();
         $.get(path + 'acc/getwhtaxgrid?branch=' + code, function (r) {
             if (r.whtax.data.length == 0) {
-                alert('data not found on this branch');
+                ShowMessage('data not found on this branch');
                 return;
             }
             let h = r.whtax.data[0].Table;
@@ -902,7 +902,7 @@ End Code
         let ask = confirm("Do you need to Save?");
         if (ask == false) return;
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetWHTaxHeader", "Acc")",
             type: "POST",
@@ -913,10 +913,10 @@ End Code
                     $('#txtDocNo').val(response.result.data);
                     $('#txtDocNo').focus();
                 }
-                if(showalert) alert(response.result.msg);
+                if(showalert) ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -927,7 +927,7 @@ End Code
             $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
             return;
         }
-        alert('You are not allow to ' + (b ? 'cancel document!' : 'do this!'));
+        ShowMessage('You are not allow to ' + (b ? 'cancel document!' : 'do this!'));
         $('#chkCancel').prop('checked', !chkmode);
     }
     function SaveDetail() {
@@ -947,7 +947,7 @@ End Code
             PayRate:CNum($('#txtPayRate').val())
 	    };
         let jsonText = JSON.stringify({ data: obj });
-        //alert(jsonText);
+        //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SetWHTaxDetail", "Acc")",
             type: "POST",
@@ -959,10 +959,10 @@ End Code
                     $('#txtItemNo').focus();
                 }                                
                 CallBackQueryWHTax(path, $('#txtBranchCode').val(), $('#txtDocNo').val(), ReadData);
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -975,7 +975,7 @@ End Code
         if (ask == false) return;
         $.get(path + 'acc/delwhtaxdetail?branch='+branch+'&code=' + code + '&itemno='+item, function (r) {
             CallBackQueryWHTax(path, $('#txtBranchCode').val(), $('#txtDocNo').val(), ReadData);
-            alert(r.whtax.result);
+            ShowMessage(r.whtax.result);
             $('#frmDetail').modal('hide');
             
         });
@@ -1003,7 +1003,7 @@ End Code
     }
     function PrintData() {
         if (userRights.indexOf('P') < 0) {
-            alert('you are not authorize to print');
+            ShowMessage('you are not authorize to print');
             return;
         }
         window.open(path + 'Acc/FormWHTax?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val());

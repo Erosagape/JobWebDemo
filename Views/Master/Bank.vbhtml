@@ -84,7 +84,7 @@ End Code
         var ask = confirm("Do you need to Delete " + code + "?");
         if (ask == false) return;
             $.get(path + 'master/delbank?code=' + code, function (r) {
-                alert(r.bank.result);
+                ShowMessage(r.bank.result);
                 ClearData();
             });
     }
@@ -103,7 +103,7 @@ End Code
             var ask = confirm("Do you need to Save " + obj.Code + "?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetBank", "Master")",
                 type: "POST",
@@ -114,14 +114,14 @@ End Code
                         $('#txtCode').val(response.result.data);
                         $('#txtCode').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function ClearData() {

@@ -465,7 +465,7 @@ End Code
     function CancelData() {
         if (userRights.indexOf('D') > 0) {
             if ($('#txtCancelReson').val() == '') {
-                alert('Please enter reason for cancel');
+                ShowMessage('Please enter reason for cancel');
                 $('#txtCancelReson').focus();
                 return;
             }
@@ -474,7 +474,7 @@ End Code
             $('#txtUpdateBy').val(user);
             $('#txtDocStatus').val('99');
         } else {
-            alert('you are not allow to cancel Document');
+            ShowMessage('you are not allow to cancel Document');
         }
     }
     function SaveData() {
@@ -505,14 +505,14 @@ End Code
             success: function (response) {
                 if (response.result.data !== null) {
                     ShowHeader();
-                    alert(response.result.data);
+                    ShowMessage(response.result.data);
                     $('#frmHeader').modal('hide');
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -542,7 +542,7 @@ End Code
         $.get(path + 'Acc/GetCNDNGrid?Branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.creditnote.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                alert('data not found');
+                ShowMessage('data not found');
                 return;
             }
             let h = r.creditnote.data;
@@ -588,7 +588,7 @@ End Code
                 if (userRights.indexOf('E') > 0) {
                     $('#frmHeader').modal('show');
                 } else {
-                    alert('you are not allow to edit this document');
+                    ShowMessage('you are not allow to edit this document');
                 }
             });
         });
@@ -639,7 +639,7 @@ End Code
             if (userRights.indexOf('E') > 0) {
                 $('#frmDetail').modal('show');
             } else {
-                alert('you are not allow to edit this document');
+                ShowMessage('you are not allow to edit this document');
             }
         });
     }
@@ -726,15 +726,15 @@ End Code
                 TaxInvNo: row_d.TaxInvNo
             };
             if ($('#txtDocType').val() == '0' && obj.TotalNet < 0) {
-                alert('Credit Note value must be more than zero');
+                ShowMessage('Credit Note value must be more than zero');
                 return;
             }
             if ($('#txtDocType').val() == '1' && obj.TotalNet > 0) {
-                alert('Debit Note value must be less than zero');
+                ShowMessage('Debit Note value must be less than zero');
                 return;
             }
             let jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetCNDNDetail", "Acc")",
                 type: "POST",
@@ -743,18 +743,18 @@ End Code
                 success: function (response) {
                     if (response.result.data !== null) {
                         ShowDetail(row.BranchCode, row.DocNo);
-                        alert(response.result.msg + '\n=>' + response.result.data);
+                        ShowMessage(response.result.msg + '\n=>' + response.result.data);
                         $('#frmDetail').modal('hide');
                         return;
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('no data to save');
+            ShowMessage('no data to save');
         }
     }
     function DeleteDetail() {
@@ -764,10 +764,10 @@ End Code
                     if (r.creditnote.data !== null) {
                         ShowDetail(row.BranchCode, row.DocNo);
                     }
-                    alert(r.creditnote.result);
+                    ShowMessage(r.creditnote.result);
                 });
         } else {
-            alert('no data to delete');
+            ShowMessage('no data to delete');
         }
     }
     function CalDiff() {

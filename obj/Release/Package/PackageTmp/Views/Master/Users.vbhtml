@@ -220,7 +220,7 @@ End Code
                 });
             });
         } else {
-            alert('Data Not Found');
+            ShowMessage('Data Not Found');
             ClearData();
         }
         //$('#txtUserID').focus();
@@ -269,17 +269,17 @@ End Code
         if (row.UserID != undefined) {
             var obj = GetDataSave();
             if (obj.UserID == '') {
-                alert('Please enter user ID');
+                ShowMessage('Please enter user ID');
                 return;
             }
             if (obj.TName == '') {
-                alert('Please enter user name');
+                ShowMessage('Please enter user name');
                 return;
             }
             var ask = confirm("Do you need to " + (row.UserID == "" ? "Add" : "Save") + " this data?");
             if (ask == false) return;
             var jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetUser", "Master")",
                 type: "POST",
@@ -290,14 +290,14 @@ End Code
                         $('#txtUserID').val(response.result.data);
                         $('#txtUserID').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }
     }
     function DeleteData() {
@@ -306,7 +306,7 @@ End Code
         if (ask == false) return;
 
         $.get(path + 'master/deluser?code=' + code, function (r) {
-            alert(r.user.result);
+            ShowMessage(r.user.result);
             ClearData();
         });
     }

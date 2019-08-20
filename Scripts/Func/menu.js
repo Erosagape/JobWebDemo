@@ -159,7 +159,7 @@
             mnuPath = path + 'Master/Vessel';
             break;
         default:
-            alert('Under Development, Coming soon!');
+            ShowMessage('Under Development, Coming soon!');
             break;
     }
     if (userID !== '') {
@@ -168,7 +168,7 @@
             window.open(mnuPath, '', '');
         }
     } else {
-        alert('Please login first');
+        ShowMessage('Please login first');
         window.location.href = path + 'index.html?redirect=' + mnuPath;
     }
 }

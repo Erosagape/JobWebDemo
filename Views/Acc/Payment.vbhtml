@@ -364,7 +364,7 @@ End Code
         $.get(path + 'acc/getpayment?branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.payment.header.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if(isAlert==true) alert('data not found');
+                if(isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.payment.header;
@@ -706,11 +706,11 @@ End Code
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data need to payment');
+            ShowMessage('No data need to payment');
         }
     }
     function SaveDetail() {
@@ -727,19 +727,19 @@ End Code
                 data: jsonString,
                 success: function (response) {
                     if (response.result.data != null) {
-                        alert(response.result.data);
+                        ShowMessage(response.result.data);
                         SetGridAdv(false);
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         }
     }
     function ApproveData() {
         if (arr.length < 0) {
-            alert('no data to approve');
+            ShowMessage('no data to approve');
             return;
         }
         if (CheckBalance() == false) {
@@ -780,7 +780,7 @@ End Code
                 }
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;
@@ -817,7 +817,7 @@ End Code
     function ReadDocument(dt) {
         let crAmt = Number($('#txtAdvCred').val());
         if (dt.AmountRemain < crAmt) {
-            alert('Balance not enough to payment');
+            ShowMessage('Balance not enough to payment');
             return;
         }
         $('#txtRefNoCred').val(dt.DocNo);
@@ -825,7 +825,7 @@ End Code
     function ReadCheque(dt) {
         let chqAmt = dt.acType == 'CU' ? Number($('#txtAdvChq').val()) : Number($('#txtAdvChqCash').val());
         if (dt.AmountRemain < chqAmt) {
-            alert('Cheque Amount not enough to payment');
+            ShowMessage('Cheque Amount not enough to payment');
             return;
         }
         $('#txtRefNoChq').val(dt.ChqNo);
@@ -877,7 +877,7 @@ End Code
             let amtChk = Number($('#txtAdvCash').val()) + Number($('#txtAdvChqCash').val());
             let amtBal = Number($('#txtCashBal').val());
             if (amtBal < amtChk) {
-                alert('Your book balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
+                ShowMessage('Your book balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
                 return false;
             }
         }
@@ -885,16 +885,16 @@ End Code
         if (amtChk > 0) {
             let amtBal = Number($('#txtCashBal').val());
             if (amtBal < amtChk) {
-                alert('Your cash balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
+                ShowMessage('Your cash balance (' + $('#txtBookCash').val() + ') is not enough for payment =' + amtBal);
                 return false;
             } else {
                 if ($('#txtBookCash').val() == '') {
-                    alert('Please select book account');
+                    ShowMessage('Please select book account');
                     $('#txtBookCash').focus();
                     return false;
                 } else {
                     if ($('#txtCashTranDate').val() == '') {
-                        alert('Please input transaction date');
+                        ShowMessage('Please input transaction date');
                         $('#txtCashTranDate').focus();
                         return false;
                     }
@@ -905,28 +905,28 @@ End Code
         if (amtChk > 0) {
             let amtBal = CNum($('#txtChqCashBal').val());
             if (amtBal < amtChk) {
-                alert('Your book balance (' + $('#txtBookChqCash').val() + ') is not enough for payment =' + amtBal);
+                ShowMessage('Your book balance (' + $('#txtBookChqCash').val() + ') is not enough for payment =' + amtBal);
                 return false
             } else {
                 if ($('#txtBookChqCash').val() == '') {
-                    alert('Please select book account');
+                    ShowMessage('Please select book account');
                     $('#txtBookChqCash').focus();
                     return false;
                 } else {
                     if ($('#txtRefNoChqCash').val() == '') {
-                        alert('Please input cheque Number');
+                        ShowMessage('Please input cheque Number');
                         $('#txtRefNoChqCash').focus();
                         return false;
                     } else {
                         if ($('#txtChqCashTranDate').val() == '') {
-                            alert('Please input cheque date');
+                            ShowMessage('Please input cheque date');
                             $('#txtChqCashTranDate').focus();
                             return false;
                         }
                     }
                     if ($('#chkStatusChq').prop('checked') == true) {
                         if ($('#cboBankChqCash').val() == '' || $('#txtBankBranchChqCash').val() == '') {
-                            alert('Please Enter Bank and Branch which cheque Returned');
+                            ShowMessage('Please Enter Bank and Branch which cheque Returned');
                             $('#cboBankChqCash').focus();
                             return false;
                         }
@@ -937,17 +937,17 @@ End Code
         amtChk = Number($('#txtAdvChq').val());
         if (amtChk > 0) {
             if ($('#txtRefNoChq').val() == '') {
-                alert('Please input cheque Number');
+                ShowMessage('Please input cheque Number');
                 $('#txtRefNoChq').focus();
                 return false;
             } else {
                 if ($('#txtChqTranDate').val() == '') {
-                    alert('Please input cheque date');
+                    ShowMessage('Please input cheque date');
                     $('#txtChqTranDate').focus();
                     return false;
                 } else {
                     if ($('#cboBankChq').val() == '' || $('#txtBankBranchChq').val() == '') {
-                        alert('Please Enter Bank and Branch');
+                        ShowMessage('Please Enter Bank and Branch');
                         $('#cboBankChq').focus();
                         return false;
                     }
@@ -957,12 +957,12 @@ End Code
         amtChk = Number($('#txtAdvCred').val());
         if (amtChk > 0) {
             if ($('#txtRefNoCred').val() == '') {
-                alert('Please input reference Number');
+                ShowMessage('Please input reference Number');
                 $('#txtRefNoCred').focus();
                 return false;
             } else {
                 if ($('#txtCredTranDate').val() == '') {
-                    alert('Please input reference date');
+                    ShowMessage('Please input reference date');
                     $('#txtCredTranDate').focus();
                     return false;
                 }

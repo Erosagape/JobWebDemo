@@ -15,6 +15,7 @@
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootbox.js"></script>
     <script src="~/Scripts/bootstrap-select.js"></script>
     <script src="~/Scripts/Func/util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
@@ -26,7 +27,7 @@
     <div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5" id="mySidebar">
         <div class="w3-sidebar w3-bar-block w3-indigo w3-card" style="width:250px;">
             <div style="width:100%;text-align:center;background-color:white">
-                <img src="~/Resource/logo-tawan.jpg" onclick="CheckLogin()" style="width:150px;padding:5px 5px 5px 5px;" />
+                <img src="~/Resource/logo-tawan.jpg" onclick="SetLogout()" style="width:150px;padding:5px 5px 5px 5px;" />
             </div>
             <div style="width:100%;text-align:center;background-color:white;color:black">
                 <label id="lblUserID">Please Login</label>
@@ -249,49 +250,31 @@
         </div>
     </div>
     <script type="text/javascript">
-    let userID = '';
-    let compID = '';
+    let userID = '@ViewBag.User';
     CheckLogin();
-    function ShowLogin(r) {
-        $('#lblUserID').text(r.TName);
-        if (compID !== '') {
-            $('#lblCompanyName').text(compID);
-        }
-    }
     function CheckLogin() {
         if (userID === '') {
-            ShowWait();
-            $.get(path + 'Config/GetLogin')
-                .done(function (r) {
-                    CloseWait();
-                    if (r.user.data.UserID !== null) {
-                        userID = r.user.data.UserID;
-                        compID = '@ViewBag.LICENSE_NAME';
-                        ShowLogin(r.user.data);
-                    } else {
-                        userID = '';
-                        window.location.href='/index.html';
-                    }
-                });
+            window.location.href='/index.html';
         } else {
-            var c = confirm('Do you need to log out?');
+            $('#lblUserID').text('@ViewBag.UserName');
+            $('#lblCompanyName').text('@ViewBag.LICENSE_NAME');
+        }
+    }
+    function SetLogout() {
+        var c = confirm('Do you need to log out?');
             if (c == true) {            
                 ShowWait();
-                $.get(path + 'Config/SetLogOut')
+                $.get('/Config/SetLogOut')
                     .done(function (r) {
                         CloseWait();
                         if (r == 'Y') {
-                            alert('Log out successfully');
-                            userID = '';
                             window.location.href='/index.html';
                         }
-
                     });
-            }
         }
     }
     function CheckDatabase() {
-        alert('MAS=@ViewBag.CONNECTION_MAS\nJOB=@ViewBag.CONNECTION_JOB');
+        ShowMessage('MAS=@ViewBag.CONNECTION_MAS\nJOB=@ViewBag.CONNECTION_JOB');
     }
     function w3_open() {
         document.getElementById("mySidebar").style.display = "block";

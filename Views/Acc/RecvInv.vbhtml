@@ -339,7 +339,7 @@ End Code
         $.get(path + 'acc/getinvforreceive?show=OPEN&branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.invdetail.data.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                if(isAlert==true) alert('data not found');
+                if(isAlert==true) ShowMessage('data not found');
                 return;
             }
             let h = r.invdetail.data;
@@ -665,7 +665,7 @@ End Code
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         }
@@ -705,7 +705,7 @@ End Code
             });
         }
         let jsonText = JSON.stringify({ data: rows });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
         $.ajax({
             url: "@Url.Action("SaveRcpDetail", "Acc")",
             type: "POST",
@@ -713,13 +713,13 @@ End Code
             data: jsonText,
             success: function (response) {
                 if (response.result.data !== null) {
-                    alert(response.result.msg+'\n->'+response.result.data);
+                    ShowMessage(response.result.msg+'\n->'+response.result.data);
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -739,19 +739,19 @@ End Code
                 success: function (response) {
                     if (response.result.data != null) {
                         SetGridAdv(false);
-                        alert(response.result.msg);
+                        ShowMessage(response.result.msg);
                         PrintVoucher($('#txtBranchCode').val(), $('#txtControlNo').val());
                     }
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         }
     }
     function ApproveData() {
         if (arr.length < 0) {
-            alert('no data to approve');
+            ShowMessage('no data to approve');
             return;
         }
         let oHeader = {
@@ -789,7 +789,7 @@ End Code
                 }
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
         return;

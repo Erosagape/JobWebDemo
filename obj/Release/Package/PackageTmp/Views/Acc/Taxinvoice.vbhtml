@@ -403,7 +403,7 @@ End Code
     function CancelData() {
         if (userRights.indexOf('D') > 0) {
             if ($('#txtCancelReson').val() == '') {
-                alert('Please enter reason for cancel');
+                ShowMessage('Please enter reason for cancel');
                 $('#txtCancelReson').focus();
                 return;
             }
@@ -411,7 +411,7 @@ End Code
             $('#txtCancelTime').val(ShowTime(GetTime()));
             $('#txtCancelProve').val(user);
         } else {
-            alert('you are not allow to cancel receipt');
+            ShowMessage('you are not allow to cancel receipt');
         }
     }
     function SaveData() {
@@ -454,14 +454,14 @@ End Code
             success: function (response) {
                 if (response.result.data !== null) {
                     ShowHeader();
-                    alert(response.result.data);
+                    ShowMessage(response.result.data);
                     $('#frmHeader').modal('hide');
                     return;
                 }
-                alert(response.result.msg);
+                ShowMessage(response.result.msg);
             },
             error: function (e) {
-                alert(e);
+                ShowMessage(e);
             }
         });
     }
@@ -492,7 +492,7 @@ End Code
         $.get(path + 'acc/getReceipt?type=' + type + '&branch=' + $('#txtBranchCode').val() + w, function (r) {
             if (r.receipt.header.length == 0) {
                 $('#tbHeader').DataTable().clear().draw();
-                alert('data not found');
+                ShowMessage('data not found');
                 return;
             }
             let h = r.receipt.header[0];
@@ -540,7 +540,7 @@ End Code
                 if (userRights.indexOf('E') > 0) {
                     $('#frmHeader').modal('show');
                 } else {
-                    alert('you are not allow to edit receipt document');
+                    ShowMessage('you are not allow to edit receipt document');
                 }
             });
         });
@@ -589,7 +589,7 @@ End Code
                     if (userRights.indexOf('E') > 0) {
                         $('#frmDetail').modal('show');
                     } else {
-                        alert('you are not allow to edit receipt document');
+                        ShowMessage('you are not allow to edit receipt document');
                     }
                 });
             }
@@ -714,7 +714,7 @@ End Code
             row_d.Rate50Tavi = CNum($('#txtRate50Tavi').val());
 
             let jsonText = JSON.stringify({ data: row_d });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: "@Url.Action("SetRcpDetail", "Acc")",
                 type: "POST",
@@ -723,18 +723,18 @@ End Code
                 success: function (response) {
                     if (response.result.data !== null) {
                         ShowDetail(row.BranchCode, row.ReceiptNo);
-                        alert(response.result.msg + '\n=>' + response.result.data);
+                        ShowMessage(response.result.msg + '\n=>' + response.result.data);
                         $('#frmDetail').modal('hide');
                         return;
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('no data to save');
+            ShowMessage('no data to save');
         }
     }
     function DeleteDetail() {
@@ -744,10 +744,10 @@ End Code
                     if (r.rcpdetail.data !== null) {
                         ShowDetail(row.BranchCode, row.ReceiptNo);
                     }
-                    alert(r.rcpdetail.result);
+                    ShowMessage(r.rcpdetail.result);
                 });
         } else {
-            alert('no data to delete');
+            ShowMessage('no data to delete');
         }
     }
     function ChangeAmount() {

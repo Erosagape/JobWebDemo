@@ -106,7 +106,6 @@ End Code
     function getJobdata() {
         ShowWait();
         $.get(path + 'joborder/updatejobstatus' + GetCliteria(), function (r) {
-            CloseWait();
             $('#tblJob').DataTable({
                 "ajax": {
                     //"url": "joborder/getjobjson" + strParam,
@@ -151,6 +150,7 @@ End Code
             $('#tblJob tbody').on('dblclick', 'tr', function () {
                 OpenJob();
             });
+            CloseWait();
         });            
     }
     function getJobdata_1() {
@@ -231,7 +231,7 @@ End Code
     }
     function OpenJob() {
         $.get(path + 'joborder/updatejobstatus?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val(), function (r) {
-            //alert(r);
+            //ShowMessage(r);
             window.open(path + 'joborder/showjob?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val());
         });
     }
