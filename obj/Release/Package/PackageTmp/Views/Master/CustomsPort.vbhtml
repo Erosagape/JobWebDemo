@@ -98,25 +98,26 @@ End Code
                 ShowMessage('Please enter area name');
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.AreaCode +"?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
+            ShowConfirm("Do you need to Save " + obj.AreaCode + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
 
-            $.ajax({
-                url: "@Url.Action("SetCustomsPort", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtAreaCode').val(response.result.data);
-                        $('#txtAreaCode').focus();
+                $.ajax({
+                    url: "@Url.Action("SetCustomsPort", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtAreaCode').val(response.result.data);
+                            $('#txtAreaCode').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');
@@ -135,12 +136,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtAreaCode').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delcustomsport?code=' + code, function (r) {
-            ShowMessage(r.RFARS.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delcustomsport?code=' + code, function (r) {
+                ShowMessage(r.RFARS.result);
+                ClearData();
+            });
         });
     }
     function SearchData(type) {

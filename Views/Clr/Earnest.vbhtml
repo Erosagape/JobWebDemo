@@ -557,11 +557,11 @@ End Code
         });
 
     }
-    function SaveExpense() {
-        let ask = confirm("Do you need to Save?");
-        if (ask == false) return;
-
-        SaveEarnest();
+    function SaveExpense() {       
+        ShowConfirm("Do you need to Save?", function (ask) {
+            if (ask == false) return;
+            SaveEarnest();
+        });
     }
     function CalTotal() {
         let amt = CDbl($('#txtExpAmount').val(),4);

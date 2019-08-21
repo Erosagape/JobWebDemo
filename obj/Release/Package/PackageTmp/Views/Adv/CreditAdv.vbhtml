@@ -641,45 +641,47 @@ End Code
         }
     }
     function SaveData() {
-        let obj = {
-            BranchCode:$('#txtBranchCode').val(),
-            ControlNo:$('#txtControlNo').val(),
-            VoucherDate:CDateTH($('#txtVoucherDate').val()),
-            TRemark:$('#txtTRemark').val(),
-            RecUser: user,
-            RecDate: CDateTH(GetToday()),
-            RecTime: GetTime(),
-            PostedBy:$('#txtPostedBy').val(),
-            PostedDate:CDateTH($('#txtPostedDate').val()),
-            PostedTime:$('#txtPostedTime').val(),
-            CancelReson:$('#txtCancelReson').val(),
-            CancelProve:$('#txtCancelProve').val(),
-            CancelDate:CDateTH($('#txtCancelDate').val()),
-            CancelTime: $('#txtCancelTime').val(),
-            CustCode: $('#txtCustCode').val(),
-            CustBranch: $('#txtCustBranch').val()
-        };
-        let ask = confirm("Do you need to Save " + $('#txtControlNo').val() + "?");
-        if (ask == false) return;
-        let jsonText = JSON.stringify({ data: obj });
-        //ShowMessage(jsonText);
-        $.ajax({
-            url: "@Url.Action("SetVoucherHeader", "Acc")",
-            type: "POST",
-            contentType: "application/json",
-            data: jsonText,
-            success: function (response) {
-                if (response.result.data != null) {
-                    $('#txtControlNo').val(response.result.data);
-                    $('#txtControlNo').focus();
-                }
-                ShowMessage(response.result.msg);
-            },
-            error: function (e) {
-                ShowMessage(e);
-            }
-        });
+        ShowConfirm("Do you need to Save " + $('#txtControlNo').val() + "?", function (ask) {
+            if (ask == false) return;
 
+            let obj = {
+                BranchCode:$('#txtBranchCode').val(),
+                ControlNo:$('#txtControlNo').val(),
+                VoucherDate:CDateTH($('#txtVoucherDate').val()),
+                TRemark:$('#txtTRemark').val(),
+                RecUser: user,
+                RecDate: CDateTH(GetToday()),
+                RecTime: GetTime(),
+                PostedBy:$('#txtPostedBy').val(),
+                PostedDate:CDateTH($('#txtPostedDate').val()),
+                PostedTime:$('#txtPostedTime').val(),
+                CancelReson:$('#txtCancelReson').val(),
+                CancelProve:$('#txtCancelProve').val(),
+                CancelDate:CDateTH($('#txtCancelDate').val()),
+                CancelTime: $('#txtCancelTime').val(),
+                CustCode: $('#txtCustCode').val(),
+                CustBranch: $('#txtCustBranch').val()
+            };
+            let jsonText = JSON.stringify({ data: obj });
+            //ShowMessage(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetVoucherHeader", "Acc")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    if (response.result.data != null) {
+                        $('#txtControlNo').val(response.result.data);
+                        $('#txtControlNo').focus();
+                    }
+                    ShowMessage(response.result.msg);
+                },
+                error: function (e) {
+                    ShowMessage(e);
+                }
+            });
+
+        });
     }
     function SetGridControl() {
         let code = $('#txtBranchCode').val();

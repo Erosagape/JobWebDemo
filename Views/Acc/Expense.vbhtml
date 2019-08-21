@@ -409,13 +409,15 @@ End Code
     }
     function SetCancel(b) {
         if (b == true) {
-            if (confirm("Do you want to " + (chkmode ? 'cancel' : 're-open') + "?") == true) {
-                $('#txtCancelProve').val(chkmode ? user : '');
-                $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
-                $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
-                return;
-            }
-            $('#chkCancel').prop('checked', !chkmode);
+            ShowConfirm("Do you want to " + (chkmode ? 'cancel' : 're-open') + "?", function (result) {
+                if (result == true) {
+                    $('#txtCancelProve').val(chkmode ? user : '');
+                    $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
+                    $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+                    return;
+                }
+                $('#chkCancel').prop('checked', !chkmode);
+            });
             return;
         }
         ShowMessage('You are not allow to ' + (b ? 'cancel payment!' : 'do this!'));
@@ -568,12 +570,14 @@ End Code
                 ShowMessage('you are not authorize to delete');
                 return;
             }
-            if (confirm('are you sure to delete this data?') == true) {
-                $.get(path + 'acc/delpaydetail?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val() + '&item=' + dtl.ItemNo, function (r) {
-                    ShowMessage(r.payment.result);
-                    ShowData($('#txtBranchCode').val(), $('#txtDocNo').val());
-                });
-            }
+            ShowConfirm('are you sure to delete this data?', function (result) {
+                if (result == true) {
+                    $.get(path + 'acc/delpaydetail?branch=' + $('#txtBranchCode').val() + '&code=' + $('#txtDocNo').val() + '&item=' + dtl.ItemNo, function (r) {
+                        ShowMessage(r.payment.result);
+                        ShowData($('#txtBranchCode').val(), $('#txtDocNo').val());
+                    });
+                }
+            });
         } else {
             ShowMessage('No data to delete');
         }

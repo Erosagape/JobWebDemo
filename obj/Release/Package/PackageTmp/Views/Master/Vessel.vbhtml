@@ -76,12 +76,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtTName').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delvessel?code=' + code, function (r) {
-            ShowMessage(r.vessel.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delvessel?code=' + code, function (r) {
+                ShowMessage(r.vessel.result);
+                ClearData();
+            });
         });
     }
     function SaveData() {
@@ -96,25 +96,26 @@ End Code
                 $('#txtTName').focus();
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.TName + "?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetVessel", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtRegsNumber').val(response.result.data);
-                        $('#txtRegsNumber').focus();
+            ShowConfirm("Do you need to Save " + obj.TName + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetVessel", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtRegsNumber').val(response.result.data);
+                            $('#txtRegsNumber').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

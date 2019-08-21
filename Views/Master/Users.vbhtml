@@ -276,25 +276,26 @@ End Code
                 ShowMessage('Please enter user name');
                 return;
             }
-            var ask = confirm("Do you need to " + (row.UserID == "" ? "Add" : "Save") + " this data?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetUser", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data!=null) {
-                        $('#txtUserID').val(response.result.data);
-                        $('#txtUserID').focus();
+            ShowConfirm("Do you need to " + (row.UserID == "" ? "Add" : "Save") + " this data?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetUser", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data!=null) {
+                            $('#txtUserID').val(response.result.data);
+                            $('#txtUserID').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');
@@ -302,12 +303,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtUserID').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/deluser?code=' + code, function (r) {
-            ShowMessage(r.user.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/deluser?code=' + code, function (r) {
+                ShowMessage(r.user.result);
+                ClearData();
+            });
         });
     }
 

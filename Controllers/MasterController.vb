@@ -774,7 +774,9 @@ AND b.IsApplyPolicy=1
                 End If
                 Dim oData = New CCompany(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""company"":{""data"":" & json & "},""sql"":""" & tSqlw & """}"
+                Dim oContact = New CCompanyContact(jobWebConn).GetData(tSqlw)
+                Dim jsonc As String = JsonConvert.SerializeObject(oContact)
+                json = "{""company"":{""data"":" & json & ",""contact"":" & jsonc & "},""sql"":""" & tSqlw & """}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

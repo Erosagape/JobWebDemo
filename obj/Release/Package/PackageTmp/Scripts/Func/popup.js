@@ -1,6 +1,36 @@
 ﻿//basic function tools for binding
+function CheckPassword(db, user, ev) {
+    bootbox.prompt({
+        title: "Please enter your password",
+        inputType: 'password',
+        buttons: {
+            cancel: {
+                label: 'Cancel',
+                className: 'btn-danger'
+            },
+            confirm: {
+                label: 'Confirm',
+                className: 'btn-success'                
+            }
+        },
+        callback: function (pass) {
+            if (pass !== null) {
+                $.get('/Config/SetLogin?Database=' + db + '&Code=' + user + '&Pass=' + pass, function (r) {
+                    if (r.user.data.length > 0) {
+                        ev();
+                    } else {
+                        ShowMessage('User Or Password Incorrect');
+                    }
+                });
+            }
+        }
+    });
+}
 function ShowMessage(str) {
     bootbox.alert(str);
+}
+function ShowConfirm(str,func) {
+    bootbox.confirm(str, func);
 }
 function CreateLOV(dv, frm, tb, name, html, c) {
     if (c <= 4) html = html.replace('<th>desc2</th>', '');
@@ -491,8 +521,8 @@ function SetGridCustContact(p, g, t, d, ev) {
             }
         });
 }
-function SetGridContactName(p, g, d, ev) {
-    $.get(p + 'joborder/getjobdatadistinct?field=CustContactName')
+function SetGridDataDistinct(p, g, t, d, ev) {
+    $.get(p + 'joborder/getdatadistinct' + t)
         .done(function (r) {
             let dr = r[0].Table;
             if (dr.length > 0) {
@@ -501,7 +531,7 @@ function SetGridContactName(p, g, d, ev) {
                     selected: true, //ให้สามารถเลือกแถวได้
                     columns: [ //กำหนด property ของ header column
                         { data: null, title: "#" },
-                        { data: "val", title: "ชื่อผู้ติดต่อ" }
+                        { data: "val", title: "Data List" }
                     ],
                     "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
                         {

@@ -897,27 +897,28 @@ End Code
         };
         return obj;
     }
-    function SaveHeader(showalert =true) {
-        let obj = GetDataHeader();
-        let ask = confirm("Do you need to Save?");
-        if (ask == false) return;
-        let jsonText = JSON.stringify({ data: obj });
-        //ShowMessage(jsonText);
-        $.ajax({
-            url: "@Url.Action("SetWHTaxHeader", "Acc")",
-            type: "POST",
-            contentType: "application/json",
-            data: jsonText,
-            success: function (response) {
-                if (response.result.data != null) {
-                    $('#txtDocNo').val(response.result.data);
-                    $('#txtDocNo').focus();
+    function SaveHeader(showalert = true) {
+        ShowConfirm("Do you need to Save?", function (ask) {
+            if (ask == false) return;
+            let obj = GetDataHeader();
+            let jsonText = JSON.stringify({ data: obj });
+            //ShowMessage(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetWHTaxHeader", "Acc")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    if (response.result.data != null) {
+                        $('#txtDocNo').val(response.result.data);
+                        $('#txtDocNo').focus();
+                    }
+                    if(showalert) ShowMessage(response.result.msg);
+                },
+                error: function (e) {
+                    ShowMessage(e);
                 }
-                if(showalert) ShowMessage(response.result.msg);
-            },
-            error: function (e) {
-                ShowMessage(e);
-            }
+            });
         });
     }
     function SetCancel(b) {
@@ -967,17 +968,18 @@ End Code
         });
     }
     function DeleteDetail() {
-        let branch = $('#txtBranchCode').val();
-        let code = $('#txtDocNo').val();
-        let item = $('#txtItemNo').val();
+        ShowConfirm("Do you need to Delete Item " + $('#txtItemNo').val() + "?", function (ask) {
+            if (ask == false) return;
 
-        let ask = confirm("Do you need to Delete " + item + "?");
-        if (ask == false) return;
-        $.get(path + 'acc/delwhtaxdetail?branch='+branch+'&code=' + code + '&itemno='+item, function (r) {
-            CallBackQueryWHTax(path, $('#txtBranchCode').val(), $('#txtDocNo').val(), ReadData);
-            ShowMessage(r.whtax.result);
-            $('#frmDetail').modal('hide');
-            
+            let branch = $('#txtBranchCode').val();
+            let code = $('#txtDocNo').val();
+            let item = $('#txtItemNo').val();
+
+            $.get(path + 'acc/delwhtaxdetail?branch='+branch+'&code=' + code + '&itemno='+item, function (r) {
+                CallBackQueryWHTax(path, $('#txtBranchCode').val(), $('#txtDocNo').val(), ReadData);
+                ShowMessage(r.whtax.result);
+                $('#frmDetail').modal('hide');            
+            });
         });
     }
     function ClearDetail() {

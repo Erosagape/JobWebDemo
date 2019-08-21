@@ -78,12 +78,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtCode').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delbranch?code=' + code, function (r) {
-            ShowMessage(r.branch.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delbranch?code=' + code, function (r) {
+                ShowMessage(r.branch.result);
+                ClearData();
+            });
         });
     }
     function SaveData() {
@@ -97,25 +97,26 @@ End Code
                 ShowMessage('Please enter branch name');
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.Code + "/" + obj.BrName +"?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetBranch", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtCode').val(response.result.data);
-                        $('#txtCode').focus();
+            ShowConfirm("Do you need to Save " + obj.Code + "/" + obj.BrName + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetBranch", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtCode').val(response.result.data);
+                            $('#txtCode').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

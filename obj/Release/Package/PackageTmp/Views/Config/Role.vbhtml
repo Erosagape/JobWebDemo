@@ -256,12 +256,13 @@ End Code
     function DeleteHeader() {
         var code = $('#txtRoleID').val();
         if (code !== '') {
-            var ask = confirm("Do you need to Delete " + code + "?");
-            if (ask == false) return;
-            $.get(path + 'config/deluserrole?code=' + code, function (r) {
-                ShowMessage(r.userrole.result);
-                ClearHeader();
-                LoadGrid();
+            ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+                if (ask == false) return;
+                $.get(path + 'config/deluserrole?code=' + code, function (r) {
+                    ShowMessage(r.userrole.result);
+                    ClearHeader();
+                    LoadGrid();
+                });
             });
         }
     }
@@ -269,11 +270,12 @@ End Code
         var code = $('#txtRoleID').val();
         var id = $('#txtUserID').val();
         if (id !== '') {
-            var ask = confirm("Do you need to Delete "+id+" from role " + code + "?");
-            if (ask == false) return;
-            $.get(path + 'config/deluserroledetail?code=' + code +'&id='+ id, function (r) {
-                ShowMessage(r.userrole.result);
-                LoadUser($('#txtRoleID').val());
+            ShowConfirm("Do you need to Delete " + id + " from role " + code + "?", function (ask) {
+                if (ask == false) return;
+                $.get(path + 'config/deluserroledetail?code=' + code + '&id=' + id, function (r) {
+                    ShowMessage(r.userrole.result);
+                    LoadUser($('#txtRoleID').val());
+                });
             });
         }
     }
@@ -283,25 +285,26 @@ End Code
             UserID: $('#txtUserID').val()
 	    };
         if (obj.RoleID != "" && obj.UserID != "") {
-            var ask = confirm("Do you need to Apply " + obj.RoleID + " To "+ obj.UserID +"?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            var result =$.ajax({
-                url: "@Url.Action("SetUserRoleDetail", "Config")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText
-            });
-            result.done(function (response) {
-                if (response.result.data != null) {
-                    LoadUser($('#txtRoleID').val());
-                    $('#txtUserID').focus();
-                }
-                ShowMessage(response.result.msg);
-            });
-            result.fail(function (err) {
-                ShowMessage(err);
+            ShowConfirm("Do you need to Apply " + obj.RoleID + " To " + obj.UserID + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                var result =$.ajax({
+                    url: "@Url.Action("SetUserRoleDetail", "Config")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText
+                });
+                result.done(function (response) {
+                    if (response.result.data != null) {
+                        LoadUser($('#txtRoleID').val());
+                        $('#txtUserID').focus();
+                    }
+                    ShowMessage(response.result.msg);
+                });
+                result.fail(function (err) {
+                    ShowMessage(err);
+                });
             });
         } else {
             ShowMessage('No data to save');
@@ -315,27 +318,28 @@ End Code
             RoleGroup: $('#txtRoleGroup').val()
 	    };
         if (obj.RoleID != "") {
-            var ask = confirm("Do you need to Save " + obj.RoleID + "?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetUserRole", "Config")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                async:false,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtRoleID').val(response.result.data);
-                        $('#txtRoleID').focus();
-                        LoadGrid();
+            ShowConfirm("Do you need to Save " + obj.RoleID + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetUserRole", "Config")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    async:false,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtRoleID').val(response.result.data);
+                            $('#txtRoleID').focus();
+                            LoadGrid();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');
@@ -348,24 +352,25 @@ End Code
             Author: GetAuthor()
 	    };
         if (obj.RoleID != "" && obj.ModuleID != "") {
-            var ask = confirm("Do you need to Apply " + obj.Author + " To "+ obj.ModuleID +"?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            var result = $.ajax({
-                url: "@Url.Action("SetUserRolePolicy", "Config")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText
-            });
-            result.done(function (response) {
-                if (response.result.data != null) {
-                    LoadPolicy($('#txtRoleID').val());
-                }
-                ShowMessage(response.result.msg);
-            });
-            result.fail(function (err) {
-                ShowMessage(err);
+            ShowConfirm("Do you need to Apply " + obj.Author + " To " + obj.ModuleID + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                var result = $.ajax({
+                    url: "@Url.Action("SetUserRolePolicy", "Config")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText
+                });
+                result.done(function (response) {
+                    if (response.result.data != null) {
+                        LoadPolicy($('#txtRoleID').val());
+                    }
+                    ShowMessage(response.result.msg);
+                });
+                result.fail(function (err) {
+                    ShowMessage(err);
+                });
             });
         } else {
             ShowMessage('No data to save');

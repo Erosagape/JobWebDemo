@@ -595,6 +595,7 @@
     <Content Include="Views\Report\Export.vbhtml" />
     <Content Include="Views\Shared\MasterPage.vbhtml" />
     <Content Include="Views\Menu\_Index.vbhtml" />
+    <Content Include="Views\Menu\About.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

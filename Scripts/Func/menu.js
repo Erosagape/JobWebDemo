@@ -169,6 +169,5 @@
         }
     } else {
         ShowMessage('Please login first');
-        window.location.href = path + 'index.html?redirect=' + mnuPath;
     }
 }

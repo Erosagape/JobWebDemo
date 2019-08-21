@@ -331,7 +331,11 @@ Namespace Controllers
             If IsNothing(Session("CurrUser")) Then
                 Session("CurrUser") = ""
             End If
-            ViewBag.User = Session("CurrUser")
+            ViewBag.User = Session("CurrUser").ToString
+            If IsNothing(Session("DatabaseID")) Then
+                Session("DatabaseID") = "1"
+            End If
+            ViewBag.DATABASE = Session("DatabaseID").ToString
             Dim oData
             If ViewBag.User <> "" Then
                 oData = New CUser(jobWebConn).GetData(String.Format(" WHERE UserID='{0}'", ViewBag.User))
@@ -344,7 +348,7 @@ Namespace Controllers
                 oData = New CUser(jobWebConn)
             End If
             Dim json As String = JsonConvert.SerializeObject(oData)
-            json = "{""user"":{""data"":" & json & ",""connection_job"":""" & jobWebConn.Replace("\", "\\") & """,""connection_mas"":""" & jobMasConn.Replace("\", "\\") & """}}"
+            json = "{""user"":{""data"":" & json & ",""connection_job"":""" & jobWebConn.Replace("\", "\\") & """,""connection_mas"":""" & jobMasConn.Replace("\", "\\") & """,""database"":""" & ViewBag.DATABASE & """}}"
             Return Content(json, jsonContent)
         End Function
         Function SetLogOut() As ActionResult
@@ -379,7 +383,7 @@ Namespace Controllers
                 'Load License Name
                 Using tbLicense = Main.GetDatabaseProfile(My.MySettings.Default.LicenseTo.ToString)
                     If tbLicense.Rows.Count > 0 Then
-                        Session("CurrLicense") = tbLicense.Rows(0)("CustName").ToString & "(DB=" & dbID & ")"
+                        Session("CurrLicense") = tbLicense.Rows(0)("CustName").ToString & " / " & dbID
                     Else
                         Return Content("[]", jsonContent)
                     End If

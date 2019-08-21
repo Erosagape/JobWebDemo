@@ -205,12 +205,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtGroupCode').val();
-        var ask = confirm("Do you need to Delete "+code +"?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delservicegroup?code=' + code, function (r) {
-            ShowMessage(r.servicegroup.result);
-            ShowData(r.servicegroup.data[0]);
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delservicegroup?code=' + code, function (r) {
+                ShowMessage(r.servicegroup.result);
+                ShowData(r.servicegroup.data[0]);
+            });
         });
     }
     function LoadData(dt) {
@@ -285,48 +285,50 @@ End Code
             ShowMessage('Please enter name');
             return;
         }
-        var ask = confirm("Do you need to " + (row.GroupCode == "" ? "Add" : "Save") + " this data?");
-        if (ask == false) return;
-        var jsonText = JSON.stringify({ data: obj });
-        //ShowMessage(jsonText);
-        $.ajax({
-            url: "@Url.Action("SetServiceGroup", "Master")",
-            type: "POST",
-            contentType: "application/json",
-            data: jsonText,
-            success: function (response) {
-                if (response.result.data!=null) {
-                    $('#txtGroupCode').val(response.result.data);
-                    $('#txtGroupCode').focus();
-                }
-                ShowMessage(response.result.msg);
-            },
-            error: function (e) {
-                ShowMessage(e);
-            }
-        });        
-    }
-    function SaveDetail() {
-        if (row_d !== null) {
-            row_d.GroupCode = $('#txtGroupCode').val();
-            var ask = confirm("Do you need to set " + (row_d.SICode) + " to this group?");
+        ShowConfirm("Do you need to " + (row.GroupCode == "" ? "Add" : "Save") + " this data?", function (ask) {
             if (ask == false) return;
-            var jsonText = JSON.stringify({ data: row_d });
+            var jsonText = JSON.stringify({ data: obj });
             //ShowMessage(jsonText);
             $.ajax({
-                url: "@Url.Action("SetServiceCode", "Master")",
+                url: "@Url.Action("SetServiceGroup", "Master")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
                 success: function (response) {
-                    if (response.result.data != null) {
-                        ShowDetail();
+                    if (response.result.data!=null) {
+                        $('#txtGroupCode').val(response.result.data);
+                        $('#txtGroupCode').focus();
                     }
                     ShowMessage(response.result.msg);
                 },
                 error: function (e) {
                     ShowMessage(e);
                 }
+            });        
+        });
+    }
+    function SaveDetail() {
+        if (row_d !== null) {
+            row_d.GroupCode = $('#txtGroupCode').val();
+            ShowConfirm("Do you need to set " + (row_d.SICode) + " to this group?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: row_d });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetServiceCode", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            ShowDetail();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
+                    }
+                });
             });
         }
     }

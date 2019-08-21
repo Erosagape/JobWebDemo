@@ -30,7 +30,7 @@
                 <img src="~/Resource/logo-tawan.jpg" onclick="SetLogout()" style="width:150px;padding:5px 5px 5px 5px;" />
             </div>
             <div style="width:100%;text-align:center;background-color:white;color:black">
-                <label id="lblUserID">Please Login</label>
+                <a href="#" onclick="SetLogin()"><label id="lblUserID">Please Login</label></a>
             </div>
             <div id="mainBoard" class="w3-bar-item w3-button" onclick="OpenMenu('Dashboard')">
                 Dashboard
@@ -126,26 +126,6 @@
                 <div class="panel-body">
                     @RenderBody()
                 </div>
-                <div class="panel-footer" style="display:none">
-                    <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
-                        <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
-                    </a>
-                    <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">
-                        <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save</b>
-                    </a>
-                    <a href="#" class="btn btn-danger" id="btnDelete" onclick="DeleteData()">
-                        <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
-                    </a>
-                    <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
-                        <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print</b>
-                    </a>
-                    <a href="#" class="btn btn-warning" id="btnCancel" onclick="CancelData()">
-                        <i class="fa fa-lg fa-close"></i>&nbsp;<b>Cancel</b>
-                    </a>
-                    <a href="#" class="btn btn-primary" id="btnSearch" onclick="SearchData()">
-                        <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
-                    </a>
-                </div>
             </div>
         </div>
 
@@ -238,7 +218,12 @@
         </div>
     </div>
     <div id="dvCommands" class="w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px">
-        <label id="lblCompanyName" onclick="CheckDatabase()">Tawan Technology Co.,ltd</label>
+        <div style="float:left">
+            <label id="lblCompanyName">Tawan Technology Co.,ltd &copy;@DateTime.Today.Year</label>
+        </div>
+        <div style="float:right">
+            <label id="lblLicenseName" onclick="CheckDatabase()">@ViewBag.LICENSE_NAME</label>
+        </div>
     </div>
     <div id="dvWaiting" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
         <div class="vertical-alignment-helper">
@@ -251,17 +236,23 @@
     </div>
     <script type="text/javascript">
     let userID = '@ViewBag.User';
+    let dbID = '@ViewBag.LICENSE_NAME'.split('/')[1].trim();
     CheckLogin();
+    function SetLogin() {
+        CheckPassword(dbID, userID, function () {
+            ShowMessage('Welcome ' + userID + '!');
+        });
+    }
     function CheckLogin() {
         if (userID === '') {
             window.location.href='/index.html';
         } else {
             $('#lblUserID').text('@ViewBag.UserName');
-            $('#lblCompanyName').text('@ViewBag.LICENSE_NAME');
+            $('#lblLicenseName').text('@ViewBag.LICENSE_NAME');
         }
     }
     function SetLogout() {
-        var c = confirm('Do you need to log out?');
+        ShowConfirm('Do you need to log out?', function (c) {
             if (c == true) {            
                 ShowWait();
                 $.get('/Config/SetLogOut')
@@ -271,7 +262,8 @@
                             window.location.href='/index.html';
                         }
                     });
-        }
+            }
+        });
     }
     function CheckDatabase() {
         ShowMessage('MAS=@ViewBag.CONNECTION_MAS\nJOB=@ViewBag.CONNECTION_JOB');

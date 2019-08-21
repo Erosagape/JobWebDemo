@@ -132,12 +132,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtCTYCODE').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delcountry?code=' + code, function (r) {
-            ShowMessage(r.country.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delcountry?code=' + code, function (r) {
+                ShowMessage(r.country.result);
+                ClearData();
+            });
         });
     }
     function SaveData() {
@@ -153,25 +153,26 @@ End Code
                 ShowMessage('Please enter country name');
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.CTYCODE + "/" + obj.CTYName +"?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetCountry", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtCTYCODE').val(response.result.data);
-                        $('#txtCTYCODE').focus();
+            ShowConfirm("Do you need to Save " + obj.CTYCODE + "/" + obj.CTYName + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetCountry", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtCTYCODE').val(response.result.data);
+                            $('#txtCTYCODE').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

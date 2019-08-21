@@ -722,14 +722,16 @@ End Code
     }
     function SetCancel(b) {
         if (b == true) {
-            if (confirm("Do you want to " + (chkmode ? 'cancel' : 're-open') + "?") == true) {
-                $('#cboDocStatus').val(chkmode ? '99' : GetStatus());
-                $('#txtCancelProve').val(chkmode ? user : '');
-                $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
-                $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
-                return;
-            }
-            $('#chkCancel').prop('checked', !chkmode);
+            ShowConfirm("Do you want to " + (chkmode ? 'cancel' : 're-open') + "?", function (result) {
+                if (result == true) {
+                    $('#cboDocStatus').val(chkmode ? '99' : GetStatus());
+                    $('#txtCancelProve').val(chkmode ? user : '');
+                    $('#txtCancelDate').val(chkmode ? CDateEN(GetToday()) : '');
+                    $('#txtCancelTime').val(chkmode ? ShowTime(GetTime()) : '');
+                    return;
+                }
+                $('#chkCancel').prop('checked', !chkmode);
+            });
             return;
         }
         ShowMessage('You are not allow to ' + (b ? 'cancel Advance!' : 'do this!'));

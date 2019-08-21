@@ -33,12 +33,9 @@ Public Class CController
                 Session("CurrUser") = ""
             End If
             ViewBag.User = Session("CurrUser").ToString
-            If ViewBag.User = "" Then
-                Return Redirect("~/index.html?redirect=" + baseURL)
-            End If
-            ViewBag.UserName = ""
+
             If CheckSession("UserProfiles") Then
-                Return Redirect("~/index.html?redirect=" + baseURL)
+                ViewBag.UserName = "**TIME OUT**"
             Else
                 ViewBag.UserName = DirectCast(Session("UserProfiles"), CUser).TName
             End If
@@ -47,23 +44,22 @@ Public Class CController
             End If
             ViewBag.LICENSE_NAME = Session("CurrLicense").ToString
             If ViewBag.LICENSE_NAME = "" Then
-                Return Redirect("~/index.html?redirect=" + baseURL)
+                ViewBag.LICENSE_NAME = "**EXPIRED**"
             End If
 
             If CheckSession("ConnJob") Then
                 jobWebConn = ""
-                Return Redirect("~/index.html?redirect=" + baseURL)
             Else
                 jobWebConn = Session("ConnJob").ToString
-                ViewBag.CONNECTION_JOB = jobWebConn
             End If
+            ViewBag.CONNECTION_JOB = jobWebConn
+
             If CheckSession("ConnMas") Then
                 jobMasConn = ""
-                Return Redirect("~/index.html?redirect=" + baseURL)
             Else
                 jobMasConn = Session("ConnMas").ToString
-                ViewBag.CONNECTION_MAS = jobMasConn
             End If
+            ViewBag.CONNECTION_MAS = jobMasConn
 
             If CheckSession("CurrForm") Then
                 Session("CurrForm") = ""

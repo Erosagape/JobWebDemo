@@ -139,11 +139,12 @@ End Code
         var code = $('#txtUserID').val();
         var key ="MODULE_"+ $('#txtAppID').val();
         var menu = $('#txtMenuID').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-        $.get(path + 'master/deluserauth?code=' + code + '&app='+key+'&menu='+menu, function (r) {
-            ShowMessage(r.userauth.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/deluserauth?code=' + code + '&app='+key+'&menu='+menu, function (r) {
+                ShowMessage(r.userauth.result);
+                ClearData();
+            });
         });
     }
     function ReadData(dr) {
@@ -181,20 +182,21 @@ End Code
                 ShowMessage('Please select Menu');
                 return;
             }
-            var ask = confirm("Do you need to Save This Authorize '" + obj.Author +"' for " + obj.UserID + " ("+ obj.AppID +"/" + obj.MenuID + ")?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            $.ajax({
-                url: "@Url.Action("SetUserAuth", "Config")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+            ShowConfirm("Do you need to Save This Authorize '" + obj.Author + "' for " + obj.UserID + " (" + obj.AppID + "/" + obj.MenuID + ")?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                $.ajax({
+                    url: "@Url.Action("SetUserAuth", "Config")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
+                    }
+                });
             });
         } else {
             ShowMessage('No data to save');

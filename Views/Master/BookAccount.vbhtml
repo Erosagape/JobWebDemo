@@ -188,11 +188,12 @@ End Code
     function DeleteData() {
         var branch = $('#txtBranchCode').val();
         var code = $('#txtBookCode').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-        $.get(path + 'master/delbookaccount?branch='+branch+'&code=' + code, function (r) {
-            ShowMessage(r.bookaccount.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delbookaccount?branch='+branch+'&code=' + code, function (r) {
+                ShowMessage(r.bookaccount.result);
+                ClearData();
+            });
         });
     }
     function ReadData(dr) {
@@ -254,24 +255,25 @@ End Code
             LimitBalance:$('#txtLimitBalance').val()   
         };
         if (obj.BookCode != "") {
-            var ask = confirm("Do you need to Save " + obj.BookCode + "?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            $.ajax({
-                url: "@Url.Action("SetBookAccount", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtBookCode').val(response.result.data);
-                        $('#txtBookCode').focus();
+            ShowConfirm("Do you need to Save " + obj.BookCode + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                $.ajax({
+                    url: "@Url.Action("SetBookAccount", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtBookCode').val(response.result.data);
+                            $('#txtBookCode').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

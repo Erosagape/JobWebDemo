@@ -83,12 +83,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtUnitType').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delservunit?code=' + code, function (r) {
-            ShowMessage(r.servunit.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delservunit?code=' + code, function (r) {
+                ShowMessage(r.servunit.result);
+                ClearData();
+            });
         });
     }
     function SaveData() {
@@ -104,25 +104,26 @@ End Code
                 $('#txtUName').focus();
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.UnitType + "?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetServUnit", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtUnitType').val(response.result.data);
-                        $('#txtUnitType').focus();
+            ShowConfirm("Do you need to Save " + obj.UnitType + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetServUnit", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtUnitType').val(response.result.data);
+                            $('#txtUnitType').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

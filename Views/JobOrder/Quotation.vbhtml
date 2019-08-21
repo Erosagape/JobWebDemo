@@ -149,18 +149,23 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                Contact Name <input type="text" id="txtContactName" class="form-control" />
+                                Contact Name
+                                <br/>
+                                <div style="display:flex">
+                                    <input type="text" id="txtContactName" class="form-control" style="width:100%" />
+                                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('contact')" />
+                                </div>                                
                             </div>
                             <div class="col-sm-8">
-                                Remark <textarea id="txtTRemark" class="form-control"></textarea>
+                                <a href="#" onclick="SearchData('remark')">Remark</a><textarea id="txtTRemark" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
-                                Header:<textarea id="txtDescriptionH" class="form-control"></textarea>
+                                <a href="#" onclick="SearchData('header')">Header</a><textarea id="txtDescriptionH" class="form-control"></textarea>
                             </div>
                             <div class="col-sm-6">
-                                Footer:<textarea id="txtDescriptionF" class="form-control"></textarea>
+                                <a href="#" onclick="SearchData('footer')">Footer</a><textarea id="txtDescriptionF" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="row">
@@ -222,7 +227,7 @@ End Code
                                 Ship By :<br /><select id="txtShipBy" class="form-control dropdown" value="0"></select>
                             </div>
                             <div class="col-sm-5">
-                                Description<br />
+                                <a href="#" onclick="SearchData('desc')">Description:</a><br />
                                 <textarea id="txtDescription" class="form-control"></textarea>
                             </div>
                         </div>
@@ -834,18 +839,20 @@ End Code
             return;
         }
         if (row_d.SeqNo !== undefined) {
-            if (confirm("Are you sure to delete seq " + row_d.SeqNo + ' from ' + row_d.QNo) == true) {
-                $.get(path+ 'JobOrder/DelQuoDetail?Branch=' + row_d.BranchCode + '&Code=' + row_d.QNo + '&Seq=' + row_d.SeqNo)
-                    .done(function (r) {
-                        if (r.quodetail.data !== null) {
-                            ShowDetail(row.BranchCode, row.QNo);
-                            row_d = {};
-                            row_i = {};
-                            $('#tbItem').DataTable().clear().draw();
-                        }
-                        ShowMessage(r.quodetail.result);
-                    });
-            }
+            ShowConfirm("Are you sure to delete seq " + row_d.SeqNo + ' from ' + row_d.QNo, function (result) {
+                if (result == true) {
+                    $.get(path+ 'JobOrder/DelQuoDetail?Branch=' + row_d.BranchCode + '&Code=' + row_d.QNo + '&Seq=' + row_d.SeqNo)
+                        .done(function (r) {
+                            if (r.quodetail.data !== null) {
+                                ShowDetail(row.BranchCode, row.QNo);
+                                row_d = {};
+                                row_i = {};
+                                $('#tbItem').DataTable().clear().draw();
+                            }
+                            ShowMessage(r.quodetail.result);
+                        });
+                }
+            });
         } else {
             ShowMessage('no selected section to delete');
         }
@@ -856,16 +863,18 @@ End Code
             return;
         }
         if (row_i.ItemNo !== undefined) {
-            if (confirm("Are you sure to delete item " + row_i.ItemNo + ' from section #' + row_i.SeqNo) == true) {
-                $.get(path+ 'JobOrder/DelQuoItem?Branch=' + row_i.BranchCode + '&Code=' + row_i.QNo + '&Seq=' + row_i.SeqNo + '&Item=' + row_i.ItemNo)
-                    .done(function (r) {
-                        if (r.quoitem.data !== null) {
-                            ShowItem(row_d.BranchCode, row_d.QNo, row_d.SeqNo);
-                            row_i = {};
-                        }
-                        ShowMessage(r.quoitem.result);
-                    });
-            }
+            ShowConfirm("Are you sure to delete item " + row_i.ItemNo + ' from section #' + row_i.SeqNo, function (result) {
+                if (result == true) {
+                    $.get(path+ 'JobOrder/DelQuoItem?Branch=' + row_i.BranchCode + '&Code=' + row_i.QNo + '&Seq=' + row_i.SeqNo + '&Item=' + row_i.ItemNo)
+                        .done(function (r) {
+                            if (r.quoitem.data !== null) {
+                                ShowItem(row_d.BranchCode, row_d.QNo, row_d.SeqNo);
+                                row_i = {};
+                            }
+                            ShowMessage(r.quoitem.result);
+                        });
+                }
+            });
         } else {
             ShowMessage('no selected item to delete');
         }
@@ -1014,10 +1023,17 @@ End Code
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
             //users
             CreateLOV(dv, '#frmSearchUser', '#tbUser', 'Users', response, 2);
+            //Contact
+            CreateLOV(dv, '#frmSearchContact', '#tbContact', 'Contact Person', response, 2);
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
             //Service 
-            CreateLOV(dv, '#frmSearchServ', '#tbServ', 'Service Code', response,2);
+            CreateLOV(dv, '#frmSearchServ', '#tbServ', 'Service Code', response, 2);
+            //Quotation Remark,header,footer
+            CreateLOV(dv, '#frmSearchRemark', '#tbRemark', 'Remark List', response, 1);
+            CreateLOV(dv, '#frmSearchHeader', '#tbHeader', 'Header List', response, 1);
+            CreateLOV(dv, '#frmSearchFooter', '#tbFooter', 'Footer List', response, 1);
+            CreateLOV(dv, '#frmSearchDesc', '#tbDesc', 'Description List', response, 1);
         });
     }
     function SearchData(type) {
@@ -1043,7 +1059,35 @@ End Code
             case 'service':
                 SetGridSICode(path, '#tbServ','', '#frmSearchServ', ReadService);
                 break;
+            case 'contact':
+                let w = '?Branch=' + $('#txtBCustBranch').val() + '&Code=' + $('#txtBCustCode').val();
+                SetGridCustContact(path, '#tbContact', w,'#frmSearchContact', ReadContactName);
+                break;
+            case 'remark':
+                SetGridDataDistinct(path, '#tbRemark', '?Table=Job_QuotationHeader&Field=TRemark', '#frmSearchRemark', ReadRemark);
+                break;
+            case 'header':
+                SetGridDataDistinct(path, '#tbHeader', '?Table=Job_QuotationHeader&Field=DescriptionH', '#frmSearchHeader', ReadHeader);
+                break;
+            case 'footer':
+                SetGridDataDistinct(path, '#tbFooter', '?Table=Job_QuotationHeader&Field=DescriptionF', '#frmSearchFooter', ReadFooter);
+                break;
+            case 'desc':
+                SetGridDataDistinct(path, '#tbDesc', '?Table=Job_QuotationDetail&Field=Description', '#frmSearchDesc', ReadDesc);
+                break;
         }
+    }
+    function ReadRemark(dt) {
+        $('#txtTRemark').val(dt.val);
+    }
+    function ReadHeader(dt) {
+        $('#txtDescriptionH').val(dt.val);
+    }
+    function ReadFooter(dt) {
+        $('#txtDescriptionF').val(dt.val);
+    }
+    function ReadDesc(dt) {
+        $('#txtDescription').val(dt.val);
     }
     function ReadData() {
         $('#txtQNo').val(row.QNo);
@@ -1135,7 +1179,14 @@ End Code
     function ReadCustomer(dt) {
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
+        $('#txtBCustCode').val(dt.BillToCustCode);
+        $('#txtBCustBranch').val(dt.BillToBranch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
+        ShowCustomer(path, dt.BillToCustCode, dt.BillToBranch, '#txtBCustName');
+    }
+    function ReadContactName(dt) {
+        $('#txtContactName').val(dt.ContactName);
+        $('#txtContactName').focus();
     }
     function ReadBilling(dt) {
         $('#txtBCustCode').val(dt.CustCode);

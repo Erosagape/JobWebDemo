@@ -105,11 +105,12 @@ End Code
     function DeleteData() {
         var code = $('#txtPortCode').val();
         var key = $('#txtCountryCode').val();
-        var ask = confirm("Do you need to Delete " + code + " of "+key+"?");
-        if (ask == false) return;
+        ShowConfirm("Do you need to Delete " + code + " of " + key + "?", function (ask) {
+            if (ask == false) return;
             $.get(path + 'master/delinterport?code=' + code + '&key='+key, function (r) {
                 ShowMessage(r.interport.result);
                 ClearData();
+            });
         });
     }
     function ReadData(dr) {
@@ -139,25 +140,26 @@ End Code
                 ShowMessage('Please enter port name');
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.PortCode + "?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetInterPort", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtPortCode').val(response.result.data);
-                        $('#txtPortCode').focus();
+            ShowConfirm("Do you need to Save " + obj.PortCode + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetInterPort", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtPortCode').val(response.result.data);
+                            $('#txtPortCode').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

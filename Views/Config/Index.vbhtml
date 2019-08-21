@@ -131,18 +131,19 @@ End Code
             ShowMessage('please enter config value');
             return;
         }
-        var ask = confirm("Do you need to Save " + obj.ConfigCode + "/" + obj.ConfigKey + "?");
-        if (ask == false) return;
-        $.ajax({
-            url: "@Url.Action("SetConfig", "Config")",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({ data: obj }),
-            success: function (response) {
-                response ? ShowMessage("Save Completed!") : ShowMessage("Cannot Save data");
-                ShowData($('#txtCode').val(), "");
-                $("#txtCode").focus();
-            }
+        ShowConfirm("Do you need to Save " + obj.ConfigCode + "/" + obj.ConfigKey + "?", function (ask) {
+            if (ask == false) return;
+            $.ajax({
+                url: "@Url.Action("SetConfig", "Config")",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ data: obj }),
+                success: function (response) {
+                    response ? ShowMessage("Save Completed!") : ShowMessage("Cannot Save data");
+                    ShowData($('#txtCode').val(), "");
+                    $("#txtCode").focus();
+                }
+            });
         });
     }
     function GetParam(Code, Key) {
@@ -167,11 +168,12 @@ End Code
     function DeleteData() {
         var code = $('#txtCode').val();
         var key = $('#txtKey').val();
-        var ask = confirm("Do you need to Delete " + code + "/" + key + "?");
-        if (ask == false) return;
-        $.get(path + 'config/delconfig' + GetParam(code,key), function (r) {
-            ShowMessage(r.config.result);
-            ShowData($('#txtCode').val(), "");
+        ShowConfirm("Do you need to Delete " + code + "/" + key + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'config/delconfig' + GetParam(code,key), function (r) {
+                ShowMessage(r.config.result);
+                ShowData($('#txtCode').val(), "");
+            });
         });
     }
     function ShowData(Code, Key) {

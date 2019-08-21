@@ -597,25 +597,26 @@ End Code
                 ShowMessage('Please enter customer name');
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.CustCode + "/" + obj.Branch +"?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetCompany", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtCustCode').val(response.result.data);
-                        $('#txtCustCode').focus();
+            ShowConfirm("Do you need to Save " + obj.CustCode + "/" + obj.Branch + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetCompany", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtCustCode').val(response.result.data);
+                            $('#txtCustCode').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');
@@ -624,12 +625,12 @@ End Code
     function DeleteData() {
         var code = $('#txtCustCode').val();
         var branch = $('#txtBranch').val();
-        var ask = confirm("Do you need to Delete " + code + "/" +branch+"?");
-        if (ask == false) return;
-
-        $.get(path + 'master/delcompany?code=' + code + '&branch=' + branch, function (r) {
-            ShowMessage(r.company.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "/" + branch + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delcompany?code=' + code + '&branch=' + branch, function (r) {
+                ShowMessage(r.company.result);
+                ClearData();
+            });
         });
     }
     function AddContact() {

@@ -10,5 +10,8 @@ Namespace Controllers
         Function AuthError() As ActionResult
             Return GetView("AuthError")
         End Function
+        Function About() As ActionResult
+            Return GetView("About")
+        End Function
     End Class
 End Namespace

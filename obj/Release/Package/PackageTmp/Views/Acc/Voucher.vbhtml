@@ -872,26 +872,26 @@ End Code
         $('#txtPRSum').val(CCurrency(CDbl(sumPR,2)));
     }
     function SaveData() {
-        let obj = {
-            BranchCode:$('#txtBranchCode').val(),
-            ControlNo:$('#txtControlNo').val(),
-            VoucherDate:CDateTH($('#txtVoucherDate').val()),
-            TRemark:$('#txtTRemark').val(),
-            RecUser:$('#txtRecUser').val(),
-            RecDate:CDateTH($('#txtRecDate').val()),
-            RecTime:$('#txtRecTime').val(),
-            PostedBy:$('#txtPostedBy').val(),
-            PostedDate:CDateTH($('#txtPostedDate').val()),
-            PostedTime:$('#txtPostedTime').val(),
-            CancelReson:$('#txtCancelReson').val(),
-            CancelProve:$('#txtCancelProve').val(),
-            CancelDate:CDateTH($('#txtCancelDate').val()),
-            CancelTime:$('#txtCancelTime').val(),
-            CustCode: $('#txtCustCode').val(),
-            CustBranch:$('#txtCustBranch').val()
-        };
         //if (obj.ControlNo != "") {
-            let ask = confirm("Do you need to Save " + obj.ControlNo + "?");
+        ShowConfirm("Do you need to Save " + $('#txtControlNo').val() + "?", function (ask) {
+            let obj = {
+                BranchCode:$('#txtBranchCode').val(),
+                ControlNo:$('#txtControlNo').val(),
+                VoucherDate:CDateTH($('#txtVoucherDate').val()),
+                TRemark:$('#txtTRemark').val(),
+                RecUser:$('#txtRecUser').val(),
+                RecDate:CDateTH($('#txtRecDate').val()),
+                RecTime:$('#txtRecTime').val(),
+                PostedBy:$('#txtPostedBy').val(),
+                PostedDate:CDateTH($('#txtPostedDate').val()),
+                PostedTime:$('#txtPostedTime').val(),
+                CancelReson:$('#txtCancelReson').val(),
+                CancelProve:$('#txtCancelProve').val(),
+                CancelDate:CDateTH($('#txtCancelDate').val()),
+                CancelTime:$('#txtCancelTime').val(),
+                CustCode: $('#txtCustCode').val(),
+                CustBranch:$('#txtCustBranch').val()
+            };
             if (ask == false) return;
             let jsonText = JSON.stringify({ data: obj });
             //ShowMessage(jsonText);
@@ -911,6 +911,7 @@ End Code
                     ShowMessage(e);
                 }
             });
+        });
         //} else {
         //    ShowMessage('No data to save');
         //}
@@ -1234,42 +1235,42 @@ End Code
         }
     }
     function SavePayment() {
-        let obj = {
-            BranchCode: $('#txtBranchCode').val(),
-            ControlNo: $('#txtControlNo').val(),
-            ItemNo: $('#txtItemNo').val(),
-            PRVoucher:$('#txtPRVoucher').val(),
-            PRType:$('#txtPRType').val(),
-            ChqNo:$('#txtChqNo').val(),
-            BookCode:$('#txtBookCode').val(),
-            BankCode:$('#txtBankCode').val(),
-            BankBranch:$('#txtBankBranch').val(),
-            ChqDate:CDateTH($('#txtChqDate').val()),
-            CashAmount:CNum($('#txtCashAmount').val()),
-            ChqAmount:CNum($('#txtChqAmount').val()),
-            CreditAmount: CNum($('#txtCreditAmount').val()),
-            SumAmount: CNum($('#txtSumAmt').val()),
-            CurrencyCode: $('#txtCurrencyCode').val(),
-            ExchangeRate: CNum($('#txtExchangeRate').val()),
-            TotalAmount: CNum($('#txtTotalAmt').val()),
-            VatExc: CNum($('#txtVatExc').val()),
-            VatInc: CNum($('#txtVatInc').val()),
-            WhtExc: CNum($('#txtWhtExc').val()),
-            WhtInc: CNum($('#txtWhtInc').val()),
-            TotalNet: CNum($('#txtTotalNet').val()),
-            IsLocal:$('#txtIsLocal').val(),
-            ChqStatus:$('#txtChqStatus').val(),
-            TRemark:$('#txtDTRemark').val(),
-            PayChqTo:$('#txtPayChqTo').val(),
-            DocNo:$('#txtDocNo').val(),
-            SICode:$('#txtSICode').val(),
-            RecvBank:$('#txtRecvBank').val(),
-            RecvBranch: $('#txtRecvBranch').val(),
-            acType: $('#txtacType').val(),
-            ForJNo: $('#txtForJNo').val()
-        };
         //if (obj.PRVoucher != "") {
-            let ask = confirm("Do you need to Save " + obj.PRVoucher + "?");
+        ShowConfirm("Do you need to Save " + $('#txtPRVoucher').val() + "?", function (ask) {
+            let obj = {
+                BranchCode: $('#txtBranchCode').val(),
+                ControlNo: $('#txtControlNo').val(),
+                ItemNo: $('#txtItemNo').val(),
+                PRVoucher:$('#txtPRVoucher').val(),
+                PRType:$('#txtPRType').val(),
+                ChqNo:$('#txtChqNo').val(),
+                BookCode:$('#txtBookCode').val(),
+                BankCode:$('#txtBankCode').val(),
+                BankBranch:$('#txtBankBranch').val(),
+                ChqDate:CDateTH($('#txtChqDate').val()),
+                CashAmount:CNum($('#txtCashAmount').val()),
+                ChqAmount:CNum($('#txtChqAmount').val()),
+                CreditAmount: CNum($('#txtCreditAmount').val()),
+                SumAmount: CNum($('#txtSumAmt').val()),
+                CurrencyCode: $('#txtCurrencyCode').val(),
+                ExchangeRate: CNum($('#txtExchangeRate').val()),
+                TotalAmount: CNum($('#txtTotalAmt').val()),
+                VatExc: CNum($('#txtVatExc').val()),
+                VatInc: CNum($('#txtVatInc').val()),
+                WhtExc: CNum($('#txtWhtExc').val()),
+                WhtInc: CNum($('#txtWhtInc').val()),
+                TotalNet: CNum($('#txtTotalNet').val()),
+                IsLocal:$('#txtIsLocal').val(),
+                ChqStatus:$('#txtChqStatus').val(),
+                TRemark:$('#txtDTRemark').val(),
+                PayChqTo:$('#txtPayChqTo').val(),
+                DocNo:$('#txtDocNo').val(),
+                SICode:$('#txtSICode').val(),
+                RecvBank:$('#txtRecvBank').val(),
+                RecvBranch: $('#txtRecvBranch').val(),
+                acType: $('#txtacType').val(),
+                ForJNo: $('#txtForJNo').val()
+            };
             if (ask == false) return;
             let jsonText = JSON.stringify({ data:[ obj ]});
             //ShowMessage(jsonText);
@@ -1289,45 +1290,47 @@ End Code
                     ShowMessage(e);
                 }
             });
+        });
         //} else {
         //    ShowMessage('No data to save');
         //}
     }
-    function SaveDocument() {
-        let obj = {
-            BranchCode:$('#txtBranchCode').val(),
-            ControlNo:$('#txtControlNo').val(),
-            ItemNo:$('#txtDocItemNo').val(),
-            DocType:$('#txtDocType').val(),
-            DocNo:$('#txtDDocNo').val(),
-            DocDate:CDateTH($('#txtDocDate').val()),
-            CmpType:$('#txtCmpType').val(),
-            CmpCode:$('#txtCmpCode').val(),
-            CmpBranch:$('#txtCmpBranch').val(),
-            PaidAmount:CNum($('#txtPaidAmount').val()),
-            TotalAmount: CNum($('#txtTotalAmount').val()),
-            acType: $('#txtDocacType').val()
-        };
-        if (obj.DocNo!= "") {
-            let ask = confirm("Do you need to Save " + obj.DocNo + "?");
-            if (ask == false) return;
-            let jsonText = JSON.stringify({ data:[ obj ]});
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetVoucherDoc", "Acc")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.document !== null) {
-                        SetGridDocument(response.result.document[0]);
+    function SaveDocument() {       
+        if ($('#txtDDocNo').val() !== "") {
+            ShowConfirm("Do you need to Save " + $('#txtDDocNo').val() + "?", function (ask) {
+                let obj = {
+                    BranchCode:$('#txtBranchCode').val(),
+                    ControlNo:$('#txtControlNo').val(),
+                    ItemNo:$('#txtDocItemNo').val(),
+                    DocType:$('#txtDocType').val(),
+                    DocNo:$('#txtDDocNo').val(),
+                    DocDate:CDateTH($('#txtDocDate').val()),
+                    CmpType:$('#txtCmpType').val(),
+                    CmpCode:$('#txtCmpCode').val(),
+                    CmpBranch:$('#txtCmpBranch').val(),
+                    PaidAmount:CNum($('#txtPaidAmount').val()),
+                    TotalAmount: CNum($('#txtTotalAmount').val()),
+                    acType: $('#txtDocacType').val()
+                };
+                if (ask == false) return;
+                let jsonText = JSON.stringify({ data: [obj] });
+                            //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetVoucherDoc", "Acc")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.document !== null) {
+                            SetGridDocument(response.result.document[0]);
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
-            });
+                });
+            });                        
         } else {
             ShowMessage('No data to save');
         }

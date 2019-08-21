@@ -123,25 +123,26 @@ End Code
                 ShowMessage('Please enter description');
                 return;
             }
-            var ask = confirm("Do you need to Save " + obj.Type + "/" + obj.Description +"?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetDeclareType", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtType').val(response.result.data);
-                        $('#txtType').focus();
+            ShowConfirm("Do you need to Save " + obj.Type + "/" + obj.Description + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetDeclareType", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtType').val(response.result.data);
+                            $('#txtType').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');
@@ -160,12 +161,12 @@ End Code
     }
     function DeleteData() {
         var code = $('#txtType').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-
-        $.get(path + 'master/deldeclaretype?code=' + code, function (r) {
-            ShowMessage(r.RFDCT.result);
-            ClearData();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/deldeclaretype?code=' + code, function (r) {
+                ShowMessage(r.RFDCT.result);
+                ClearData();
+            });
         });
     }
 </script>

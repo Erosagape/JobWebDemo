@@ -438,15 +438,17 @@ End Code
     }
     function DeleteDetail() {
         if (row_d.ItemNo !== undefined) {
-            if (confirm("Are you sure to delete inv " + row_d.InvNo + ' from ' + row_d.BillAcceptNo) == true) {
-                $.get(path+ 'Acc/DelBillDetail?Branch=' + row.BranchCode + '&Code=' + row.BillAcceptNo + '&Item=' + row_d.ItemNo)
+            ShowConfirm("Are you sure to delete inv " + row_d.InvNo + ' from ' + row_d.BillAcceptNo, function (result) {
+                if (result == true) {
+                    $.get(path + 'Acc/DelBillDetail?Branch=' + row.BranchCode + '&Code=' + row.BillAcceptNo + '&Item=' + row_d.ItemNo)
                     .done(function (r) {
                         if (r.billdetail.data !== null) {
                             ShowDetail(row.BranchCode, row.BillAcceptNo);
                         }
                         ShowMessage(r.billdetail.result);
                     });
-            }
+                }                
+            });
         } else {
             ShowMessage('no data to delete');
         }

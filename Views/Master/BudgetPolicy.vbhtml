@@ -149,12 +149,13 @@ End Code
     //CRUD Functions used in HTML Java Scripts
     function DeleteData() {
         var code = $('#txtID').val();
-        var ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
             $.get(path + 'master/delbudgetpolicy?code=' + code, function (r) {
                 ShowMessage(r.budgetpolicy.result);
                 ClearData();
             });
+        });
     }
 	function ReadData(dr){
         $('#txtID').val(CNum(dr.ID));
@@ -188,27 +189,28 @@ End Code
             UpdateBy:user,
         };
         if (obj.ID !== "") {
-            var ask = confirm("Do you need to Save " + obj.ID + "?");
-            if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetBudgetPolicy", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtID').val(response.result.data);
-                        $('#txtID').focus();
-                        $('#dvEditor').modal('hide');
-                        ShowData();
+            ShowConfirm("Do you need to Save " + obj.ID + "?", function (ask) {
+                if (ask == false) return;
+                var jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetBudgetPolicy", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtID').val(response.result.data);
+                            $('#txtID').focus();
+                            $('#dvEditor').modal('hide');
+                            ShowData();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

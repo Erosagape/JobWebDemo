@@ -143,16 +143,17 @@ End Code
     }
     //CRUD Functions used in HTML Java Scripts
     function DeleteData() {
-        let branch = $('#txtBranch').val();
-        let code = $('#txtCustCode').val();
-        let item = $('#txtItemNo').val();
-        let ask = confirm("Do you need to Delete " + item + "?");
-        if (ask == false) return;
-        $.get(path + 'master/delcompanycontact?branch=' + branch + '&code=' + code + '&item=' + item, function (r) {
-            ShowMessage(r.companycontact.result);
-            ShowData();
-            ClearData();
-        });
+        var branch = $('#txtBranch').val();
+        var code = $('#txtCustCode').val();
+        var item = $('#txtItemNo').val();
+        ShowConfirm("Do you need to Delete " + $('#txtItemNo').val() + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delcompanycontact?branch=' + branch + '&code=' + code + '&item=' + item, function (r) {
+                ShowMessage(r.companycontact.result);
+                ShowData();
+                ClearData();
+            });
+        });        
     }
 	function ReadData(dr){		
         $('#txtItemNo').val(dr.ItemNo);
@@ -163,7 +164,7 @@ End Code
         $('#txtPhone').val(dr.Phone);
 	}
 	function SaveData(){
-		let obj={			
+		var obj={			
             CustCode: $('#txtCustCode').val(),
             Branch:$('#txtBranch').val(),
             ItemNo:$('#txtItemNo').val(),
@@ -178,25 +179,26 @@ End Code
             return;
         }
         if (obj.ItemNo != "") {
-            let ask = confirm("Do you need to Save " + obj.ItemNo + "?");
-            if (ask == false) return;
-            let jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetCompanyContact", "Master")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        ShowData();
-                        ClearData();
+            ShowConfirm("Do you need to Save " + obj.ItemNo + "?", function (ask) {
+                if (ask == false) return;
+                let jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetCompanyContact", "Master")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            ShowData();
+                            ClearData();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

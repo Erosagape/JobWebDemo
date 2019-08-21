@@ -143,17 +143,18 @@ End Code
         $('#txtVenCode').focus();
     }
     function DeleteData() {
-        let code = $('#txtVenCode').val();
-        let ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
+        var code = $('#txtVenCode').val();
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'master/delvender?code=' + code, function (r) {
+                ShowMessage(r.vender.result);
+                ClearData();
+            });
 
-        $.get(path + 'master/delvender?code=' + code, function (r) {
-            ShowMessage(r.vender.result);
-            ClearData();
         });
     }
     function SaveData() {
-        let obj = GetDataSave();
+        var obj = GetDataSave();
         if (obj.VenCode == '') {
             ShowMessage('Please enter vender code');
             return;
@@ -162,26 +163,27 @@ End Code
             ShowMessage('Please enter vender name');
             return;
         }
-        let ask = confirm("Do you need to " + (obj.VenCode == "" ? "Add" : "Save") + " this data?");
-        if (ask == false) return;
-        let jsonText = JSON.stringify({ data: obj });
-        //ShowMessage(jsonText);
-        $.ajax({
-            url: "@Url.Action("SetVender", "Master")",
-            type: "POST",
-            contentType: "application/json",
-            data: jsonText,
-            success: function (response) {
-                if (response.result.data!=null) {
-                    $('#txtVenCode').val(response.result.data);
-                    $('#txtVenCode').focus();
+        ShowConfirm("Do you need to " + (obj.VenCode == "" ? "Add" : "Save") + " this data?", function (ask) {
+            if (ask == false) return;
+            let jsonText = JSON.stringify({ data: obj });
+            //ShowMessage(jsonText);
+            $.ajax({
+                url: "@Url.Action("SetVender", "Master")",
+                type: "POST",
+                contentType: "application/json",
+                data: jsonText,
+                success: function (response) {
+                    if (response.result.data!=null) {
+                        $('#txtVenCode').val(response.result.data);
+                        $('#txtVenCode').focus();
+                    }
+                    ShowMessage(response.result.msg);
+                },
+                error: function (e) {
+                    ShowMessage(e);
                 }
-                ShowMessage(response.result.msg);
-            },
-            error: function (e) {
-                ShowMessage(e);
-            }
-        });        
+            });        
+        });
     }
     function ReadVender(dr) {
         if (dr.VenCode != undefined) {
