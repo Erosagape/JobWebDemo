@@ -1,4 +1,23 @@
 ﻿//basic function tools for binding
+function CheckSession() {
+    $.get('/Config/GetLogin', function (r) {
+        if (r.user.data.UserID == null) {
+            $('#cboDatabase').empty();
+            $('#cboDatabase').append($('<option>', { value: '' })
+                .text('N/A'));
+            $.get('/Config/GetDatabase').done(function (dr) {
+                if (dr.database.length > 0) {
+                    for (let i = 0; i < dr.database.length; i++) {
+                        $('#cboDatabase').append($('<option>', { value: (i + 1) })
+                            .text(dr.company + '->' + dr.database[i].trim()));
+                    }
+                    $('#cboDatabase').val(1);
+                    $('#dvLogin').modal('show');
+                }
+            });
+        }
+    });
+}
 function CheckPassword(db, user, ev) {
     bootbox.prompt({
         title: "Please enter your password",

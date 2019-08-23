@@ -56,15 +56,15 @@ Module Main
         Return ret
     End Function
 
-    Friend Function GetValueConfig(sCode As String, sKey As String) As String
+    Friend Function GetValueConfig(sCode As String, sKey As String, Optional sDef As String = "") As String
         Dim tSqlw As String = " WHERE ConfigCode<>'' "
-        tSqlw &= String.Format("AND ConfigCode='{0}'", sCode)
+        If sCode <> "" Then tSqlw &= String.Format("AND ConfigCode='{0}'", sCode)
         tSqlw &= String.Format("AND ISNULL(ConfigKey,'')='{0}'", sKey)
         Dim oData = New CConfig(jobWebConn).GetData(tSqlw)
         If oData.Count > 0 Then
             Return oData(0).ConfigValue
         Else
-            Return ""
+            Return sDef
         End If
     End Function
     Friend Function GetDataConfig(sCode As String) As List(Of CConfig)

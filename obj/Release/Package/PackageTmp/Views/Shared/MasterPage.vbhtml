@@ -20,6 +20,7 @@
     <script src="~/Scripts/Func/util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
     <script src="~/Scripts/Func/menu.js"></script>
+    <script src="~/Scripts/Func/lang.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 </head>
 <body style="background:#e6e6e6;color:black;">
@@ -31,6 +32,10 @@
             </div>
             <div style="width:100%;text-align:center;background-color:white;color:black">
                 <a href="#" onclick="SetLogin()"><label id="lblUserID">Please Login</label></a>
+                <select id="cboLanguage" onchange="ChangeLanguage($(this).val(),'@ViewBag.Module')" data-width="fit">
+                    <option value="EN">EN</option>
+                    <option value="TH">ไทย</option>
+                </select>
             </div>
             <div id="mainBoard" class="w3-bar-item w3-button" onclick="OpenMenu('Dashboard')">
                 Dashboard
@@ -39,118 +44,97 @@
                 Marketing Works
             </div>
             <div id="mnuMkt" class="w3-hide w3-pale-green w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Quotation')">- Quotation</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('AppQuo')">- Approve Quotation</a>
+                <a href="#" id="mnuMkt1" class="w3-bar-item w3-button" onclick="OpenMenu('Quotation')">- Quotation</a>
+                <a href="#" id="mnuMkt2" class="w3-bar-item w3-button" onclick="OpenMenu('AppQuo')">- Approve Quotation</a>
             </div>
             <div id="mainCS" class="w3-bar-item w3-button" onclick="w3_accordion('mnuCS')">
                 CS Works
             </div>
             <div id="mnuCS" class="w3-hide w3-light-grey w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('CreateJob')">- Create Job</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('SearchJob')">- List Job</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Transport')">- Delivery Order</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('WHTax')">- Withholding Tax</a>
+                <a href="#" id="mnuCS1" class="w3-bar-item w3-button" onclick="OpenMenu('CreateJob')">- Create Job</a>
+                <a href="#" id="mnuCS2" class="w3-bar-item w3-button" onclick="OpenMenu('SearchJob')">- List Job</a>
+                <a href="#" id="mnuCS3" class="w3-bar-item w3-button" onclick="OpenMenu('Transport')">- Delivery Order</a>
+                <a href="#" id="mnuCS4" class="w3-bar-item w3-button" onclick="OpenMenu('WHTax')">- Withholding Tax</a>
             </div>
-            <div id="mainApp" class="w3-bar-item w3-button" onclick="w3_accordion('mnuShp')">
+            <div id="mainShp" class="w3-bar-item w3-button" onclick="w3_accordion('mnuShp')">
                 Shipping Works
             </div>
             <div id="mnuShp" class="w3-hide w3-khaki w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Advance')">- Advance</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Clearing')">- Clearing</a>
+                <a href="#" id="mnuShp1" class="w3-bar-item w3-button" onclick="OpenMenu('Advance')">- Advance</a>
+                <a href="#" id="mnuShp2" class="w3-bar-item w3-button" onclick="OpenMenu('Clearing')">- Clearing</a>
             </div>
             <div id="mainApp" class="w3-bar-item w3-button" onclick="w3_accordion('mnuApp')">
                 Approving
             </div>
             <div id="mnuApp" class="w3-hide w3-pale-yellow w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('AppAdvance')">- Approve Advance</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('AppClearing')">- Approve Clearing</a>
+                <a href="#" id="mnuApp1" class="w3-bar-item w3-button" onclick="OpenMenu('AppAdvance')">- Approve Advance</a>
+                <a href="#" id="mnuApp2" class="w3-bar-item w3-button" onclick="OpenMenu('AppClearing')">- Approve Clearing</a>
             </div>
             <div id="mainFin" class="w3-bar-item w3-button" onclick="w3_accordion('mnuFin')">
                 Finance Works
             </div>
             <div id="mnuFin" class="w3-hide w3-pale-blue w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('PayAdvance')">- Payment Advance</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Payment')">- Payment Bill</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('RecvClear')">- Receive Clearing</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('RecvInv')">- Receive Invoice</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Cheque')">- Cheque Management</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('CreditAdv')">- Credit Advance</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('PettyCash')">- Petty Cash</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Earnest')">- Earnest Clearing</a>
+                <a href="#" id="mnuFin1" class="w3-bar-item w3-button" onclick="OpenMenu('PayAdvance')">- Payment Advance</a>
+                <a href="#" id="mnuFin2" class="w3-bar-item w3-button" onclick="OpenMenu('Payment')">- Payment Bill</a>
+                <a href="#" id="mnuFin3" class="w3-bar-item w3-button" onclick="OpenMenu('RecvClear')">- Receive Clearing</a>
+                <a href="#" id="mnuFin4" class="w3-bar-item w3-button" onclick="OpenMenu('RecvInv')">- Receive Invoice</a>
+                <a href="#" id="mnuFin5" class="w3-bar-item w3-button" onclick="OpenMenu('Cheque')">- Cheque Management</a>
+                <a href="#" id="mnuFin6" class="w3-bar-item w3-button" onclick="OpenMenu('CreditAdv')">- Credit Advance</a>
+                <a href="#" id="mnuFin7" class="w3-bar-item w3-button" onclick="OpenMenu('PettyCash')">- Petty Cash</a>
+                <a href="#" id="mnuFin8" class="w3-bar-item w3-button" onclick="OpenMenu('Earnest')">- Earnest Clearing</a>
             </div>
             <div id="mainAcc" class="w3-bar-item w3-button" onclick="w3_accordion('mnuAcc')">
                 Account Works
             </div>
             <div id="mnuAcc" class="w3-hide w3-pale-red w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Voucher')">- Vouchers</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Invoice')">- Invoice</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Billing')">- Billing</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Receipt')">- Receipts</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('TaxInvoice')">- Tax-invoice</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Expense')">- Payments Bill</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('CreditNote')">- Credit/Debit Note</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('GLNote')">- Journal Entry</a>
+                <a href="#" id="mnuAcc1" class="w3-bar-item w3-button" onclick="OpenMenu('Voucher')">- Vouchers</a>
+                <a href="#" id="mnuAcc2" class="w3-bar-item w3-button" onclick="OpenMenu('Invoice')">- Invoice</a>
+                <a href="#" id="mnuAcc3" class="w3-bar-item w3-button" onclick="OpenMenu('Billing')">- Billing</a>
+                <a href="#" id="mnuAcc4" class="w3-bar-item w3-button" onclick="OpenMenu('Receipt')">- Receipts</a>
+                <a href="#" id="mnuAcc5" class="w3-bar-item w3-button" onclick="OpenMenu('TaxInvoice')">- Tax-invoice</a>
+                <a href="#" id="mnuAcc6" class="w3-bar-item w3-button" onclick="OpenMenu('Expense')">- Payments Bill</a>
+                <a href="#" id="mnuAcc7" class="w3-bar-item w3-button" onclick="OpenMenu('CreditNote')">- Credit/Debit Note</a>
+                <a href="#" id="mnuAcc8" class="w3-bar-item w3-button" onclick="OpenMenu('GLNote')">- Journal Entry</a>
             </div>
             <div id="mainRpt" class="w3-bar-item w3-button" onclick="w3_accordion('mnuRpt')">
                 Report & Tracking
             </div>
             <div id="mnuRpt" class="w3-hide w3-amber w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Report')">- Reports</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('Tracking')">- Tracking</a>
+                <a href="#" id="mnuRpt1" class="w3-bar-item w3-button" onclick="OpenMenu('Report')">- Reports</a>
+                <a href="#" id="mnuRpt2" class="w3-bar-item w3-button" onclick="OpenMenu('Tracking')">- Tracking</a>
             </div>
             <div id="mainMas" class="w3-bar-item w3-button" onclick="w3_accordion('mnuMas')">
                 Master Files
             </div>
             <div id="mnuMas" class="w3-hide w3-sand w3-card-4">
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('MasG')">- Customs File</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('MasA')">- Accounts File</a>
-                <a href="#" class="w3-bar-item w3-button" onclick="OpenMenu('MasS')">- System Files</a>
+                <a href="#" id="mnuMas1" class="w3-bar-item w3-button" onclick="OpenMenu('MasG')">- Customs File</a>
+                <a href="#" id="mnuMas2" class="w3-bar-item w3-button" onclick="OpenMenu('MasA')">- Accounts File</a>
+                <a href="#" id="mnuMas3" class="w3-bar-item w3-button" onclick="OpenMenu('MasS')">- System Files</a>
             </div>
         </div>
     </div>
     <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
-    <div style="display:flex;flex-direction:column;margin-bottom:100px;">
-        <div class="w3-container" style="margin-bottom:10px">
-            <!-- Page Content -->
-            <div Class="panel-primary">
-                <div Class="panel-heading w3-indigo">
-                    <div Class="panel-title" style="display:flex">
-                        <div>
-                            <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="w3_open();" />
-                        </div>
-                        <div style="margin-left:10px">
-                            <h4>@ViewBag.Title</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    @RenderBody()
-                </div>
-            </div>
-        </div>
-
-    </div>
     <div id="dvMasA" class="modal" style="width:100%">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color:black">
-                    <div class="modal-title" style="color:white;text-align:center">
+                    <div id="mainMasA" class="modal-title" style="color:white;text-align:center">
                         Account Master Files
                     </div>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('venders')">ผู้ให้บริการ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('ServUnit')">หน่วยบริการ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Bank')">ธนาคาร</button>
+                            <button id="mnuMasA1" class="btn btn-default btn-block" onclick="OpenMenu('customers')">ผู้นำเข้าส่งออก</button>
+                            <button id="mnuMasA2" class="btn btn-default btn-block" onclick="OpenMenu('venders')">ผู้ให้บริการ</button>
+                            <button id="mnuMasA3" class="btn btn-default btn-block" onclick="OpenMenu('ServUnit')">หน่วยบริการ</button>
+                            <button id="mnuMasA4" class="btn btn-default btn-block" onclick="OpenMenu('Bank')">ธนาคาร</button>
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('ServiceGroup')">กลุ่มค่าบริการ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('BudgetPolicy')">มาตรฐานค่าบริการ</button>
+                            <button id="mnuMasA5" class="btn btn-default btn-block" onclick="OpenMenu('BookAccount')">สมุดบัญชีธนาคาร</button>
+                            <button id="mnuMasA6" class="btn btn-default btn-block" onclick="OpenMenu('ServiceGroup')">กลุ่มค่าบริการ</button>
+                            <button id="mnuMasA7" class="btn btn-default btn-block" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
+                            <button id="mnuMasA8" class="btn btn-default btn-block" onclick="OpenMenu('BudgetPolicy')">มาตรฐานค่าบริการ</button>
                         </div>
                     </div>
                 </div>
@@ -164,20 +148,20 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color:black">
-                    <div class="modal-title" style="color:white;text-align:center">
+                    <div id="mainMasS" class="modal-title" style="color:white;text-align:center">
                         System Master Files
                     </div>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
+                            <button id="mnuMasS1" class="btn btn-default btn-block" onclick="OpenMenu('Constant')">ค่าคงที่ระบบ</button>
+                            <button id="mnuMasS2" class="btn btn-default btn-block" onclick="OpenMenu('users');">ผู้ใช้งาน</button>
+                            <button id="mnuMasS3" class="btn btn-default btn-block" onclick="OpenMenu('UserAuth');">กำหนดสิทธิ์ผู้ใช้งาน</button>
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Role')">กลุ่มผู้ใช้งาน</button>
+                            <button id="mnuMasS4" class="btn btn-default btn-block" onclick="OpenMenu('Branch')">สาขา</button>
+                            <button id="mnuMasS5" class="btn btn-default btn-block" onclick="OpenMenu('Role')">กลุ่มผู้ใช้งาน</button>
                         </div>
                     </div>
 
@@ -192,22 +176,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color:black">
-                    <div class="modal-title" style="color:white;text-align:center">
+                    <div id="mainMasG" class="modal-title" style="color:white;text-align:center">
                         General Master Files
                     </div>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Currency')">สกุลเงิน</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('Country')">ประเทศ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('vessel')">ชื่อพาหนะ</button>
+                            <button id="mnuMasG1" class="btn btn-default btn-block" onclick="OpenMenu('Currency')">สกุลเงิน</button>
+                            <button id="mnuMasG2" class="btn btn-default btn-block" onclick="OpenMenu('Country')">ประเทศ</button>
+                            <button id="mnuMasG3" class="btn btn-default btn-block" onclick="OpenMenu('InterPort')">ท่าต่างประเทศ</button>
+                            <button id="mnuMasG4" class="btn btn-default btn-block" onclick="OpenMenu('vessel')">ชื่อพาหนะ</button>
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('DeclareType')">ประเภทใบขน</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</button>
-                            <button class="btn btn-default btn-block" onclick="OpenMenu('CustomsUnit')">หน่วยสินค้า</button>
+                            <button id="mnuMasG5" class="btn btn-default btn-block" onclick="OpenMenu('DeclareType')">ประเภทใบขน</button>
+                            <button id="mnuMasG6" class="btn btn-default btn-block" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</button>
+                            <button id="mnuMasG7" class="btn btn-default btn-block" onclick="OpenMenu('CustomsUnit')">หน่วยสินค้า</button>
                         </div>
                     </div>
                 </div>
@@ -217,9 +201,31 @@
             </div>
         </div>
     </div>
+    <div style="display:flex;flex-direction:column;margin-bottom:100px;">
+        <div class="w3-container" style="margin-bottom:10px">
+            <!-- Page Content -->
+            <div Class="panel-primary">
+                <div Class="panel-heading w3-indigo">
+                    <div Class="panel-title" style="display:flex">
+                        <div>
+                            <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="w3_open();" />
+                        </div>
+                        <div style="margin-left:10px">
+                            <h4><label id="lblTitle" onclick="alert('@ViewBag.Module')">@ViewBag.Title</label></h4>
+                            <label style="display:none" id="lblModule">@ViewBag.Module</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+
+    </div>
     <div id="dvCommands" class="w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px">
         <div style="float:left">
-            <label id="lblCompanyName">Tawan Technology Co.,ltd &copy;@DateTime.Today.Year</label>
+            <label id="lblCompanyName" onclick="OpenContact()">Tawan Technology Co.,ltd &copy;@DateTime.Today.Year</label>
         </div>
         <div style="float:right">
             <label id="lblLicenseName" onclick="CheckDatabase()">@ViewBag.LICENSE_NAME</label>
@@ -234,18 +240,92 @@
             </div>
         </div>
     </div>
+    <div id="dvLogin"  class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:black">
+                        <div class="modal-title" style="color:white;text-align:center">
+                            Log in
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        Database : <select class="form-control dropdown" id="cboDatabase"></select>
+                        User ID : <input type="text" class="form-control" id="txtUserID" />
+                        Password : <input type="password" class="form-control" id="txtPassword" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="btnLogin" onclick="SetVariable()">Log in</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
     let userID = '@ViewBag.User';
-    let dbID = '@ViewBag.LICENSE_NAME'.split('/')[1].trim();
-    CheckLogin();
+    let dbID = GetDatabaseID();
+    let sessionID = '@ViewBag.SESSION_ID';
+    let dbMas = '@ViewBag.CONNECTION_MAS';
+    let dbJob = '@ViewBag.CONNECTION_JOB';
+    let userLang = '@ViewBag.PROFILE_DEFAULT_LANG';
+    
+    if (userLang !== 'EN' && userLang !== '') {
+        $('#cboLanguage').val(userLang);
+        ChangeLanguage(userLang, $('#lblModule').text());
+    }
+    SetEvents();
+
+    function SetEvents() {
+        $('#dvLogin').on('shown.bs.modal', function () {
+            $('#txtUserID').focus();
+        });
+        $('#txtUserID').keydown(function (event) {
+            if (event.which === 13) {
+                $('#txtPassword').focus();
+            }
+        });
+        $('#txtPassword').keydown(function (event) {
+            if (event.which === 13) {
+                SetVariable();
+            }
+        });
+        CheckLogin();
+    }
+    function GetDatabaseID() {
+        let dbName = '@ViewBag.LICENSE_NAME';
+        if (dbName.indexOf('/') > 0) {
+            return dbName.split('/')[1].trim();
+        } else {
+            return '1';
+        }
+    }
+    function SetVariable() {
+        userID = $('#txtUserID').val();
+        dbID = $('#cboDatabase').val();
+        let Password = $('#txtPassword').val();
+        $.get('/Config/SetLogin?Code=' + userID + '&Pass=' + Password + '&Database=' + dbID)
+            .done(function (r) {
+                if (r.user.data.length > 0) {
+                    sessionID = r.user.session_id;
+                    dbMas = r.user.database_mas;
+                    dbJob = r.user.database_job;
+                    $('#lblUserID').text(r.user.data[0].TName);
+                    $('#lblLicenseName').text(r.user.license_to);
+                    $('#dvLogin').modal('hide');
+                } else {
+                    ShowMessage('User ID or Password Incorrect');
+                }
+            });
+    }
     function SetLogin() {
         CheckPassword(dbID, userID, function () {
             ShowMessage('Welcome ' + userID + '!');
         });
     }
+
     function CheckLogin() {
         if (userID === '') {
-            window.location.href='/index.html';
+            CheckSession();
         } else {
             $('#lblUserID').text('@ViewBag.UserName');
             $('#lblLicenseName').text('@ViewBag.LICENSE_NAME');
@@ -253,7 +333,7 @@
     }
     function SetLogout() {
         ShowConfirm('Do you need to log out?', function (c) {
-            if (c == true) {            
+            if (c == true) {
                 ShowWait();
                 $.get('/Config/SetLogOut')
                     .done(function (r) {
@@ -265,8 +345,11 @@
             }
         });
     }
+    function OpenContact() {
+        window.open('/Menu/About', '', '');
+    }
     function CheckDatabase() {
-        ShowMessage('MAS=@ViewBag.CONNECTION_MAS\nJOB=@ViewBag.CONNECTION_JOB');
+        ShowMessage('MAS='+dbMas+'\nJOB='+dbJob+'\nSESSION-ID='+sessionID);
     }
     function w3_open() {
         document.getElementById("mySidebar").style.display = "block";

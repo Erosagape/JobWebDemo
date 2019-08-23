@@ -156,7 +156,6 @@ Public Class CCustomer
         m_BeginDate = DateTime.MinValue
         m_ExpireDate = DateTime.MinValue
         m_Active = 0
-        m_Seq = 1
         m_CustRemark = ""
         m_CustMessage = ""
     End Sub

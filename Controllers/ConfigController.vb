@@ -205,7 +205,6 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
-
         Public Function SetConfig(<FromBody()> ByVal data As CConfig) As HttpResponseMessage
             If Not IsNothing(data) Then
                 data.SetConnect(jobWebConn)
@@ -245,6 +244,27 @@ Namespace Controllers
                 Dim json = "{""config"":{""result"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
+        End Function
+        Function GetCurrentProfile() As ActionResult
+            LoadCompanyProfile()
+            Dim json = "{""data"":{"
+            json &= """default_branch"":""" & ViewBag.PROFILE_DEFAULT_BRANCH & ""","
+            json &= """default_branch_name"":""" & ViewBag.PROFILE_DEFAULT_BRANCH_NAME & ""","
+            json &= """profile_logo"":""" & ViewBag.PROFILE_LOGO & ""","
+            json &= """company_name"":""" & ViewBag.PROFILE_COMPANY_NAME & ""","
+            json &= """company_fax"":""" & ViewBag.PROFILE_COMPANY_FAX & ""","
+            json &= """company_tel"":""" & ViewBag.PROFILE_COMPANY_TEL & ""","
+            json &= """company_email"":""" & ViewBag.PROFILE_COMPANY_EMAIL & ""","
+            json &= """company_addr1"":""" & ViewBag.PROFILE_COMPANY_ADDR1 & ""","
+            json &= """company_addr2"":""" & ViewBag.PROFILE_COMPANY_ADDR2 & ""","
+            json &= """currency"":""" & ViewBag.PROFILE_CURRENCY & ""","
+            json &= """vatrate"":""" & ViewBag.PROFILE_VATRATE & ""","
+            json &= """payment_credit"":""" & ViewBag.PROFILE_PAYMENT_CREDIT_DAYS & ""","
+            json &= """taxnumber"":""" & ViewBag.PROFILE_TAXNUMBER & ""","
+            json &= """taxbranch"":""" & ViewBag.PROFILE_TAXBRANCH & ""","
+            json &= """default_lang"":""" & ViewBag.PROFILE_DEFAULT_LANG & """"
+            json &= "}}"
+            Return Content(json, jsonContent)
         End Function
         Function GetConfig() As ActionResult
             Try
@@ -327,15 +347,11 @@ Namespace Controllers
             </div>
 "
         End Function
+        Function GetSession() As ActionResult
+            Return Content(Session.SessionID, textContent)
+        End Function
         Function GetLogin() As ActionResult
-            If IsNothing(Session("CurrUser")) Then
-                Session("CurrUser") = ""
-            End If
-            ViewBag.User = Session("CurrUser").ToString
-            If IsNothing(Session("DatabaseID")) Then
-                Session("DatabaseID") = "1"
-            End If
-            ViewBag.DATABASE = Session("DatabaseID").ToString
+            LoadCompanyProfile()
             Dim oData
             If ViewBag.User <> "" Then
                 oData = New CUser(jobWebConn).GetData(String.Format(" WHERE UserID='{0}'", ViewBag.User))
@@ -348,21 +364,51 @@ Namespace Controllers
                 oData = New CUser(jobWebConn)
             End If
             Dim json As String = JsonConvert.SerializeObject(oData)
-            json = "{""user"":{""data"":" & json & ",""connection_job"":""" & jobWebConn.Replace("\", "\\") & """,""connection_mas"":""" & jobMasConn.Replace("\", "\\") & """,""database"":""" & ViewBag.DATABASE & """}}"
+            json = "{""user"":{""session_id"":""" & Session.SessionID & """,""data"":" & json & ",""connection_job"":""" & jobWebConn.Replace("\", "\\") & """,""connection_mas"":""" & jobMasConn.Replace("\", "\\") & """,""database"":""" & ViewBag.DATABASE & """,""license_to"":""" & ViewBag.LICENSE_NAME & """}}"
             Return Content(json, jsonContent)
         End Function
         Function SetLogOut() As ActionResult
-            ViewBag.User = ""
-            Session("CurrUser") = ""
+            Session("CurrUser") = Nothing
             Session("UserProfiles") = Nothing
+            Session("DatabaseID") = Nothing
+            Session("CurrLicense") = Nothing
+            Session("ConnJob") = Nothing
+            Session("ConnMas") = Nothing
+            Session("CurrForm") = Nothing
+            Session("CurrRights") = Nothing
+            Session("CurrentLang") = Nothing
+            Session("CurrBranch") = Nothing
+            Session("CurrBranchName") = Nothing
+            Session("CompanyLogo") = Nothing
+            Session("CompanyName") = Nothing
+            Session("CompanyFax") = Nothing
+            Session("CompanyTel") = Nothing
+            Session("CompanyEmail") = Nothing
+            Session("CompanyAddr1") = Nothing
+            Session("CompanyAddr2") = Nothing
+            Session("Currency") = Nothing
+            Session("VatRate") = Nothing
+            Session("CreditDays") = Nothing
+            Session("TaxNumber") = Nothing
+            Session("TaxBranch") = Nothing
             Return Content("Y", textContent)
+        End Function
+        Function GetLanguage() As ActionResult
+            LoadCompanyProfile()
+            Return Content(Session("CurrentLang").ToString(), textContent)
+        End Function
+        Function SetLanguage(data As String) As ActionResult
+            Session("CurrentLang") = data
+            Return Content(data, textContent)
         End Function
         Function SetLogin() As ActionResult
             Try
+
                 Dim dbID As String = "1"
                 If Not IsNothing(Request.QueryString("Database")) Then
                     dbID = Request.QueryString("Database").ToString
                 End If
+                Session("DatabaseID") = dbID
                 'Load Connections by Database which selected
                 Dim dbConn As String() = Main.GetDatabaseConnection(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", dbID)
                 Session("ConnJob") = dbConn(0)
@@ -393,12 +439,13 @@ Namespace Controllers
                 If chk = 2 And oData.Count > 0 Then
                     Session("CurrUser") = oData(0).UserID
                     Session("UserProfiles") = oData(0)
+                    LoadCompanyProfile()
                 Else
                     Session("CurrUser") = ""
                     Session("UserProfiles") = Nothing
                 End If
                 Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""user"":{""data"":" & json & ",""database_job"":""" & jobWebConn.Replace("\", "\\") & """,""database_mas"":""" & jobMasConn.Replace("\", "\\") & """}}"
+                json = "{""user"":{""session_id"":""" & Session.SessionID & """,""data"":" & json & ",""database_job"":""" & jobWebConn.Replace("\", "\\") & """,""database_mas"":""" & jobMasConn.Replace("\", "\\") & """,""database"":""" & ViewBag.DATABASE & """,""license_to"":""" & ViewBag.LICENSE_NAME & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("[]", jsonContent)

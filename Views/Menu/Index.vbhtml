@@ -3,6 +3,7 @@
 End Code
 Job Type : <select id="cboJobType" onchange="drawChart()"></select>
 Transport By : <select id="cboShipBy" onchange="drawChart()"></select>
+Last Update : <label id="lblLastUpdate">@DateTime.Now().ToString("dd/MM/yyyy HH:mm:ss")</label>
 <div class="row">
     <div class="col-md-6">
         <b>Volume By Status:</b>
@@ -33,7 +34,7 @@ Transport By : <select id="cboShipBy" onchange="drawChart()"></select>
     window.onresize = () => {
         drawChart();
     }
-    setTimeout(function () {
+    setInterval(function () {
         drawChart();
     }, 30000);
     function drawChart() {
@@ -83,6 +84,7 @@ Transport By : <select id="cboShipBy" onchange="drawChart()"></select>
 
             }
             CloseWait();
+            $('#lblLastUpdate').text(new Date().toTimeString());
         });
     }
     function getDataTable(dt) {

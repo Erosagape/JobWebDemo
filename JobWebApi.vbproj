@@ -274,6 +274,7 @@
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
     <Content Include="Scripts\Func\combo.js" />
+    <Content Include="Scripts\Func\lang.js" />
     <Content Include="Scripts\Func\menu.js" />
     <Content Include="Scripts\Func\popup.js" />
     <Content Include="Scripts\Func\reports.js" />

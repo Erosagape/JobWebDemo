@@ -1,12 +1,12 @@
 /*!
  * Bootstrap Reboot v4.1.3 (https://getbootstrap.com/)
  * Copyright 2011-2018 The Bootstrap Authors
- * Copyright 2011-2018 Twitter, Inc.
+ * Copyright 2011-2018 Twitter; Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * Forked from Normalize.css, licensed MIT (https://github.com/necolas/normalize.css/blob/master/LICENSE.md)
+ * Forked from Normalize.css; licensed MIT (https://github.com/necolas/normalize.css/blob/master/LICENSE.md)
  */
-*,
-*::before,
+*;
+*::before;
 *::after {
   box-sizing: border-box;
 }
@@ -17,20 +17,20 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgba(0; 0; 0; 0);
 }
 
 @-ms-viewport {
   width: device-width;
 }
 
-article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+article; aside; figcaption; figure; footer; header; hgroup; main; nav; section {
   display: block;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: -apple-system; BlinkMacSystemFont; "Segoe UI"; Roboto; "Helvetica Neue"; Arial; sans-serif; "Apple Color Emoji"; "Segoe UI Emoji"; "Segoe UI Symbol"; "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -49,7 +49,7 @@ hr {
   overflow: visible;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1; h2; h3; h4; h5; h6 {
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
@@ -59,7 +59,7 @@ p {
   margin-bottom: 1rem;
 }
 
-abbr[title],
+abbr[title];
 abbr[data-original-title] {
   text-decoration: underline;
   -webkit-text-decoration: underline dotted;
@@ -74,16 +74,16 @@ address {
   line-height: inherit;
 }
 
-ol,
-ul,
+ol;
+ul;
 dl {
   margin-top: 0;
   margin-bottom: 1rem;
 }
 
-ol ol,
-ul ul,
-ol ul,
+ol ol;
+ul ul;
+ol ul;
 ul ol {
   margin-bottom: 0;
 }
@@ -105,7 +105,7 @@ dfn {
   font-style: italic;
 }
 
-b,
+b;
 strong {
   font-weight: bolder;
 }
@@ -114,7 +114,7 @@ small {
   font-size: 80%;
 }
 
-sub,
+sub;
 sup {
   position: relative;
   font-size: 75%;
@@ -147,7 +147,7 @@ a:not([href]):not([tabindex]) {
   text-decoration: none;
 }
 
-a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
+a:not([href]):not([tabindex]):hover; a:not([href]):not([tabindex]):focus {
   color: inherit;
   text-decoration: none;
 }
@@ -156,11 +156,11 @@ a:not([href]):not([tabindex]):focus {
   outline: 0;
 }
 
-pre,
-code,
-kbd,
+pre;
+code;
+kbd;
 samp {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: SFMono-Regular; Menlo; Monaco; Consolas; "Liberation Mono"; "Courier New"; monospace;
   font-size: 1em;
 }
 
@@ -215,10 +215,10 @@ button:focus {
   outline: 5px auto -webkit-focus-ring-color;
 }
 
-input,
-button,
-select,
-optgroup,
+input;
+button;
+select;
+optgroup;
 textarea {
   margin: 0;
   font-family: inherit;
@@ -226,40 +226,40 @@ textarea {
   line-height: inherit;
 }
 
-button,
+button;
 input {
   overflow: visible;
 }
 
-button,
+button;
 select {
   text-transform: none;
 }
 
-button,
-html [type="button"],
-[type="reset"],
+button;
+html [type="button"];
+[type="reset"];
 [type="submit"] {
   -webkit-appearance: button;
 }
 
-button::-moz-focus-inner,
-[type="button"]::-moz-focus-inner,
-[type="reset"]::-moz-focus-inner,
+button::-moz-focus-inner;
+[type="button"]::-moz-focus-inner;
+[type="reset"]::-moz-focus-inner;
 [type="submit"]::-moz-focus-inner {
   padding: 0;
   border-style: none;
 }
 
-input[type="radio"],
+input[type="radio"];
 input[type="checkbox"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-input[type="date"],
-input[type="time"],
-input[type="datetime-local"],
+input[type="date"];
+input[type="time"];
+input[type="datetime-local"];
 input[type="month"] {
   -webkit-appearance: listbox;
 }
@@ -292,7 +292,7 @@ progress {
   vertical-align: baseline;
 }
 
-[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-inner-spin-button;
 [type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
@@ -302,7 +302,7 @@ progress {
   -webkit-appearance: none;
 }
 
-[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-cancel-button;
 [type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }

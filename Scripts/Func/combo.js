@@ -61,7 +61,7 @@ function loadConfig(e, code, path, def) {
         }
     });
 }
-function loadDatabaseList(e) {
+function loadDatabase(e) {
     $(e).empty();
     $(e).append($('<option>', { value: '' })
         .text('N/A'));
