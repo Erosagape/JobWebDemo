@@ -305,7 +305,7 @@ End Code
 </div>
 <script type="text/javascript">
     let path = '@Url.Content("~")';
-    $(document).ready(function () {
+    //$(document).ready(function () {
         let branch = getQueryString('branch');
         let code = getQueryString('code');
         if (branch != "" && code != "") {
@@ -383,5 +383,5 @@ End Code
                 }
             });
         }
-    });
+    //});
 </script>

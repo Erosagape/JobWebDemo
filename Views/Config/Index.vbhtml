@@ -63,13 +63,13 @@ End Code
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     //define variables
-    var path = '@Url.Content("~")';
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    //$(document).ready(function () {
         SetLOV();
         SetEvents();
         ShowData("", "");
         $("#txtCode").focus();
-    });
+    //});
     function SetLOV() {
         //single field show in grid
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code', function (response) {

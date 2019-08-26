@@ -531,7 +531,7 @@
     <Content Include="Views\Master\Bank.vbhtml" />
     <Content Include="Views\Master\BookAccount.vbhtml" />
     <Content Include="Views\Config\SQLAdmin.vbhtml" />
-    <Content Include="Views\Report\Index.vbhtml" />
+    <Content Include="Views\Report\_Index.vbhtml" />
     <Content Include="Views\Shared\_ReportLandscape.vbhtml" />
     <Content Include="Views\Acc\Index.vbhtml" />
     <Content Include="Views\JobOrder\_FormJob.vbhtml" />
@@ -597,6 +597,7 @@
     <Content Include="Views\Shared\MasterPage.vbhtml" />
     <Content Include="Views\Menu\_Index.vbhtml" />
     <Content Include="Views\Menu\About.vbhtml" />
+    <Content Include="Views\Report\Index.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

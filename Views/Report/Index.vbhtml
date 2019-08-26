@@ -1,52 +1,68 @@
 ﻿@Code
-    Layout = "~/Views/Shared/_ReportLandscape.vbhtml"
-    ViewBag.Title = "Report"
-End Code
-<table width="100%">
-        <tr>
-            <td style="border:1px solid black;text-align:center">
-                #No
-            </td>
-            <td style="border:1px solid black;text-align:left">
-                Description
-            </td>
-            <td style="border:1px solid black;text-align:center">
-                Units
-            </td>
-            <td style="border:1px solid black;text-align:center">
-                Total
-            </td>
-        </tr>
-        @For i As Integer = 1 To 100
-            @<tr>
-                <td style="border:1px solid black;text-align:center">
-                    @i
-                </td>
-                <td style="border:1px solid black;text-align:left">
-                    Test Data
-                </td>
-                <td style="border:1px solid black;text-align:center">
-                    1xLCL
-                </td>
-                <td style="border:1px solid black;text-align:right">
-                    300.0
-                </td>
-            </tr>
-        Next
-        <tr>
-            <td colspan="3" style="border:1px solid black;text-align:right;background-color:aquamarine">
-                Total
-            </td>
-            <td style="border:1px solid black;text-align:right;background-color:aquamarine">
-                800.00
-            </td>
-        </tr>
-    </table>    
+    ViewData("Title") = "Reports"
+    End Code
+    <div class="row">
+        <div class="col-sm-6">
+            <div style="display:flex">
+                <label style="display:block;width:200px">Group Report</label>
+                <select id="cboReportGroup" class="form-control dropdown" onchange="ChangeLanguageForm('@ViewBag.Module');" style="width:100%"></select>
+            </div>
+            <table id="tbReportList" class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th class="desktop">
+                            Report Code
+                        </th>
+                        <th class="all">
+                            Report Name
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+               </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            Report Cliteria:<br />
+            <table id="tbFields">
+                <tr>
+                    <td>
+                        Date From
+                    </td>
+                    <td>
+                        <input type="date" id="txtDateFrom" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Date To
+                    </td>
+                    <td>
+                        <input type="date" id="txtDateTo" />
+                    </td>
+                </tr>
+            </table>
+            <a href="#" class="btn btn-info" id="btnPrnJob" onclick="PrintReport()">
+                <i class="fa fa-lg fa-print">Preview Report</i>
+            </a>
+        </div>
+   </div>
+<script type="text/javascript" src="~/Scripts/Func/reports.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var serv = [];
-    var user = '@ViewBag.User';
-    $(document).ready(function () {
-
+    let reportID = '';
+    ChangeLanguageForm('@ViewBag.Module');
+    $('#tbReportList tbody').on('click', 'tr', function () {
+        SetSelect('#tbReportList', this);
+        let data = $('#tbReportList').DataTable().row(this).data();
+        //alert(data.ReportCode);
+        reportID = data.ReportCode;
     });
+    function GetCliteria() {
+        let w = '?DateFrom=' + $('#txtDateFrom').val();
+        w += '&DateTo=' + $('#txtDateTo').val();
+        return w;
+    }
+    function PrintReport() {
+        alert(reportID + '\n' + GetCliteria());
+    }
 </script>

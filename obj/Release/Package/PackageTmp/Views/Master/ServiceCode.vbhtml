@@ -121,8 +121,8 @@ End Code
 <div id="dvList"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var row = {}; //row pointer to current record show in buffer
+    let path = '@Url.Content("~")';
+    let row = {}; //row pointer to current record show in buffer
     //$(document).ready(function () {
     SetEvents();
     SetEnterToTab();

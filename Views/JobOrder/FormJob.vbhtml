@@ -183,14 +183,14 @@ End Code
     </tr>
 </table>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    $(document).ready(function () {
-        var br = getQueryString('BranchCode');
-        var jno = getQueryString('JNo');
+    let path = '@Url.Content("~")';
+    //$(document).ready(function () {
+        let br = getQueryString('BranchCode');
+        let jno = getQueryString('JNo');
         if (br != "" && jno != "") {
             GetJob(br, jno);
         }
-    });
+    //});
     function GetJob(Branch, Job) {
         $.get(path+'joborder/getjobsql?branch=' + Branch + '&jno=' + Job)
             .done(function (r) {

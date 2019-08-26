@@ -72,7 +72,7 @@ End Code
 <script type="text/javascript">
     let path = '@Url.Content("~")';
     let vcType='P';
-    $(document).ready(function () {
+    //$(document).ready(function () {
         let branch = getQueryString('branch');
         let controlno = getQueryString('controlno');
         $.get(path + 'acc/getvoucher?branch=' + branch + '&code=' + controlno, function (r) {
@@ -80,7 +80,7 @@ End Code
                 ShowData(r.voucher);
             }
         });
-    });
+    //});
 
     function ShowData(data) {
         let div = $('#tbData tbody');

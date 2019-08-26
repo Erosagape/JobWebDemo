@@ -83,9 +83,9 @@ End Code
     </tr>
 </table>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var serv = [];    
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    let serv = [];    
+    //$(document).ready(function () {
         let branch = getQueryString('branch');
         let controlno = getQueryString('code');
         $.get(path + 'acc/getvoucher?branch=' + branch + '&code=' + controlno, function (r) {
@@ -93,7 +93,7 @@ End Code
                 LoadData(r.voucher);
             }
         });
-    });
+    //});
     function LoadData(data) {
         $.get(path +'Master/GetServiceCode')
             .done(function (r) {

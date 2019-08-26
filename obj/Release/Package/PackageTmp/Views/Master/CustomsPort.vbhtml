@@ -31,12 +31,12 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-        var path = '@Url.Content("~")';
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    //$(document).ready(function () {
         SetEvents();
         SetEnterToTab();
         ClearData();
-    });
+    //});
     function SetEvents() {
         $('#txtAreaCode').keydown(function (event) {
             if (event.which == 13) {

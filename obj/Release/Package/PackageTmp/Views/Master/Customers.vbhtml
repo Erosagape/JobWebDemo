@@ -226,14 +226,14 @@ End Code
 </div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var row = {};
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    let row = {};
+    //$(document).ready(function () {
         SetLOVs();
         SetEvents();
         SetEnterToTab();
         $('#txtCustCode').focus();
-    });
+    //});
     function SetEvents() {
         $('#txtBranch').keydown(function (event) {
             if (event.which == 13) {

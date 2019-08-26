@@ -126,12 +126,12 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    //$(document).ready(function () {
         loadConfig('#txtRoleGroup', 'CLR_FROM', path, '');
         SetEvents();
         LoadGrid();
-    });
+    //});
     function SetEvents() {
         $('#txtRoleID').keydown(function (event) {
             if (event.which == 13) {

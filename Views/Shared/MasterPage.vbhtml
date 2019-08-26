@@ -19,6 +19,7 @@
     <script src="~/Scripts/bootstrap-select.js"></script>
     <script src="~/Scripts/Func/util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
+    <script src="~/Scripts/Func/combo.js"></script>
     <script src="~/Scripts/Func/menu.js"></script>
     <script src="~/Scripts/Func/lang.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
@@ -36,9 +37,6 @@
                     <option value="EN">EN</option>
                     <option value="TH">ไทย</option>
                 </select>
-            </div>
-            <div id="mainBoard" class="w3-bar-item w3-button" onclick="OpenMenu('Dashboard')">
-                Dashboard
             </div>
             <div id="mainMkt" class="w3-bar-item w3-button" onclick="w3_accordion('mnuMkt')">
                 Marketing Works
@@ -101,7 +99,8 @@
             </div>
             <div id="mnuRpt" class="w3-hide w3-amber w3-card-4">
                 <a href="#" id="mnuRpt1" class="w3-bar-item w3-button" onclick="OpenMenu('Report')">- Reports</a>
-                <a href="#" id="mnuRpt2" class="w3-bar-item w3-button" onclick="OpenMenu('Tracking')">- Tracking</a>
+                <a href="#" id="mnuRpt2" class="w3-bar-item w3-button" onclick="OpenMenu('Tracking')">- Customer Tracking</a>
+                <a href="#" id="mnuRpt3" class="w3-bar-item w3-button" onclick="OpenMenu('Dashboard')">-Job Dashboard</a>
             </div>
             <div id="mainMas" class="w3-bar-item w3-button" onclick="w3_accordion('mnuMas')">
                 Master Files
@@ -251,8 +250,8 @@
                     </div>
                     <div class="modal-body">
                         Database : <select class="form-control dropdown" id="cboDatabase"></select>
-                        User ID : <input type="text" class="form-control" id="txtUserID" />
-                        Password : <input type="password" class="form-control" id="txtPassword" />
+                        User ID : <input type="text" class="form-control" id="txtUserLogin" />
+                        Password : <input type="password" class="form-control" id="txtUserPassword" />
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" id="btnLogin" onclick="SetVariable()">Log in</button>
@@ -277,14 +276,14 @@
 
     function SetEvents() {
         $('#dvLogin').on('shown.bs.modal', function () {
-            $('#txtUserID').focus();
+            $('#txtUserLogin').focus();
         });
-        $('#txtUserID').keydown(function (event) {
+        $('#txtUserLogin').keydown(function (event) {
             if (event.which === 13) {
-                $('#txtPassword').focus();
+                $('#txtUserPassword').focus();
             }
         });
-        $('#txtPassword').keydown(function (event) {
+        $('#txtUserPassword').keydown(function (event) {
             if (event.which === 13) {
                 SetVariable();
             }
@@ -300,9 +299,9 @@
         }
     }
     function SetVariable() {
-        userID = $('#txtUserID').val();
+        userID = $('#txtUserLogin').val();
         dbID = $('#cboDatabase').val();
-        let Password = $('#txtPassword').val();
+        let Password = $('#txtUserPassword').val();
         $.get('/Config/SetLogin?Code=' + userID + '&Pass=' + Password + '&Database=' + dbID)
             .done(function (r) {
                 if (r.user.data.length > 0) {

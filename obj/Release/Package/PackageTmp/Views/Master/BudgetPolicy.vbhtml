@@ -112,6 +112,7 @@ End Code
         $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
     }
     function ShowData() {
+        ShowWait();
         $('#tbDetail').DataTable().clear().draw();
         $.get(path + 'Master/GetServiceBudget?Branch=' + $('#txtBranchCode').val() + '&JType=' + $('#txtJobType').val() + '&SBy=' + $('#txtShipBy').val())
             .done(function (r) {
@@ -144,6 +145,7 @@ End Code
                 $('#tbDetail tbody').on('click', 'button', function () {
                     $('#dvEditor').modal('show');
                 });
+                CloseWait();
             });
     }
     //CRUD Functions used in HTML Java Scripts

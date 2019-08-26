@@ -100,13 +100,13 @@ End Code
 <div id="dvLOVs"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var row = {};
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    let row = {};
+    //$(document).ready(function () {
         SetEvents();
         SetEnterToTab();
         ClearData();
-    });
+    //});
     function SetEnterToTab() {
         //Set enter to tab
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {

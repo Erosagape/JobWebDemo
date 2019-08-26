@@ -133,3 +133,143 @@ function ShowCustomer(path, Code, Branch, ControlID) {
             });
     }
 }
+function LoadReport(reportID) {
+    switch (reportID) {
+        case 'AccruedSum':
+            break;
+        case 'Adjustment':
+            break;
+        case 'AdvBalance':
+            break;
+        case 'AdvBilled':
+            break;
+        case 'AdvCleared':
+            break;
+        case 'AdvDailyPay':
+            break;
+        case 'AdvDailyReq':
+            break;
+        case 'AdvFollow':
+            break;
+        case 'AdvMonthly':
+            break;
+        case 'AdvOnclear':
+            break;
+        case 'AdvOngoing':
+            break;
+        case 'AdvSumClear':
+            break;
+        case 'AdvWeekly':
+            break;
+        case 'APDaily':
+            break;
+        case 'APDetail':
+            break;
+        case 'ARDetail':
+            break;
+        case 'ARSummary':
+            break;
+        case 'BalanceSheet':
+            break;
+        case 'BillDaily':
+            break;
+        case 'BillDue':
+            break;
+        case 'BillOverdue':
+            break;
+        case 'BillSummary':
+            break;
+        case 'BookFlow':
+            break;
+        case 'CashFlow':
+            break;
+        case 'CashPredict':
+            break;
+        case 'ChqPayDaily':
+            break;
+        case 'ChqRcvDaily':
+            break;
+        case 'ClrBilled':
+            break;
+        case 'ClrDaily':
+            break;
+        case 'ClrOngoing':
+            break;
+        case 'CNDNDaily':
+            break;
+        case 'CostingDetail':
+            break;
+        case 'GLBatch':
+            break;
+        case 'InvBilled':
+            break;
+        case 'InvDaily':
+            break;
+        case 'InvOnhold':
+            break;
+        case 'InvStatus':
+            break;
+        case 'InvSummary':
+            break;
+        case 'JobClearing':
+            break;
+        case 'JobCosting':
+            break;
+        case 'JobKPI':
+            break;
+        case 'JobOperComplete':
+            break;
+        case 'JobOperDaily':
+            break;
+        case 'JobOperEmp':
+            break;
+        case 'JobOperMonthly':
+            break;
+        case 'JobOperSum':
+            break;
+        case 'JobOperWeekly':
+            break;
+        case 'JobPending':
+            break;
+        case 'JobProfit':
+            break;
+        case 'JobStatusMonthly':
+            break;
+        case 'JobStatusWeekly':
+            break;
+        case 'JobTracking':
+            break;
+        case 'PayDaily':
+            break;
+        case 'PettyCash':
+            break;
+        case 'PODetail':
+            break;
+        case 'ProfitLoss':
+            break;
+        case 'RcpDaily':
+            break;
+        case 'RcpTaxFollow':
+            break;
+        case 'RcpTaxOngoing':
+            break;
+        case 'RcpTaxPayment':
+            break;
+        case 'RcpTaxSum':
+            break;
+        case 'RcvDaily':
+            break;
+        case 'SalesTax':
+            break;
+        case 'SODetail':
+            break;
+        case 'TaxDaily':
+            break;
+        case 'TrialBalance':
+            break;
+        case 'VATMonthly':
+            break;
+        case 'WHTMonthly':
+            break;
+    }
+}

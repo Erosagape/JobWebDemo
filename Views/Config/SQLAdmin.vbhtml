@@ -17,7 +17,7 @@ End Code
     </div>
 </div>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
+    let path = '@Url.Content("~")';
     var table = "";
     function SendData() {
         var obj = {

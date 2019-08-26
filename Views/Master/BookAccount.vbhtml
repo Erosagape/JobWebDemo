@@ -103,7 +103,7 @@ End Code
 
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
+    let path = '@Url.Content("~")';
     //$(document).ready(function () {
         SetEvents();
         SetEnterToTab();

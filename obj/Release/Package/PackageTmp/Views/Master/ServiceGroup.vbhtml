@@ -92,14 +92,14 @@ End Code
 <div id="dvList"></div>
 <script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var row = {}; //row pointer to current record show in buffer
-    var row_d = {};
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    let row = {}; //row pointer to current record show in buffer
+    let row_d = {};
+    //$(document).ready(function () {
         SetEvents();
         SetEnterToTab();
         $('#txtGroupCode').focus();
-    });
+    //});
     function SetEnterToTab() {
         //Set enter to tab
         $("input[tabindex], select[tabindex], textarea[tabindex]").each(function () {

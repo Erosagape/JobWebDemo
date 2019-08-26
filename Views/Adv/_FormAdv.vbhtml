@@ -160,16 +160,16 @@ End Code
     <p style="text-align:right">Printed By : @ViewBag.User Printed Date : @DateTime.Now &copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
 </div>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var serv = [];
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    let serv = [];
+    //$(document).ready(function () {
         ShowCompany('#divCompany');
         var branch = getQueryString('branch');
         var advno = getQueryString('advno');
         if (branch != "" && advno != "") {
             GetAdv(branch, advno);
         }
-    });
+    //});
     function GetAdv(Branch, Doc) {
         $.get(path +'adv/getadvance?branchcode=' + Branch + '&advno=' + Doc)
             .done(function (r) {

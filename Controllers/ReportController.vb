@@ -6,8 +6,8 @@ Namespace Controllers
 
         ' GET: Report
         Function Index() As ActionResult
-            ViewBag.ReportName = "Shipment Total Report"
-            Return GetView("Index")
+            ViewBag.ReportName = "Reports"
+            Return GetView("Index", "MODULE_REP")
         End Function
         Function Import() As ActionResult
             Return GetView("Import", "MODULE_REP")

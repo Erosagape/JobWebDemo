@@ -166,8 +166,8 @@
         </table>
     </div>
 <script type="text/javascript">
-    var serv = [];
-    $(document).ready(function () {
+    let serv = [];
+    //$(document).ready(function () {
         ShowCompany();
         var br = getQueryString('BranchCode');
         var ano = getQueryString('AdvNo');
@@ -177,7 +177,7 @@
             var r = GetDummy();
             ShowData(r);
         }
-    });
+    //});
     function GetAdv(Branch, Doc) {
         $.get('adv/getadvance?branchcode=' + Branch + '&advno=' + Doc)
             .done(function (r) {

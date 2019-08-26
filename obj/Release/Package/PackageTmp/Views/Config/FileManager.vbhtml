@@ -19,11 +19,11 @@ End Code
     }
 </style>
 <script type="text/javascript">
-    var path = '@Url.Content("~")';
-    var imgpath = 'Resource/uploads';
-    $(document).ready(function () {
+    let path = '@Url.Content("~")';
+    let imgpath = 'Resource/uploads';
+    //$(document).ready(function () {
         ShowAllPic();
-    });
+    //});
     function ShowAllPic() {
         $.get(path + 'Config/GetFileList?Path=' + imgpath, function (r) {
             var html = '';
