@@ -70,7 +70,7 @@ End Code
             </div>
             <br />
             <div id="dvCommand" class="col-sm-12">
-                <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+                <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="ClearData()">
                     <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
                 </a>
                 <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">

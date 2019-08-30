@@ -70,7 +70,7 @@ End Code
                 <div class="tab-pane fade" id="tabDetail">
                     <p>
                         Details of Quotation No:<input type="text" id="txtDocNo" style="width:10%" disabled />
-                        <a href="#" class="btn btn-default" id="btnAddDetail" onclick="AddDetail()">
+                        <a href="#" class="btn btn-default w3-purple" id="btnAddDetail" onclick="AddDetail()">
                             <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Section</b>
                         </a>
                         <table id="tbDetail" class="table table-responsive">
@@ -92,7 +92,7 @@ End Code
             </div>
         </div>
         <p>
-            <a href="#" class="btn btn-default" id="btnAdd" onclick="AddHeader()">
+            <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddHeader()">
                 <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New Quotation</b>
             </a>
             <a href="#" class="btn btn-warning" id="btnCancel" onclick="CopyData()">
@@ -233,7 +233,7 @@ End Code
                         </div>
                         <div>
                             <div style="float:left">
-                                <a href="#" class="btn btn-default" id="btnAddDetail" onclick="AddDetail()">
+                                <a href="#" class="btn btn-default w3-purple" id="btnAddDetail" onclick="AddDetail()">
                                     <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Section</b>
                                 </a>
                                 <a href="#" class="btn btn-success" id="btnUpdateD" onclick="SaveDetail()">
@@ -261,7 +261,7 @@ End Code
                                 </tr>
                             </thead>
                         </table>
-                        <a href="#" class="btn btn-default" id="btnAddItem" onclick="AddItem()">
+                        <a href="#" class="btn btn-default w3-purple" id="btnAddItem" onclick="AddItem()">
                             <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Expenses</b>
                         </a>
                         <a href="#" class="btn btn-danger" id="btnDelItem" onclick="DeleteItem()">
@@ -436,7 +436,7 @@ End Code
                     </div>
                     <div class="modal-footer">
                         <div style="float:left">
-                            <a href="#" class="btn btn-default" id="btnAddItem" onclick="AddItem()">
+                            <a href="#" class="btn btn-default w3-purple" id="btnAddItem" onclick="AddItem()">
                                 <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Expenses</b>
                             </a>
                             <a href="#" class="btn btn-success" id="btnUpdateI" onclick="SaveItem()">
@@ -1024,7 +1024,7 @@ End Code
             //users
             CreateLOV(dv, '#frmSearchUser', '#tbUser', 'Users', response, 2);
             //Contact
-            CreateLOV(dv, '#frmSearchContact', '#tbContact', 'Contact Person', response, 2);
+            CreateLOV(dv, '#frmSearchCont', '#tbCont', 'Contact Person', response, 3);
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
             //Service 
@@ -1061,7 +1061,7 @@ End Code
                 break;
             case 'contact':
                 let w = '?Branch=' + $('#txtBCustBranch').val() + '&Code=' + $('#txtBCustCode').val();
-                SetGridCustContact(path, '#tbContact', w,'#frmSearchContact', ReadContactName);
+                SetGridCustContact(path, '#tbCont' , w,'#frmSearchCont', ReadContactName);
                 break;
             case 'remark':
                 SetGridDataDistinct(path, '#tbRemark', '?Table=Job_QuotationHeader&Field=TRemark', '#frmSearchRemark', ReadRemark);

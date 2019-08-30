@@ -106,7 +106,7 @@ End Code
                         <div class="col-sm-3">
                             <input type="checkbox" id="chkMerge" checked /> Generate One Tax-Invoice<br />
                             <div id="dvMsg"></div>
-                            <a href="#" class="btn btn-success" id="btnGen" onclick="ApproveData()">
+                            <a href="#" class="btn btn-default w3-purple" id="btnGen" onclick="ApproveData()">
                                 <i class="fa fa-lg fa-save"></i>&nbsp;<b>Save Tax-Invoice</b>
                             </a>
                         </div>

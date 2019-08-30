@@ -9,7 +9,7 @@ End Code
             Type:<br /><input type="text" id="txtVesselType" class="form-control" tabIndex="3">
         </div>
         <div id="dvCommand">
-            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearData()">
+            <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="ClearData()">
                 <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
             </a>
             <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">

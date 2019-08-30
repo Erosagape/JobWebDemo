@@ -400,8 +400,175 @@ Namespace Controllers
             Return GetView("FormDelivery")
         End Function
         Function Transport() As ActionResult
-            'Return GetView("Transport", "MODULE_CS")
-            Return RedirectToAction("FormDelivery")
+            Return GetView("Transport", "MODULE_CS")
+            'Return RedirectToAction("FormDelivery")
+        End Function
+        Function GetJobTransport() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE JNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND JNo='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                Dim oDataH = New CTransportHeader(jobWebConn).GetData(tSqlw)
+                Dim jsonH As String = JsonConvert.SerializeObject(oDataH)
+                Dim oDataD = New CTransportDetail(jobWebConn).GetData(tSqlw)
+                Dim jsonD As String = JsonConvert.SerializeObject(oDataD)
+                Dim json = "{""transport"":{""header"":" & jsonH & ",""detail"":" & jsonD & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetTransportHeader(<FromBody()> data As CTransportHeader) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+
+                    If "" & data.JNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}' ", data.BranchCode, data.JNo))
+                    Dim json = "{""result"":{""data"":""" & data.JNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelTransportHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE JNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""transport"":{""result"":""Please Select Some branch""}}", jsonContent)
+                End If
+
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format(" AND JNo='{0}'", Request.QueryString("Job").ToString)
+                Else
+                    Return Content("{""transport"":{""result"":""Please Select Some Data""}}", jsonContent)
+                End If
+                Dim oDataH As New CTransportHeader(jobWebConn)
+                Dim msg = ""
+                For Each oDoc In oDataH.GetData(tSqlw)
+                    msg &= "\n" & oDoc.DeleteData(tSqlw)
+                Next
+                Dim json = "{""transport"":{""result"":""" & msg & """}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetTransportDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE JNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND JNo='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format("AND ItemNo={0} ", Request.QueryString("Item").ToString)
+                End If
+                Dim oData = New CTransportDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""transport"":{""detail"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetTransportDetail(<FromBody()> data As CTransportDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    If "" & data.JNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}' AND ItemNo='{2}' ", data.BranchCode, data.JNo, data.ItemNo))
+                    Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelTransportDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE JNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""jobtransportdetail"":{""result"":""Please Select Some branch""}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND JNo='{0}'", Request.QueryString("JNo").ToString)
+                Else
+                    Return Content("{""jobtransportdetail"":{""result"":""Please Select Some Job""}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format("AND ItemNo={0}", Request.QueryString("Item").ToString)
+                End If
+                Dim oData As New CTransportDetail(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""transport"":{""result"":""" & msg & """]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetTransportReport() As ActionResult
+            Try
+                Dim tSqlw As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND Job_Order.BranchCode='{0}'", Request.QueryString("Branch").ToString())
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format(" AND Job_Order.JNo='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND Job_LoadInfo.BookingNo='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND Job_Order.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Vend")) Then
+                    tSqlw &= String.Format(" AND Job_LoadInfo.VenderCode='{0}' ", Request.QueryString("Vend").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND Job_LoadInfo.LoadDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND Job_LoadInfo.LoadDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectTransport(tSqlw))
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""transport"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""transport"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
         End Function
         Function FormTransport() As ActionResult
             Return GetView("FormTransport")

@@ -62,35 +62,13 @@ Public Class frmGenCode
             If strReader <> "" Then strReader &= vbCrLf
             If strWriter <> "" Then strWriter &= vbCrLf
             Dim strType As String = Replace(dc.DataType.FullName, "System.", "")
-            If dc.ColumnName.IndexOf("date", StringComparison.InvariantCultureIgnoreCase) = dc.ColumnName.Length - 4 Then
+            If dc.ColumnName.IndexOf("date", StringComparison.InvariantCultureIgnoreCase) = dc.ColumnName.Length - 4 And dc.ColumnName.Length > 4 Then
                 strType = "Date"
             End If
+            strHtml &= vbCrLf & vbTab & "<div class=""col-sm-1"">"
+            strHtml &= vbCrLf & "" & dc.ColumnName & " :<br/><div style=""display:flex"">"
             Select Case strType
-                Case "String"
-                    strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
-                    strReader &= "row." & dc.ColumnName & " =rd.GetString(rd.GetOrdinal(""" & dc.ColumnName & """)).ToString()" & vbCrLf
-                    strReader &= "End if"
-
-                    strPrivate &= "Private m_" & dc.ColumnName & " as String"
-
-                    strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as String"
-                    strProperty &= vbCrLf & "Get"
-                    strProperty &= vbCrLf & "Return m_" & dc.ColumnName
-                    strProperty &= vbCrLf & "End Get"
-                    strProperty &= vbCrLf & "Set (value as String)"
-                    strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
-                    strProperty &= vbCrLf & "End Set"
-
-                    strReset &= vbCrLf & "m_" & dc.ColumnName & " ="""""
-
-                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control""></div>"
-
-                    strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
-                    strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
-                    strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
-
-                    strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
-                Case "Double", "Integer"
+                Case "Double"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Double"
 
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
@@ -107,7 +85,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
 
-                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""number"" id=""txt" & dc.ColumnName & """ class=""form-control"" value=""0.00""></div>"
+                    strHtml &= "<input type=""number"" id=""txt" & dc.ColumnName & """ class=""form-control"" value=""0.00"">"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CNum($('#txt" & dc.ColumnName & "').val()),"
@@ -131,7 +109,7 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =DateTime.Minvalue"
 
-                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control""></div>"
+                    strHtml &= "<input type=""date"" id=""txt" & dc.ColumnName & """ class=""form-control"">"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(CDateEN(dr." & dc.ColumnName & "));"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":CDateTH($('#txt" & dc.ColumnName & "').val()),"
@@ -141,7 +119,7 @@ Public Class frmGenCode
                     Else
                         strWriter &= "dr(""" & dc.ColumnName & """)=Main.GetDBTime(me." & dc.ColumnName & ")"
                     End If
-                Case Else
+                Case "Integer"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Integer"
 
                     strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
@@ -158,14 +136,38 @@ Public Class frmGenCode
 
                     strReset &= vbCrLf & "m_" & dc.ColumnName & " =0"
 
-                    strHtml &= vbCrLf & "<div style=""flex:1"">" & dc.ColumnName & " :<br/><input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" value=""0""></div>"
+                    strHtml &= "<input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"" value=""0"">"
 
                     strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
                     strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
                     strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
                     strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
-            End Select
+                Case Else
+                    strReader &= "if IsDbNull(rd.GetValue(rd.GetOrdinal(""" & dc.ColumnName & """)))=False then " & vbCrLf
+                    strReader &= "row." & dc.ColumnName & " =rd.GetString(rd.GetOrdinal(""" & dc.ColumnName & """)).ToString()" & vbCrLf
+                    strReader &= "End if"
 
+                    strPrivate &= "Private m_" & dc.ColumnName & " as String"
+
+                    strProperty &= vbCrLf & "Public Property " & dc.ColumnName & " as String"
+                    strProperty &= vbCrLf & "Get"
+                    strProperty &= vbCrLf & "Return m_" & dc.ColumnName
+                    strProperty &= vbCrLf & "End Get"
+                    strProperty &= vbCrLf & "Set (value as String)"
+                    strProperty &= vbCrLf & "m_" & dc.ColumnName & " =value"
+                    strProperty &= vbCrLf & "End Set"
+
+                    strReset &= vbCrLf & "m_" & dc.ColumnName & " ="""""
+
+                    strHtml &= "<input type=""text"" id=""txt" & dc.ColumnName & """ class=""form-control"">"
+
+                    strJavaLoad &= vbCrLf & "$('#txt" & dc.ColumnName & "').val(dr." & dc.ColumnName & ");"
+                    strJavaSave &= vbCrLf & dc.ColumnName & ":$('#txt" & dc.ColumnName & "').val(),"
+                    strJavaClear &= vbCrLf & "$('#txt" & dc.ColumnName & "').val('');"
+
+                    strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
+            End Select
+            strHtml &= "</div></div>"
             strProperty &= vbCrLf & "End Property"
             strPrivate &= strProperty
             strGet &= vbCrLf & "Dim v" & dc.ColumnName & "=obj." & dc.ColumnName & ""
@@ -337,10 +339,8 @@ Public Class frmGenCode
         End If
         If CheckBox1.Checked = True Then
             strAll = strAll & vbCrLf & "<!-- HTML CONTROLS -->"
-            strAll = strAll & vbCrLf & "<div id=""dvForm"">"
-            strAll = strAll & vbCrLf & vbTab & "<div style=""display:flex;flex-wrap:wrap;"">"
+            strAll = strAll & vbCrLf & "<div id=""dvForm"" class=""row"">"
             strAll = strAll & vbCrLf & vbTab & strHtml
-            strAll = strAll & vbCrLf & vbTab & "</div>"
             strAll = strAll & vbCrLf & "</div>"
             strAll = strAll & vbCrLf & "<div id=""dvCommand"">"
             strAll = strAll & vbCrLf & "<button id=""btnAdd"" class=""btn btn-default"" onclick=""ClearData()"">Add</button>
@@ -352,13 +352,11 @@ Public Class frmGenCode
             strAll = strAll & vbCrLf & "//-----JAVA FUNCTIONS for HTML Scripts-----"
             strAll = strAll & "
 <script type=""text/javascript"">
-    var path = '@Url.Content(""~"")';
-    $(document).ready(function () {
-        SetEvents();
-    });
+    let path = '@Url.Content(""~"")';
+    SetEvents();
     function CallBackQuery" & TextBox4.Text.Substring(1) & "(p, code, ev) {
         $.get(p + 'master/get" & TextBox4.Text.Substring(1).ToLower & "?Code=' + code).done(function (r) {
-            var dr = r." & TextBox4.Text.Substring(1).ToLower & ".data;
+            let dr = r." & TextBox4.Text.Substring(1).ToLower & ".data;
             if (dr.length > 0) {
                 ev(dr[0]);
             }
@@ -367,7 +365,7 @@ Public Class frmGenCode
     function SetEvents(){
         $('#txt" & TextBox6.Text & "').keydown(function (event) {
             if (event.which == 13) {
-                var code=$('#txt" & TextBox6.Text & "').val();
+                let code=$('#txt" & TextBox6.Text & "').val();
                 ClearData();
                 $('#txt" & TextBox6.Text & "').val(code);
                 CallBackQuery" & TextBox4.Text.Substring(1) & "(path, code,ReadData);
@@ -376,26 +374,26 @@ Public Class frmGenCode
     }
     //CRUD Functions used in HTML Java Scripts
     function DeleteData() {
-        var code = $('#txt" & TextBox6.Text & "').val();
-        var ask = confirm(""Do you need to Delete "" + code + ""?"");
+        let code = $('#txt" & TextBox6.Text & "').val();
+        let ask = confirm(""Do you need to Delete "" + code + ""?"");
         if (ask == false) return;
             $.get(path + 'master/del" & TextBox4.Text.Substring(1).ToLower & "?code=' + code, function (r) {
                 alert(r." & TextBox4.Text.Substring(1).ToLower & ".result);
                 ClearData();
             });
     }"
-            strAll = strAll & vbCrLf & vbTab & "function ReadData(dr){"
+            strAll = strAll & vbCrLf & vbTab & "    function ReadData(dr){"
             strAll = strAll & vbCrLf & vbTab & vbTab & strJavaLoad
-            strAll = strAll & vbCrLf & vbTab & "}"
-            strAll = strAll & vbCrLf & vbTab & "function SaveData(){"
-            strAll = strAll & vbCrLf & vbTab & vbTab & "var obj={"
+            strAll = strAll & vbCrLf & vbTab & "    }"
+            strAll = strAll & vbCrLf & vbTab & "    function SaveData(){"
+            strAll = strAll & vbCrLf & vbTab & vbTab & "        let obj={"
             strAll = strAll & vbCrLf & vbTab & vbTab & vbTab & strJavaSave
-            strAll = strAll & vbCrLf & vbTab & "};"
+            strAll = strAll & vbCrLf & vbTab & "    };"
             strAll = strAll & "
         if (obj." & TextBox6.Text & " != """") {
-            var ask = confirm(""Do you need to Save "" + obj." & TextBox6.Text & " + ""?"");
+            let ask = confirm(""Do you need to Save "" + obj." & TextBox6.Text & " + ""?"");
             if (ask == false) return;
-            var jsonText = JSON.stringify({ data: obj });
+            let jsonText = JSON.stringify({ data: obj });
             //alert(jsonText);
             $.ajax({
                 url: ""@Url.Action(""Set" & TextBox4.Text.Substring(1) & """, ""Master"")"",
@@ -416,10 +414,10 @@ Public Class frmGenCode
         } else {
             alert('No data to save');
         }"
-            strAll = strAll & vbCrLf & vbTab & "}"
-            strAll = strAll & vbCrLf & vbTab & "function ClearData(){"
-            strAll = strAll & vbCrLf & vbTab & vbTab & strJavaClear
-            strAll = strAll & vbCrLf & vbTab & "}"
+            strAll = strAll & vbCrLf & vbTab & "    }"
+            strAll = strAll & vbCrLf & vbTab & "    function ClearData(){"
+            strAll = strAll & vbCrLf & vbTab & vbTab & "        " & strJavaClear
+            strAll = strAll & vbCrLf & vbTab & "    }"
             strAll = strAll & vbCrLf & "</script>"
         End If
 

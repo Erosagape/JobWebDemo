@@ -15,6 +15,7 @@ End Code
     <div class="col-sm-10">
         <table id="tbResult" class="table table-responsive">
         </table>
+        <div id="dvDownload"></div>
     </div>
 </div>
 <script type="text/javascript">
@@ -80,7 +81,7 @@ End Code
                     data: tb
                 }
             );
-            Download(fname);
+            $('#dvDownload').html('<input type="button" value="Download" onclick="Download(' + "'" + fname + "'" + ')"/><a href="/'+ fname +'" target="_blank">View Contents</a>');
         });
     }
     function Download(fname) {

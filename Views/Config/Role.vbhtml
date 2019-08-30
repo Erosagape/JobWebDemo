@@ -12,7 +12,7 @@ End Code
                     <div style="flex:1">Role Group :<br /><select id="txtRoleGroup" class="form-control dropdown"></select></div>
                 </div>
                 <div id="dvCommand">
-                    <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearHeader()">
+                    <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="ClearHeader()">
                         <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
                     </a>
                     <a href="#" class="btn btn-success" id="btnSave" onclick="SaveHeader()">

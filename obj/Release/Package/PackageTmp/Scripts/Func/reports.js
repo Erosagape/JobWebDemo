@@ -133,7 +133,469 @@ function ShowCustomer(path, Code, Branch, ControlID) {
             });
     }
 }
+function GetReportStatus(reportID) {
+    let val = '';
+    switch (reportID) {
+        case 'JOBDAILY':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBCS':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBSHP':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBTYPE':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBSHIPBY':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBCUST':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBPORT':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBADV':
+            val = 'ADV_STATUS';
+            break;
+        case 'JOBVOLUME':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBSTATUS':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBSALES':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBCOMM':
+            val = 'JOB_STATUS';
+            break;
+        case 'ADVDAILY':
+            val = 'ADV_STATUS';
+            break;
+        case 'EXPDAILY':
+            val = '';
+            break;
+        case 'RCPDAILY':
+            val = 'JOB_STATUS';
+            break;
+        case 'TAXDAILY':
+            val = 'JOB_STATUS';
+            break;
+        case 'CASHDAILY':
+            val = '';
+            break;
+        case 'CLRDAILY':
+            val = 'CLR_STATUS';
+            break;
+        case 'INVDAILY':
+            val = 'JOB_STATUS';
+            break;
+        case 'BILLDAILY':
+            val = 'JOB_STATUS';
+            break;
+        case 'JOBCOST':
+            val = 'JOB_STATUS';
+            break;
+        case 'BOOKBAL':
+            val = '';
+            break;
+        case 'VATSALES':
+            val = '';
+            break;
+        case 'VATBUY':
+            val = '';
+            break;
+        case 'WHTAX':
+            val = '';
+            break;
+        case 'ACCEXP':
+            val = '';
+            break;
+        case 'ACCINC':
+            val = 'JOB_STATUS';
+            break;
+        case 'ARBAL':
+            val = 'JOB_STATUS';
+            break;
+        case 'APBAL':
+            val = '';
+            break;
+        case 'CNDN':
+            val = '';
+            break;
+        case 'TRIALBAL':
+            val = '';
+            break;
+        case 'BALANCS':
+            val = '';
+            break;
+        case 'PROFITLOSS':
+            val = '';
+            break;
+        case 'CASHFLOW':
+            val = '';
+            break;
+        case 'JOURNAL':
+            val = '';
+            break;
+    }
+}
+function LoadCliteria(reportID) {
+    switch (reportID) {
+        case 'JOBDAILY':
+        case 'JOBCS':
+        case 'JOBSHP':
+        case 'JOBTYPE':
+        case 'JOBSHIPBY':
+        case 'JOBCUST':
+        case 'JOBPORT':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'JOBADV':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').show();
+            break;
+        case 'JOBVOLUME':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'JOBSTATUS':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'JOBSALES':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'JOBCOMM':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'ADVDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').show();
+            break;
+        case 'EXPDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').hide();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').show();
+            break;
+        case 'RCPDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'TAXDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'CASHDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').show();
+            break;
+        case 'CLRDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').show();
+            break;
+        case 'INVDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'BILLDAILY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'JOBCOST':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').show();
+            $('#tbJob').show();
+            $('#tbVend').show();
+            break;
+        case 'BOOKBAL':
+            $('#tbDate').show();
+            $('#tbEmp').hide();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'VATSALES':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').hide();
+            $('#tbJob').show();
+            $('#tbVend').hide();
+            break;
+        case 'VATBUY':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').show();
+            break;
+        case 'WHTAX':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').hide();
+            $('#tbJob').show();
+            $('#tbVend').show();
+            break;
+        case 'ACCEXP':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').show();
+            break;
+        case 'ACCINC':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'ARBAL':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'APBAL':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').show();
+            break;
+        case 'CNDN':
+            $('#tbDate').show();
+            $('#tbEmp').show();
+            $('#tbCust').show();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'TRIALBAL':
+            $('#tbDate').show();
+            $('#tbEmp').hide();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'BALANCS':
+            $('#tbDate').show();
+            $('#tbEmp').hide();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'PROFITLOSS':
+            $('#tbDate').show();
+            $('#tbEmp').hide();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'CASHFLOW':
+            $('#tbDate').show();
+            $('#tbEmp').hide();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+        case 'JOURNAL':
+            $('#tbDate').show();
+            $('#tbEmp').hide();
+            $('#tbCust').hide();
+            $('#tbStatus').hide();
+            $('#tbJob').hide();
+            $('#tbVend').hide();
+            break;
+    }
+}
 function LoadReport(reportID) {
+    switch (reportID) {
+        case 'JOBDAILY':
+
+            break;
+        case 'JOBCS':
+
+            break;
+        case 'JOBSHP':
+
+            break;
+        case 'JOBTYPE':
+
+            break;
+        case 'JOBSHIPBY':
+
+            break;
+        case 'JOBCUST':
+
+            break;
+        case 'JOBPORT':
+
+            break;
+        case 'JOBADV':
+
+            break;
+        case 'JOBVOLUME':
+
+            break;
+        case 'JOBSTATUS':
+
+            break;
+        case 'JOBSALES':
+
+            break;
+        case 'JOBCOMM':
+
+            break;
+        case 'ADVDAILY':
+
+            break;
+        case 'EXPDAILY':
+
+            break;
+        case 'RCPDAILY':
+
+            break;
+        case 'TAXDAILY':
+
+            break;
+        case 'CASHDAILY':
+
+            break;
+        case 'CLRDAILY':
+
+            break;
+        case 'INVDAILY':
+
+            break;
+        case 'BILLDAILY':
+
+            break;
+        case 'JOBCOST':
+
+            break;
+        case 'BOOKBAL':
+
+            break;
+        case 'VATSALES':
+
+            break;
+        case 'VATBUY':
+
+            break;
+        case 'WHTAX':
+
+            break;
+        case 'ACCEXP':
+
+            break;
+        case 'ACCINC':
+
+            break;
+        case 'ARBAL':
+
+            break;
+        case 'APBAL':
+
+            break;
+        case 'CNDN':
+
+            break;
+        case 'TRIALBAL':
+
+            break;
+        case 'BALANCS':
+
+            break;
+        case 'PROFITLOSS':
+
+            break;
+        case 'CASHFLOW':
+
+            break;
+        case 'JOURNAL':
+
+            break;
+    }
+}
+/*
+function _LoadReport(reportID) {
     switch (reportID) {
         case 'AccruedSum':
             break;
@@ -273,3 +735,4 @@ function LoadReport(reportID) {
             break;
     }
 }
+*/

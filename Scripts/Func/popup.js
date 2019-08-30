@@ -534,7 +534,8 @@ function SetGridCustContact(p, g, t, d, ev) {
                             }
                         }
                     ],
-                    destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+                    destroy: true, //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page,
+                    responsive: true
                 });
                 BindEvent(g, d, ev);
             }

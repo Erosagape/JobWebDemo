@@ -102,7 +102,7 @@ End Code
                 <label for="chkIsUsedCoSlip">Used for Co-operation</label>
             </div>
         </div>
-        <a href="#" class="btn btn-default" id="btnAdd" onclick="AddData()">
+        <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddData()">
             <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
         </a>
         <input type="checkbox" id="chkCopyMode" /><b>Copy Mode</b>

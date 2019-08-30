@@ -6,27 +6,27 @@ End Code
         <div class="row">
             <div class="col-sm-3">                               
                 <div style="display:flex;flex-direction:row">
-                    Branch Code:
+                    <label id="lblBranchCode">Branch Code:</label>
                     <input type="text" class="form-control" style="width:50px" id="txtBranchCode" disabled />
                     <input type="text" class="form-control" style="width:100%" id="txtBranchName" disabled />
                 </div>
             </div>
             <div class="col-sm-3">
                 <div style="display:flex;flex-direction:row">
-                    Job Number:
+                    <label id="lblJNo">Job Number:</label>
                     <input type="text" class="form-control" style="width:100%;background-color:yellow;color:red;font-weight:bold" id="txtJNo" disabled />
                     <input type="text" class="form-control" style="width:50px" id="txtRevised" disabled />
                 </div>
             </div>
             <div class="col-sm-3">
                 <div style="display:flex;flex-direction:row">
-                    Open Date:
+                    <label id="lblDocDate">Open Date:</label>
                     <input type="date" class="form-control" id="txtDocDate" disabled />
                 </div>
             </div>
             <div class="col-sm-3">
                 <div style="display:flex;flex-direction:row">
-                    Job Status:
+                    <label id="lblJobStatus">Job Status:</label>
                     <input type="text" class="form-control" style="width:100%;background-color:aquamarine;font-weight:bold" id="txtJobStatus" disabled />
                 </div>
             </div>

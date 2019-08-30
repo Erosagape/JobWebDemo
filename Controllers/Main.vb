@@ -1471,4 +1471,43 @@ GROUP BY j.JobStatus
         sql = String.Format(sql, tSqlW)
         Return sql
     End Function
+    Public Function SQLSelectTransport(tsqlW As String) As String
+        Dim sql = "
+SELECT Job_LoadInfo.BranchCode, Job_LoadInfo.JNo, Job_LoadInfo.VenderCode, Job_LoadInfo.ContactName, Job_LoadInfo.BookingNo, 
+Job_LoadInfo.LoadDate, Job_LoadInfo.Remark, Job_LoadInfo.PackingPlace, Job_LoadInfo.CYPlace, Job_LoadInfo.FactoryPlace, 
+Job_LoadInfo.ReturnPlace, Job_LoadInfo.PackingDate, Job_LoadInfo.CYDate, Job_LoadInfo.FactoryDate, Job_LoadInfo.ReturnDate, 
+Job_LoadInfo.PackingTime, Job_LoadInfo.CYTime, Job_LoadInfo.FactoryTime, Job_LoadInfo.ReturnTime, Job_LoadInfo.NotifyCode, 
+Job_LoadInfo.TransMode, Job_LoadInfo.PaymentCondition, Job_LoadInfo.PaymentBy, Job_LoadInfoDetail.ItemNo, 
+Job_LoadInfoDetail.CTN_NO, Job_LoadInfoDetail.SealNumber, Job_LoadInfoDetail.TruckNO, Job_LoadInfoDetail.TruckIN, 
+Job_LoadInfoDetail.Start, Job_LoadInfoDetail.Finish, Job_LoadInfoDetail.TimeUsed, Job_LoadInfoDetail.CauseCode, 
+Job_LoadInfoDetail.Comment, Job_LoadInfoDetail.TruckType, Job_LoadInfoDetail.Driver, Job_LoadInfoDetail.TargetYardDate, 
+Job_LoadInfoDetail.TargetYardTime, Job_LoadInfoDetail.ActualYardDate, Job_LoadInfoDetail.ActualYardTime, 
+Job_LoadInfoDetail.UnloadFinishDate, Job_LoadInfoDetail.UnloadFinishTime, Job_LoadInfoDetail.UnloadDate, Job_LoadInfoDetail.UnloadTime, 
+Job_LoadInfoDetail.Location, Job_LoadInfoDetail.ReturnDate AS TruckReturnDate, Job_LoadInfoDetail.ShippingMark, 
+Job_LoadInfoDetail.ProductDesc, Job_LoadInfoDetail.CTN_SIZE, Job_LoadInfoDetail.ProductQty, Job_LoadInfoDetail.ProductUnit, 
+Job_LoadInfoDetail.GrossWeight, Job_LoadInfoDetail.Measurement, Job_Order.DocDate, Job_Order.CustCode, Job_Order.CustBranch, 
+Job_Order.CustContactName, Job_Order.QNo, Job_Order.Revise, Job_Order.ManagerCode, Job_Order.CSCode, Job_Order.Description, 
+Job_Order.TRemark, Job_Order.JobStatus, Job_Order.JobType, Job_Order.ShipBy, Job_Order.InvNo, Job_Order.InvTotal, 
+Job_Order.InvProduct, Job_Order.InvCountry, Job_Order.InvFCountry, Job_Order.InvInterPort, Job_Order.InvProductQty, 
+Job_Order.InvProductUnit, Job_Order.InvCurUnit, Job_Order.InvCurRate, Job_Order.ImExDate, Job_Order.BLNo, Job_Order.ClearPort, 
+Job_Order.ClearPortNo, Job_Order.ClearDate, Job_Order.ForwarderCode, Job_Order.AgentCode, Job_Order.VesselName, 
+Job_Order.ETDDate, Job_Order.ETADate, Job_Order.FNetPrice, Job_Order.BNetPrice, Job_Order.CloseJobDate, Job_Order.CloseJobTime, 
+Job_Order.CloseJobBy, Job_Order.DeclareType, Job_Order.DeclareNumber, Job_Order.DeclareStatus, Job_Order.EstDeliverDate, 
+Job_Order.EstDeliverTime, Job_Order.DutyDate, Job_Order.DutyAmount, Job_Order.ConfirmChqDate, Job_Order.ShippingEmp, 
+Job_Order.TotalGW, Job_Order.GWUnit, Job_Order.ReadyToClearDate, Job_Order.Commission, Job_Order.CommPayTo, 
+Job_Order.MVesselName, Job_Order.ProjectName, Job_Order.TotalNW, Job_Order.CustRefNO, Job_Order.TotalQty, Job_Order.HAWB, 
+Job_Order.MAWB, Job_Order.consigneecode, Job_Order.privilegests, Job_Order.DeliveryNo, Job_Order.DeliveryTo, 
+Job_Order.DeliveryAddr, Mas_Company.NameThai, Mas_Company.NameEng, Mas_Company.TAddress1, Mas_Company.TAddress2, 
+Mas_Company.EAddress1, Mas_Company.EAddress2, Mas_Company.Phone, Mas_Company.FaxNumber, Mas_Company.GLAccountCode, 
+Mas_Company.BillToCustCode, Mas_Company.BillToBranch
+FROM Mas_Vender RIGHT OUTER JOIN
+Job_LoadInfo ON Mas_Vender.BranchCode = Job_LoadInfo.BranchCode LEFT OUTER JOIN
+Mas_Company RIGHT OUTER JOIN
+Job_Order ON Mas_Company.Branch = Job_Order.CustBranch AND Mas_Company.CustCode = Job_Order.CustCode ON 
+Job_LoadInfo.BranchCode = Job_Order.BranchCode AND Job_LoadInfo.JNo = Job_Order.JNo LEFT OUTER JOIN
+Job_LoadInfoDetail ON Job_LoadInfo.BranchCode = Job_LoadInfoDetail.BranchCode AND Job_LoadInfo.JNo = Job_LoadInfoDetail.JNo
+WHERE Job_Order.JNo<>'' {0}
+"
+        Return String.Format(sql, tsqlW)
+    End Function
 End Module

@@ -30,7 +30,7 @@ End Code
         <div class="col-sm-2">
             <div class="btn-group-vertical">
                 <br />
-                <a href="#" class="btn btn-default" id="btnGenJob" onclick="CreateNewJob()">
+                <a href="#" class="btn btn-default w3-purple" id="btnGenJob" onclick="CreateNewJob()">
                     <i class="fa fa-lg fa-file-o"></i> &nbsp;<b>Create Job</b>
                 </a>
             </div>

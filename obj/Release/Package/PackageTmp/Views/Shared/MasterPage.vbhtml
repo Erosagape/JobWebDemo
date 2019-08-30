@@ -43,7 +43,7 @@
             </div>
             <div id="mnuMkt" class="w3-hide w3-pale-green w3-card-4">
                 <a href="#" id="mnuMkt1" class="w3-bar-item w3-button" onclick="OpenMenu('Quotation')">- Quotation</a>
-                <a href="#" id="mnuMkt2" class="w3-bar-item w3-button" onclick="OpenMenu('AppQuo')">- Approve Quotation</a>
+                <a href="#" id="mnuMkt3" class="w3-bar-item w3-button" onclick="OpenMenu('EstimateCost')">- Estimate Costing</a>
             </div>
             <div id="mainCS" class="w3-bar-item w3-button" onclick="w3_accordion('mnuCS')">
                 CS Works
@@ -67,6 +67,7 @@
             <div id="mnuApp" class="w3-hide w3-pale-yellow w3-card-4">
                 <a href="#" id="mnuApp1" class="w3-bar-item w3-button" onclick="OpenMenu('AppAdvance')">- Approve Advance</a>
                 <a href="#" id="mnuApp2" class="w3-bar-item w3-button" onclick="OpenMenu('AppClearing')">- Approve Clearing</a>
+                <a href="#" id="mnuMkt2" class="w3-bar-item w3-button" onclick="OpenMenu('AppQuo')">- Approve Quotation</a>
             </div>
             <div id="mainFin" class="w3-bar-item w3-button" onclick="w3_accordion('mnuFin')">
                 Finance Works
@@ -109,6 +110,13 @@
                 <a href="#" id="mnuMas1" class="w3-bar-item w3-button" onclick="OpenMenu('MasG')">- Customs File</a>
                 <a href="#" id="mnuMas2" class="w3-bar-item w3-button" onclick="OpenMenu('MasA')">- Accounts File</a>
                 <a href="#" id="mnuMas3" class="w3-bar-item w3-button" onclick="OpenMenu('MasS')">- System Files</a>
+            </div>
+            <div id="mainUtil" class="w3-bar-item w3-button" onclick="w3_accordion('mnuUtil')">
+                Utility
+            </div>
+            <div id="mnuUtil" class="w3-hide w3-sand w3-card-4">
+                <a href="#" id="mnuUtil1" class="w3-bar-item w3-button" onclick="OpenMenu('Import')">- Import data</a>
+                <a href="#" id="mnuUtil2" class="w3-bar-item w3-button" onclick="OpenMenu('Export')">- Export data</a>
             </div>
         </div>
     </div>

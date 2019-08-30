@@ -66,7 +66,7 @@ End Code
                 <a href="#" class="btn btn-success" id="btnGen" onclick="ShowSummary()">
                     <i class="fa fa-lg fa-save"></i>&nbsp;<b>Create Invoice</b>
                 </a>
-                <a href="#" class="btn btn-default" id="btnAdd" onclick="ResetData()">
+                <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="ResetData()">
                     <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Reset Select</b>
                 </a>
             </div>

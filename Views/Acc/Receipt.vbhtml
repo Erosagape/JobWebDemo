@@ -37,8 +37,8 @@ End Code
                 <a href="#" class="btn btn-primary" id="btnShow">
                     <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
                 </a>
-                <a href="#" class="btn btn-success" id="btnGen" onclick="CreateReceipt()">
-                    <i class="fa fa-lg fa-save"></i>&nbsp;<b>Create Receipt</b>
+                <a href="#" class="btn btn-default w3-purple" id="btnGen" onclick="CreateReceipt()">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Create Receipt</b>
                 </a>
             </div>
         </div>

@@ -23,6 +23,74 @@ Namespace Controllers
         Function EstimateCost() As ActionResult
             Return GetView("EstimateCost", "MODULE_ADV")
         End Function
+        Function GetClearExp() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE JNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND JNo ='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND SICode ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CClearExp(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""estimate"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetClearExp(<FromBody()> data As CClearExp) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.JNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Job""}}", jsonContent)
+                    End If
+                    If "" & data.SICode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Code""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE SICode='{0}' AND BranchCode='{1}' AND JNo='{2}' ", data.SICode, data.BranchCode, data.JNo))
+                    Dim json = "{""result"":{""data"":""" & data.SICode & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelClearExp() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE JNo<>'' "
+
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode = '{0}' ", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""estimate"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND JNo = '{0}' ", Request.QueryString("Job").ToString)
+                Else
+                    Return Content("{""estimate"":{""result"":""Please Select Some Job"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND SICode = '{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oData As New CClearExp(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""estimate"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function FormCreditAdv() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "CreditAdv")

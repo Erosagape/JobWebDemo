@@ -215,7 +215,7 @@ End Code
                             </div>
                         </div>
                         <div id="dvCommand">
-                            <a href="#" class="btn btn-default" id="btnNew" onclick="AddHeader()">
+                            <a href="#" class="btn btn-default w3-purple" id="btnNew" onclick="AddHeader()">
                                 <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New Document</b>
                             </a>
                             <a href="#" class="btn btn-success" id="btnSave" onclick="SaveHeader()">
@@ -251,7 +251,7 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-9">
-                                <a href="#" class="btn btn-default" id="btnAdd" onclick="AddDetail()">
+                                <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddDetail()">
                                     <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
                                 </a>
                                 <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
@@ -344,7 +344,7 @@ End Code
                                 </div>
                                 <div class="modal-footer">
                                     <div style="float:left">
-                                        <a href="#" class="btn btn-default" id="btnAdd" onclick="AddDetail()">
+                                        <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddDetail()">
                                             <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>New</b>
                                         </a>
                                         <a href="#" class="btn btn-success" id="btnUpdate" onclick="SaveDetail()">

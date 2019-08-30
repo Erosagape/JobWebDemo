@@ -37,7 +37,7 @@ End Code
                 <a href="#" class="btn btn-primary" id="btnShow">
                     <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Search</b>
                 </a>
-                <a href="#" class="btn btn-default" id="btnNew">
+                <a href="#" class="btn btn-default w3-purple" id="btnNew">
                     <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Create New</b>
                 </a>
             </div>

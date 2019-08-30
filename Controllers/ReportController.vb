@@ -15,5 +15,8 @@ Namespace Controllers
         Function Export() As ActionResult
             Return GetView("Export", "MODULE_REP")
         End Function
+        Function Preview() As ActionResult
+            Return GetView("Preview")
+        End Function
     End Class
 End Namespace

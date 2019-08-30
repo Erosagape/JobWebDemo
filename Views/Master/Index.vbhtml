@@ -19,7 +19,9 @@ End Code
             CreateLOV(dv, '#frmSearchCode', '#tbCode', 'Search Data', response, 2);
         });
     }
-    function SearchData(type) {
+    function 
+        
+        (type) {
         switch (type) {
             default:
                 break;

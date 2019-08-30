@@ -409,6 +409,7 @@
     <Compile Include="Models\CBranch.vb" />
     <Compile Include="Models\CBudgetPolicy.vb" />
     <Compile Include="Models\CClrDetail.vb" />
+    <Compile Include="Models\CClrExpense.vb" />
     <Compile Include="Models\CClrHeader.vb" />
     <Compile Include="Models\CCompany.vb" />
     <Compile Include="Models\CConfig.vb" />
@@ -435,6 +436,8 @@
     <Compile Include="Models\CServiceCode.vb" />
     <Compile Include="Models\CServiceGroup.vb" />
     <Compile Include="Models\CServUnit.vb" />
+    <Compile Include="Models\CTransportDetail.vb" />
+    <Compile Include="Models\CTransportHeader.vb" />
     <Compile Include="Models\CUser.vb" />
     <Compile Include="Models\CUserAuth.vb" />
     <Compile Include="Models\CUtil.vb" />
@@ -598,6 +601,7 @@
     <Content Include="Views\Menu\_Index.vbhtml" />
     <Content Include="Views\Menu\About.vbhtml" />
     <Content Include="Views\Report\Index.vbhtml" />
+    <Content Include="Views\Report\Preview.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

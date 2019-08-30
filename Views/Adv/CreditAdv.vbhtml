@@ -324,7 +324,7 @@ End Code
             </div>
         </div>
         <div id="dvCommand">
-            <a href="#" class="btn btn-default" id="btnAdd" onclick="ClearForm()">
+            <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="ClearForm()">
                 <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Clear Data</b>
             </a>
             <a href="#" class="btn btn-success" id="btnSave" onclick="SaveData()">

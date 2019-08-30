@@ -33,7 +33,7 @@ End Code
                             <input type="text" id="txtItemNo" class="form-control" value="0" disabled>
                         </div>
                         <div style="flex:40%">
-                            <input type="button" id="btnAdd" value="Add" class="btn btn-default" onclick="ClearData()" />
+                            <input type="button" id="btnAdd" value="Add" class="btn btn-default w3-purple" onclick="ClearData()" />
                         </div>
                     </div>                                
             </div>

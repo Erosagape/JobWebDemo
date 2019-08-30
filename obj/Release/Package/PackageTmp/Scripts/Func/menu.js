@@ -158,6 +158,15 @@
         case 'vessel':
             mnuPath = path + 'Master/Vessel';
             break;
+        case 'EstimateCost':
+            mnuPath = path + 'Adv/EstimateCost';
+            break;
+        case 'Import':
+            mnuPath = path + 'Report/Import';
+            break;
+        case 'Export':
+            mnuPath = path + 'Report/Export';
+            break;
         default:
             ShowMessage('Under Development, Coming soon!');
             break;

@@ -29,6 +29,7 @@ function ChangeLanguage(code, module) {
                 mainMkt: 'Marketing Works|แผนกการตลาด',
                 mnuMkt1: 'Quotation|ใบเสนอราคา',
                 mnuMkt2: 'Approve Quotation|อนุมัติใบเสนอราคา',
+                mnuMkt3: 'Estimate Cost|ประมาณการค่าใช้จ่าย',
                 mainCS: 'CS Works|แผนกบริการลูกค้า',
                 mnuCS1: 'CreateJob|สร้างงานใหม่',
                 mnuCS2: 'List Job|ค้นหางาน',
@@ -91,7 +92,10 @@ function ChangeLanguage(code, module) {
                 mnuMasG7: 'Product Unit|หน่วยสินค้า',
                 mainLang: 'Change Language|เปลี่ยนภาษา',
                 mnuLang1: 'English|ภาษาอังกฤษ',
-                mnuLang2: 'Thai|ภาษาไทย'
+                mnuLang2: 'Thai|ภาษาไทย',
+                mainUtil: 'Utility Tools|เครื่องมือต่างๆ',
+                mnuUtil1: 'Import|นำเข้าข้อมูล',
+                mnuUtil2: 'Export|ส่งออกข้อมูล'
             };
             SetLanguage(lang);
             ChangeLanguageForm(module);
@@ -125,6 +129,74 @@ function ChangeLanguageForm(fname) {
             break;
         case 'MODULE_REP/Index':
             let reportLists = [
+                { "ReportGroup": "CS", "ReportCode": "JOBDAILY", "ReportNameEN": "Job List Daily", "ReportNameTH": "รายงานการตรวจปล่อยตามวันที่" },
+                { "ReportGroup": "CS", "ReportCode": "JOBCS", "ReportNameEN": "Job List By CS", "ReportNameTH": "รายงานการตรวจปล่อยตามพนักงานบริการลูกค้า" },
+                { "ReportGroup": "CS", "ReportCode": "JOBSHP", "ReportNameEN": "Job List By Shipping", "ReportNameTH": "รายงานการตรวจปล่อยตามชิปปิ้ง" },
+                { "ReportGroup": "CS", "ReportCode": "JOBTYPE", "ReportNameEN": "Job List By Type", "ReportNameTH": "รายงานการตรวจปล่อยตามประเภทงาน" },
+                { "ReportGroup": "CS", "ReportCode": "JOBSHIPBY", "ReportNameEN": "Job List By Transport", "ReportNameTH": "รายงานการตรวจปล่อยตามลักษณะงานขนส่ง" },
+                { "ReportGroup": "CS", "ReportCode": "JOBCUST", "ReportNameEN": "Job List By Customer", "ReportNameTH": "รายงานการตรวจปล่อยตามลูกค้า" },
+                { "ReportGroup": "CS", "ReportCode": "JOBPORT", "ReportNameEN": "Job List By Port", "ReportNameTH": "รายงานการตรวจปล่อยตามสถานที่ตรวจปล่อย" },
+                { "ReportGroup": "CS", "ReportCode": "JOBADV", "ReportNameEN": "Advance By Emp", "ReportNameTH": "รายงานการเบิกเงินตามพนักงาน" },
+                { "ReportGroup": "SALES", "ReportCode": "JOBVOLUME", "ReportNameEN": "Job Volume By Cust", "ReportNameTH": "รายงานสรุปงานตามลูกค้า" },
+                { "ReportGroup": "SALES", "ReportCode": "JOBSTATUS", "ReportNameEN": "Job Volume By Status", "ReportNameTH": "รายงานสรุปงานตามสถานะ" },
+                { "ReportGroup": "SALES", "ReportCode": "JOBSALES", "ReportNameEN": "Job Sales By Emp", "ReportNameTH": "รายงานสรุปยอดขายตามพนักงาน" },
+                { "ReportGroup": "SALES", "ReportCode": "JOBCOMM", "ReportNameEN": "Job Commission By Emp", "ReportNameTH": "รายงานสรุปค่าคอมมิชชั่น" },
+                { "ReportGroup": "FIN", "ReportCode": "ADVDAILY", "ReportNameEN": "Advance Payment", "ReportNameTH": "รายงานการจ่ายเงินเบิกล่วงหน้า" },
+                { "ReportGroup": "FIN", "ReportCode": "EXPDAILY", "ReportNameEN": "Expense Payment", "ReportNameTH": "รายงานการจ่ายเงินทดรองจ่าย" },
+                { "ReportGroup": "FIN", "ReportCode": "RCPDAILY", "ReportNameEN": "Receipt Daily", "ReportNameTH": "รายงานใบเสร็จรับเงินประจำวัน" },
+                { "ReportGroup": "FIN", "ReportCode": "TAXDAILY", "ReportNameEN": "Tax-invoice Daily", "ReportNameTH": "รายงานใบกำกับภาษีประจำวัน" },
+                { "ReportGroup": "FIN", "ReportCode": "CASHDAILY", "ReportNameEN": "Transaction Daily", "ReportNameTH": "รายงานการรับจ่ายเงินประจำวัน" },
+                { "ReportGroup": "BILL", "ReportCode": "CLRDAILY", "ReportNameEN": "Clearing Daily", "ReportNameTH": "รายงานการปิดค่าใช้จ่ายประจำวัน" },
+                { "ReportGroup": "BILL", "ReportCode": "INVDAILY", "ReportNameEN": "Invoice Daily", "ReportNameTH": "รายงานใบแจ้งหนี้ประจำวัน" },
+                { "ReportGroup": "BILL", "ReportCode": "BILLDAILY", "ReportNameEN": "Billing Daily", "ReportNameTH": "รายงานใบวางบิลประจำวัน" },
+                { "ReportGroup": "ACC", "ReportCode": "JOBCOST", "ReportNameEN": "Job Costing And Profit", "ReportNameTH": "รายงานต้นทุนและกำไรขั้นต้น" },
+                { "ReportGroup": "ACC", "ReportCode": "BOOKBAL", "ReportNameEN": "Book Accounts Balance", "ReportNameTH": "รายงานการใช้จ่ายเงินตามสมุดบัญชี" },
+                { "ReportGroup": "ACC", "ReportCode": "VATSALES", "ReportNameEN": "Output VAT Report", "ReportNameTH": "รายงานภาษีขาย" },
+                { "ReportGroup": "ACC", "ReportCode": "VATBUY", "ReportNameEN": "Input VAT Report", "ReportNameTH": "รายงานภาษีซื้อ" },
+                { "ReportGroup": "ACC", "ReportCode": "WHTAX", "ReportNameEN": "Withholding-Tax Report", "ReportNameTH": "รายงานหัก ณ ที่จ่าย" },
+                { "ReportGroup": "ACC", "ReportCode": "ACCEXP", "ReportNameEN": "Accrued Expenses Report", "ReportNameTH": "รายงานค่าใช้จ่ายค้างจ่าย" },
+                { "ReportGroup": "ACC", "ReportCode": "ACCINC", "ReportNameEN": "Accrued Income Report", "ReportNameTH": "รายงานรายได้ค้างรับ" },
+                { "ReportGroup": "ACC", "ReportCode": "ARBAL", "ReportNameEN": "Accounts Receivable Report", "ReportNameTH": "รายงานลูกหนี้" },
+                { "ReportGroup": "ACC", "ReportCode": "APBAL", "ReportNameEN": "Accounts Payable Report", "ReportNameTH": "รายงานเจ้าหนี้" },
+                { "ReportGroup": "ACC", "ReportCode": "CNDN", "ReportNameEN": "Credit/Debit Note Report", "ReportNameTH": "รายงานการปรับปรุงหนี้" },
+                { "ReportGroup": "ACC", "ReportCode": "TRIALBAL", "ReportNameEN": "Trial Balance Report", "ReportNameTH": "รายงานงบทดลอง" },
+                { "ReportGroup": "ACC", "ReportCode": "BALANCS", "ReportNameEN": "Balance Sheet", "ReportNameTH": "รายงานงบดุล" },
+                { "ReportGroup": "ACC", "ReportCode": "PROFITLOSS", "ReportNameEN": "Profit And Loss", "ReportNameTH": "รายงานงบกำไรขาดทุน" },
+                { "ReportGroup": "ACC", "ReportCode": "CASHFLOW", "ReportNameEN": "Cash Flow", "ReportNameTH": "รายงานงบกระแสเงินสด" },
+                { "ReportGroup": "ACC", "ReportCode": "JOURNAL", "ReportNameEN": "Journal Entry Report", "ReportNameTH": "รายงานสมุดรายวัน" }
+            ];
+            
+
+            let group = $('#cboReportGroup').val();
+            if (group == null) {
+                group = 'CS';
+                let reportGroups = [
+                    { "ConfigKey": "ACC", "ConfigValue": "Account Reports|รายงานแผนกบัญชี" },
+                    { "ConfigKey": "BILL", "ConfigValue": "Finance Reports|รายงานแผนกบิลลิ่ง" },
+                    { "ConfigKey": "CS", "ConfigValue": "CS Reports|รายงานแผนกบริการลูกค้า" },
+                    { "ConfigKey": "FIN", "ConfigValue": "Finance Reports|รายงานแผนกการเงิน" },
+                    { "ConfigKey": "SALES", "ConfigValue": "Sales Reports|รายงานแผนกการตลาด" }
+                ];
+                loadComboArray('#cboReportGroup', reportGroups, 'CS');
+            }
+            let reports = reportLists.filter(function (data) {
+                return data.ReportGroup == group;
+            });
+            $('#tbReportList').DataTable({
+                data: reports,
+                columns: [
+                    { data: "ReportCode", title: "Report Code" },
+                    { data: (mainLanguage == 'TH' ? "ReportNameTH" : "ReportNameEN"), title: "ReportName" }
+                ],
+                responsive: true,
+                destroy:true
+            });
+
+            break;
+    }    
+}
+/* old report list 
+ let _reportLists = [
                 { "ReportGroup": "CS", "ReportCode": "JobKPI", "ReportNameEN": "Performance Summary", "ReportNameTH": "รายงานสรุปการปฏิบัติงานของพนักงานว่าทำได้ตามเป้าหรือไม่" },
                 { "ReportGroup": "CS", "ReportCode": "JobOperComplete", "ReportNameEN": "Complete Operation", "ReportNameTH": "รายงานงานที่ดำเนินการตรวจปล่อยเสร็จแล้ว" },
                 { "ReportGroup": "CS", "ReportCode": "JobOperDaily", "ReportNameEN": "Daily Operation by Date", "ReportNameTH": "รายงานงานประจำวันตามวันที่ที่ต้องทำ" },
@@ -194,32 +266,4 @@ function ChangeLanguageForm(fname) {
                 { "ReportGroup": "ACC", "ReportCode": "VATMonthly", "ReportNameEN": "VAT Report", "ReportNameTH": "รายงานภาษีมูลค่าเพิ่ม" },
                 { "ReportGroup": "ACC", "ReportCode": "WHTMonthly", "ReportNameEN": "WHT Report", "ReportNameTH": "รายงานภาษี ณ ที่จ่าย" }
             ];
-            let group = $('#cboReportGroup').val();
-            if (group == null) {
-                group = 'CS';
-                let reportGroups = [
-                    { "ConfigKey": "ACC", "ConfigValue": "Account Reports|รายงานแผนกบัญชี" },
-                    { "ConfigKey": "FIN", "ConfigValue": "Finance Reports|รายงานแผนกการเงิน" },
-                    { "ConfigKey": "BILL", "ConfigValue": "Finance Reports|รายงานแผนกบิลลิ่ง" },
-                    { "ConfigKey": "CS", "ConfigValue": "CS Reports|รายงานแผนกบริการลูกค้า" },
-                    { "ConfigKey": "SALES", "ConfigValue": "Sales Reports|รายงานแผนกการตลาด" },
-                ];
-                loadComboArray('#cboReportGroup', reportGroups, 'CS');
-            }
-            let reports = reportLists.filter(function (data) {
-                return data.ReportGroup == group;
-            });
-            $('#tbReportList').DataTable({
-                data: reports,
-                columns: [
-                    { data: "ReportCode", title: "Report Code" },
-                    { data: (mainLanguage == 'TH' ? "ReportNameTH" : "ReportNameEN"), title: "ReportName" }
-                ],
-                responsive: true,
-                destroy:true
-            });
-
-            break;
-    }    
-}
-
+ */
