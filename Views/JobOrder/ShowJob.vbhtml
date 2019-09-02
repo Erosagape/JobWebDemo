@@ -550,7 +550,6 @@ End Code
         <div id="frmLOVs"></div>
     </div>
 </div>
-<script src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript">
     //define letiables
     const path = '@Url.Content("~")';
@@ -812,10 +811,10 @@ End Code
                 SetGridCurrency(path, '#tbCurr', '#frmSearchCurr', ReadCurrency);
                 break;
             case 'CUSTOMER':
-                SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
+                SetGridCompanyByGroup(path, '#tbCust', 'CUSTOMERS', '#frmSearchCust', ReadCustomer);
                 break;
             case 'CONSIGNEE':
-                SetGridCompany(path, '#tbCons', '#frmSearchCons', ReadConsignee);
+                SetGridCompanyByGroup(path, '#tbCons','CONSIGNEE', '#frmSearchCons', ReadConsignee);
                 break;
             case 'ProjectName':
                 SetGridProjectName(path, '#tbProj', '#frmSearchProj', ReadProjectName);

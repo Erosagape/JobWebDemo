@@ -483,6 +483,33 @@ function SetGridUser(p, g, d, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridCompanyByGroup(p, g,t, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetCompany?Group=' + t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'company.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "CustCode", title: "รหัส" },
+            { data: "Branch", title: "สาขา" },
+            { data: "NameThai", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
 function SetGridCompany(p, g, d, ev) {
     $(g).DataTable({
         ajax: {
@@ -867,6 +894,59 @@ function SetGridInvProduct(p, g, d, ev) {
                 BindEvent(g, d, ev);
             }
         });
+}
+function SetGridProvince(p, g, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetProvince', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'province.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "ProvinceCode", title: "รหัส" },
+            { data: "ProvinceName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridProvinceSub(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetProvinceSub'+ t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'province.detail'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "District", title: "อำเภอ" },
+            { data: "SubProvince", title: "ตำบล" },
+            { data: "PostCode", title: "รหัสไปรษณีย์" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
 }
 function SetGridBank(p, g, d, ev) {
     $(g).DataTable({

@@ -72,7 +72,7 @@ function getQueryString(name, url) {
         results = regex.exec(url);
     if (!results) return '';
     if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    return decodeURIComponent(results[2].replace(/\+/g, ' ')).toUpperCase();
 }
 //convertion utility function
 function CDateTH(sqlDateString) {
@@ -323,6 +323,30 @@ function DummyCompanyData() {
     return o;
 }
 //public query functions
+function CallBackQueryProvince(p, code, ev) {
+    $.get(p + 'master/getprovince?Code=' + code).done(function (r) {
+        let dr = r.province.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryProvinceSub(p, code, ev) {
+    $.get(p + 'master/getprovincesub?Code=' + code).done(function (r) {
+        let dr = r.province.detail;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
+function CallBackQueryClearExp(p, branch, code, job, ev) {
+    $.get(p + 'adv/getclearexp?Branch=' + branch + '&Job=' + job + '&Code=' + code).done(function (r) {
+        let dr = r.estimate.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function CallBackQueryWHTax(p, branch,code, ev) {
     $.get(p + 'acc/getwhtax?branch=' + branch + '&code=' + code).done(function (r) {
         let dr = r.whtax.header;

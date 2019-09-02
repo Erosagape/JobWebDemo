@@ -301,10 +301,10 @@ End Code
                 SetGridUser(path, '#tbUser', '#frmSearchUser', ReadUser);
                 break;
             case 'customer':
-                SetGridCompany(path, '#tbCust', '#frmSearchCust', ReadCustomer);
+                SetGridCompanyByGroup(path, '#tbCust','CUSTOMERS,INTERNAL,PERSON', '#frmSearchCust', ReadCustomer);
                 break;
             case 'consignee':
-                SetGridCompany(path, '#tbCons', '#frmSearchCons', ReadConsignee);
+                SetGridCompanyByGroup(path, '#tbCons','CONSIGNEE' ,'#frmSearchCons', ReadConsignee);
                 break;
             case 'contact':
                 let w = '?Branch=' + $('#txtCustBranch').val() + '&Code=' + $('#txtCustCode').val();

@@ -343,9 +343,17 @@ Public Class frmGenCode
             strAll = strAll & vbCrLf & vbTab & strHtml
             strAll = strAll & vbCrLf & "</div>"
             strAll = strAll & vbCrLf & "<div id=""dvCommand"">"
-            strAll = strAll & vbCrLf & "<button id=""btnAdd"" class=""btn btn-default"" onclick=""ClearData()"">Add</button>
-            <button id=""btnSave"" class=""btn btn-success"" onclick=""SaveData()"">Save</button>
-            <button id=""btnDel"" class=""btn btn-danger"" onclick=""DeleteData()"">Delete</button>"
+            strAll = strAll & vbCrLf & "
+            <a href=""#"" class=""btn btn-default w3-purple"" id=""btnAdd"" onclick=""ClearData()"">
+                <i class=""fa fa-lg fa-file-o""></i>&nbsp;<b>New</b>
+            </a>
+            <a href=""#"" class=""btn btn-success"" id=""btnSave"" onclick=""SaveData()"">
+                <i class=""fa fa-lg fa-save""></i>&nbsp;<b>Save</b>
+            </a>
+            <a href=""#"" class=""btn btn-danger"" id=""btnDelete"" onclick=""DeleteData()"">
+                <i class=""fa fa-lg fa-trash""></i>&nbsp;<b>Delete</b>
+            </a>
+"
             strAll = strAll & vbCrLf & "</div>"
         End If
         If CheckBox2.Checked = True Then
@@ -378,7 +386,7 @@ Public Class frmGenCode
         let ask = confirm(""Do you need to Delete "" + code + ""?"");
         if (ask == false) return;
             $.get(path + 'master/del" & TextBox4.Text.Substring(1).ToLower & "?code=' + code, function (r) {
-                alert(r." & TextBox4.Text.Substring(1).ToLower & ".result);
+                ShowMessage(r." & TextBox4.Text.Substring(1).ToLower & ".result);
                 ClearData();
             });
     }"
@@ -394,7 +402,7 @@ Public Class frmGenCode
             let ask = confirm(""Do you need to Save "" + obj." & TextBox6.Text & " + ""?"");
             if (ask == false) return;
             let jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
+            //ShowMessage(jsonText);
             $.ajax({
                 url: ""@Url.Action(""Set" & TextBox4.Text.Substring(1) & """, ""Master"")"",
                 type: ""POST"",
@@ -405,14 +413,14 @@ Public Class frmGenCode
                         $('#txt" & TextBox6.Text & "').val(response.result.data);
                         $('#txt" & TextBox6.Text & "').focus();
                     }
-                    alert(response.result.msg);
+                    ShowMessage(response.result.msg);
                 },
                 error: function (e) {
-                    alert(e);
+                    ShowMessage(e);
                 }
             });
         } else {
-            alert('No data to save');
+            ShowMessage('No data to save');
         }"
             strAll = strAll & vbCrLf & vbTab & "    }"
             strAll = strAll & vbCrLf & vbTab & "    function ClearData(){"

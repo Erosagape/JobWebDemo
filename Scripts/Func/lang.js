@@ -90,6 +90,7 @@ function ChangeLanguage(code, module) {
                 mnuMasG5: 'Declare Type|ประเภทใบขน',
                 mnuMasG6: 'Customs Port|ท่าตรวจปล่อย',
                 mnuMasG7: 'Product Unit|หน่วยสินค้า',
+                mnuMasG8: 'Province|จังหวัด/อำเภอ/ตำบล',
                 mainLang: 'Change Language|เปลี่ยนภาษา',
                 mnuLang1: 'English|ภาษาอังกฤษ',
                 mnuLang2: 'Thai|ภาษาไทย',

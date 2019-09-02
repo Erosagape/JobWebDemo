@@ -167,6 +167,9 @@
         case 'Export':
             mnuPath = path + 'Report/Export';
             break;
+        case 'Province':
+            mnuPath = path + 'Master/Province';
+            break;
         default:
             ShowMessage('Under Development, Coming soon!');
             break;

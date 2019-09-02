@@ -43,6 +43,36 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function CopyClearExp() As ActionResult
+            Dim msg As String = ""
+            Try
+                Dim cliteria = Request.QueryString("cliteria").ToString()
+                Dim jobSource = cliteria.Split("=")(0)
+                Dim jobDest = cliteria.Split("=")(1)
+                Dim oSrc = New CClearExp(jobWebConn).GetData(String.Format(" WHERE BranchCode+'|'+JNo='{0}'", jobSource))
+                For Each oRow In oSrc
+                    Dim oDesc = New CClearExp(jobWebConn).GetData(String.Format(" WHERE BranchCode+'|'+JNo='{0}' AND SICode='{1}' ", jobDest, oRow.SICode))
+                    Dim oRec = New CClearExp(jobWebConn)
+                    If oDesc.Count > 0 Then
+                        oRec = oDesc(0)
+                    Else
+                        oRec.BranchCode = jobDest.Split("|")(0).Trim()
+                        oRec.SICode = oRow.SICode
+                        oRec.JNo = jobDest.Split("|")(1).Trim()
+                    End If
+                    oRec.SDescription = oRow.SDescription
+                    oRec.AmountCharge = oRow.AmountCharge
+                    oRec.TRemark = oRow.TRemark
+                    oRec.Status = oRow.Status
+                    msg &= "<br/>" & oRec.SaveData(String.Format(" WHERE BranchCode+'|'+JNo='{0}' AND SICode='{1}' ", jobDest, oRow.SICode))
+                Next
+                If msg = "" Then msg = "No data to copy"
+                msg = "Result:<br/>" & msg
+                Return Content(msg, textContent)
+            Catch ex As Exception
+                Return Content("[ERROR] " + ex.Message, textContent)
+            End Try
+        End Function
         Function SetClearExp(<FromBody()> data As CClearExp) As ActionResult
             Try
                 If Not IsNothing(data) Then

@@ -427,6 +427,7 @@
     <Compile Include="Models\CJobOrder.vb" />
     <Compile Include="Models\CPayDetail.vb" />
     <Compile Include="Models\CPayHeader.vb" />
+    <Compile Include="Models\CProvince.vb" />
     <Compile Include="Models\CQuoDetail.vb" />
     <Compile Include="Models\CQuoHeader.vb" />
     <Compile Include="Models\CQuoItem.vb" />
@@ -602,6 +603,7 @@
     <Content Include="Views\Menu\About.vbhtml" />
     <Content Include="Views\Report\Index.vbhtml" />
     <Content Include="Views\Report\Preview.vbhtml" />
+    <Content Include="Views\Master\Province.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

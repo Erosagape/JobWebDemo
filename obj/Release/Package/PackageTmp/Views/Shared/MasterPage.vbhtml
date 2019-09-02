@@ -196,6 +196,7 @@
                             <button id="mnuMasG4" class="btn btn-default btn-block" onclick="OpenMenu('vessel')">ชื่อพาหนะ</button>
                         </div>
                         <div class="col-sm-6">
+                            <button id="mnuMasG8" class="btn btn-default btn-block" onclick="OpenMenu('Province')">จังหวัด/ตำบล/อำเภอ</button>
                             <button id="mnuMasG5" class="btn btn-default btn-block" onclick="OpenMenu('DeclareType')">ประเภทใบขน</button>
                             <button id="mnuMasG6" class="btn btn-default btn-block" onclick="OpenMenu('CustomsPort')">ท่าตรวจปล่อย</button>
                             <button id="mnuMasG7" class="btn btn-default btn-block" onclick="OpenMenu('CustomsUnit')">หน่วยสินค้า</button>

@@ -4,39 +4,61 @@
 End Code
 <ul class="nav nav-tabs">
     <li class="active">
-        <a data-toggle="tab" id="tabHeader">Loading Information</a>
-        <a data-toggle="tab" id="tabContainer">Container Information</a>
-        <a data-toggle="tab" id="tabTruckOrder">Vehicles Information</a>
+        <a data-toggle="tab" href="#tabLoading">Loading Information</a>
+    </li>
+    <li>
+        <a data-toggle="tab" href="#tabContainer">Container Information</a>
+    </li>
+    <li>
+        <a data-toggle="tab" href="#tabTruckOrder">Vehicles Information</a>
     </li>
 </ul>
 <div class="tab-content">
-    <div class="tab-pane fade in active">
+    <div class="tab-pane fade in active" id="tabLoading">
         <div id="dvForm">
             <div class="row">
                 <div class="col-sm-3">
-                    Branch <br />
+                    Branch
+                    <br />
                     <div style="display:flex;flex-direction:row">
-                        <input type="text" class="form-control" id="txtBranchCode" style="width:15%" disabled />
+                        <input type="text" class="form-control" id="txtBranchCode" style="width:20%" disabled />
                         <input type="button" class="btn btn-default" value="..." onclick="SearchData('branch');" />
-                        <input type="text" class="form-control" id="txtBranchName" style="width:65%" disabled />
+                        <input type="text" class="form-control" id="txtBranchName" style="width:100%" disabled />
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    Job Number<br />
+                    Job Number
+                    <br />
                     <div style="display:flex;flex-direction:row">
-                        <input type="text" id="txtJNo" class="form-control" />
+                        <input type="text" id="txtJNo" class="form-control" style="width:100%" />
+                        <input type="button" class="btn btn-default" value="..." onclick="SearchData('job');" />
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    Booking No<br />
+                    Booking No
+                    <br />
                     <div style="display:flex;flex-direction:row">
-                        <input type="text" id="txtBookingNo" class="form-control" />
+                        <input type="text" id="txtBookingNo" class="form-control" style="width:100%"/>
+                        <input type="button" class="btn btn-default" value="..." onclick="SearchData('booking');" />
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    Transport Mode<br />
+                    Transport Term
+                    <br />
                     <div style="display:flex;flex-direction:row">
-                        <input type="text" id="txtTransMode" class="form-control">
+                        <select id="txtTransMode" class="form-control dropdown">
+                            <option value="EXP">EX-Works</option>
+                            <option value="FCA">Free Carrier</option>
+                            <option value="FAS">Free Alongside Ship</option>
+                            <option value="FOB">Free On Board</option>
+                            <option value="CPT">Carriage Paid To</option>
+                            <option value="CFR">Cost and Freight</option>
+                            <option value="CIF">Carriage Paid To</option>
+                            <option value="CIP">Carriage and Insurance Paid</option>
+                            <option value="DAT">Delivered at Terminal</option>
+                            <option value="DAP">Delivered at Place</option>
+                            <option value="DDP">Delivered Duty Paid</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -44,7 +66,7 @@ End Code
                 <div class="col-sm-6">
                     Notify Party :<br />
                     <div style="display:flex;flex-direction:row">
-                        <input type="text" id="txtNotifyCode" class="form-control" style="width:130px" />
+                        <input type="text" id="txtNotifyCode" class="form-control" style="width:20%" />
                         <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('customer')">...</button>
                         <input type="text" id="txtNotifyName" class="form-control" style="width:100%" disabled />
                     </div>
@@ -52,7 +74,7 @@ End Code
                 <div class="col-sm-6">
                     Vender Code :<br />
                     <div style="display:flex;flex-direction:row">
-                        <input type="text" id="txtVenderCode" class="form-control">
+                        <input type="text" id="txtVenderCode" class="form-control" style="width:20%">
                         <button id="btnBrowseCust" class="btn btn-default" onclick="SearchData('vender')">...</button>
                         <input type="text" id="txtVenderName" class="form-control" style="width:100%" disabled />
                     </div>
@@ -160,10 +182,89 @@ End Code
             </div>
         </div>
     </div>
-    <div class="tab-pane fade">
+    <div class="tab-pane fade" id="tabContainer">
 
     </div>
-    <div class="tab-pane fade">
+    <div class="tab-pane fade" id="tabTruckOrder">
 
     </div>
 </div>
+<div id="dvLOVs"></div>
+<script type="text/javascript">
+    //define letiables
+    const path = '@Url.Content("~")';
+    const user = '@ViewBag.User';
+    const userRights = '@ViewBag.UserRights';
+    SetLOVs();
+    SetEvents();
+    function SetEvents() {
+        let branch = getQueryString("BranchCode");
+        let job = getQueryString("JNo");
+        if (branch !== '') {
+            $('#txtBranchCode').val(branch);
+            ShowBranch(path, branch, '#txtBranchName');
+        } else {
+            $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
+            $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
+        }
+        if (job !== '') {
+            $('#txtJNo').val(job);
+        }
+    }
+    function SetLOVs() {
+        //3 Fields Show
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (response) {
+            let dv = document.getElementById("dvLOVs");
+            //Customers
+            CreateLOV(dv,'#frmSearchCust', '#tbCust','Customers',response,3);
+            //Agent
+            CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
+            //Branch
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            //Job
+            CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job', response, 3);
+            //Booking
+            CreateLOV(dv, '#frmSearchBook', '#tbBook', 'Booking', response, 3);
+        });
+    }
+    function SetGridBooking() {
+
+    }
+    function SearchData(type) {
+        switch (type) {
+            case 'vender':
+                SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender);
+                break;
+            case 'customer':
+                SetGridCompanyByGroup(path, '#tbCust', 'NOTIFY_PARTY', '#frmSearchCust', ReadCustomer);
+                break;
+            case 'branch':
+                SetGridBranch(path, '#tbBranch','#frmSearchBranch', ReadBranch);
+                break;
+            case 'job':
+                SetGridJob(path, '#tbJob', '#frmSearchJob', '?branch=' + $('#txtBranchCode').val(), ReadJob);
+                break;
+            case 'booking':
+                SetGridBooking();
+                break;
+        }
+    }
+    function ReadVender(dt) {
+        $('#txtVenderCode').val(dt.VenCode);
+        $('#txtVenderName').val(dt.TName);
+    }
+    function ReadCustomer(dt) {
+        $('#txtNotifyCode').val(dt.CustCode);
+        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtNotifyName');
+    }
+    function ReadBranch(dt) {
+        $('#txtBranchCode').val(dt.Code);
+        $('#txtBranchName').val(dt.BrName);
+    }
+    function ReadJob(dt) {
+        $('#txtJNo').val(dt.JNo);
+    }
+    function ReadBooking(dt) {
+
+    }
+</script>

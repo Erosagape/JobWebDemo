@@ -79,6 +79,109 @@ Namespace Controllers
                 Return Content("[]", jsonContent)
             End Try
         End Function
+        Function Province() As ActionResult
+            Return GetView("Province", "MODULE_MAS")
+        End Function
+        Function GetProvince() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ProvinceCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ProvinceCode ='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CProvince(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""province"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetProvince(<FromBody()> data As CProvince) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.ProvinceCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE ProvinceCode='{0}' ", data.ProvinceCode))
+                    Dim json = "{""result"":{""data"":""" & data.ProvinceCode & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelProvince() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ProvinceCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ProvinceCode='{0}'", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""province"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CProvince(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""province"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetProvinceSub() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE ProvinceCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND ProvinceCode='{0}'", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CProvinceSub(jobMasConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""province"":{""detail"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetProvinceSub(<FromBody()> data As CProvinceSub) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.id = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobMasConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE id='{0}' ", data.id))
+                    Dim json = "{""result"":{""data"":""" & data.id & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelProvinceSub() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE id<>'' "
+                If Not IsNothing(Request.QueryString("ID")) Then
+                    tSqlw &= String.Format("AND id Like '{0}'", Request.QueryString("ID").ToString)
+                Else
+                    Return Content("{""province"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CProvinceSub(jobMasConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""province"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function SetCompanyContact(<FromBody()> data As CCompanyContact) As ActionResult
             Try
                 If Not IsNothing(data) Then
@@ -771,6 +874,9 @@ AND b.IsApplyPolicy=1
                 End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND Branch='{0}'", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Group")) Then
+                    tSqlw &= String.Format(" AND CustGroup IN('{0}')", Request.QueryString("Group").ToString.Replace(",", "','"))
                 End If
                 Dim oData = New CCompany(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
