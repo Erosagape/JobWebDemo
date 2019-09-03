@@ -33,7 +33,7 @@ function ChangeLanguage(code, module) {
                 mainCS: 'CS Works|แผนกบริการลูกค้า',
                 mnuCS1: 'CreateJob|สร้างงานใหม่',
                 mnuCS2: 'List Job|ค้นหางาน',
-                mnuCS3: 'Delivery Order|ใบส่งของ',
+                mnuCS3: 'Loading Info|ข้อมูลรับบรรทุก',
                 mnuCS4: 'Witholding-Tax|ออกหนังสือหักณที่จ่าย',
                 mainShp: 'Shipping Works|แผนกชิปปิ้ง',
                 mnuShp1: 'Advance|ใบเบิกค่าใช้จ่าย',

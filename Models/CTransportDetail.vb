@@ -93,12 +93,12 @@ Public Class CTransportDetail
             m_Finish = value
         End Set
     End Property
-    Private m_TimeUsed As Date
-    Public Property TimeUsed As Date
+    Private m_TimeUsed As Double
+    Public Property TimeUsed As Double
         Get
             Return m_TimeUsed
         End Get
-        Set(value As Date)
+        Set(value As Double)
             m_TimeUsed = value
         End Set
     End Property
@@ -291,6 +291,15 @@ Public Class CTransportDetail
             m_Measurement = value
         End Set
     End Property
+    Private m_BookingNo As String
+    Public Property BookingNo As String
+        Get
+            Return m_BookingNo
+        End Get
+        Set(value As String)
+            m_BookingNo = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -305,6 +314,7 @@ Public Class CTransportDetail
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
                             dr("BranchCode") = Me.BranchCode
                             dr("JNo") = Me.JNo
+                            dr("BookingNo") = Me.BookingNo
                             If Me.ItemNo = 0 Then Me.AddNew()
                             dr("ItemNo") = Me.ItemNo
                             dr("CTN_NO") = Me.CTN_NO
@@ -313,7 +323,7 @@ Public Class CTransportDetail
                             dr("TruckIN") = Main.GetDBDate(Me.TruckIN)
                             dr("Start") = Main.GetDBDate(Me.Start)
                             dr("Finish") = Main.GetDBDate(Me.Finish)
-                            dr("TimeUsed") = Main.GetDBTime(Me.TimeUsed)
+                            dr("TimeUsed") = Me.TimeUsed
                             dr("CauseCode") = Me.CauseCode
                             dr("Comment") = Me.Comment
                             dr("TruckType") = Me.TruckType
@@ -348,7 +358,7 @@ Public Class CTransportDetail
         Return msg
     End Function
     Public Sub AddNew()
-        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_LoadInfoDetail WHERE BranchCode='{0}' And JNo ='{1}' ", m_BranchCode, m_JNo), "____")
+        Dim retStr As String = Main.GetMaxByMask(m_ConnStr, String.Format("SELECT MAX(ItemNo) as t FROM Job_LoadInfoDetail WHERE BranchCode='{0}' And BookingNo ='{1}' ", m_BranchCode, m_BookingNo), "____")
         m_ItemNo = Convert.ToInt32("0" & retStr)
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CTransportDetail)
@@ -364,7 +374,10 @@ Public Class CTransportDetail
                         row.BranchCode = rd.GetString(rd.GetOrdinal("BranchCode")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("JNo"))) = False Then
-                        row.JNo = rd.GetValue(rd.GetOrdinal("JNo"))
+                        row.JNo = rd.GetString(rd.GetOrdinal("JNo"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("BookingNo"))) = False Then
+                        row.BookingNo = rd.GetString(rd.GetOrdinal("BookingNo"))
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("ItemNo"))) = False Then
                         row.ItemNo = rd.GetInt16(rd.GetOrdinal("ItemNo"))

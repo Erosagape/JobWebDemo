@@ -542,6 +542,14 @@ function CallBackQueryPayment(p, br, no, ev) {
         }
     });
 }
+function CallBackQueryGLHeader(p, branch, code, ev) {
+    $.get(p + 'acc/getjournalentry?Branch=' + branch + '&Code=' + code).done(function (r) {
+        let dr = r.journal.header;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function ShowConfigValue(path, Code, Key, ControlID) {
     let strParam = "";
     if (Code != "") {

@@ -421,6 +421,8 @@
     <Compile Include="Models\CCustomsPort.vb" />
     <Compile Include="Models\CCustomsUnit.vb" />
     <Compile Include="Models\CDeclareType.vb" />
+    <Compile Include="Models\CGLDetail.vb" />
+    <Compile Include="Models\CGLHeader.vb" />
     <Compile Include="Models\CInterPort.vb" />
     <Compile Include="Models\CInvDetail.vb" />
     <Compile Include="Models\CInvHeader.vb" />

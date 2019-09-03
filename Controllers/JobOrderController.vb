@@ -403,17 +403,20 @@ Namespace Controllers
             Return GetView("Transport", "MODULE_CS")
             'Return RedirectToAction("FormDelivery")
         End Function
-        Function GetJobTransport() As ActionResult
+        Function GetTransport() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE JNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
                 End If
-                If Not IsNothing(Request.QueryString("Job")) Then
-                    tSqlw &= String.Format("AND JNo='{0}' ", Request.QueryString("Job").ToString)
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BookingNo='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 Dim oDataH = New CTransportHeader(jobWebConn).GetData(tSqlw)
                 Dim jsonH As String = JsonConvert.SerializeObject(oDataH)
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND JNo='{0}' ", Request.QueryString("Job").ToString)
+                End If
                 Dim oDataD = New CTransportDetail(jobWebConn).GetData(tSqlw)
                 Dim jsonD As String = JsonConvert.SerializeObject(oDataD)
                 Dim json = "{""transport"":{""header"":" & jsonH & ",""detail"":" & jsonD & "}}"
@@ -429,11 +432,11 @@ Namespace Controllers
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
                     End If
 
-                    If "" & data.JNo = "" Then
+                    If "" & data.BookingNo = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}' ", data.BranchCode, data.JNo))
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BookingNo='{1}' ", data.BranchCode, data.BookingNo))
                     Dim json = "{""result"":{""data"":""" & data.JNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -454,8 +457,8 @@ Namespace Controllers
                     Return Content("{""transport"":{""result"":""Please Select Some branch""}}", jsonContent)
                 End If
 
-                If Not IsNothing(Request.QueryString("Job")) Then
-                    tSqlw &= String.Format(" AND JNo='{0}'", Request.QueryString("Job").ToString)
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND BookingNo='{0}'", Request.QueryString("Code").ToString)
                 Else
                     Return Content("{""transport"":{""result"":""Please Select Some Data""}}", jsonContent)
                 End If
@@ -476,11 +479,14 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
                 End If
-                If Not IsNothing(Request.QueryString("Job")) Then
-                    tSqlw &= String.Format("AND JNo='{0}' ", Request.QueryString("Job").ToString)
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BookingNo='{0}' ", Request.QueryString("Code").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Item")) Then
                     tSqlw &= String.Format("AND ItemNo={0} ", Request.QueryString("Item").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND JNo='{0}' ", Request.QueryString("Job").ToString)
                 End If
                 Dim oData = New CTransportDetail(jobWebConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
@@ -496,11 +502,11 @@ Namespace Controllers
                     If "" & data.BranchCode = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
                     End If
-                    If "" & data.JNo = "" Then
+                    If "" & data.BookingNo = "" Then
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
                     End If
                     data.SetConnect(jobWebConn)
-                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}' AND ItemNo='{2}' ", data.BranchCode, data.JNo, data.ItemNo))
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BookingNo='{1}' AND ItemNo='{2}' ", data.BranchCode, data.BookingNo, data.ItemNo))
                     Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
@@ -516,14 +522,14 @@ Namespace Controllers
             Try
                 Dim tSqlw As String = " WHERE JNo<>'' "
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlw &= String.Format("AND BranchCode='{0}'", Request.QueryString("Branch").ToString)
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
                 Else
-                    Return Content("{""jobtransportdetail"":{""result"":""Please Select Some branch""}}", jsonContent)
+                    Return Content("{""transport"":{""result"":""Please Select Some branch""}}", jsonContent)
                 End If
-                If Not IsNothing(Request.QueryString("Job")) Then
-                    tSqlw &= String.Format("AND JNo='{0}'", Request.QueryString("JNo").ToString)
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND BookingNo='{0}' ", Request.QueryString("Code").ToString)
                 Else
-                    Return Content("{""jobtransportdetail"":{""result"":""Please Select Some Job""}}", jsonContent)
+                    Return Content("{""transport"":{""result"":""Please Select Some Job""}}", jsonContent)
                 End If
                 If Not IsNothing(Request.QueryString("Item")) Then
                     tSqlw &= String.Format("AND ItemNo={0}", Request.QueryString("Item").ToString)
@@ -541,10 +547,10 @@ Namespace Controllers
             Try
                 Dim tSqlw As String = ""
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlw &= String.Format(" AND Job_Order.BranchCode='{0}'", Request.QueryString("Branch").ToString())
+                    tSqlw &= String.Format(" AND Job_LoadInfo.BranchCode='{0}'", Request.QueryString("Branch").ToString())
                 End If
                 If Not IsNothing(Request.QueryString("Job")) Then
-                    tSqlw &= String.Format(" AND Job_Order.JNo='{0}' ", Request.QueryString("Job").ToString)
+                    tSqlw &= String.Format(" AND Job_LoadInfoDetail.JNo='{0}' ", Request.QueryString("Job").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format(" AND Job_LoadInfo.BookingNo='{0}' ", Request.QueryString("Code").ToString)

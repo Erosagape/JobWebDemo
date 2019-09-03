@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("TAWAN")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("BIZ")>  _
         Public ReadOnly Property LicenseTo() As String
             Get
                 Return CType(Me("LicenseTo"),String)

@@ -131,12 +131,13 @@ End Code
         let branch = $('#txtBranchCode').val();
         let code = $('#txtSICode').val();
         let job = $('#txtJNo').val();
-        let ask = confirm("Do you need to Delete " + code + "?");
-        if (ask == false) return;
-        $.get(path + 'adv/delclearexp?branch=' + branch + '&code=' + code + '&job=' + job, function (r) {
+        ShowConfirm("Do you need to Delete " + code + "?", function (ask) {
+            if (ask == false) return;
+            $.get(path + 'adv/delclearexp?branch=' + branch + '&code=' + code + '&job=' + job, function (r) {
                 ShowMessage(r.estimate.result);
                 ClearData();
             });
+        });
     }
     function ReadData(dr) {
         $('#txtBranchCode').val(dr.BranchCode);
@@ -158,26 +159,27 @@ End Code
             Status:$('#txtStatus').val()
         };
         if (obj.SICode != "") {
-            let ask = confirm("Do you need to Save " + obj.SICode + "?");
-            if (ask == false) return;
-            let jsonText = JSON.stringify({ data: obj });
-            //alert(jsonText);
-            $.ajax({
-                url: "@Url.Action("SetClearExp", "Adv")",
-                type: "POST",
-                contentType: "application/json",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txtSICode').val(response.result.data);
-                        $('#txtSICode').focus();
+            ShowConfirm("Do you need to Save " + obj.SICode + "?", function (ask) {
+                if (ask == false) return;
+                let jsonText = JSON.stringify({ data: obj });
+                //alert(jsonText);
+                $.ajax({
+                    url: "@Url.Action("SetClearExp", "Adv")",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txtSICode').val(response.result.data);
+                            $('#txtSICode').focus();
+                        }
+                        RefreshGrid();
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    RefreshGrid();
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');

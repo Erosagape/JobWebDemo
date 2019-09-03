@@ -184,6 +184,18 @@ function ShowCustomer(path, Code, Branch, ControlID) {
             });
     }
 }
+function ShowCompany(path, Code, ControlID) {
+    $(ControlID).val('');
+    if (Code.length > 0) {
+        $.get(path + 'Master/GetCompany?Code=' + Code)
+            .done(function (r) {
+                if (r.company.data.length > 0) {
+                    let c = r.company.data[0];
+                    $(ControlID).val(c.NameThai);
+                }
+            });
+    }
+}
 function ShowCustomerAddress(path, Code, Branch, ControlIDName,ControlIDAddr) {
     $(ControlIDName).val('');
     $(ControlIDAddr).val('');

@@ -2,14 +2,14 @@
 
 Namespace Controllers
     Public Class TrackingController
-        Inherits Controller
+        Inherits CController
 
         ' GET: Tracking
         Function Index() As ActionResult
-            Return View()
+            Return GetView("Index")
         End Function
         Function Document() As ActionResult
-            Return View()
+            Return GetView("Document")
         End Function
     End Class
 End Namespace

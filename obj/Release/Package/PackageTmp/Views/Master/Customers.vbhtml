@@ -110,11 +110,23 @@ End Code
                         Billing Address :<textarea id="txtBillToAddress" class="form-control" disabled></textarea>
                     </div>
                     <div class="col-sm-6">
-                        BLDG No/Street :<br /><input type="text" id="txtTAddress" class="form-control" tabIndex="26">
-                        District :<br /><input type="text" id="txtTDistrict" class="form-control" tabIndex="27">
-                        Sub District :<br /><input type="text" id="txtTSubProvince" class="form-control" tabIndex="28">
-                        Province :<br /><input type="text" id="txtTProvince" class="form-control" tabIndex="29">
-                        PostCode :<br /><input type="text" id="txtTPostCode" class="form-control" tabIndex="30">
+                        BLDG No/Street :<br />
+                        <input type="text" id="txtTAddress" class="form-control" tabIndex="26">
+                        District :
+                        <br />
+                        <div style="display:flex">
+                            <input type="text" id="txtTDistrict" class="form-control" style="width:100%" tabIndex="27">
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('subdistrict')" />
+                        </div>
+                        Sub District :<br />
+                        <input type="text" id="txtTSubProvince" class="form-control" tabIndex="28">
+                        Province :<br />
+                                  <div style="display:flex">
+                                      <input type="text" id="txtTProvince" class="form-control" style="width:20%" tabIndex="29">
+                                      <input type="text" id="txtTProvinceName" class="form-control" style="width:80%" disabled>
+                                  </div>
+                        PostCode :<br />
+                        <input type="text" id="txtTPostCode" class="form-control" tabIndex="30">
                     </div>
                 </div>
 
@@ -260,6 +272,9 @@ End Code
                 CallBackQueryCustomer(path, $('#txtBillToCustCode').val(), $('#txtBillToBranch').val(), ReadBilling);
             }
         });
+        $('#txtTProvince').change(function () {
+            CallBackQueryProvince(path, $('#txtTProvince').val(), ShowProvince);
+        });
         $('#cboCommLevel').change(function () {
             var data = $(this).val();
             $('#txtCommLevel').val(data);
@@ -295,7 +310,7 @@ End Code
     }
     function SetLOVs() {
         //prepare searching data grid
-        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (res) {
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (res) {
             var dv = document.getElementById("dvLOVs");
             CreateLOV(dv, '#frmSearchCust', '#tbCust', 'Customers', res, 3);
             CreateLOV(dv, '#frmSearchBill', '#tbBill', 'Billing Place', res, 3);
@@ -303,7 +318,7 @@ End Code
             CreateLOV(dv, '#frmSearchCSIM', '#tbCSI', 'Staffs', res, 2);
             CreateLOV(dv, '#frmSearchCSEX', '#tbCSE', 'Staffs', res, 2);
             CreateLOV(dv, '#frmSearchCSOT', '#tbCSO', 'Staffs', res, 2);
-
+            CreateLOV(dv, '#frmSearchProvince', '#tbProvince', 'Province/District/Sub District',res, 3);
         });
         //load configuration data
         var lists = "CUSTOMER_GROUP=#txtCustGroup";
@@ -334,7 +349,20 @@ End Code
             case 'csother':
                 SetGridUser(path, '#tbCSO', '#frmSearchCSOT',ReadCSOth);
                 break;
+            case 'subdistrict':
+                SetGridProvinceSub(path, '#tbProvince', '#frmSearchProvince', '', ReadProvince);
+                break;
         }
+    }
+    function ShowProvince(dr) {
+        $('#txtTProvinceName').val(dr.ProvinceName);
+    }
+    function ReadProvince(dr) {
+        $('#txtTProvince').val(dr.ProvinceCode);
+        $('#txtTProvince').change();
+        $('#txtTPostCode').val(dr.PostCode);
+        $('#txtTDistrict').val(dr.District);
+        $('#txtTSubProvince').val(dr.SubProvince);
     }
     function ReadCustomer(dr) {
         if (dr.CustCode != undefined) {
@@ -504,6 +532,7 @@ End Code
         $('#txtTDistrict').val('');
         $('#txtTSubProvince').val('');
         $('#txtTProvince').val('');
+        $('#txtTProvinceName').val('');
         $('#txtTPostCode').val('');
         $('#txtDMailAddress').val('');
         $('#txtPrivilegeOption').val('');

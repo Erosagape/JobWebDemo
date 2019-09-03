@@ -51,7 +51,7 @@
             <div id="mnuCS" class="w3-hide w3-light-grey w3-card-4">
                 <a href="#" id="mnuCS1" class="w3-bar-item w3-button" onclick="OpenMenu('CreateJob')">- Create Job</a>
                 <a href="#" id="mnuCS2" class="w3-bar-item w3-button" onclick="OpenMenu('SearchJob')">- List Job</a>
-                <a href="#" id="mnuCS3" class="w3-bar-item w3-button" onclick="OpenMenu('Transport')">- Delivery Order</a>
+                <a href="#" id="mnuCS3" class="w3-bar-item w3-button" onclick="OpenMenu('Transport')">- Loading Info</a>
                 <a href="#" id="mnuCS4" class="w3-bar-item w3-button" onclick="OpenMenu('WHTax')">- Withholding Tax</a>
             </div>
             <div id="mainShp" class="w3-bar-item w3-button" onclick="w3_accordion('mnuShp')">

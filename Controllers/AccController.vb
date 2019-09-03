@@ -509,6 +509,143 @@ Namespace Controllers
             Return GetView("GLNote", "MODULE_ACC")
             'Return RedirectToAction("FormGL")
         End Function
+        Function GetJournalEntry() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE GLRefNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND GLRefNo ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oDataD = New CGLDetail(jobWebConn).GetData(tSqlw)
+                Dim jsonD As String = JsonConvert.SerializeObject(oDataD)
+                If Not IsNothing(Request.QueryString("Year")) Then
+                    tSqlw &= String.Format("AND FiscalYear='{0}' ", Request.QueryString("Year").ToString)
+                End If
+                Dim oData = New CGLHeader(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""journal"":{""header"":" & json & ",""detail"":" & jsonD & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function GetGLDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE GLRefNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND GLRefNo='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format(" AND ItemNo={0} ", Request.QueryString("Item").ToString)
+                End If
+                Dim oData = New CGLDetail(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""journal"":{""detail"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetGLDetail(<FromBody()> data As CGLDetail) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    If "" & data.GLRefNo = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND GLRefNo='{1}' AND ItemNo={2} ", data.BranchCode, data.GLRefNo, data.ItemNo))
+                    Dim json = "{""result"":{""data"":""" & data.ItemNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelGLDetail() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE GLRefNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""journal"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND GLRefNo='{0}' ", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""journal"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    tSqlw &= String.Format(" AND ItemNo={0} ", Request.QueryString("Item").ToString)
+                Else
+                    Return Content("{""journal"":{""result"":""Please Select Some Item"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CGLDetail(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""journal"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetGLHeader(<FromBody()> data As CGLHeader) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.BranchCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    If "" & data.GLRefNo = "" Then
+                        data.AddNew(data.GLType & DateTime.Today.ToString("yyMM") & "____")
+                    End If
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND GLRefNo='{1}' ", data.BranchCode, data.GLRefNo))
+                    Dim json = "{""result"":{""data"":""" & data.GLRefNo & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelGLHeader() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE GLRefNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND BranchCode='{0}' ", Request.QueryString("Branch").ToString)
+                Else
+                    Return Content("{""journal"":{""result"":""Please Select Some Branch"",""data"":[]}}", jsonContent)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND GLRefNo='{0}' ", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""journal"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CGLHeader(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+                Dim oDataD As New CGLDetail(jobWebConn)
+                Dim msgD = oDataD.DeleteData(tSqlw)
+
+                Dim json = "{""journal"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function FormExpense() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
             Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ACC", "Expense")
