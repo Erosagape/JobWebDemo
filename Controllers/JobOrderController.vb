@@ -555,6 +555,9 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Code")) Then
                     tSqlw &= String.Format(" AND Job_LoadInfo.BookingNo='{0}' ", Request.QueryString("Code").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("Doc")) Then
+                    tSqlw &= String.Format(" AND Job_LoadInfoDetail.DeliveryNo='{0}' ", Request.QueryString("Doc").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     tSqlw &= String.Format(" AND Job_Order.CustCode='{0}' ", Request.QueryString("Cust").ToString)
                 End If
@@ -737,6 +740,62 @@ Namespace Controllers
             <div id=""frmSearchIPort"" class=""modal fade"" role=""dialog""></div>
 "
             Return Content(html, textContent)
+        End Function
+        Function GetNewDelivery() As ActionResult
+            Try
+                Dim branch As String = ""
+                Dim booking As String = ""
+                Dim itemno As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    branch = Request.QueryString("Branch").ToString
+                Else
+                    Return Content("[ERROR]:Please Select Branch", textContent)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    booking = Request.QueryString("Code").ToString
+                Else
+                    Return Content("[ERROR]:Please Select Booking", textContent)
+                End If
+                If Not IsNothing(Request.QueryString("Item")) Then
+                    itemno = Request.QueryString("Item").ToString
+                Else
+                    Return Content("[ERROR]:Please Select item", textContent)
+                End If
+                Dim pFormatSQL As String = "DO" & DateTime.Now().ToString("yyMM") & "_____"
+                Dim data = New CTransportDetail(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND BookingNo='{1}' AND ItemNo={2}", branch, booking, itemno))
+                Dim msg = "[ERROR]:Data Not Found"
+                If data.Count > 0 Then
+                    Dim row = data(0)
+                    row.DeliveryNo = Main.GetMaxByMask(jobWebConn, String.Format("SELECT MAX(DeliveryNo) as t FROM Job_LoadInfoDetail WHERE BranchCode='{0}' And DeliveryNo Like '%{1}' ", branch, pFormatSQL), pFormatSQL)
+                    msg = row.SaveData(String.Format(" WHERE BranchCode='{0}' AND BookingNo='{1}' AND ItemNo={2}", branch, booking, itemno))
+                    If msg.Substring(0, 1) = "S" Then
+                        Dim header = New CTransportHeader(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND BookingNo='{1}' ", branch, booking))
+                        If header.Count > 0 Then
+                            Dim job = New CJobOrder(jobWebConn).GetData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", row.BranchCode, row.JNo))
+                            If job.Count > 0 Then
+                                job(0).EstDeliverDate = row.UnloadFinishDate
+                                job(0).DeliveryNo = row.DeliveryNo
+                                job(0).DeliveryTo = header(0).ContactName
+                                job(0).DeliveryAddr = row.Location
+                                msg = job(0).SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", row.BranchCode, row.JNo))
+                                If msg.Substring(0, 1) = "S" Then
+                                    msg = row.DeliveryNo
+                                Else
+                                    row.DeliveryNo = ""
+                                    row.SaveData(String.Format(" WHERE BranchCode='{0}' AND BookingNo='{1}' AND ItemNo={2}", branch, booking, itemno))
+                                End If
+                            Else
+                                msg = "[ERROR]:Job Not Found"
+                            End If
+                        Else
+                            msg = "[ERROR]:Booking Not Found"
+                        End If
+                    End If
+                End If
+                Return Content(msg, textContent)
+            Catch ex As Exception
+                Return Content("[ERROR]:" + ex.Message, textContent)
+            End Try
         End Function
         Function GetNewJob() As ActionResult
             Try

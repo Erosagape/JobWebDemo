@@ -208,9 +208,13 @@ End Code
                     <th class="desktop">ProductQty</th>
                     <th class="desktop">GrossWeight</th>
                     <th class="all">UnloadDate</th>
+                    <th class="all">DeliveryNo</th>
                 </tr>
             </thead>
         </table>
+        <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+            <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Delivery Slip</b>
+        </a>
     </div>
 </div>
 <div id="dvContainer" class="modal fade">
@@ -263,7 +267,7 @@ End Code
                         Job Status:<br />
                         <div style="display:flex">
                             <select id="txtCauseCode" class="form-control dropdown">
-                                <option value="0">No Ploblem</option>
+                                <option value="0">Working</option>
                                 <option value="1">Late</option>
                                 <option value="2">Accident</option>
                                 <option value="3">Cancel</option>
@@ -296,8 +300,14 @@ End Code
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-8">
                         Operation Note :<br /><div style="display:flex"><textarea id="txtComment" class="form-control"></textarea></div>
+                    </div>
+                    <div class="col-sm-4">
+                        Delivery No: 
+                        <input type="button" id="btnGenDeliveryNo" onclick="GenerateDO()" class="btn btn-warning" value="Create" />
+                        <br />
+                        <div style="display:flex"><input type="text" id="txtDeliveryNo" class="form-control" disabled></div>
                     </div>
                 </div>
                 <div class="row">
@@ -371,6 +381,7 @@ End Code
     const path = '@Url.Content("~")';
     const user = '@ViewBag.User';
     const userRights = '@ViewBag.UserRights';
+    let row = {};
     SetLOVs();
     SetEvents();
     function AddDetail() {
@@ -514,7 +525,8 @@ End Code
                     render: function (data) {
                         return CDateEN(data.UnloadDate);
                     }
-                }
+                },
+                { data: "DeliveryNo", title: "Delivery No" }
             ],
             destroy: true,
             responsive:true
@@ -524,8 +536,15 @@ End Code
             row = $('#tbDetail').DataTable().row(this).data(); //read current row selected
             ClearDetail();
             ReadDetail(row);
+        });
+        $('#tbDetail tbody').on('dblclick', 'tr', function () {
             $('#dvContainer').modal('show');
         });
+    }
+    function PrintData() {
+        if (row.DeliveryNo !== null) {
+            window.open(path + 'JobOrder/FormDelivery?Branch=' + row.BranchCode + '&Doc=' + row.DeliveryNo, '', '');
+        }
     }
     function LoadData() {
         let branch = $('#txtBranchCode').val();
@@ -657,6 +676,7 @@ End Code
         $('#txtUnloadDate').val('');
         $('#txtUnloadTime').val('');
         $('#txtLocation').val('');
+        $('#txtDeliveryNo').val('');
         $('#txtDReturnDate').val('');
         $('#txtShippingMark').val('');
         $('#txtProductDesc').val('');
@@ -699,7 +719,8 @@ End Code
             ProductUnit:$('#txtProductUnit').val(),
             GrossWeight:CNum($('#txtGrossWeight').val()),
             Measurement:CNum($('#txtMeasurement').val()),
-            BookingNo:$('#txtBookingNo').val()
+            BookingNo: $('#txtBookingNo').val(),
+            DeliveryNo: $('#txtDeliveryNo').val()
         };
         if (obj.ItemNo != "") {
             ShowConfirm("Do you need to Save " + obj.ItemNo + "?", function (ask) {
@@ -750,6 +771,7 @@ End Code
         $('#txtUnloadDate').val(CDateEN(dr.UnloadDate));
         $('#txtUnloadTime').val(ShowTime(dr.UnloadTime));
         $('#txtLocation').val(dr.Location);
+        $('#txtDeliveryNo').val(dr.DeliveryNo);
         $('#txtDReturnDate').val(CDateEN(dr.ReturnDate));
         $('#txtShippingMark').val(dr.ShippingMark);
         $('#txtProductDesc').val(dr.ProductDesc);
@@ -766,12 +788,25 @@ End Code
         ShowConfirm("Do you need to Delete " + item + "?", function (ask) {
             if (ask == false) return;
             $.get(path + 'joborder/deltransportdetail?branch=' + branch + '&code=' + code + '&item=' + item, function (r) {
+                LoadDetail($('#txtBranchCode').val(), $('#txtBookingNo').val());
+                $('#dvContainer').modal('hide');
                 ShowMessage(r.transport.result);
-                ClearDetail();
             });
         });
     }
     function ReadUnit(dr) {
         $('#txtProductUnit').val(dr.UnitType);
+    }
+    function GenerateDO() {        
+        let branch = $('#txtBranchCode').val();
+        let code = $('#txtBookingNo').val();
+        let item = $('#txtItemNo').val();
+        $.get(path + 'JobOrder/GetNewDelivery?Branch=' + branch + '&Code=' + code + '&Item=' + item, function (r) {
+            if (r.substr(0, 1) !== "[") {
+                $('#txtDeliveryNo').val(r);
+            }
+            LoadDetail($('#txtBranchCode').val(), $('#txtBookingNo').val());
+            ShowMessage(r);
+        });
     }
 </script>

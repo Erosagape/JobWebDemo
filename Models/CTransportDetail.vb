@@ -300,6 +300,15 @@ Public Class CTransportDetail
             m_BookingNo = value
         End Set
     End Property
+    Private m_DeliveryNo As String
+    Public Property DeliveryNo As String
+        Get
+            Return m_DeliveryNo
+        End Get
+        Set(value As String)
+            m_DeliveryNo = value
+        End Set
+    End Property
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
         Using cn As New SqlConnection(m_ConnStr)
@@ -345,6 +354,7 @@ Public Class CTransportDetail
                             dr("ProductUnit") = Me.ProductUnit
                             dr("GrossWeight") = Me.GrossWeight
                             dr("Measurement") = Me.Measurement
+                            dr("DeliveryNo") = Me.DeliveryNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = "Save Complete"
@@ -352,7 +362,7 @@ Public Class CTransportDetail
                     End Using
                 End Using
             Catch ex As Exception
-                msg = ex.Message
+                msg = "[ERROR]:" & ex.Message
             End Try
         End Using
         Return msg
@@ -465,6 +475,9 @@ Public Class CTransportDetail
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("Measurement"))) = False Then
                         row.Measurement = rd.GetDouble(rd.GetOrdinal("Measurement"))
+                    End If
+                    If IsDBNull(rd.GetValue(rd.GetOrdinal("DeliveryNo"))) = False Then
+                        row.DeliveryNo = rd.GetString(rd.GetOrdinal("DeliveryNo"))
                     End If
                     lst.Add(row)
                 End While

@@ -40,6 +40,7 @@ End Code
             <th class="desktop">FactoryDate</th>
             <th class="all">UnloadFinishDate</th>
             <th class="desktop">Comment</th>
+            <th class="desktop">DeliveryNo</th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -102,7 +103,8 @@ End Code
                         return CDateEN(data.UnloadFinishDate);
                     }
                 },
-                { data: "Comment", title: "Remark" }
+                { data: "Comment", title: "Remark" },
+                { data: "DeliveryNo", title: "Delivery No" }
             ],
             destroy: true, //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
             responsive:true
