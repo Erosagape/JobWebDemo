@@ -225,7 +225,7 @@ End Code
                         Container# :<br /><div style="display:flex"><input type="text" id="txtCTN_NO" class="form-control"></div>
                     </div>
                     <div class="col-sm-3">
-                        Size :<br /><div style="display:flex"><input type="text" id="txtCTN_SIZE" class="form-control"></div>
+                        Size :<br /><div style="display:flex"><select id="txtCTN_SIZE" class="form-control dropdown"></select></div>
                     </div>
                     <div class="col-sm-3">
                         Seal No.:<br /><div style="display:flex"><input type="text" id="txtSealNumber" class="form-control"></div>
@@ -234,20 +234,57 @@ End Code
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         Product :<br /><div style="display:flex"><input type="text" id="txtProductDesc" class="form-control"></div>
                     </div>
                     <div class="col-sm-2">
                         Qty :<br /><div style="display:flex"><input type="number" id="txtProductQty" class="form-control" value="0.00"></div>
                     </div>
-                    <div class="col-sm-2">
-                        Unit :<br /><div style="display:flex"><input type="text" id="txtProductUnit" class="form-control"></div>
+                    <div class="col-sm-4">
+                        Unit :
+                        <br />
+                        <div style="display:flex">
+                            <input type="text" id="txtProductUnit" class="form-control" style="width:100%">
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('servunit')" />
+                        </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-2">
                         G/W :<br /><div style="display:flex"><input type="number" id="txtGrossWeight" class="form-control" value="0.00"></div>
                     </div>
                     <div class="col-sm-2">
                         M3 :<br /><div style="display:flex"><input type="number" id="txtMeasurement" class="form-control" value="0.00"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        Return Date :<br /><div style="display:flex"><input type="date" id="txtDReturnDate" class="form-control"></div>
+                    </div>
+                    <div class="col-sm-3">
+                        Job Status:<br />
+                        <div style="display:flex">
+                            <select id="txtCauseCode" class="form-control dropdown">
+                                <option value="0">No Ploblem</option>
+                                <option value="1">Late</option>
+                                <option value="2">Accident</option>
+                                <option value="3">Cancel</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        Driver :<br /><div style="display:flex"><input type="text" id="txtDriver" class="form-control"></div>
+                    </div>
+                    <div class="col-sm-3">
+                        Truck ID :<br /><div style="display:flex"><input type="text" id="txtTruckNO" class="form-control"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        Type :
+                        <br />
+                        <div style="display:flex">
+                            <input type="text" id="txtTruckType" class="form-control">
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('carunit')" />
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -259,38 +296,13 @@ End Code
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        Driver :<br /><div style="display:flex"><input type="text" id="txtDriver" class="form-control"></div>
-                    </div>
-                    <div class="col-sm-3">
-                        Truck ID :<br /><div style="display:flex"><input type="text" id="txtTruckNO" class="form-control"></div>
-                    </div>
-                    <div class="col-sm-3">
-                        Type :<br /><div style="display:flex"><input type="text" id="txtTruckType" class="form-control"></div>
+                    <div class="col-sm-12">
+                        Operation Note :<br /><div style="display:flex"><textarea id="txtComment" class="form-control"></textarea></div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4">
-                        Return Date :<br /><div style="display:flex"><input type="date" id="txtDReturnDate" class="form-control"></div>
-                    </div>
-                    <div class="col-sm-3">
-                        Problem Code:<br />
-                        <div style="display:flex">
-                            <select id="txtCauseCode" class="form-control dropdown">
-                                <option value="0">No Ploblem</option>
-                                <option value="1">Late</option>
-                                <option value="2">Accident</option>
-                                <option value="3">Cancel</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                        Comment :<br /><div style="display:flex"><textarea id="txtComment" class="form-control"></textarea></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4" style="display:flex;flex-direction:column">
-                        Summary:
+                    <div class="col-sm-4" style="display:flex;flex-direction:column;background:gold;padding-bottom:1em">
+                        <b>Summary:</b>
                         <div>
                             Truck In :<br /><div style="display:flex"><input type="date" id="txtTruckIN" class="form-control"></div>
                         </div>
@@ -304,8 +316,8 @@ End Code
                             Mile Used :<br /><div style="display:flex"><input type="number" id="txtTimeUsed" class="form-control"></div>
                         </div>
                     </div>
-                    <div class="col-sm-4" style="display:flex;flex-direction:column">
-                        Target:
+                    <div class="col-sm-4" style="display:flex;flex-direction:column;background:salmon;padding-bottom:1em">
+                        <b>Target:</b>
                         <div>
                             At Yard Date:<br /><div style="display:flex"><input type="date" id="txtTargetYardDate" class="form-control"></div>
                         </div>
@@ -319,8 +331,8 @@ End Code
                             Unload Time :<br /><div style="display:flex"><input type="text" id="txtUnloadTime" class="form-control"></div>
                         </div>
                     </div>
-                    <div class="col-sm-4" style="display:flex;flex-direction:column">
-                        Actual:
+                    <div class="col-sm-4" style="display:flex;flex-direction:column;background:lightgreen;padding-bottom:1em">
+                        <b>Actual:</b>
                         <div>
                             At Yard Date :<br /><div style="display:flex"><input type="date" id="txtActualYardDate" class="form-control"></div>
                         </div>
@@ -385,6 +397,7 @@ End Code
         });
     }
     function SetLOVs() {
+        loadUnit('#txtCTN_SIZE', path, '?Type=1');
         //3 Fields Show
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (response) {
             let dv = document.getElementById("dvLOVs");
@@ -394,6 +407,8 @@ End Code
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            //Units
+            CreateLOV(dv, '#frmSearchUnit', '#tbUnit', 'Car Unit', response, 2);
             //Job
             CreateLOV(dv, '#frmSearchJob', '#tbJob', 'Job', response, 3);
             //Booking
@@ -413,6 +428,12 @@ End Code
                 break;
             case 'job':
                 SetGridJob(path, '#tbJob', '#frmSearchJob', '?branch=' + $('#txtBranchCode').val(), ReadJob);
+                break;
+            case 'servunit':
+                SetGridServUnitFilter(path, '#tbUnit', '?Type=0', '#frmSearchUnit', ReadUnit);
+                break;
+            case 'carunit':
+                SetGridServUnitFilter(path, '#tbUnit', '?Type=2', '#frmSearchUnit', ReadUnit);
                 break;
             case 'booking':
                 let w = '?Branch=' + $('#txtBranchCode').val();
@@ -749,5 +770,8 @@ End Code
                 ClearDetail();
             });
         });
+    }
+    function ReadUnit(dr) {
+        $('#txtProductUnit').val(dr.UnitType);
     }
 </script>

@@ -107,9 +107,9 @@
                 Master Files
             </div>
             <div id="mnuMas" class="w3-hide w3-sand w3-card-4">
+                <a href="#" id="mnuMas3" class="w3-bar-item w3-button" onclick="OpenMenu('MasS')">- System Files</a>
                 <a href="#" id="mnuMas1" class="w3-bar-item w3-button" onclick="OpenMenu('MasG')">- Customs File</a>
                 <a href="#" id="mnuMas2" class="w3-bar-item w3-button" onclick="OpenMenu('MasA')">- Accounts File</a>
-                <a href="#" id="mnuMas3" class="w3-bar-item w3-button" onclick="OpenMenu('MasS')">- System Files</a>
             </div>
             <div id="mainUtil" class="w3-bar-item w3-button" onclick="w3_accordion('mnuUtil')">
                 Utility
@@ -142,6 +142,7 @@
                             <button id="mnuMasA6" class="btn btn-default btn-block" onclick="OpenMenu('ServiceGroup')">กลุ่มค่าบริการ</button>
                             <button id="mnuMasA7" class="btn btn-default btn-block" onclick="OpenMenu('ServiceCode')">รหัสค่าบริการ</button>
                             <button id="mnuMasA8" class="btn btn-default btn-block" onclick="OpenMenu('BudgetPolicy')">มาตรฐานค่าบริการ</button>
+                            <button id="mnuMasA9" class="btn btn-default btn-block" onclick="OpenMenu('AccountCode')">รหัสบัญชี</button>
                         </div>
                     </div>
                 </div>

@@ -963,7 +963,7 @@ End Code
                     $('#txtDeliverTo').val(dr.DeliveryTo);
                     $('#txtDeliverAddr').val(dr.DeliveryAddr);
 
-                    if (dr.JobStatus >= 3) {
+                    if (dr.JobStatus >= 7) {
                         $('#btnSave').attr('disabled', 'disabled');
                     }
                 }
@@ -1228,7 +1228,7 @@ End Code
     function SetContainerEdit() {
         $('#tbSUnt').DataTable({
             ajax: {
-                url: path + 'Master/GetServUnit', //web service ที่จะ call ไปดึงข้อมูลมา
+                url: path + 'Master/GetServUnit?Type=1', //web service ที่จะ call ไปดึงข้อมูลมา
                 dataSrc: 'servunit.data'
             },
             selected: true, //ให้สามารถเลือกแถวได้

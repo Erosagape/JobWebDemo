@@ -44,11 +44,16 @@ End Code
             <div class="col-sm-3">
                 Fax:<br /><input type="text" id="txtFaxNumber" Class="form-control" tabIndex="11">
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 Web/E-mail:<br /><input type="text" id="txtWEB_SITE" Class="form-control" tabIndex="12">
             </div>
-            <div class="col-sm-3">
-                GL Code:<br /><input type="text" id="txtGLAccountCode" Class="form-control" tabIndex="13">
+            <div class="col-sm-2">
+                GL Code:
+                <br />
+                <div style="display:flex">
+                    <input type="text" id="txtGLAccountCode" Class="form-control" tabIndex="13">
+                    <input type="button" class="btn btn-default" value="..." onclick="SearchData('acccode')" />
+                </div>                
             </div>
         </div>
         <div class="row">
@@ -185,6 +190,9 @@ End Code
             });        
         });
     }
+    function ReadAccount(dr) {
+        $('#txtGLAccountCode').val(dr.AccCode);
+    }
     function ReadVender(dr) {
         if (dr.VenCode != undefined) {
             row = dr;
@@ -227,6 +235,9 @@ End Code
             case 'vender':
                 SetGridVender(path, '#tbVend', '#frmSearchVend', ReadVender);
                 break;
+            case 'acccode':
+                SetGridAccountCode(path, '#tbAcc', '#frmSearchAcc', '',ReadAccount);
+                break;
         }
     }
     function SetEvents() {
@@ -244,6 +255,7 @@ End Code
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             let dv = document.getElementById("dvLOVs");
             CreateLOV(dv, '#frmSearchVend', '#tbVend', 'Venders', response, 2);
+            CreateLOV(dv, '#frmSearchAcc', '#tbAcc', 'Account Codes', response, 2);
         });
     }
     function SetEnterToTab() {

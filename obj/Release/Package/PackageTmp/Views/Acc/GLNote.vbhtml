@@ -141,9 +141,13 @@ End Code
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-3">
-                        A/C Code :<br /><div style="display:flex"><input type="text" id="txtGLAccountCode" class="form-control"></div>
+                        A/C Code :<br />
+                        <div style="display:flex">
+                            <input type="text" id="txtGLAccountCode" class="form-control">
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('acccode')" />
+                        </div>
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-8">
                         A/C Description :<br /><div style="display:flex"><input type="text" id="txtGLDescription" class="form-control"></div>
                     </div>
                 </div>
@@ -187,7 +191,11 @@ End Code
     ClearData();
 
     function SetEvents() {
-
+        $('#txtGLAccountCode').keydown(function (event) {
+            if (event.which == 13) {
+                ShowAccount(path, $('#txtGLAccountCode'), '#txtGLDescription');
+            }
+        });
         $('#txtGLRefNo').keydown(function (event) {
             if (event.which == 13) {
                 let branch = $('#txtBranchCode').val();
@@ -414,12 +422,17 @@ End Code
             let dv = document.getElementById("dvLOVs");
             //Branch
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+            //code
+            CreateLOV(dv, '#frmSearchAcc', '#tbAcc', 'Account Codes', response, 2);
             //gl
             CreateLOV(dv, '#frmSearchRef', '#tbRef', 'Batch Entry', response, 4);
         });
     }
     function SearchData(type) {
         switch (type) {
+            case 'acccode':
+                SetGridAccountCode(path, '#tbAcc', '#frmSearchAcc', '', ReadAccount);
+                break;
             case 'branch':
                 SetGridBranch(path, '#tbBranch','#frmSearchBranch', ReadBranch);
                 break;
@@ -428,6 +441,10 @@ End Code
                 SetGridJournal(path, '#tbRef', '#frmSearchRef', w, ReadData);
                 break;
         }
+    }
+    function ReadAccount(dt) {
+        $('#txtGLAccountCode').val(dt.AccCode);
+        $('#txtGLDescription').val(dt.AccTName);
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);

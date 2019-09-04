@@ -76,6 +76,7 @@ function ChangeLanguage(code, module) {
                 mnuMasA6: 'Service Groups|กลุ่มค่าบริการ',
                 mnuMasA7: 'Service Code|รหัสค่าบริการ',
                 mnuMasA8: 'Service Policy|มาตรฐานค่าบริการ',
+                mnuMasA9: 'Account Code|ผังบัญชี',
                 mainMasS: 'System Files|ข้อมูลพื้นฐานระบบ',
                 mnuMasS1: 'System Variables|ค่าคงที่ระบบ',
                 mnuMasS2: 'System User|ผู้ใช้งานระบบ',

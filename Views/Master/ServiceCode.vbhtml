@@ -61,13 +61,23 @@ End Code
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-sm-2">
-                GL-Sales<br /><input type="text" id="txtGLAccountCodeSales" class="form-control" tabindex="7" />
+            <div class="col-sm-4">
+                GL-Sales
+                <br />
+                <div style="display:flex">
+                    <input type="text" id="txtGLAccountCodeSales" class="form-control" tabindex="7" />
+                    <input type="button" class="btn btn-default" value="..." onclick="ShowSearch('accsales')" />
+                </div>
             </div>
-            <div class="col-sm-2">
-                GL-Cost<br /><input type="text" id="txtGLAccountCodeCost" class="form-control" tabindex="8" />
+            <div class="col-sm-4">
+                GL-Cost
+                <br />
+                <div style="display:flex">
+                    <input type="text" id="txtGLAccountCodeCost" class="form-control" tabindex="8" />
+                    <input type="button" class="btn btn-default" value="..." onclick="ShowSearch('acccost')" />
+                </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-4">
                 Process Desc:<textarea id="txtProcessDesc" class="form-control" tabindex="9"></textarea>
             </div>
         </div>
@@ -161,7 +171,10 @@ End Code
             //Vender
             CreateLOV(dv,'#dvVend','#tbVend','Venders',response,2);
             //SICode
-            CreateLOV(dv,'#dvSearch','#tbGrid','Service Code',response,2);
+            CreateLOV(dv, '#dvSearch', '#tbGrid', 'Service Code', response, 2);
+            //Accounts
+            CreateLOV(dv, '#frmSearchAcc1', '#tbAcc1', 'Account Code', response, 2);
+            CreateLOV(dv, '#frmSearchAcc2', '#tbAcc2', 'Account Code', response, 2);
             //1 Fields
             //Unit
             CreateLOV(dv,'#dvUnit','#tbUnit','Units',response,2);
@@ -233,8 +246,20 @@ End Code
         $('#txtCurrencyCode').val(dt.Code);
         $('#txtCurrencyCode').focus();
     }
+    function ReadGLSales(dt) {
+        $('#txtGLAccountCodeSales').val(dt.AccCode);
+    }
+    function ReadGLCost(dt) {
+        $('#txtGLAccountCodeCost').val(dt.AccCode);
+    }
     function ShowSearch(ty) {
         switch (ty) {
+            case 'accsales':
+                SetGridAccountCode(path, '#tbAcc1', '#frmSearchAcc1','', ReadGLSales);
+                break;
+            case 'acccost':
+                SetGridAccountCode(path, '#tbAcc2', '#frmSearchAcc2', '', ReadGLCost);
+                break;
             case 'sicode':
                 let w = '';
                 if ($('#cboType').val() !== null) {

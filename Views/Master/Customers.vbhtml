@@ -95,7 +95,13 @@ End Code
             <div id="tabCust2" class="tab-pane fade">
                 <div class="row">
                     <div class="col-sm-6">
-                        GL Code :<br /><input type="text" id="txtGLAccountCode" class="form-control" tabIndex="23">
+                        GL Code :
+                        <br />
+                        <div style="display:flex">
+                            <input type="text" id="txtGLAccountCode" class="form-control" style="width:20%" tabIndex="23">
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('acccode')" />
+                            <input type="text" id="txtGLAccountName" class="form-control" style="width:100%" disabled>
+                        </div>
                         Billing To:<br />
                         <div style="display:flex">
                             <div style="flex:1">
@@ -272,6 +278,9 @@ End Code
                 CallBackQueryCustomer(path, $('#txtBillToCustCode').val(), $('#txtBillToBranch').val(), ReadBilling);
             }
         });
+        $('#txtGLAccountCode').change(function () {
+            ShowAccount(path, $('#txtGLAccountCode').val(), '#txtGLAccountName');
+        });
         $('#txtTProvince').change(function () {
             CallBackQueryProvince(path, $('#txtTProvince').val(), ShowProvince);
         });
@@ -318,6 +327,7 @@ End Code
             CreateLOV(dv, '#frmSearchCSIM', '#tbCSI', 'Staffs', res, 2);
             CreateLOV(dv, '#frmSearchCSEX', '#tbCSE', 'Staffs', res, 2);
             CreateLOV(dv, '#frmSearchCSOT', '#tbCSO', 'Staffs', res, 2);
+            CreateLOV(dv, '#frmSearchAcc', '#tbAcc', 'Account Codes', res, 2);
             CreateLOV(dv, '#frmSearchProvince', '#tbProvince', 'Province/District/Sub District',res, 3);
         });
         //load configuration data
@@ -331,6 +341,9 @@ End Code
     }
     function SearchData(type) {
         switch (type) {
+            case 'acccode':
+                SetGridAccountCode(path, '#tbAcc', '#frmSearchAcc','', ReadAccountCode);
+                break;
             case 'customer':
                 SetGridCompany(path, '#tbCust','#frmSearchCust', ReadCustomer);
                 break;
@@ -356,6 +369,10 @@ End Code
     }
     function ShowProvince(dr) {
         $('#txtTProvinceName').val(dr.ProvinceName);
+    }
+    function ReadAccountCode(dr) {
+        $('#txtGLAccountCode').val(dr.AccCode);
+        $('#txtGLAccountName').val(dr.AccTName);
     }
     function ReadProvince(dr) {
         $('#txtTProvince').val(dr.ProvinceCode);
@@ -387,6 +404,7 @@ End Code
             $('#txtCSCodeEX').val(dr.CSCodeEX);
             $('#txtCSCodeOT').val(dr.CSCodeOT);
             $('#txtGLAccountCode').val(dr.GLAccountCode);
+            ShowAccount(path, dr.GLAccountCode, '#txtGLAccountName');
             $('#txtCustType').val(dr.CustType);
             $('#txtBillToCustCode').val(dr.BillToCustCode);
             $('#txtBillToBranch').val(dr.BillToBranch);
@@ -500,6 +518,7 @@ End Code
         $('#txtCSCodeEX').val('');
         $('#txtCSCodeOT').val('');
         $('#txtGLAccountCode').val('');
+        $('#txtGLAccountName').val('');
         $('#txtCustType').val('');
         $('#txtBillToCustCode').val('');
         $('#txtBillToCustName').val('');

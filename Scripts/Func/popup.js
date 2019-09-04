@@ -349,6 +349,32 @@ function SetGridCustomsUnit(p, g, d, ev) {
     });
     BindEvent(g, d, ev);
 }
+function SetGridAccountCode(p, g, d, t, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetAccountCode'+ t, //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'accountcode.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "AccCode", title: "รหัส" },
+            { data: "AccTName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
 function SetGridCurrency(p, g , d, ev) {
     $(g).DataTable({
         ajax: {
@@ -845,6 +871,32 @@ function SetGridServUnit(p, g, d, ev) {
     $(g).DataTable({
         ajax: {
             url: p + 'Master/GetServUnit', //web service ที่จะ call ไปดึงข้อมูลมา
+            dataSrc: 'servunit.data'
+        },
+        selected: true, //ให้สามารถเลือกแถวได้
+        columns: [ //กำหนด property ของ header column
+            { data: null, title: "#" },
+            { data: "UnitType", title: "รหัส" },
+            { data: "UName", title: "คำอธิบาย" }
+        ],
+        "columnDefs": [ //กำหนด control เพิ่มเติมในแต่ละแถว
+            {
+                "targets": 0, //column ที่ 0 เป็นหมายเลขแถว
+                "data": null,
+                "render": function (data, type, full, meta) {
+                    let html = "<button class='btn btn-warning'>Select</button>";
+                    return html;
+                }
+            }
+        ],
+        destroy: true //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
+    });
+    BindEvent(g, d, ev);
+}
+function SetGridServUnitFilter(p, g, t, d, ev) {
+    $(g).DataTable({
+        ajax: {
+            url: p + 'Master/GetServUnit' + t, //web service ที่จะ call ไปดึงข้อมูลมา
             dataSrc: 'servunit.data'
         },
         selected: true, //ให้สามารถเลือกแถวได้

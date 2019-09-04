@@ -353,14 +353,20 @@ Public Class frmGenCode
             <a href=""#"" class=""btn btn-danger"" id=""btnDelete"" onclick=""DeleteData()"">
                 <i class=""fa fa-lg fa-trash""></i>&nbsp;<b>Delete</b>
             </a>
+            <a href=""#"" class=""btn btn-primary"" id=""btnSearch"" onclick=""SearchData()"">
+                <i class=""fa fa-lg fa-filter""></i>&nbsp;<b>Search</b>
+            </a>
 "
             strAll = strAll & vbCrLf & "</div>"
+            strAll = strAll & vbCrLf & "<div id=""dvLOVs""></div>"
         End If
         If CheckBox2.Checked = True Then
             strAll = strAll & vbCrLf & "//-----JAVA FUNCTIONS for HTML Scripts-----"
             strAll = strAll & "
 <script type=""text/javascript"">
     let path = '@Url.Content(""~"")';
+    let user ='@ViewBag.User';
+    let userRights ='@ViewBag.UserRights';
     SetEvents();
     function CallBackQuery" & TextBox4.Text.Substring(1) & "(p, code, ev) {
         $.get(p + 'master/get" & TextBox4.Text.Substring(1).ToLower & "?Code=' + code).done(function (r) {
@@ -379,53 +385,67 @@ Public Class frmGenCode
                 CallBackQuery" & TextBox4.Text.Substring(1) & "(path, code,ReadData);
             }
         });
+        $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name,desc1,desc2', function (response) {
+            var dv = document.getElementById(""dvLOVs"");
+            CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
+        });
     }
     //CRUD Functions used in HTML Java Scripts
     function DeleteData() {
         let code = $('#txt" & TextBox6.Text & "').val();
-        let ask = confirm(""Do you need to Delete "" + code + ""?"");
-        if (ask == false) return;
+        ShowConfirm(""Do you need to Delete "" + code + ""?"",function(ask){
+            if (ask == false) return;
             $.get(path + 'master/del" & TextBox4.Text.Substring(1).ToLower & "?code=' + code, function (r) {
                 ShowMessage(r." & TextBox4.Text.Substring(1).ToLower & ".result);
                 ClearData();
             });
+        });
     }"
-            strAll = strAll & vbCrLf & vbTab & "    function ReadData(dr){"
+            strAll = strAll & vbCrLf & vbTab & "function ReadData(dr){"
             strAll = strAll & vbCrLf & vbTab & vbTab & strJavaLoad
-            strAll = strAll & vbCrLf & vbTab & "    }"
-            strAll = strAll & vbCrLf & vbTab & "    function SaveData(){"
-            strAll = strAll & vbCrLf & vbTab & vbTab & "        let obj={"
+            strAll = strAll & vbCrLf & vbTab & "}"
+            strAll = strAll & vbCrLf & vbTab & "function SaveData(){"
+            strAll = strAll & vbCrLf & vbTab & vbTab & "    let obj={"
             strAll = strAll & vbCrLf & vbTab & vbTab & vbTab & strJavaSave
-            strAll = strAll & vbCrLf & vbTab & "    };"
+            strAll = strAll & vbCrLf & vbTab & "};"
             strAll = strAll & "
         if (obj." & TextBox6.Text & " != """") {
-            let ask = confirm(""Do you need to Save "" + obj." & TextBox6.Text & " + ""?"");
-            if (ask == false) return;
-            let jsonText = JSON.stringify({ data: obj });
-            //ShowMessage(jsonText);
-            $.ajax({
-                url: ""@Url.Action(""Set" & TextBox4.Text.Substring(1) & """, ""Master"")"",
-                type: ""POST"",
-                contentType: ""application/json"",
-                data: jsonText,
-                success: function (response) {
-                    if (response.result.data != null) {
-                        $('#txt" & TextBox6.Text & "').val(response.result.data);
-                        $('#txt" & TextBox6.Text & "').focus();
+            ShowConfirm(""Do you need to Save "" + obj." & TextBox6.Text & " + ""?"",function(ask){
+                if (ask == false) return;
+                let jsonText = JSON.stringify({ data: obj });
+                //ShowMessage(jsonText);
+                $.ajax({
+                    url: ""@Url.Action(""Set" & TextBox4.Text.Substring(1) & """, ""Master"")"",
+                    type: ""POST"",
+                    contentType: ""application/json"",
+                    data: jsonText,
+                    success: function (response) {
+                        if (response.result.data != null) {
+                            $('#txt" & TextBox6.Text & "').val(response.result.data);
+                            $('#txt" & TextBox6.Text & "').focus();
+                        }
+                        ShowMessage(response.result.msg);
+                    },
+                    error: function (e) {
+                        ShowMessage(e);
                     }
-                    ShowMessage(response.result.msg);
-                },
-                error: function (e) {
-                    ShowMessage(e);
-                }
+                });
             });
         } else {
             ShowMessage('No data to save');
         }"
-            strAll = strAll & vbCrLf & vbTab & "    }"
-            strAll = strAll & vbCrLf & vbTab & "    function ClearData(){"
+            strAll = strAll & vbCrLf & vbTab & "}"
+            strAll = strAll & vbCrLf & vbTab & "function ClearData(){"
             strAll = strAll & vbCrLf & vbTab & vbTab & "        " & strJavaClear
-            strAll = strAll & vbCrLf & vbTab & "    }"
+            strAll = strAll & vbCrLf & vbTab & "}
+    function SearchData(type) {
+        switch (type) {
+            case 'branch':
+                SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadData);
+                break;
+        }
+    }
+"
             strAll = strAll & vbCrLf & "</script>"
         End If
 

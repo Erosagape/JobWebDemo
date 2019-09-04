@@ -550,6 +550,14 @@ function CallBackQueryGLHeader(p, branch, code, ev) {
         }
     });
 }
+function CallBackQueryAccountCode(p, code, ev) {
+    $.get(p + 'master/getaccountcode?Code=' + code).done(function (r) {
+        let dr = r.accountcode.data;
+        if (dr.length > 0) {
+            ev(dr[0]);
+        }
+    });
+}
 function ShowConfigValue(path, Code, Key, ControlID) {
     let strParam = "";
     if (Code != "") {

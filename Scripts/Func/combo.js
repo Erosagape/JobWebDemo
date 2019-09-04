@@ -75,6 +75,20 @@ function loadDatabase(e) {
         }
     });
 }
+function loadUnit(e, path, filter) {
+    $.get(path + 'Master/GetServUnit' + filter).done(function (r) {
+        let dr = r.servunit.data;
+        $(e).empty();
+        $(e).append($('<option>', { value: '' })
+            .text('N/A'));
+        if (dr.length > 0) {
+            for (let i = 0; i < dr.length; i++) {
+                $(e).append($('<option>', { value: dr[i].UnitType.trim() })
+                    .text(dr[i].UName.trim()));
+            }
+        }
+    });
+}
 function loadBank(cb, path) {
     $.get(path + 'Master/GetBank').done(function (r) {
         let dr = r.bank.data;
@@ -259,6 +273,16 @@ function ShowCurrency(path, Code, ControlID) {
             if (r.currency.data.length > 0) {
                 let b = r.currency.data[0];
                 $(ControlID).val(b.TName);
+            }
+        });
+}
+function ShowAccount(path, Code, ControlID) {
+    $(ControlID).val('');
+    $.get(path + 'Master/GetAccountCode?Code=' + Code)
+        .done(function (r) {
+            if (r.accountcode.data.length > 0) {
+                let b = r.accountcode.data[0];
+                $(ControlID).val(b.AccTName);
             }
         });
 }

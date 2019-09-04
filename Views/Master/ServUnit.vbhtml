@@ -11,7 +11,8 @@ End Code
                   <select id="txtIsCTNUnit" class="form-control dropdown" tabIndex="4">
                       <option value="-1">เป็นหน่วยงานบริการ</option>
                       <option value="0">เป็นหน่วยนับสินค้า</option>
-                      <option value="1">เป็นหน่วยตู้/ขนส่ง</option>
+                      <option value="1">เป็นหน่วยตู้</option>
+                      <option value="2">เป็นหน่วยพาหนะ</option>
                   </select>
         </div>
         <div id="dvCommand">

@@ -47,13 +47,20 @@ End Code
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-5">
                         Address (TH) :<br /><input type="text" id="txtTAddress1" class="form-control" tabIndex="8">
                         <br /><input type="text" id="txtTAddress2" class="form-control" tabIndex="9">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-5">
                         Address (EN) :<br /><input type="text" id="txtEAddress1" class="form-control" tabIndex="10">
                         <br /><input type="text" id="txtEAddress2" class="form-control" tabIndex="11">
+                    </div>
+                    <div class="col-sm-2">
+                        GL Code : <br/>
+                        <div style="display:flex">
+                            <input type="text" id="txtGLAccountCode" class="form-control" />
+                            <input type="button" class="btn btn-default" value="..." onclick="SearchData('acccode')" />
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -135,6 +142,7 @@ End Code
             CreateLOV(dv, '#frmSearchBranch', '#tbBranch', 'Branch', response, 2);
             CreateLOV(dv, '#frmSearchBank', '#tbBank', 'Bank', response, 2);
             CreateLOV(dv, '#frmSearchBook', '#tbBook', 'Book Account', response, 2);
+            CreateLOV(dv, '#frmSearchAcc', '#tbAcc', 'Account Code', response, 2);
         });
     }
     function SetEnterToTab() {
@@ -161,6 +169,9 @@ End Code
     }
     function SearchData(type) {
         switch (type) {
+            case 'acccode':
+                SetGridAccountCode(path, '#tbAcc', '#frmSearchAcc', '', ReadAccount);
+                break;
             case 'branch':
                 SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
                 break;
@@ -172,6 +183,9 @@ End Code
                 break;
 
         }
+    }
+    function ReadAccount(dr) {
+        $('#txtGLAccountCode').val(dr.AccCode);
     }
     function ReadBank(dr) {
         $('#txtBankCode').val(dr.Code);
@@ -200,6 +214,7 @@ End Code
         $('#txtBranchCode').val(dr.BranchCode);
         ShowBranch(path, $('#txtBranchCode').val(), '#txtBranchName');
         $('#txtBookCode').val(dr.BookCode);
+        $('#txtGLAccountCode').val(dr.GLAccountCode);
         $('#txtBookName').val(dr.BookName);
         $('#txtBankCode').val(dr.BankCode);
         ShowBank(path, $('#txtBankCode').val(), '#txtBankName');
@@ -242,7 +257,6 @@ End Code
             BookCode:$('#txtBookCode').val(),
             BookName:$('#txtBookName').val(),
             BankCode: $('#txtBankCode').val(),
-            
             BankBranch:$('#txtBankBranch').val(),
             IsLocal: ($('#chkIsLocal').prop('checked') == true ? 1 : 0),
             ACType:$('#txtACType').val(),
@@ -252,7 +266,8 @@ End Code
             EAddress2:$('#txtEAddress2').val(),
             Phone:$('#txtPhone').val(),
             FaxNumber: $('#txtFaxNumber').val(),
-            LimitBalance:$('#txtLimitBalance').val()   
+            LimitBalance: $('#txtLimitBalance').val(),
+            GLAccountCode: $('#txtGLAccountCode').val()
         };
         if (obj.BookCode != "") {
             ShowConfirm("Do you need to Save " + obj.BookCode + "?", function (ask) {
@@ -297,6 +312,7 @@ End Code
         $('#txtFaxNumber').val('');
         $('#txtBookCode').focus();
         $('#txtLimitBalance').val(0);   
+        $('#txtGLAccountCode').val('');
         $('#tbBalance').DataTable().clear().draw();
     }
 </script>

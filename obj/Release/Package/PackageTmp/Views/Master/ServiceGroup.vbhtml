@@ -10,7 +10,13 @@ End Code
                 <input type="text" id="txtGroupCode" class="form-control" tabIndex="1">
             </div>
             <div class="col-sm-5">Group Name :<br /><input type="text" id="txtGroupName" class="form-control" tabIndex="2"></div>
-            <div class="col-sm-4">GL Account :<br /><input type="text" id="txtGLAccountCode" class="form-control" tabIndex="3"></div>
+            <div class="col-sm-4">GL Account :
+            <br />
+            <div style="display:flex">
+                <input type="text" id="txtGLAccountCode" class="form-control" tabIndex="3">
+                <input type="button" class="btn btn-default" value="..." onclick="SearchAccount()" />
+            </div>
+            </div>
         </div>
         <div class="form-group row">
             <div class="col-md-6">
@@ -129,6 +135,7 @@ End Code
             //Service Group
             CreateLOV(dv, '#dvSearch', '#tbGrid', 'Service Group', response, 2);
             CreateLOV(dv, '#dvServ', '#tbServ', 'Service Charges', response, 2);
+            CreateLOV(dv, '#dvAcc', '#tbAcc', 'Account Codes', response, 2);
         });
     }
     function SetEvents() {
@@ -169,10 +176,16 @@ End Code
     function SearchService() {
         SetGridSICodeFilter(path, '#tbServ', '', '#dvServ', ReadService);
     }
+    function SearchAccount() {
+        SetGridAccountCode(path, '#tbAcc', '#dvAcc', '', ReadAccount);
+    }
     function ReadService(dt) {
         row_d = dt;
         $('#txtSICode').val(dt.SICode);
         $('#txtSDescription').val(dt.NameThai);
+    }
+    function ReadAccount(dt) {
+        $('#txtGLAccountCode').val(dt.AccCode);
     }
     function ShowData(dt) {
         LoadData(dt);

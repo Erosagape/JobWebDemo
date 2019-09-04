@@ -59,6 +59,62 @@ Namespace Controllers
         Function CompanyContact() As ActionResult
             Return GetView("CompanyContact", "MODULE_MAS")
         End Function
+        Function AccountCode() As ActionResult
+            Return GetView("AccountCode", "MODULE_ACC")
+        End Function
+        Function GetAccountCode() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE AccCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND AccCode Like '{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Group")) Then
+                    tSqlw &= String.Format("AND AccMain ='{0}' ", Request.QueryString("Group").ToString)
+                End If
+                Dim oData = New CAccountCode(jobWebConn).GetData(tSqlw)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                json = "{""accountcode"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
+        Function SetAccountCode(<FromBody()> data As CAccountCode) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    If "" & data.AccCode = "" Then
+                        Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                    End If
+                    data.SetConnect(jobWebConn)
+                    Dim msg = data.SaveData(String.Format(" WHERE AccCode='{0}' ", data.AccCode))
+                    Dim json = "{""result"":{""data"":""" & data.AccCode & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+        Function DelAccountCode() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE AccCode<>'' "
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND AccCode='{0}' ", Request.QueryString("Code").ToString)
+                Else
+                    Return Content("{""accountcode"":{""result"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+                End If
+                Dim oData As New CAccountCode(jobWebConn)
+                Dim msg = oData.DeleteData(tSqlw)
+
+                Dim json = "{""accountcode"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetCompanyContact() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE ItemNo<>'' "
@@ -636,7 +692,10 @@ AND b.IsApplyPolicy=1
 
                 Dim tSqlw As String = " WHERE UnitType<>'' "
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND UnitType ='{0}'", Request.QueryString("Code").ToString)
+                    tSqlw &= String.Format("AND UnitType ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    tSqlw &= String.Format("AND IsCTNUnit={0} ", Request.QueryString("Type").ToString)
                 End If
                 Dim oData = New CServUnit(jobMasConn).GetData(tSqlw)
                 Dim json As String = JsonConvert.SerializeObject(oData)
