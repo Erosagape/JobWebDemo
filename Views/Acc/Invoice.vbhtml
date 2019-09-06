@@ -93,6 +93,9 @@ End Code
                         </tr>
                     </thead>
                 </table>
+                <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                    <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print</b>
+                </a>
             </div>
         </div>
         <div id="frmHeader" class="modal modal-lg fade">
@@ -355,7 +358,6 @@ End Code
                                     </table>
                                 </div>
                             </div>
-
                         </p>
                     </div>
                     <div class="modal-footer">

@@ -46,7 +46,7 @@ Namespace Controllers
             End Select
             Dim msg As String = "No Data Execute"
             Dim fname As String = DateTime.Now.ToString("yyyyMMddHHMMss") + ".json"
-            Dim path = System.IO.Path.Combine(Server.MapPath("~/"), fname)
+            Dim path = System.IO.Path.Combine(Server.MapPath("~/Resource/Export/"), fname)
             'Dim columns As String = "[]"
             If tConn <> "" Then
                 Select Case data.Result
@@ -76,7 +76,7 @@ Namespace Controllers
                         msg = Main.DBExecute(tConn, data.Source)
                 End Select
             End If
-            Return Content("{""result"":{""data"":""" & fname & """,""msg"":""" + msg.Replace("\", "\\") + """}}", jsonContent)
+            Return Content("{""result"":{""data"":""Resource/Export/" & fname & """,""msg"":""" + msg.Replace("\", "\\") + """}}", jsonContent)
 
         End Function
         Function GetSQLResult(<FromBody> data As CResult) As ActionResult
@@ -347,7 +347,7 @@ Namespace Controllers
             </div>
 "
         End Function
-        Function GetSession() As ActionResult
+        Function GetSessionID() As ActionResult
             Return Content(Session.SessionID, textContent)
         End Function
         Function GetLogin() As ActionResult
@@ -827,7 +827,11 @@ Namespace Controllers
                     If File.ContentLength > 0 Then
                         If exts.IndexOf(System.IO.Path.GetExtension(filename).ToLower) >= 0 Then
                             Try
-                                Dim path = System.IO.Path.Combine(Server.MapPath("~"), filename)
+                                Dim saveTo = ""
+                                If Not IsNothing(Request.QueryString("Path")) Then
+                                    saveTo = Request.QueryString("Path").ToString
+                                End If
+                                Dim path = System.IO.Path.Combine(Server.MapPath("~/" + saveTo), filename)
                                 File.SaveAs(path)
                                 msg = msg + "Upload " + filename + " successfully" + vbCrLf
                             Catch ex As Exception
@@ -857,10 +861,10 @@ Namespace Controllers
                     If File.ContentLength > 0 Then
                         If exts.IndexOf(System.IO.Path.GetExtension(filename).ToLower) >= 0 Then
                             Try
-                                If System.IO.Directory.Exists(Server.MapPath("~/Resource/uploads")) = False Then
-                                    IO.Directory.CreateDirectory(Server.MapPath("~/Resource/uploads"))
+                                If System.IO.Directory.Exists(Server.MapPath("~/Resource")) = False Then
+                                    IO.Directory.CreateDirectory(Server.MapPath("~/Resource"))
                                 End If
-                                Dim path = System.IO.Path.Combine(Server.MapPath("~/Resource/uploads"), filename)
+                                Dim path = System.IO.Path.Combine(Server.MapPath("~/Resource"), filename)
                                 File.SaveAs(path)
                                 msg = msg + "Upload " + filename + " successfully" + vbCrLf
                             Catch ex As Exception

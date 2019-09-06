@@ -1,4 +1,19 @@
 ﻿//function for javascripts usage
+function QuickCallback(ev) {
+    $.get('/Config/SetLogin?Code=ADMIN&Pass=1234&Database=0')
+        .done(function (r) {
+            if (r.user.data.length > 0) {
+                ev();
+                CallLogout();
+            }
+        });
+}
+function CallLogout() {
+    $.get('/Config/SetLogout')
+        .done(function (r) {
+            //alert('Process Complete');
+        });
+}
 function sortData(obj, key, order) {
     obj.sort(compareValues(key, order));
 }

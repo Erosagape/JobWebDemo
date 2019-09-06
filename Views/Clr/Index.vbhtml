@@ -24,7 +24,7 @@ End Code
             </div>
             <div class="col-sm-3">
                 Document Date :
-                <input type="date" class="form-control" id="txtClrDate" tabindex="1" />
+                <input type="date" class="form-control" id="txtClrDate" tabindex="1" disabled />
             </div>
 
         </div>
@@ -193,6 +193,9 @@ End Code
                 </div>
             </div>
             <div id="tabDetail" class="tab-pane fade">
+                <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddDetail()">
+                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
+                </a>
                 <a href="#" class="btn btn-warning" id="btnChooseAdv" onclick="LoadAdvance()">
                     <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Choose Advance</b>
                 </a>
@@ -220,9 +223,6 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-9">
-                        <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddDetail()">
-                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
-                        </a>
                         <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
                             <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Detail</b>
                         </a>
@@ -244,7 +244,9 @@ End Code
                         <input type="text" id="txtNetAmount" style="width:100px;text-align:right" />
                     </div>
                 </div>
-
+                <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                    <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Document</b>
+                </a>
             </div>
             <div id="frmDetail" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -1005,6 +1007,7 @@ End Code
     function ClearHeader() {
         hdr = {};
         $('#txtClrDate').val(GetToday());
+        $('#txtClearanceDate').val('');
         $('#txtEmpCode').val(user);
         if (isjobmode == false) {
             $('#cboJobType').val('');

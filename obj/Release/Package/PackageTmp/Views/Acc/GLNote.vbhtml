@@ -451,7 +451,7 @@ End Code
         $('#txtBranchName').val(dt.BrName);
     }
     function PrintData() {
-        window.open(path + 'Acc/FormGL?BranchCode=' + $('#txtBranchCode').val() + '&RefNo=' + $('#txtGLRefNo').val(), '', '');
+        window.open(path + 'Acc/FormGL?Branch=' + $('#txtBranchCode').val() + '&Code=' + $('#txtGLRefNo').val(), '', '');
     }
     function ApproveData() {
         if ($('#txtCancelBy').val() == '') {

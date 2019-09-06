@@ -193,6 +193,12 @@ End Code
                         Commercial Level :<br /><input type="text" id="txtCommLevel" class="form-control" disabled />
                         <br /><select id="cboCommLevel" class="form-control"></select>
                         <br /><input type="button" value="Company Contact" class="btn btn-default" onclick="AddContact()" />
+                        <br/>
+                        Tracking Authorized : <br/>
+                        <div style="display:flex">
+                            <label style="display:block;width:250px">Log in : </label><input type="text" id="txtLoginName" class="form-control">                                                                                      
+                            <label style="display:block;width:250px">Password : </label><input type="password" id="txtLoginPassword" class="form-control">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -213,8 +219,6 @@ End Code
         </div>
         <div id="dvLOVs"></div>
         <div id="dvHidden" style="display:none">
-            <input type="hidden" id="txtLoginName" class="form-control">
-            <input type="hidden" id="txtLoginPassword" class="form-control">
             <input type="hidden" id="txtMapText" class="form-control">
             <input type="hidden" id="txtMapFileName" class="form-control">
             <input type="hidden" id="txtCmpType" class="form-control">

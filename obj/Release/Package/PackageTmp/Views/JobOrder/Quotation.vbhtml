@@ -106,6 +106,7 @@ End Code
             <div class="modal-dialog-lg">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <h4><b>Add/Edit Quotation</b></h4>
                         <div class="row">
                             <div class="col-sm-3">
                                 Quotation No:<br /> <input type="text" id="txtQNo" class="form-control" disabled />
@@ -216,9 +217,16 @@ End Code
             <div class="modal-dialog-lg">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <div style="display:flex">
+                            <h4><b>Section And Expenses</b></h4>
+                        </div>
+                        <a href="#" class="btn btn-default w3-purple" id="btnAddDetail" onclick="AddDetail()">
+                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Section</b>
+                        </a>
                         <div class="row">
-                            <div class="col-sm-1">
-                                Section No<br /><input type="text" id="txtSeqNo" class="form-control" disabled />
+                            <div class="col-sm-2">
+                                Section No<br />
+                                <input type="text" id="txtSeqNo" class="form-control" disabled />
                             </div>
                             <div class="col-sm-3">
                                 Job Type :<br /><select id="txtJobType" class="form-control dropdown" value="0"></select>
@@ -226,16 +234,13 @@ End Code
                             <div class="col-sm-3">
                                 Ship By :<br /><select id="txtShipBy" class="form-control dropdown" value="0"></select>
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <a href="#" onclick="SearchData('desc')">Description:</a><br />
                                 <textarea id="txtDescription" class="form-control"></textarea>
                             </div>
                         </div>
                         <div>
                             <div style="float:left">
-                                <a href="#" class="btn btn-default w3-purple" id="btnAddDetail" onclick="AddDetail()">
-                                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Section</b>
-                                </a>
                                 <a href="#" class="btn btn-success" id="btnUpdateD" onclick="SaveDetail()">
                                     <i class="fa fa-lg fa-save"></i>&nbsp;<b>Update Section</b>
                                 </a>
@@ -243,7 +248,10 @@ End Code
                         </div>
                     </div>
                     <div class="modal-body">
-                        Lists of Expenses:
+                        <h4><b>Lists of Expenses:</b></h4>
+                        <a href="#" class="btn btn-default w3-purple" id="btnAddItem" onclick="AddItem()">
+                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Expenses</b>
+                        </a>
                         <input type="hidden" id="txtDocItemNo" />
                         <table id="tbItem" class="table table-responsive" style="width:100%">
                             <thead>
@@ -261,9 +269,6 @@ End Code
                                 </tr>
                             </thead>
                         </table>
-                        <a href="#" class="btn btn-default w3-purple" id="btnAddItem" onclick="AddItem()">
-                            <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Expenses</b>
-                        </a>
                         <a href="#" class="btn btn-danger" id="btnDelItem" onclick="DeleteItem()">
                             <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Expense</b>
                         </a>
@@ -278,7 +283,7 @@ End Code
             <div class="modal-dialog-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        For <label id="lblHeader"></label>
+                        <h4>For <label id="lblHeader"></label></h4>
                         <br />
                         Item No <input type="text" id="txtItemNo" disabled />
                         Calculate Type
@@ -481,7 +486,11 @@ End Code
     SetLOVs();
 
     function ShowHeader() {
-        let w = '&cust=' + $('#txtCustCode').val();
+        ShowWait();
+        let w = '';
+        if ($('#txtCustCode').val() !== '') {
+            w += '&cust=' + $('#txtCustCode').val();
+        }
         if ($('#txtDocDateF').val() !== "") {
             w += '&DateFrom=' + CDateEN($('#txtDocDateF').val());
         }
@@ -500,6 +509,7 @@ End Code
         ClearDetail();
         ClearItem();
         $.get(path + 'joborder/getquotation?branch=' + $('#txtBranchCode').val() + w, function (r) {
+            CloseWait();
             if (r.quotation.header.length == 0) {                
                 //ShowMessage('data not found');
                 return;
@@ -545,6 +555,11 @@ End Code
                 SetSelect('#tbHeader', this);
                 ClearHeader();
                 row = $('#tbHeader').DataTable().row(this).data(); //read current row selected
+                $('#txtCustCode').val(row.CustCode);
+                $('#txtCustBranch').val(row.CustBranch);
+                $('#txtBCustCode').val(row.BillToCustCode);
+                $('#txtBCustBranch').val(row.BillToCustBranch);
+                ShowCustomer(path, row.CustCode, row.CustBranch, '#txtCustName');
                 ReadData();
                 ShowDetail(row.BranchCode, row.QNo);
             });
@@ -769,7 +784,9 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
+                    $('#txtSeqNo').val(response.result.data);
                     ShowDetail($('#txtBranchCode').val(), $('#txtDocNo').val());
+                    ShowItem($('#txtBranchCode').val(), $('#txtDocNo').val(), response.result.data);
                     ShowMessage(response.result.data);
                     //$('#frmDetail').modal('hide');
                     return;
@@ -821,6 +838,7 @@ End Code
             data: jsonString,
             success: function (response) {
                 if (response.result.data !== null) {
+                    $('#txtDocItemNo').val(response.result.data);
                     ShowItem($('#txtBranchCode').val(), $('#txtDocNo').val(), $('#txtDocItemNo').val());
                     ShowMessage(response.result.data);
                     //$('#frmItem').modal('hide');
@@ -903,9 +921,11 @@ End Code
         $('#txtDocItemNo').val('');
         $('#txtReferQNo').val('');
         $('#txtDocDate').val(GetToday());
-        $('#txtBCustCode').val('');
-        $('#txtBCustBranch').val('');
-        $('#txtBCustName').val('');
+        if ($('#txtBCustCode').val() == '') {
+            $('#txtBCustCode').val($('#txtCustCode').val());
+            $('#txtBCustBranch').val($('#txtCustBranch').val());
+            $('#txtBCustName').val($('#txtCustName').val());
+        }
         $('#txtContactName').val('');
         $('#txtApproveDate').val('');
         $('#txtApproveTime').val('');
@@ -940,6 +960,7 @@ End Code
         $('#txtJobType').val('');
         $('#txtShipBy').val('');
         $('#txtDescription').val('');
+        $('#tbItem').DataTable().clear().draw();
     }
     function ClearItem() {
         $('#lblHeader').text(row_d.Description);
@@ -1191,7 +1212,7 @@ End Code
     function ReadBilling(dt) {
         $('#txtBCustCode').val(dt.CustCode);
         $('#txtBCustBranch').val(dt.Branch);
-        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtBCustName');
+        ShowCustomer(path, dt.CustCode, dt.Branch, '#txtBCustName');        
     }
     function ReadCurrency(dt) {
         $('#txtCurrencyCode').val(dt.Code);

@@ -934,6 +934,9 @@ AND b.IsApplyPolicy=1
                 If Not IsNothing(Request.QueryString("Branch")) Then
                     tSqlw &= String.Format(" AND Branch='{0}'", Request.QueryString("Branch").ToString)
                 End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlw &= String.Format(" AND TaxNumber='{0}'", Request.QueryString("TaxNumber").ToString)
+                End If
                 If Not IsNothing(Request.QueryString("Group")) Then
                     tSqlw &= String.Format(" AND CustGroup IN('{0}')", Request.QueryString("Group").ToString.Replace(",", "','"))
                 End If

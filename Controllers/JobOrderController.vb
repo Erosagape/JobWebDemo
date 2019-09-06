@@ -128,29 +128,29 @@ Namespace Controllers
             Try
                 Dim tSqlW As String = ""
                 If Not IsNothing(Request.QueryString("JType")) Then
-                    tSqlW &= " AND Job_QuotationDetail.JobType=" & Request.QueryString("JType") & ""
+                    tSqlW &= " AND Job_QuotationDetail.JobType=" & Request.QueryString("JType").ToString & ""
                 End If
                 If Not IsNothing(Request.QueryString("SBy")) Then
-                    tSqlW &= " AND Job_QuotationDetail.ShipBy=" & Request.QueryString("SBy") & ""
+                    tSqlW &= " AND Job_QuotationDetail.ShipBy=" & Request.QueryString("SBy").ToString & ""
                 End If
                 If Not IsNothing(Request.QueryString("Branch")) Then
-                    tSqlW &= " AND Job_QuotationHeader.BranchCode='" & Request.QueryString("Branch") & "'"
+                    tSqlW &= " AND Job_QuotationHeader.BranchCode='" & Request.QueryString("Branch").ToString & "'"
                 End If
                 If Not IsNothing(Request.QueryString("Status")) Then
-                    tSqlW &= " AND Job_QuotationHeader.DocStatus='" & Request.QueryString("Status") & "'"
+                    tSqlW &= " AND Job_QuotationHeader.DocStatus='" & Request.QueryString("Status").ToString & "'"
                 End If
                 If Not IsNothing(Request.QueryString("Cust")) Then
-                    tSqlW &= " AND Job_QuotationHeader.CustCode='" & Request.QueryString("Cust") & "'"
+                    tSqlW &= " AND Job_QuotationHeader.CustCode='" & Request.QueryString("Cust").ToString & "'"
                 End If
                 If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlW &= " AND Job_QuotationItem.SICode='" & Request.QueryString("Code") & "'"
+                    tSqlW &= " AND Job_QuotationItem.SICode='" & Request.QueryString("Code").ToString & "'"
                 End If
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectQuotation() & " WHERE NOT ISNULL(Job_QuotationHeader.CancelBy,'')<>'' " & tSqlW & " ORDER BY Job_QuotationHeader.BranchCode,Job_QuotationHeader.QNo,Job_QuotationHeader.ApproveDate DESC,Job_QuotationItem.SICode,Job_QuotationItem.QtyBegin")
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""quotation"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""quotation"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function GetQuotation() As ActionResult
@@ -560,6 +560,9 @@ Namespace Controllers
                 End If
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     tSqlw &= String.Format(" AND Job_Order.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlw &= String.Format(" AND Mas_Company.TaxNumber='{0}' ", Request.QueryString("TaxNumber").ToString)
                 End If
                 If Not IsNothing(Request.QueryString("Vend")) Then
                     tSqlw &= String.Format(" AND Job_LoadInfo.VenderCode='{0}' ", Request.QueryString("Vend").ToString)

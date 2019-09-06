@@ -25,7 +25,7 @@ End Code
             </div>
             <div class="col-sm-3">
                 Request Date :<br />
-                <input type="date" class="form-control" id="txtAdvDate" tabindex="1" />
+                <input type="date" class="form-control" id="txtAdvDate" tabindex="1" disabled />
             </div>
         </div>
         <div class="row">
@@ -139,6 +139,11 @@ End Code
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td colspan="2">
+                                            Payment Total:
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>
                                             <input type="checkbox" id="chkCash" />
                                             <label for="chkCash">Cash</label>
@@ -229,6 +234,9 @@ End Code
                     <div id="tabDetail" class="tab-pane fade">
                         <div class="row">
                             <div class="col-sm-12">
+                                <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddDetail()">
+                                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
+                                </a>
                                 <table id="tbDetail" class="table table-responsive">
                                     <thead>
                                         <tr>
@@ -251,9 +259,6 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-9">
-                                <a href="#" class="btn btn-default w3-purple" id="btnAdd" onclick="AddDetail()">
-                                    <i class="fa fa-lg fa-file-o"></i>&nbsp;<b>Add Detail</b>
-                                </a>
                                 <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
                                     <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete Detail</b>
                                 </a>
@@ -274,7 +279,9 @@ End Code
                                 <input type="text" id="txtTotalAmount" style="width:100px;text-align:right" />
                             </div>
                         </div>
-
+                        <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                            <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print Document</b>
+                        </a>
                     </div>
                     <div id="frmDetail" class="modal fade" role="dialog">
                         <div class="modal-dialog">
@@ -437,6 +444,7 @@ End Code
             $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
             $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
         }
+        $('#txtAdvDate').val(GetToday());
     }
     function LoadJob(dt) {
         if (dt.length > 0) {
@@ -521,7 +529,7 @@ End Code
                 return;
             }
             let val = GetTotal();
-            if (val <= 0) {
+            if (val < 0) {
                 ShowMessage('Total not Balance,Please check');
                 $('#txtAdv' + id.substr(3)).val(0);
                 $('#txtAdv' + id.substr(3)).attr('disabled', 'disabled');
@@ -811,10 +819,14 @@ End Code
                 ShowMessage('you are not authorize to save');
                 return;
             }
-            if (Number($('#txtTotalAmount').val()) > 0) {
-                if (SumTotal() == 0) {
-                    ShowMessage('please select type of receive advancing money');
-                    return;
+            if (Number($('#txtTotalAmount').val())!==Number(SumTotal())) {
+                if (Number($('#txtTotalAmount').val()) > 0) {
+                    if (Number(SumTotal()) == 0) {
+                        $('#chkCash').checked = true;
+                    } else {
+                        ShowMessage('Total not balance,Please check on payment total');
+                        return;
+                    }                    
                 }
             }
             if ($('#cboJobType').val() == 0) {
@@ -1125,7 +1137,7 @@ End Code
         $('#chkApprove').prop('checked', $('#txtApproveBy').val() == '' ? false : true);
         $('#chkPayment').prop('checked', $('#txtPaymentBy').val() == '' ? false : true);
 
-        $('#chkCash').prop('checked', false);
+        $('#chkCash').prop('checked', true);
         $('#chkChq').prop('checked', false);
         $('#chkChqCash').prop('checked', false);
         $('#chkCred').prop('checked', false);

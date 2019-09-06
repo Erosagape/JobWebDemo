@@ -23,6 +23,26 @@ Namespace Controllers
         Function EstimateCost() As ActionResult
             Return GetView("EstimateCost", "MODULE_ADV")
         End Function
+        Function GetClearExpReport() As ActionResult
+            Try
+                Dim tSqlw As String = " WHERE a.JNo<>'' "
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format("AND a.BranchCode ='{0}' ", Request.QueryString("Branch").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format("AND a.JNo ='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format("AND a.SICode ='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectClearExp() & tSqlw)
+                Dim json = JsonConvert.SerializeObject(oData)
+                json = "{""estimate"":{""data"":" & json & "}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+        End Function
         Function GetClearExp() As ActionResult
             Try
                 Dim tSqlw As String = " WHERE JNo<>'' "

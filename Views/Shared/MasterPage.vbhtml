@@ -220,7 +220,7 @@
                             <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="w3_open();" />
                         </div>
                         <div style="margin-left:10px">
-                            <h4><label id="lblTitle" onclick="alert('@ViewBag.Module')">@ViewBag.Title</label></h4>
+                            <h4><label id="lblTitle" onclick="OpenContact()">@ViewBag.Title</label></h4>
                             <label style="display:none" id="lblModule">@ViewBag.Module</label>
                         </div>
                     </div>
@@ -230,15 +230,9 @@
                 </div>
             </div>
         </div>
-
     </div>
     <div id="dvCommands" class="w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px">
-        <div style="float:left">
-            <label id="lblCompanyName" onclick="OpenContact()">Tawan Technology Co.,ltd &copy;@DateTime.Today.Year</label>
-        </div>
-        <div style="float:right">
-            <label id="lblLicenseName" onclick="CheckDatabase()">@ViewBag.LICENSE_NAME</label>
-        </div>
+        <label id="lblLicenseName" onclick="CheckDatabase()">@ViewBag.LICENSE_NAME</label>            
     </div>
     <div id="dvWaiting" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
         <div class="vertical-alignment-helper">

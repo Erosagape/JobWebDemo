@@ -113,7 +113,7 @@ End Code
             SetSelect('#tbDetail', this);
             let row = $('#tbDetail').DataTable().row(this).data(); //read current row selected
             window.open(path + 'JobOrder/ShowJob?BranchCode=' + row.BranchCode + '&JNo=' + row.JNo,'','');
-        });            
+        });
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);

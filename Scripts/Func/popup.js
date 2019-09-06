@@ -1,5 +1,5 @@
 ﻿//basic function tools for binding
-function CheckSession() {
+function CheckSession(ev) {
     $.get('/Config/GetLogin', function (r) {
         if (r.user.data.UserID == null) {
             $('#cboDatabase').empty();
@@ -15,6 +15,8 @@ function CheckSession() {
                     $('#dvLogin').modal('show');
                 }
             });
+        } else {
+            ev();
         }
     });
 }
@@ -591,6 +593,8 @@ function SetGridCustContact(p, g, t, d, ev) {
                     responsive: true
                 });
                 BindEvent(g, d, ev);
+            } else {
+                ShowMessage('Not Found Contact Of This Company');
             }
         });
 }

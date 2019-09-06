@@ -78,6 +78,7 @@ End Code
                 <th class="desktop">Status</th>
                 <th>JNo</th>
                 <th>AmountCharge</th>
+                <th>Clear.No</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -198,7 +199,7 @@ End Code
         if ($('#txtJNo').val() !== '') {
             w += '&Job=' + $('#txtJNo').val();
         }
-        $.get(path + 'Adv/GetClearExp' + w, function (r) {
+        $.get(path + 'Adv/GetClearExpReport' + w, function (r) {
             if (r.estimate.data.length == 0) {
                 $('#tbData').DataTable().clear().draw();
                 return;
@@ -222,7 +223,8 @@ End Code
                         }
                     },
                     { data: "JNo", title: "Job No" },
-                    { data: "AmountCharge", title: "Charge" }
+                    { data: "AmountCharge", title: "Charge" },
+                    { data: "ClrNo", title: "Clearing No" }
                 ],
                 destroy: true,
                 responsive:true

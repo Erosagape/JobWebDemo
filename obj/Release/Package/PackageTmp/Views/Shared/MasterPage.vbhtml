@@ -230,13 +230,11 @@
                 </div>
             </div>
         </div>
-
     </div>
     <div id="dvCommands" class="w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px">
         <div style="float:left">
             <label id="lblCompanyName" onclick="OpenContact()">Tawan Technology Co.,ltd &copy;@DateTime.Today.Year</label>
-        </div>
-        <div style="float:right">
+            <br/>
             <label id="lblLicenseName" onclick="CheckDatabase()">@ViewBag.LICENSE_NAME</label>
         </div>
     </div>

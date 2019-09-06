@@ -1471,6 +1471,19 @@ GROUP BY j.JobStatus
         sql = String.Format(sql, tSqlW)
         Return sql
     End Function
+    Public Function SQLSelectClearExp() As String
+        Dim sql = "
+SELECT a.BranchCode,a.JNo,a.SICode,a.SDescription,a.TRemark,a.AmountCharge,a.Status,b.ClrNo
+FROM dbo.Job_ClearExp a
+LEFT JOIN (
+SELECT BranchCode,JobNo,SICode,Max(ClrNo) as ClrNo
+FROM dbo.Job_ClearDetail
+GROUP BY BranchCode,JobNo,SICode
+) b
+ON a.BranchCode=b.BranchCode AND a.JNo=b.JobNo AND a.SICode=b.SICode
+"
+        Return sql
+    End Function
     Public Function SQLSelectTransport(tsqlW As String) As String
         Dim sql = "
 SELECT dbo.Job_LoadInfo.BranchCode, dbo.Job_LoadInfo.JNo, dbo.Job_LoadInfo.VenderCode, dbo.Job_LoadInfo.ContactName, dbo.Job_LoadInfo.BookingNo, 

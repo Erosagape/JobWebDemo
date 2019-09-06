@@ -90,7 +90,7 @@ End Code
         <div class="row">
             <div class="col-sm-6" style="display:flex">                
                 <div style="width:30%">
-                    <label id="lblCustInv" style="display:block;width:100%;">Commercial Invoice</label>
+                    <label id="lblCustInv" style="display:block;width:100%;color:red">Commercial Invoice</label>
                 </div>
                 <div style="display:flex;width:70%">                    
                     <input type="text" class="form-control" id="txtCustInv" style="width:100%" tabindex="10" />
@@ -148,18 +148,20 @@ End Code
             </a>
         </p>
     </div>
-    <div id="frmShowJob" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div id="dvResp" class="modal-header">
-                    <label id="lblSaveComplete">Save Complete!</label>
-                </div>
-                <div class="modal-body" style="text-align:center">
-                    <input id="txtJNo" type="text" style="position:center;font-size:20px;text-align:center" disabled />
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" id="btnViewJob" onclick="OpenJob()">ViewJob</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">X</button>
+    <div id="frmShowJob" class="modal fade" data-backdrop="static" data-keyboard="false">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div id="dvResp" class="modal-header">
+                        <label id="lblSaveComplete">Save Complete!</label>
+                    </div>
+                    <div class="modal-body" style="text-align:center">
+                        <input id="txtJNo" type="text" style="position:center;font-size:20px;text-align:center;color:red" disabled />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="btnViewJob" onclick="OpenJob()">View</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">X</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -197,7 +199,8 @@ End Code
         $('#cboJobType').val(jt);
         $('#cboShipBy').val(sb);
         $('#txtCSCode').val(user);
-        ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
+        ShowUser(path, $('#txtCSCode').val(), '#txtCSName');
+        $('#txtJobDate').val(GetToday());
     }
     function SetLOVs() {
         //3 Fields Show
@@ -226,16 +229,24 @@ End Code
         $('#txtCSCode').focusout(function () {
             ShowUser(path,$('#txtCSCode').val(), '#txtCSName');
         });
-        $('#txtCustBranch').focusout(function () {
-            ShowCustomer(path,$('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
-        });
         $('#txtCustCode').keydown(function (e) {
             if (e.which == 13) {
-                GetQuotation();
+                $('#txtConsignee').val('');
+                CallBackQueryCustomerSingle(path, $('#txtCustCode').val(), function (dr) {
+                    $('#txtCustBranch').val(dr.Branch);
+                    $('#txtCustName').val(dr.NameThai);
+                    $('#txtConsignee').val(dr.BillToCustCode);
+                    ReadCustRelateData();
+                });
+            }
+        });
+        $('#txtCustBranch').keydown(function (ev) {
+            if (ev.which == 13) {
+                ShowCustomer(path, $('#txtCustCode').val(), $('#txtCustBranch').val(), '#txtCustName');
             }
         });
         $('#txtConsignee').focusout(function () {
-            ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
+            ShowCompany(path, $('#txtConsignee').val(), '#txtConsignName');
         });
     }
     function SetEnterToTab() {
@@ -275,9 +286,22 @@ End Code
         $('#txtCustCode').val(dt.CustCode);
         $('#txtCustBranch').val(dt.Branch);
         ShowCustomer(path, dt.CustCode, dt.Branch, '#txtCustName');
-        $('#txtConsignee').val(dt.CustCode);
-        ShowCustomer(path,$('#txtConsignee').val(), $('#txtCustBranch').val(), '#txtConsignName');
-        $('#txtCustCode').focus();
+        if (dt.BillToCustCode !== '') {
+            $('#txtConsignee').val(dt.BillToCustCode);            
+        } else {
+            $('#txtConsignee').val(dt.CustCode);            
+        }
+        ReadCustRelateData();
+        $('#txtCustInv').focus();
+    }
+    function ReadCustRelateData() {
+        $('#txtContactPerson').val('');
+        $('#txtQNo').val('');
+        $('#txtRevise').val('');
+        $('#txtManagerCode').val('');
+        ShowCompany(path, $('#txtConsignee').val(), '#txtConsignName');        
+        GetContact();
+        GetQuotation();
     }
     function ReadConsignee(dt) {
         $('#txtConsignee').val(dt.CustCode);
@@ -323,14 +347,20 @@ End Code
         strParam += '&CustCode=' + $('#txtCustCode').val();
         return strParam;
     }
+    function GetContact() {
+        let cust = $('#txtCustCode').val();
+        $.get(path + 'Master/GetCompanyContact?code=' + cust)
+            .done(function (r) {
+                if (r.companycontact.data.length > 0) {
+                    $('#txtContactPerson').val(r.companycontact.data[0].ContactName);
+                }
+            });
+    }
     function GetQuotation() {
         let branch = $('#txtBranchCode').val();
         let cust = $('#txtCustCode').val();
         let jtype = $('#cboJobType').val();
         let sby = $('#cboShipBy').val();
-        $('#txtQNo').val('');
-        $('#txtRevise').val('');
-        $('#txtManagerCode').val('');
         $.get(path + 'JobOrder/GetQuotationGrid?branch=' + branch + '&cust=' + cust + '&jtype=' + jtype + '&sby=' + sby + '&status=1')
             .done(function (r) {
                 if (r.quotation.data.length > 0) {

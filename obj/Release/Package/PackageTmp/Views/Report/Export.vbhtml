@@ -45,7 +45,7 @@ End Code
         let jsonText = JSON.stringify({ data: obj });
 
         let func= $.ajax({
-            url: "@Url.Action("GetJSONResult", "CONFIG")",
+            url: "@Url.Action("GetJSONResult", "Config")",
             type: "POST",
             contentType: "application/json",
             data: jsonText,

@@ -15,22 +15,15 @@
     <script src="~/Scripts/bootstrap-select.js"></script>
     <script src="~/Scripts/Func/util.js"></script>
     <script src="~/Scripts/Func/popup.js"></script>
+    <script src="~/Scripts/Func/combo.js"></script>
     <title>@ViewBag.Title</title>
-    <script type="text/javascript">
-        function BackToMenu() {
-            var c = confirm('Do you want to back to main menu?');
-            if (c == true) {
-                window.location.href = '../Menu/Index';
-            }
-        }
-    </script>
 </head>
 <body>
     <div Class="panel-primary">
         <div Class="panel-heading">
             <div Class="panel-title" style="display:flex">
                 <div>
-                    <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="BackToMenu();" />
+                    <img src="~/Resource/logo-tawan.jpg" style="width:100px" />
                 </div>   
                 <div style="margin-left:10px">
                     <h4>@ViewBag.Title</h4>
@@ -41,7 +34,7 @@
             @RenderBody()
         </div>
         <div class="panel-footer">
-            <p>&copy; @DateTime.Now.Year - Tawan Technology Co.,ltd (@ViewBag.User)</p> 
+            <p>&copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p> 
         </div>
     </div>
 </body>
