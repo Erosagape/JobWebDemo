@@ -212,7 +212,7 @@ Namespace Controllers
                             sql &= " AND d.LinkBillNo is null AND d.BNet > 0 "
                     End Select
                 End If
-                sql &= " ORDER BY h.BranchCode,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo "
+                sql &= " ORDER BY h.BranchCode,h.ClrDate DESC,h.ClrNo,j.CustCode,j.CustBranch,d.ItemNo "
 
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sql)
                 Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & "}"
@@ -352,7 +352,7 @@ Namespace Controllers
                     tSqlW &= " AND b.CustCode IN(Select CustCode from Mas_Company where TaxNumber='" & Request.QueryString("TaxNumber") & "') "
                 End If
 
-                Dim sql As String = SQLSelectClrHeader() & "{0}"
+                Dim sql As String = SQLSelectClrHeader() & "{0} ORDER BY a.ClrDate DESC"
 
                 Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
                 Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"

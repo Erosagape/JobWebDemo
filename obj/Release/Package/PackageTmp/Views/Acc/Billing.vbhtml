@@ -84,9 +84,14 @@ End Code
                         </tr>
                     </thead>
                 </table>
-                <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
-                    <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                <a href="#" class="btn btn-info" id="btnPrint" onclick="PrintData()">
+                    <i class="fa fa-lg fa-print"></i>&nbsp;<b>Print</b>
                 </a>
+                <div style="float:right">
+                    <a href="#" class="btn btn-danger" id="btnDel" onclick="DeleteDetail()">
+                        <i class="fa fa-lg fa-trash"></i>&nbsp;<b>Delete</b>
+                    </a>
+                </div>
             </div>
         </div>
         <div id="frmHeader" class="modal fade">

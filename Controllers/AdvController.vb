@@ -589,7 +589,7 @@ Namespace Controllers
                     tSqlW &= " AND a.AdvType IN(1,2,3,4) "
                 End If
                 Dim sql As String = SQLSelectAdvDetail()
-                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW + " ORDER BY a.AdvDate DESC")
                 Dim json = "{""adv"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
@@ -652,7 +652,7 @@ Namespace Controllers
                     tSqlW &= " AND a.AdvType IN(1,2,3,4) "
                 End If
                 Dim sql As String = SQLSelectAdvHeader()
-                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW)
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(sql + tSqlW + " ORDER BY a.AdvDate DESC")
                 Dim json = "{""adv"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception

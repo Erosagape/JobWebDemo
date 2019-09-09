@@ -1344,7 +1344,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Cancel")) Then
                     tSqlw &= String.Format("AND ISNULL(CancelProve,''){0}", If(Request.QueryString("Cancel").ToString.ToUpper = "Y", "<>''", "=''"))
                 End If
-                Dim oData = New CInvHeader(jobWebConn).GetData(tSqlw)
+                Dim oData = New CInvHeader(jobWebConn).GetData(tSqlw & " ORDER BY DocDate DESC")
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""invheader"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
@@ -1439,7 +1439,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("DateTo")) Then
                     tSqlw &= " AND BillDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
                 End If
-                Dim oData = New CBillHeader(jobWebConn).GetData(tSqlw)
+                Dim oData = New CBillHeader(jobWebConn).GetData(tSqlw & " ORDER BY BillDate DESC")
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""billheader"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
@@ -1590,7 +1590,7 @@ Namespace Controllers
                     End If
                 End If
 
-                Dim oHead = New CRcpHeader(jobWebConn).GetData(tSqlw)
+                Dim oHead = New CRcpHeader(jobWebConn).GetData(tSqlw & " ORDER BY ReceiptDate DESC")
                 Dim oDet = New CRcpDetail(jobWebConn).GetData(tSqlw)
 
                 Dim jsonH As String = ""
@@ -1910,16 +1910,16 @@ Namespace Controllers
                 Dim defaultWhere As String = "(id.TotalAmt-ISNULL(id.AmtCredit,0)-ISNULL(r.ReceivedNet,0)-ISNULL(c.CreditNet,0))"
                 Dim tSqlw As String = " AND " & defaultWhere & " >0 "
                 If Not IsNothing(Request.QueryString("Show")) Then
-                    If Request.QueryString("Show").ToString = "NOPAY" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "NOPAY" Then
                         tSqlw &= " AND ISNULL(r.ReceivedNet,0)=0 "
                     End If
-                    If Request.QueryString("Show").ToString = "RECEIVED" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "RECEIVED" Then
                         tSqlw = " AND ISNULL(r.ReceivedNet,0)>0 "
                     End If
-                    If Request.QueryString("Show").ToString = "CLEARED" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "CLEARED" Then
                         tSqlw = " AND " & defaultWhere & "<=0 "
                     End If
-                    If Request.QueryString("Show").ToString = "ALL" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "ALL" Then
                         tSqlw = ""
                     End If
                 End If
@@ -1946,7 +1946,7 @@ Namespace Controllers
                 End If
                 Dim isSummary As Boolean = False
                 If Not IsNothing(Request.QueryString("Type")) Then
-                    If Request.QueryString("Type").ToString = "SUM" Then
+                    If Request.QueryString("Type").ToString.ToUpper = "SUM" Then
                         isSummary = True
                     End If
                 End If
@@ -1965,38 +1965,38 @@ Namespace Controllers
                 Dim bCheckVoucher As Boolean = False
                 Dim byReceipt As Boolean = False
                 If Not IsNothing(Request.QueryString("Show")) Then
-                    If Request.QueryString("Show").ToString = "WAIT" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "WAIT" Then
                         'don't have receipt document yet
                         tSqlw &= " AND ISNULL(r.ReceivedNet,0)=0 "
                     End If
-                    If Request.QueryString("Show").ToString = "RECV" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "RECV" Then
                         'have receipt document
                         tSqlw = " AND ISNULL(r.ReceivedNet,0)>0 "
                     End If
-                    If Request.QueryString("Show").ToString = "OPEN" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "OPEN" Then
                         'by receipt document
                         bCheckVoucher = True
                         byReceipt = True
                         tSqlw = ""
                     End If
-                    If Request.QueryString("Show").ToString = "FULLPAY" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "FULLPAY" Then
                         tSqlw = " AND " & defaultWhere & "<=0 "
                     End If
-                    If Request.QueryString("Show").ToString = "PARTPAY" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "PARTPAY" Then
                         tSqlw = " AND " & defaultWhere & ">0 "
                     End If
-                    If Request.QueryString("Show").ToString = "WAITPAY" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "WAITPAY" Then
                         bCheckVoucher = True
                         tSqlw = " AND ISNULL(r.LastReceiptNo,'')<>'' AND ISNULL(r.LastControlNo,'')='' "
                         tSqlw &= " AND " & defaultWhere & ">=0 "
                     End If
-                    If Request.QueryString("Show").ToString = "ALL" Then
+                    If Request.QueryString("Show").ToString.ToUpper = "ALL" Then
                         tSqlw = ""
                     Else
-                        If Request.QueryString("Show").ToString = "CANCEL" Then
-                            tSqlw = " where NOT ISNULL(ih.CancelProve,'')='' " & tSqlw
+                        If Request.QueryString("Show").ToString.ToUpper = "CANCEL" Then
+                            tSqlw = " AND NOT ISNULL(ih.CancelProve,'')='' " & tSqlw
                         Else
-                            tSqlw = " where ISNULL(ih.CancelProve,'')='' " & tSqlw
+                            tSqlw = " AND ISNULL(ih.CancelProve,'')='' " & tSqlw
                         End If
                     End If
                 End If
@@ -2042,27 +2042,27 @@ Namespace Controllers
                     recvNo = Request.QueryString("RecvNo").ToString
                 End If
                 If Not IsNothing(Request.QueryString("Type")) Then
-                    If Request.QueryString("Type").ToString = "ADV" Then
+                    If Request.QueryString("Type").ToString.ToUpper = "ADV" Then
                         tSqlw &= " AND ISNULL(id.AmtAdvance,0)>0 "
                     End If
-                    If Request.QueryString("Type").ToString = "SRV" Then
+                    If Request.QueryString("Type").ToString.ToUpper = "SRV" Then
                         tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 "
                     End If
-                    If Request.QueryString("Type").ToString = "TAX" Then
+                    If Request.QueryString("Type").ToString.ToUpper = "TAX" Then
                         'have advance or have service
                         tSqlw &= " AND ((ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)>0) OR ISNULL(id.AmtAdvance,0)>0) "
                     End If
-                    If Request.QueryString("Type").ToString = "REC" Then
+                    If Request.QueryString("Type").ToString.ToUpper = "REC" Then
                         'have service but no vat
                         tSqlw &= " AND ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0 "
                     End If
-                    If Request.QueryString("Type").ToString = "RCP" Then
+                    If Request.QueryString("Type").ToString.ToUpper = "RCP" Then
                         'have service non vat or advance
                         tSqlw &= " AND ((ISNULL(id.AmtCharge,0)>0 AND ISNULL(id.AmtVat,0)=0) OR ISNULL(id.AmtAdvance,0)>0)) "
                     End If
                 End If
+                tSqlw &= " ORDER BY ih.DocNo DESC"
                 Dim sql As String = If(Not byReceipt, SQLSelectInvForReceive(bCheckVoucher) & tSqlw, SQLSelectInvByReceive(recvNo, bCheckVoucher) & tSqlw)
-
                 Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sql)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""invdetail"":{""data"":" & json & ",""condition"":""" & tSqlw & """}}"
@@ -2099,7 +2099,7 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("Cust")) Then
                     tSqlw &= String.Format(" AND a.CustCode='{0}' ", Request.QueryString("Cust").ToString)
                 End If
-                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvForBilling() & tSqlw)
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectInvForBilling() & tSqlw & " ORDER BY a.DocDate DESC ")
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 json = "{""invdetail"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)

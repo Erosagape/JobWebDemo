@@ -428,6 +428,7 @@
     <Compile Include="Models\CInvDetail.vb" />
     <Compile Include="Models\CInvHeader.vb" />
     <Compile Include="Models\CJobOrder.vb" />
+    <Compile Include="Models\CLog.vb" />
     <Compile Include="Models\CPayDetail.vb" />
     <Compile Include="Models\CPayHeader.vb" />
     <Compile Include="Models\CProvince.vb" />

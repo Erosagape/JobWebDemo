@@ -1,5 +1,15 @@
 ﻿//function for javascripts usage
 function QuickCallback(ev) {
+    $.get('/Config/GetLogin')
+        .done(function (r) {
+            if (r.user.data.length > 0) {
+                ev();
+            } else {
+                SetTempLogin(ev);
+            }
+        });
+}
+function SetTempLogin(ev) {    
     $.get('/Config/SetLogin?Code=ADMIN&Pass=1234&Database=0')
         .done(function (r) {
             if (r.user.data.length > 0) {

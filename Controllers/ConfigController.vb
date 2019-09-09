@@ -440,6 +440,7 @@ Namespace Controllers
                     Session("CurrUser") = oData(0).UserID
                     Session("UserProfiles") = oData(0)
                     LoadCompanyProfile()
+                    Main.SaveLog(ViewBag.LICENSE_NAME, ViewBag.SESSION_ID, "LOGIN", oData(0).TName, DateTime.UtcNow.ToString())
                 Else
                     Session("CurrUser") = ""
                     Session("UserProfiles") = Nothing
@@ -1147,6 +1148,21 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             Catch ex As Exception
                 Return Content("{""data"":[],""msg"":""" & ex.Message & """}", jsonContent)
+            End Try
+        End Function
+        Function SetLog(<FromBody()> data As CLog) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    Dim msg = Main.SaveLog(data.CustID, data.AppID, data.ModuleName, data.LogAction, data.Message)
+                    Dim json = "{""result"":{""data"":""" & data.Message & """,""msg"":""" & msg & """}}"
+                    Return Content(json, jsonContent)
+                Else
+                    Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
+                    Return Content(json, jsonContent)
+                End If
+            Catch ex As Exception
+                Dim json = "{""result"":{""data"":""" & data.Message & """,""msg"":""" & ex.Message & """}}"
+                Return Content(json, jsonContent)
             End Try
         End Function
     End Class

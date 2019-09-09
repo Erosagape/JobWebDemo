@@ -210,7 +210,7 @@ End Code
             $('#lblExchangeRate').text(h.ExchangeRate);
             $('#lblForeignNet').text(ShowNumber(h.ForeignNet, 2));
             $('#lblDiscountRate').text(h.DiscountRate);
-            $('#lblVATRate').text(h.VATRate);
+            $('#lblVATRate').text(ShowNumber(h.VATRate,1));
 
             let c = dr.customer[0][0];            
             if (c !== null) {
