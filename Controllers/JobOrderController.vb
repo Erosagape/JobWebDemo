@@ -437,7 +437,7 @@ Namespace Controllers
                     End If
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BookingNo='{1}' ", data.BranchCode, data.BookingNo))
-                    Dim json = "{""result"":{""data"":""" & data.JNo & """,""msg"":""" & msg & """}}"
+                    Dim json = "{""result"":{""data"":""" & data.BookingNo & """,""msg"":""" & msg & """}}"
                     Return Content(json, jsonContent)
                 Else
                     Dim json = "{""result"":{""data"":null,""msg"":""No Data To Save""}}"
@@ -954,6 +954,80 @@ Namespace Controllers
             Dim json2 = SQLDashboard2("")
             Dim json3 = SQLDashboard3("")
             Return Content("{""result"":[{""data1"":""" & json1 & """,""data2"":""" & json2 & """,""data3"":""" & json3 & """}]}", jsonContent)
+        End Function
+        Function GetTrackingSummary() As ActionResult
+            Try
+                Dim tSqlw As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND Job_Order.BranchCode='{0}'", Request.QueryString("Branch").ToString())
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format(" AND Job_Order.JNo='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND Job_LoadInfo.BookingNo='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Doc")) Then
+                    tSqlw &= String.Format(" AND Job_LoadInfoDetail.DeliveryNo='{0}' ", Request.QueryString("Doc").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND Job_Order.CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlw &= String.Format(" AND Job_Order.JobStatus='{0}' ", Request.QueryString("Status").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("TaxNumber")) Then
+                    tSqlw &= String.Format(" AND Mas_Company.TaxNumber='{0}' ", Request.QueryString("TaxNumber").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Vend")) Then
+                    tSqlw &= String.Format(" AND Job_LoadInfo.VenderCode='{0}' ", Request.QueryString("Vend").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND Job_Order.DocDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND Job_Order.DocDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectTrackingCount(tSqlw))
+                Dim json As String = ""
+                For i As Integer = 0 To oData.Rows.Count - 1
+                    If i = 0 Then
+                        json = "[""Status"",""Volume"", {""role"": ""style"" }]"
+                    End If
+                    Dim status As String = Convert.ToInt16(oData.Rows(i)("JobStatus")).ToString("00")
+                    json &= ",[""" & GetValueConfig("JOB_STATUS", status) & """," & oData.Rows(i)("TotalJob") & ","
+                    Select Case status
+                        Case "00"
+                            json &= """color:aqua"""
+                        Case "01"
+                            json &= """color:aquamarine"""
+                        Case "02"
+                            json &= """color:cadetblue"""
+                        Case "03"
+                            json &= """color:chocolate"""
+                        Case "04"
+                            json &= """color:brown"""
+                        Case "05"
+                            json &= """color:blueviolet"""
+                        Case "06"
+                            json &= """color:crimson"""
+                        Case "07"
+                            json &= """color:darkgreen"""
+                        Case "98"
+                            json &= """color:dimgrey"""
+                        Case "99"
+                            json &= """color:red"""
+                        Case Else
+                            json &= """color:black"""
+                    End Select
+                    json &= "]"
+                Next
+                json = "{""transport"":{""data"":[" & json & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""transport"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
         End Function
         Function GetDashboard() As ActionResult
             Dim msg As String = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(""))

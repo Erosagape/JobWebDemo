@@ -858,7 +858,7 @@ Public Class CJobOrder
         End Set
     End Property
     Private m_consigneecode As String
-    Public Property consigneecode As String
+    Public Property Consigneecode As String
         Get
             Return m_consigneecode
         End Get
@@ -867,7 +867,7 @@ Public Class CJobOrder
         End Set
     End Property
     Private m_privilegests As String
-    Public Property privilegests As String
+    Public Property Privilegests As String
         Get
             Return m_privilegests
         End Get
@@ -1061,11 +1061,11 @@ Public Class CJobOrder
                                 dr("TotalQty") = Me.TotalQty
                                 dr("HAWB") = Me.HAWB
                                 dr("MAWB") = Me.MAWB
-                                dr("consigneecode") = Me.consigneecode
-                                dr("privilegests") = Me.privilegests
-                                dr("DeliveryTo") = Me.deliveryTo
-                                dr("DeliveryNo") = Me.deliveryNo
-                                dr("DeliveryAddr") = Me.deliveryAddr
+                                dr("consigneecode") = Me.Consigneecode
+                                dr("privilegests") = Me.Privilegests
+                                dr("DeliveryTo") = Me.DeliveryTo
+                                dr("DeliveryNo") = Me.DeliveryNo
+                                dr("DeliveryAddr") = Me.DeliveryAddr
                                 pass = "11"
                             Catch ex As Exception
                                 msg = "[exception]:" & ex.Message
@@ -1376,10 +1376,10 @@ Public Class CJobOrder
                         row.MAWB = rd.GetString(rd.GetOrdinal("MAWB")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("consigneecode"))) = False Then
-                        row.consigneecode = rd.GetString(rd.GetOrdinal("consigneecode")).ToString()
+                        row.Consigneecode = rd.GetString(rd.GetOrdinal("consigneecode")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("privilegests"))) = False Then
-                        row.privilegests = rd.GetString(rd.GetOrdinal("privilegests")).ToString()
+                        row.Privilegests = rd.GetString(rd.GetOrdinal("privilegests")).ToString()
                     End If
                     If IsDBNull(rd.GetValue(rd.GetOrdinal("DeliveryNo"))) = False Then
                         row.DeliveryNo = rd.GetString(rd.GetOrdinal("DeliveryNo")).ToString()

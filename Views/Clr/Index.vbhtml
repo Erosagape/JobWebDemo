@@ -104,7 +104,7 @@ End Code
                 </div>
                 <div class="row">
                     <div class="col-sm-7">
-                        Co-person Reference:br/>
+                        Co-person Reference:<br/>
                         <div style="display:flex;flex-direction:row">
                             <input type="text" class="form-control" id="txtCoPersonCode" />
                         </div>

@@ -222,7 +222,7 @@ Namespace Controllers
                 Dim json As String = ""
                 Dim i As Integer = 0
                 For Each data As String In oData.ToArray
-                    If json <> "" Then json = json & ","
+                    If json <> "" Then json &= ","
                     json &= "{""Id"":""" & i.ToString("00") & """,""ConfigCode"":""" & data & """}"
                     i += 1
                 Next
@@ -481,12 +481,13 @@ Namespace Controllers
             If Not Request.QueryString("Path") Is Nothing Then
                 path = Request.QueryString("Path").ToString
             End If
-            Dim msg As String = "No data processed"
+
             Try
                 Dim fileName = System.IO.Path.Combine(Server.MapPath("~"), path)
                 Dim fReader = New System.IO.StreamReader(fileName, UTF8Encoding.UTF8)
                 Dim obj = JsonConvert.DeserializeObject(Of CJsonData)(fReader.ReadToEnd)
-                msg = "{""result"":"""
+                Dim msg As String = "{""result"":"""
+
                 Select Case obj.source
                     Case "CBranch"
                         For Each o In obj.data
@@ -1101,9 +1102,10 @@ Namespace Controllers
                     Return Content("{""userrole"":{""result"":""Please Select Some User"",""data"":[]}}", jsonContent)
                 End If
 
-                Dim oData As New CUserRoleDetail(jobWebConn)
-                oData.RoleID = Request.QueryString("Code").ToString()
-                oData.UserID = Request.QueryString("ID").ToString()
+                Dim oData As New CUserRoleDetail(jobWebConn) With {
+                    .RoleID = Request.QueryString("Code").ToString(),
+                    .UserID = Request.QueryString("ID").ToString()
+                }
                 Dim msg = oData.DeleteData(tSqlw)
 
                 Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"

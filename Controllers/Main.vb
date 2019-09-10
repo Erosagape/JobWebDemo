@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports Newtonsoft.Json
 Module Main
     Friend Const jsonContent As String = "application/json;charset=UTF-8"
     Friend Const xmlContent As String = "application/xml;charset=UTF-8"
@@ -165,6 +166,7 @@ GROUP BY a.UserID,b.ModuleID
             Return "[ERROR] SetAuthorizeByRole:" + ex.Message
         End Try
     End Function
+
     Friend Function SetAuthorizeFromPolicy(roleid As String) As String
         Dim msg As String = ""
         Try
@@ -1371,6 +1373,17 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
         oLog.Message = msg
         Return oLog.SaveData(" WHERE LogID=0 ")
     End Function
+    Function SaveLogFromObject(cust As String, app As String, modl As String, action As String, obj As Object) As String
+        Dim clientIP = HttpContext.Current.Request.UserHostAddress
+        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+        Dim oLog As New CLog(cnMas)
+        oLog.AppID = app
+        oLog.CustID = cust & "(" & clientIP & ")"
+        oLog.ModuleName = modl
+        oLog.LogAction = action
+        oLog.Message = JsonConvert.SerializeObject(obj)
+        Return oLog.SaveData(" WHERE LogID=0 ")
+    End Function
     Function GetDatabaseList(pCustomer As String, pApp As String) As List(Of String)
         Dim db = New List(Of String)
         Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
@@ -1493,6 +1506,12 @@ FROM dbo.Job_ClearDetail
 GROUP BY BranchCode,JobNo,SICode
 ) b
 ON a.BranchCode=b.BranchCode AND a.JNo=b.JobNo AND a.SICode=b.SICode
+"
+        Return sql
+    End Function
+    Public Function SQLSelectTrackingCount(tSqlW As String) As String
+        Dim sql As String = "
+SELECT t.JobStatus,COUNT(DISTINCT t.JNo) AS TotalJob FROM (" & SQLSelectTracking(tSqlW) & ") as t GROUP BY t.JobStatus 
 "
         Return sql
     End Function

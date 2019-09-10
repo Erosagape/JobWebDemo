@@ -74,10 +74,13 @@ End Code
     function RefreshGrid() {
         let branch = $('#txtBranchCode').val();
         let cust = $('#txtCustCode').val();        
-
+        let w = '';
+        if (cust !== '') {
+            w += '&Cust=' + cust;
+        }
         $('#tbDetail').DataTable({
             ajax: {
-                url: '/joborder/gettransportreport?Branch=' + branch + '&Cust=' + cust, //web service ที่จะ call ไปดึงข้อมูลมา
+                url: '/joborder/gettransportreport?Branch=' + branch + w, //web service ที่จะ call ไปดึงข้อมูลมา
                 dataSrc: 'transport.data'
             },
             selected: true, //ให้สามารถเลือกแถวได้

@@ -119,8 +119,11 @@
         case 'Report':
             mnuPath = path + 'Report/Index';
             break;
-        case 'Tracking':
+        case 'Tracking1':
             mnuPath = path + 'Tracking/Index';
+            break;
+        case 'Tracking2':
+            mnuPath = path + 'Tracking/PublicIndex';
             break;
         case 'Transport':
             mnuPath = path + 'JobOrder/Transport';

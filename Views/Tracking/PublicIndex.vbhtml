@@ -29,6 +29,12 @@ End Code
     <a href="#" class="btn btn-primary" id="btnShow" onclick="RefreshGrid()">
         <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Show</b>
     </a>
+    <div class="row">
+        <div class="col-md-12">
+            <b>Status By Customer:</b>
+            <div id="chartCust"></div>
+        </div>
+    </div>
     <table id="tbDetail" class="table table-responsive">
         <thead>
             <tr>
@@ -48,11 +54,14 @@ End Code
         <tbody></tbody>
     </table>
 <div id="dvLOVs"></div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     let path = '/';
-    ShowWait();
+    google.charts.load("current", { packages: ["corechart"] });
+    window.onresize = () => {
+        drawChart();
+    }
     QuickCallback(function () {
-        CloseWait();
         SetLOVs();
     });
     $('#txtTaxNumber').focusout(function () {
@@ -61,8 +70,6 @@ End Code
         });
     });
     function SetLOVs() {
-        $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
-        $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             let dv = document.getElementById("dvLOVs");
             //Branch
@@ -81,9 +88,7 @@ End Code
         }
     }
     function RefreshGrid() {
-        ShowWait();
         QuickCallback(function () {
-            CloseWait();
             let branch = $('#txtBranchCode').val();
             let taxno = $('#txtTaxNumber').val();
             let status = $('#cboStatus').val();
@@ -242,11 +247,66 @@ End Code
                 destroy: true, //ให้ล้างข้อมูลใหม่ทุกครั้งที่ reload page
                 responsive:true
             });
+            drawChart();
         });
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);
         $('#txtBranchName').val(dt.BrName);
         $('#txtBranchCode').focus();
+    }
+    function drawChart() {
+        let w = '?Branch=' + $('#txtBranchCode').val() + '&TaxNumber=' + $('#txtTaxNumber').val();
+        $.get(path + 'JobOrder/GetTrackingSummary' + w, function (r) {
+            if (r.transport.data.length > 0) {
+                var custTable = google.visualization.arrayToDataTable(r.transport.data);
+                var custOptions = {
+                    legend: { position: 'top', maxLines: 3 },
+                    chartArea: {width: '50%'},
+                    hAxis: {
+                      title: 'Total Job',
+                      minValue: 0,
+                    },
+                    vAxis: {
+                      title: 'Status'
+                    }
+                };
+                var chartCust = new google.visualization.BarChart(document.getElementById('chartCust'));
+                chartCust.draw(custTable, custOptions);
+            }
+        });
+    }
+    function getDataTable(dt) {
+        if (dt.length > 0) {
+            return dt;
+        }
+        dt = [["Status", "Volume"], ["ALL", 0]];
+        return dt;
+    }
+    function getDataView(tb) {
+        let dt = getDataTable(tb);
+        let totalColumns = dt[0].length - 1;
+        let data = google.visualization.arrayToDataTable(dt);
+        let view = new google.visualization.DataView(data);
+        let columns = [];
+        for (let i = 0; i <= totalColumns; i++) {
+            if (i > 0) {
+                columns.push(i);
+                columns.push({
+                    calc: function (dataTable, rowIndex) {
+                        return getAnnotation(dataTable, rowIndex, i);
+                    },
+                    type: "string",
+                    role: "annotation"
+                });
+            } else {
+                columns.push(i);
+            }
+        }
+        view.setColumns(columns);
+        return view;
+    }
+    function getAnnotation(dataTable, rowIndex, columnIndex) {
+        return dataTable.getFormattedValue(rowIndex, columnIndex) == "0" ? null : dataTable.getFormattedValue(rowIndex, columnIndex);
     }
 </script>
