@@ -955,6 +955,81 @@ Namespace Controllers
             Dim json3 = SQLDashboard3("")
             Return Content("{""result"":[{""data1"":""" & json1 & """,""data2"":""" & json2 & """,""data3"":""" & json3 & """}]}", jsonContent)
         End Function
+        Function GetTimelineReport() As ActionResult
+            Try
+                Dim tSqlw As String = ""
+                If Not IsNothing(Request.QueryString("Branch")) Then
+                    tSqlw &= String.Format(" AND BranchCode='{0}'", Request.QueryString("Branch").ToString())
+                End If
+                If Not IsNothing(Request.QueryString("Job")) Then
+                    tSqlw &= String.Format(" AND JNo='{0}' ", Request.QueryString("Job").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Code")) Then
+                    tSqlw &= String.Format(" AND BookingNo='{0}' ", Request.QueryString("Code").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Doc")) Then
+                    tSqlw &= String.Format(" AND DeliveryNo='{0}' ", Request.QueryString("Doc").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Cust")) Then
+                    tSqlw &= String.Format(" AND CustCode='{0}' ", Request.QueryString("Cust").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlw &= String.Format(" AND JobStatus='{0}' ", Request.QueryString("Status").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("Vend")) Then
+                    tSqlw &= String.Format(" AND AgentCode='{0}' ", Request.QueryString("Vend").ToString)
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlw &= " AND DutyDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlw &= " AND DutyDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                Dim onDate As Date = DateTime.Today
+                If Not IsNothing(Request.QueryString("OnDate")) Then
+                    onDate = Convert.ToDateTime(Request.QueryString("OnDate").ToString())
+                End If
+                Dim useDate As String = "DutyDate"
+                If Not IsNothing(Request.QueryString("UseDate")) Then
+                    useDate = Request.QueryString("UseDate").ToString()
+                End If
+                Dim totDays As Integer = 3
+                If Not IsNothing(Request.QueryString("Days")) Then
+                    totDays = Convert.ToInt32(Request.QueryString("Days").ToString())
+                End If
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(SQLSelectTrackingDay(useDate, onDate, totDays, tSqlw))
+                Dim json As String = ""
+                Dim jsonD As String = ""
+                For i As Integer = 0 To oData.Rows.Count - 1
+                    If i = 0 Then
+                        jsonD = "["
+                        For j As Integer = 0 To oData.Columns.Count - 1
+                            If jsonD <> "[" Then
+                                jsonD &= ","
+                            End If
+                            jsonD &= """" & oData.Columns(j).ColumnName & """"
+                        Next
+                        jsonD &= "]"
+                    End If
+                    jsonD &= ",["
+                    For j As Integer = 0 To oData.Columns.Count - 1
+                        If j > 0 Then
+                            jsonD &= ","
+                        End If
+                        If oData.Columns(j).ColumnName = "JobDay" Then
+                            jsonD &= """" & oData.Rows(i)(j) & """"
+                        Else
+                            jsonD &= "" & oData.Rows(i)(j)
+                        End If
+                    Next
+                    jsonD &= "]"
+                Next
+                json = "{""tracking"":{""data"":[" & jsonD & "]}}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("{""tracking"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
         Function GetTrackingSummary() As ActionResult
             Try
                 Dim tSqlw As String = ""

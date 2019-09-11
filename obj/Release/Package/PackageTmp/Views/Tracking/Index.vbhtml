@@ -26,6 +26,11 @@ End Code
 <a href="#" class="btn btn-primary" id="btnShow" onclick="RefreshGrid()">
     <i class="fa fa-lg fa-filter"></i>&nbsp;<b>Show</b>
 </a>
+<div class="row">
+    <div class="col-md-12">
+        <div id="chartTimeLine"></div>
+    </div>
+</div>
 <table id="tbDetail" class="table table-responsive">
     <thead>
         <tr>
@@ -46,10 +51,54 @@ End Code
     <tbody></tbody>
 </table>
 <div id="dvLOVs"></div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     let path = '/';
+
+    google.charts.load("current", { packages: ["corechart"] });
     SetLOVs();
-    RefreshGrid();
+    window.onresize = () => {
+        drawChart();
+    }
+    function getDataTable(dt) {
+        if (dt.length > 0) {
+            return dt;
+        }
+        dt = [["JobDay", "Volume"], ["ALL", 0]];
+        return dt;
+    }
+    function drawChart() {
+        let w = '?Branch='+ $('#txtBranchCode').val();
+        if ($('#txtCustCode').val() !== '') {
+            w += '&Cust=' + $('#txtCustCode').val();
+        }
+        $.get(path + 'JobOrder/GetTimelineReport' + w).done(function (r) {            
+            var dt = getDataTable(r.tracking.data);
+            var data = new google.visualization.DataTable();
+            let rows = [];
+            let cols = dt[0];
+            for (let i = 0; i < cols.length; i++){
+                if (cols[i] == 'JobDay') {
+                    data.addColumn('string', 'Date');
+                } else {
+                    data.addColumn('number', cols[i]);
+                }
+            }
+            for (let i = 1; i < dt.length; i++) {
+                rows.push(dt[i]);
+            }
+            data.addRows(rows);
+            var options = {
+                chart: {
+                    title: 'Total Shipment By Duty Date',
+                    subtitle: 'in past 7 and next 7 days',
+                    chartArea: { width: '50%' }
+                }
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('chartTimeLine'));
+            chart.draw(data, options);
+        });          
+    }
     function SetLOVs() {
         $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
         $('#txtBranchName').val('@ViewBag.PROFILE_DEFAULT_BRANCH_NAME');
@@ -119,6 +168,8 @@ End Code
             let row = $('#tbDetail').DataTable().row(this).data(); //read current row selected
             window.open(path + 'JobOrder/ShowJob?BranchCode=' + row.BranchCode + '&JNo=' + row.JNo,'','');
         });
+
+        drawChart();
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);

@@ -53,6 +53,7 @@ Public Class CUtil
                 Message = "[ERROR]" & ex.Message
             End Try
         End Using
+        Main.SaveLog("TAWAN", "JOBSHIPING", m_ConnStr, Message, pSQL)
         Return dt
     End Function
 End Class

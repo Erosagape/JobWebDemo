@@ -1515,6 +1515,29 @@ SELECT t.JobStatus,COUNT(DISTINCT t.JNo) AS TotalJob FROM (" & SQLSelectTracking
 "
         Return sql
     End Function
+    Public Function SQLSelectTrackingDay(useDay As String, onDate As Date, cutoffDay As Integer, tSQLW As String) As String
+        Dim oCfg = Main.GetDataConfig("JOB_TYPE")
+        Dim sqlCheckStatus As String = ""
+        For Each cfg In oCfg
+            sqlCheckStatus &= ",SUM(CASE WHEN JobType=" & CInt(cfg.ConfigKey) & " THEN 1 ELSE 0 END)"
+            sqlCheckStatus &= " as '" & cfg.ConfigValue & "'"
+        Next
+        Dim sqlGroup As String = "
+(CASE WHEN Day(" & useDay & ") <=Day(DATEADD(d,-" & cutoffDay & ",'" & onDate.ToString("yyyy-MM-dd") & "')) THEN '00' ELSE 
+(CASE WHEN Day(" & useDay & ") >=Day(DATEADD(d," & cutoffDay & ",'" & onDate.ToString("yyyy-MM-dd") & "')) THEN '99' ELSE FORMAT(" & useDay & ",'dd/MM/yy') END)
+END)
+"
+        Dim sql As String = "
+SELECT 
+" & sqlGroup & " as JobDay
+" & sqlCheckStatus & "
+FROM Job_Order WHERE JobStatus<90 AND " & useDay & " IS NOT NULL
+" & tSQLW & "
+GROUP BY " & sqlGroup & "
+ORDER BY 1
+"
+        Return sql
+    End Function
     Public Function SQLSelectTracking(tsqlW As String) As String
         Dim sql = "
 SELECT dbo.Job_Order.BranchCode, dbo.Job_Order.JNo, dbo.Job_LoadInfo.VenderCode, dbo.Job_LoadInfo.ContactName, dbo.Job_LoadInfo.BookingNo, 
