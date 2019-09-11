@@ -28,9 +28,11 @@ End Code
 </a>
 <div class="row">
     <div class="col-md-12">
+        <b>Job Clearance By Later/Coming 3 Days</b>
         <div id="chartTimeLine"></div>
     </div>
 </div>
+<b>Transport Tracking</b>
 <table id="tbDetail" class="table table-responsive">
     <thead>
         <tr>
@@ -72,7 +74,7 @@ End Code
         if ($('#txtCustCode').val() !== '') {
             w += '&Cust=' + $('#txtCustCode').val();
         }
-        $.get(path + 'JobOrder/GetTimelineReport' + w).done(function (r) {            
+        $.get(path + 'JobOrder/GetTimelineReport' + w).done(function (r) {
             var dt = getDataTable(r.tracking.data);
             var data = new google.visualization.DataTable();
             let rows = [];
@@ -97,7 +99,7 @@ End Code
             };
             var chart = new google.visualization.LineChart(document.getElementById('chartTimeLine'));
             chart.draw(data, options);
-        });          
+        });
     }
     function SetLOVs() {
         $('#txtBranchCode').val('@ViewBag.PROFILE_DEFAULT_BRANCH');
@@ -122,7 +124,7 @@ End Code
     }
     function RefreshGrid() {
         let branch = $('#txtBranchCode').val();
-        let cust = $('#txtCustCode').val();        
+        let cust = $('#txtCustCode').val();
         let w = '';
         if (cust !== '') {
             w += '&Cust=' + cust;

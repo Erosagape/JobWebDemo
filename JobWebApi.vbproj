@@ -437,6 +437,7 @@
     <Compile Include="Models\CQuoItem.vb" />
     <Compile Include="Models\CRcpDetail.vb" />
     <Compile Include="Models\CRcpHeader.vb" />
+    <Compile Include="Models\CReport.vb" />
     <Compile Include="Models\CRole.vb" />
     <Compile Include="Models\CServiceCode.vb" />
     <Compile Include="Models\CServiceGroup.vb" />

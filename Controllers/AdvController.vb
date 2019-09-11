@@ -551,6 +551,9 @@ Namespace Controllers
                 If Not IsNothing(Request.QueryString("JobNo")) Then
                     tSqlW &= " AND d.ForJNo='" & Request.QueryString("JobNo") & "'"
                 End If
+                If Not IsNothing(Request.QueryString("Vend")) Then
+                    tSqlW &= " AND d.VenCode='" & Request.QueryString("Vend") & "'"
+                End If
                 If Not IsNothing(Request.QueryString("JType")) Then
                     tSqlW &= " AND a.JobType=" & Request.QueryString("JType") & ""
                 End If

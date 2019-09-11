@@ -92,6 +92,67 @@ function ShowUserSign(path, UserID, ControlID) {
             });
     }
 }
+function ShowCustomer(path, Code, Branch, ControlID) {
+    $(ControlID).val('');
+    if ((Code + Branch).length > 0) {
+        $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
+            .done(function (r) {
+                if (r.company.data.length > 0) {
+                    let c = r.company.data[0];
+                    $(ControlID).text(c.NameThai);
+                }
+            });
+    }
+}
+function GetReportStatus(reportID) {
+    let val = '';
+    switch (reportID) {
+        case 'JOBADV':
+        case 'ADVDAILY':
+            val = 'ADV_STATUS';
+            break;
+        case 'CLRDAILY':
+            val = 'CLR_STATUS';
+            break;
+        case 'JOBDAILY':
+        case 'JOBCS':
+        case 'JOBSHP':
+        case 'JOBTYPE':
+        case 'JOBSHIPBY':
+        case 'JOBCUST':
+        case 'JOBPORT':
+        case 'JOBSALES':
+        case 'JOBCOMM':
+        case 'RCPDAILY':
+        case 'TAXDAILY':
+        case 'INVDAILY':
+        case 'BILLDAILY':
+        case 'JOBCOST':
+        case 'ACCINC':
+        case 'JOBVOLUME':
+        case 'JOBSTATUS':
+        case 'ARBAL':
+            val = 'JOB_STATUS';
+            break;
+        case 'EXPDAILY':
+        case 'CASHDAILY':
+        case 'BOOKBAL':
+        case 'VATSALES':
+        case 'VATBUY':
+        case 'WHTAX':
+        case 'ACCEXP':
+        case 'APBAL':
+        case 'CNDN':
+        case 'TRIALBAL':
+        case 'BALANCS':
+        case 'PROFITLOSS':
+        case 'CASHFLOW':
+        case 'JOURNAL':
+            val = '';
+            break;
+    }
+    return val;
+}
 function GetPaymentType(p) {
     switch (p) {
         case 'CA':
@@ -118,128 +179,6 @@ function GetVoucherType() {
             break;
         default:
             return '';
-            break;
-    }
-}
-function ShowCustomer(path, Code, Branch, ControlID) {
-    $(ControlID).val('');
-    if ((Code + Branch).length > 0) {
-        $.get(path + 'Master/GetCompany?Code=' + Code + '&Branch=' + Branch)
-            .done(function (r) {
-                if (r.company.data.length > 0) {
-                    let c = r.company.data[0];
-                    $(ControlID).text(c.NameThai);
-                }
-            });
-    }
-}
-function GetReportStatus(reportID) {
-    let val = '';
-    switch (reportID) {
-        case 'JOBDAILY':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBCS':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBSHP':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBTYPE':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBSHIPBY':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBCUST':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBPORT':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBADV':
-            val = 'ADV_STATUS';
-            break;
-        case 'JOBVOLUME':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBSTATUS':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBSALES':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBCOMM':
-            val = 'JOB_STATUS';
-            break;
-        case 'ADVDAILY':
-            val = 'ADV_STATUS';
-            break;
-        case 'EXPDAILY':
-            val = '';
-            break;
-        case 'RCPDAILY':
-            val = 'JOB_STATUS';
-            break;
-        case 'TAXDAILY':
-            val = 'JOB_STATUS';
-            break;
-        case 'CASHDAILY':
-            val = '';
-            break;
-        case 'CLRDAILY':
-            val = 'CLR_STATUS';
-            break;
-        case 'INVDAILY':
-            val = 'JOB_STATUS';
-            break;
-        case 'BILLDAILY':
-            val = 'JOB_STATUS';
-            break;
-        case 'JOBCOST':
-            val = 'JOB_STATUS';
-            break;
-        case 'BOOKBAL':
-            val = '';
-            break;
-        case 'VATSALES':
-            val = '';
-            break;
-        case 'VATBUY':
-            val = '';
-            break;
-        case 'WHTAX':
-            val = '';
-            break;
-        case 'ACCEXP':
-            val = '';
-            break;
-        case 'ACCINC':
-            val = 'JOB_STATUS';
-            break;
-        case 'ARBAL':
-            val = 'JOB_STATUS';
-            break;
-        case 'APBAL':
-            val = '';
-            break;
-        case 'CNDN':
-            val = '';
-            break;
-        case 'TRIALBAL':
-            val = '';
-            break;
-        case 'BALANCS':
-            val = '';
-            break;
-        case 'PROFITLOSS':
-            val = '';
-            break;
-        case 'CASHFLOW':
-            val = '';
-            break;
-        case 'JOURNAL':
-            val = '';
             break;
     }
 }
@@ -485,7 +424,7 @@ function LoadCliteria(reportID) {
             break;
     }
 }
-function LoadReport(reportID) {
+function LoadReport(reportID,obj) {
     switch (reportID) {
         case 'JOBDAILY':
 

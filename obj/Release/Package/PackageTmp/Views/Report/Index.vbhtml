@@ -107,24 +107,36 @@
                     <div class="modal-header">
                         <label id="lblCliteria">Select Cliteria of xxx</label>
                     </div>
-                    <div class="modal-body" style="display:flex;flex-direction:column">
-                        <div>
-                            <select id="selCliteria" class="form-control dropdown">
-                                <option value="=">Equal</option>
-                                <option value=">=">Greater/Equal</option>
-                                <option value="<=">Less than/Equal</option>
-                                <option value="<>">Not Equal</option>
-                                <option value="Like">Contain</option>
-                            </select>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <select id="selCliteria" class="form-control dropdown">
+                                    <option value="=">Equal</option>
+                                    <option value="&gt=">Greater/Equal</option>
+                                    <option value="&lt=">Less than/Equal</option>
+                                    <option value="&lt&gt">Not Equal</option>
+                                    <option value="Like">Contain</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-8" style="display:flex">                                
+                                <input type="text" id="txtValue" class="form-control" style="width:100%" />
+                                <input type="button" class="btn btn-default" onclick="SearchData()" value="..." />
+                            </div>
                         </div>
-                        <div style="display:flex;flex-direction:row">
-                            <input type="text" id="txtValue" class="form-control" />
-                            <input type="button" class="btn btn-default" onclick="SearchData()" value="..." />
-                            <input type="button" class="btn btn-warning" onclick="SetData()" value="Add Cliteria" />
-                        </div>
-                        <div>
-                            <label>Your Cliteria is:</label>
-                            <div id="dvSql"></div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <select id="selOption" class="form-control dropdown">
+                                    <option value="AND">AND</option>
+                                    <option value="OR">OR</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="button" class="btn btn-warning" onclick="SetData()" value="Add Clieria" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Your Cliteria is:</label>
+                                <div id="dvSql"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -143,39 +155,28 @@
     let reportID = '';
     let browseWhat = '';
     let cliterias = [];
+    let data = {};
     ChangeLanguageForm('@ViewBag.Module');
     SetEvents();
     $('#tbReportList tbody').on('click', 'tr', function () {
         SetSelect('#tbReportList', this);
-        let data = $('#tbReportList').DataTable().row(this).data();
-        //alert(data.ReportCode);
+        data = $('#tbReportList').DataTable().row(this).data();
         reportID = data.ReportCode;
+        
         LoadCliteria(reportID);
     });
     function GetCliteria() {
-        let w = '?id=' + reportID;  
-        if ($('#txtDateFrom').val() !== '') {
-            w += '&datefrom=' + $('#txtDateFrom').val();
-        }
-        if ($('#txtDateTo').val() !== '') {
-            w += '&dateto=' + $('#txtDateTo').val();
-        }
-        if ($('#txtCustCliteria').val() !== '') {
-            w += '&cust=' + $('#txtCustCliteria').val();
-        }
-        if ($('#txtStatusCliteria').val() !== '') {
-            w += '&status=' + $('#txtStatusCliteria').val();
-        }
-        if ($('#txtEmpCliteria').val() !== '') {
-            w += '&emp=' + $('#txtEmpCliteria').val();
-        }
-        if ($('#txtVendCliteria').val() !== '') {
-            w += '&vend=' + $('#txtVendCliteria').val();
-        }
-        if ($('#txtJobCliteria').val() !== '') {
-            w += '&job=' + $('#txtJobCliteria').val();
-        }
-        return w;
+        let obj = {
+            dateFrom: $('#txtDateFrom').val(),
+            dateTo: $('#txtDateTo').val(),
+            custWhere: $('#txtCustCliteria').val(),
+            jobWhere: $('#txtJobCliteria').val(),
+            empWhere: $('#txtEmpCliteria').val(),
+            vendWhere: $('#txtVendCliteria').val(),
+            statusWhere: $('#txtStatusCliteria').val(),
+        };
+        let str = JSON.stringify(obj);
+        return '?data=' + JSON.stringify(data) + '&cliteria=' + encodeURIComponent(str);
     }
     function SetEvents() {
         $.get('/Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
@@ -189,32 +190,48 @@
     }
     function BrowseCliteria(what) {
         browseWhat = what;
+        switch (browseWhat) {
+            case 'cust':             
+                $('#lblCliteria').text('Filter Data For Customer');
+                break;
+            case 'job':
+                $('#lblCliteria').text('Filter Data For Job');
+                break;
+            case 'vend':
+                $('#lblCliteria').text('Filter Data For Vender');
+                break;
+            case 'emp':
+                $('#lblCliteria').text('Filter Data For Staff');
+                break;
+            case 'status':
+                let type = GetReportStatus(reportID);
+                if (type !== '') {
+                    $('#lblCliteria').text('Filter Data For ' + type);
+                }
+                break;
+        }
         $('#dvSql').html('');
+        $('#txtValue').val('');
         cliterias = [];
         $('#dvCliteria').modal('show');
     }
     function SearchData() {        
         switch (browseWhat) {
             case 'cust':             
-                $('#lblCliteria').text('Filter Data For Customer');
                 SetGridCompany('/', '#tblCust', '#frmSearchCust',ReadData);
                 break;
             case 'job':
-                $('#lblCliteria').text('Filter Data For Job');
                 SetGridJob('/', '#tblJob', '#frmSearchJob', '', ReadData);
                 break;
             case 'vend':
-                $('#lblCliteria').text('Filter Data For Vender');
                 SetGridVender('/', '#tblVend', '#frmSearchVend', ReadData);
                 break;
             case 'emp':
-                $('#lblCliteria').text('Filter Data For Staff');
                 SetGridUser('/', '#tblEmp', '#frmSearchEmp', ReadData);
                 break;
             case 'status':
                 let type = GetReportStatus(reportID);
                 if (type !== '') {
-                    $('#lblCliteria').text('Filter Data For ' + type);
                     SetGridConfigVal('/', '#tblStatus', type, '#frmSearchStatus', ReadData);
                 }
                 break;
@@ -241,10 +258,17 @@
     }
     function SetData() {        
         let str = '[' + browseWhat + ']';
-        cliterias.push(str + '' + $('#selCliteria').val() + '"' + $('#txtValue').val() + '"');
+        if (cliterias.length > 0) {
+            str = $('#selOption').val() + str;
+        }
+        cliterias.push(str + '' + $('#selCliteria').val() + $('#txtValue').val());
         $('#dvSql').html(cliterias.toString());
+        $('#txtValue').val('');
     }
     function AddData() {
+        if ($('#txtValue').val() !== '') {
+            SetData();
+        }
         let cliteria=$('#dvSql').html();
         switch (browseWhat) {
             case 'cust':
