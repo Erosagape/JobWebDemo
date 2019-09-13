@@ -22,6 +22,14 @@
             </table>
         </div>
         <div class="col-sm-6" style="background-color:aliceblue">
+            <label id="lblBranch">Branch</label>
+            <br />
+            <div style="display:flex">
+                <input type="text" class="form-control" style="width:60px" id="txtBranchCode" disabled />
+                <input type="button" class="btn btn-default" id="btnBrowseBranch" value="..." onclick="BrowseCliteria('branch')" />
+                <input type="text" class="form-control" style="width:100%" id="txtBranchName" disabled />
+            </div>
+            <br/>
             <b>Report Cliteria:</b><br />
             <div style="display:flex;width:100%;flex-direction:column" id="tbDate">
                 <div style="display:flex;">
@@ -115,7 +123,7 @@
                                     <option value="&gt=">Greater/Equal</option>
                                     <option value="&lt=">Less than/Equal</option>
                                     <option value="&lt&gt">Not Equal</option>
-                                    <option value="Like">Contain</option>
+                                    <option value="Like%">Contain</option>
                                 </select>
                             </div>
                             <div class="col-sm-8" style="display:flex">                                
@@ -167,8 +175,9 @@
     });
     function GetCliteria() {
         let obj = {
-            dateFrom: $('#txtDateFrom').val(),
-            dateTo: $('#txtDateTo').val(),
+            branch: '[BRANCH]=' + $('#txtBranchCode').val(),
+            dateFrom: '[DATE]>=' + $('#txtDateFrom').val(),
+            dateTo: '[DATE]<=' + $('#txtDateTo').val(),
             custWhere: $('#txtCustCliteria').val(),
             jobWhere: $('#txtJobCliteria').val(),
             empWhere: $('#txtEmpCliteria').val(),
@@ -181,6 +190,7 @@
     function SetEvents() {
         $.get('/Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
             let dv = document.getElementById("dvLOVs");
+            CreateLOV(dv, '#frmSearchBranch', '#tblBranch', 'Search Branch', response, 2);
             CreateLOV(dv, '#frmSearchCust', '#tblCust', 'Search Customers', response, 3);
             CreateLOV(dv, '#frmSearchJob', '#tblJob', 'Search Job', response, 3);
             CreateLOV(dv, '#frmSearchVend', '#tblVend', 'Search Venders', response, 2);
@@ -191,6 +201,9 @@
     function BrowseCliteria(what) {
         browseWhat = what;
         switch (browseWhat) {
+            case 'branch':
+                SearchData();
+                return;
             case 'cust':             
                 $('#lblCliteria').text('Filter Data For Customer');
                 break;
@@ -217,6 +230,9 @@
     }
     function SearchData() {        
         switch (browseWhat) {
+            case 'branch':
+                SetGridBranch('/', '#tblBranch', '#frmSearchBranch', ReadBranch);
+                break;
             case 'cust':             
                 SetGridCompany('/', '#tblCust', '#frmSearchCust',ReadData);
                 break;
@@ -236,6 +252,10 @@
                 }
                 break;
         }
+    }
+    function ReadBranch(dt) {
+        $('#txtBranchCode').val(dt.Code);
+        $('#txtBranchName').val(dt.BrName);
     }
     function ReadData(dr) {
         switch (browseWhat) {
@@ -258,7 +278,7 @@
     }
     function SetData() {        
         let str = '[' + browseWhat + ']';
-        if (cliterias.length > 0) {
+        if (cliterias.length > 0 && $('#selOption').val() == "OR") {
             str = $('#selOption').val() + str;
         }
         cliterias.push(str + '' + $('#selCliteria').val() + $('#txtValue').val());

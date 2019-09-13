@@ -199,7 +199,7 @@ function ChangeLanguageForm(fname) {
             break;
     }    
 }
-/* old report list 
+/* old report list
  let _reportLists = [
                 { "ReportGroup": "CS", "ReportCode": "JobKPI", "ReportNameEN": "Performance Summary", "ReportNameTH": "รายงานสรุปการปฏิบัติงานของพนักงานว่าทำได้ตามเป้าหรือไม่" },
                 { "ReportGroup": "CS", "ReportCode": "JobOperComplete", "ReportNameEN": "Complete Operation", "ReportNameTH": "รายงานงานที่ดำเนินการตรวจปล่อยเสร็จแล้ว" },

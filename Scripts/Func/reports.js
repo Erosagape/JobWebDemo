@@ -424,115 +424,141 @@ function LoadCliteria(reportID) {
             break;
     }
 }
-function LoadReport(reportID,obj) {
-    switch (reportID) {
-        case 'JOBDAILY':
-
-            break;
-        case 'JOBCS':
-
-            break;
-        case 'JOBSHP':
-
-            break;
-        case 'JOBTYPE':
-
-            break;
-        case 'JOBSHIPBY':
-
-            break;
-        case 'JOBCUST':
-
-            break;
-        case 'JOBPORT':
-
-            break;
-        case 'JOBADV':
-
-            break;
-        case 'JOBVOLUME':
-
-            break;
-        case 'JOBSTATUS':
-
-            break;
-        case 'JOBSALES':
-
-            break;
-        case 'JOBCOMM':
-
-            break;
-        case 'ADVDAILY':
-
-            break;
-        case 'EXPDAILY':
-
-            break;
-        case 'RCPDAILY':
-
-            break;
-        case 'TAXDAILY':
-
-            break;
-        case 'CASHDAILY':
-
-            break;
-        case 'CLRDAILY':
-
-            break;
-        case 'INVDAILY':
-
-            break;
-        case 'BILLDAILY':
-
-            break;
-        case 'JOBCOST':
-
-            break;
-        case 'BOOKBAL':
-
-            break;
-        case 'VATSALES':
-
-            break;
-        case 'VATBUY':
-
-            break;
-        case 'WHTAX':
-
-            break;
-        case 'ACCEXP':
-
-            break;
-        case 'ACCINC':
-
-            break;
-        case 'ARBAL':
-
-            break;
-        case 'APBAL':
-
-            break;
-        case 'CNDN':
-
-            break;
-        case 'TRIALBAL':
-
-            break;
-        case 'BALANCS':
-
-            break;
-        case 'PROFITLOSS':
-
-            break;
-        case 'CASHFLOW':
-
-            break;
-        case 'JOURNAL':
-
-            break;
-    }
+function LoadReport(reportID, obj,lang) {
+    let str = JSON.stringify(obj);
+    $.ajax({
+        url:'/Report/GetReport',
+        type: "POST",
+        contentType: "application/json",
+        data: str,
+        success: function (response) {
+            let r = JSON.parse(response);
+            if (r.msg !== "OK") {
+                alert(r.msg);
+                return;
+            }
+            if (r.result.length > 0) {
+                var tb = r.result;
+                //let html = ' < thead > <tr>';
+                let html = '<tbody><tr>';
+                $.each(tb[0], function (key, value) {
+                    //html += '<th style="border:1px solid black;text-align:left;">' + key + '</th>';
+                    html += '<td style="border:1px solid black;text-align:left;">' + GetColumnHeader(key,lang) + '</td>';
+                });
+                //html += '</tr></thead>';
+                html += '</tr>';
+                //html += '<tbody>';
+                for (let r of tb) {
+                    html += '<tr>';
+                    for (let c in r) {               
+                        if (c.indexOf('Date') > 0) {
+                            html += '<td style="border:1px solid black;text-align:left;">' + ShowDate(r[c]) + '</td>';
+                        } else {
+                            if (r[c] !== null) {
+                                if (Number.isInteger(Math.floor(r[c]))) {
+                                    html += '<td style="border:1px solid black;text-align:right;">' + r[c] + '</td>';
+                                } else {
+                                    html += '<td style="border:1px solid black;text-align:left;">' + r[c] + '</td>';
+                                }
+                            } else {
+                                html += '<td style="border:1px solid black;text-align:left;"></td>';
+                            }
+                        }                        
+                    }
+                    html += '</tr>';
+                }
+                html += '</tbody>';
+                $('#tbResult').html(html);
+            }
+        }
+    });   
 }
+function GetColumnHeader(id,langid) {
+    let lang = {
+        JNo: 'Job#|เลขงาน',
+        DocDate: 'Open Date|วันที่เปิด',
+        BranchCode: 'Branch|สาขา',
+        ConfirmDate: 'Confirm Date|วันที่ยืนยัน',
+        CustCode: 'Customer|ลูกค้า',
+        CustContactName: 'Contact|ผู้ติดต่อ',
+        QNo: 'Quotation#|ใบเสนอราคา',
+        ManagerCode: 'Sales|ขายโดย',
+        CSCode: 'CS|พนักงาน',
+        Description: 'Description|รายละเอียด',
+        TRemark: 'Remark|หมายเหตุ',
+        JobStatusName: 'Status|สถานะ',
+        JobStatus: 'Status|สถานะ',
+        JobType: 'Type|ประเภท',
+        JobTypeName: 'Type|ประเภท',
+        ShipBy: 'ShipBy|ลักษณะ',
+        ShipByName: 'ShipBy|ลักษณะ',
+        InvNo: 'Invoice#|อินวอย',
+        InvTotal: 'Total Inv.|ยอดอินวอย',
+        InvProduct: 'Product|สินค้า',
+        InvCountry: 'Origin Cty|ต้นทาง',
+        InvFCountry: 'Dest Cty|ปลายทาง',
+        InvInterPort: 'Inter Port|Port ตปท',
+        InvProductQty: 'Qty|จำนวน',
+        InvProductUnit: 'Unit|หน่วย',
+        InvCurUnit: 'Currency|สกุลเงิน',
+        InvCurRate: 'Rate|แลกเปลี่ยน',
+        ImExDate: 'EDI Date|วันที่ทำEDI',
+        BLNo: 'BL/AWB Status|สถานะ BL/AWB',
+        BookingNo: 'Booking No|ใบจองพาหนะ',
+        ClearPort: 'Clear Port|สถานที่ตรวจปล่อย',
+        ClearPortNo: 'Port#|จุดตรวจปล่อย',
+        ClearDate: 'Customs Date|วันที่ผ่านพิธีการ',
+        LoadDate: 'Load Date|วันที่ลงของ',
+        ForwarderCode: 'Agent|ตัวแทนเรือ/สายการบิน',
+        AgentCode: 'Transport|ขนส่ง',
+        VesselName: 'Vessel|ชื่อเรือ/เที่ยวบิน',
+        ETDDate: 'ETD|วันออกจากท่า',
+        ETADate: 'ETA|วันเทียบท่า',
+        CancelReson: 'Cancel Reason|เหตุผลที่ยกเลิก',
+        CancelDate: 'Cancel Date|วันที่ยกเลิก',
+        CancelProve: 'Cancel By|ผู้ยกเลิก',
+        CloseJobDate: 'Close Date|วันที่ปิดงาน',
+        CloseJobBy: 'Close By|ผู้ปิดงาน',
+        DeclareType: 'Decl.Type|ประเภทใบขน',
+        DeclareNumber: 'Declare#|เลขที่ใบขน',
+        EstDeliverDate: 'Delivery Date|วันที่ส่งของ',
+        TotalContainer: 'Total CTN|จำนวนตู้',
+        DutyDate: 'Shipment Date|วันที่ตรวจปล่อย',
+        DutyAmount: 'Duty Amt|ภาษีอากร',
+        ConfirmChqDate: 'Confirm Date|วันที่ยืนยัน',
+        ShippingEmp: 'Shipping|ชิปปิ้ง',
+        ShippingCmd: 'Caution|ข้อพึงระวัง',
+        TotalGW: 'Gross WT|น้ำหนักสุทธิ',
+        GWUnit: 'Unit|หน่วย',
+        ReadyToClearDate: 'Ready Date|วันที่พร้อมตรวจปล่อย',
+        Commission: 'Commission|คอมมิชชั่น',
+        ProjectName: 'Project|ชื่อโครงการ',
+        MVesselName: 'Mother Vsl|เรือแม่/เที่ยวบินขนถ่าย',
+        TotalNW: 'Net WT|น้ำหนักสุทธิ',
+        Measurement: 'M3|ปริมาตร',
+        CustRefNO: 'RefNo|เลขที่อ้างอิง',
+        TotalQty: 'Total Qty|จำนวนรวม',
+        HAWB: 'House AWB/BL|House AWB/BL',
+        MAWB: 'Master AWB/BL|Master AWB/BL',
+        consigneecode: 'Consignee|ผู้ซื้อขาย',
+        DeliveryNo: 'Delivery|ใบส่งของ',
+        DeliveryTo: 'Delivery To|ส่งถึง',
+        DeliveryAddr: 'Delivery Addr|ที่อยู่'
+    }
+    let str = id;
+    if (lang[id] !== undefined) {
+        switch (langid) {
+            case 'EN':
+                str = lang[id].split('|')[0].trim();
+                break;
+            case 'TH':
+                str = lang[id].split('|')[1].trim();
+                break;
+        }
+    }
+    return str;
+}
+
 /*
 function _LoadReport(reportID) {
     switch (reportID) {

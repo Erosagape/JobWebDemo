@@ -310,12 +310,7 @@
         $.get('/Config/SetLogin?Code=' + userID + '&Pass=' + Password + '&Database=' + dbID)
             .done(function (r) {
                 if (r.user.data.length > 0) {
-                    sessionID = r.user.session_id;
-                    dbMas = r.user.database_mas;
-                    dbJob = r.user.database_job;
-                    $('#lblUserID').text(r.user.data[0].TName);
-                    $('#lblLicenseName').text(r.user.license_to);
-                    $('#dvLogin').modal('hide');
+                    location.reload();
                 } else {
                     ShowMessage('User ID or Password Incorrect');
                 }

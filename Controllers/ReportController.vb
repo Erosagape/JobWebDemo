@@ -1,4 +1,5 @@
-﻿Imports System.Web.Mvc
+﻿Imports System.Web.Http
+Imports System.Web.Mvc
 Imports Newtonsoft.Json
 
 Namespace Controllers
@@ -97,56 +98,56 @@ Namespace Controllers
             End If
             Return "''"
         End Function
-        Function GetReport(data As CReport) As ActionResult
+        Function GetReport(<FromBody()> data As CReport) As ActionResult
+            Dim sqlM As String = ""
+            Dim sqlW As String = ""
+            Dim cliteria As String = data.ReportCliteria
             Try
-                Dim json As String = ""
-                Dim sqlM As String = ""
-                Dim sqlW As String = ""
-                Dim cliteria As String = data.ReportCliteria
                 Select Case data.ReportCode
                     Case "JOBDAILY"
                         sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
-                        sqlM = SQLSelectJobReport() & sqlW & " ORDER BY j.DutyDate DESC"
-                        Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
-                        json = JsonConvert.SerializeObject(oData)
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.DocDate,j.DutyDate,j.ShippingEmp,j.InvProduct,j.InvProductQty,j.TotalGW,j.TotalContainer FROM (" & SQLSelectJobReport() & sqlW & ") j ORDER BY j.DutyDate DESC"
                     Case "JOBCS"
                         sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
-                        sqlM = SQLSelectJobReport() & sqlW & " ORDER BY j.CSCode DESC"
-                        Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
-                        json = JsonConvert.SerializeObject(oData)
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.DocDate,j.DutyDate,j.CSCode,j.InvProduct,j.InvProductQty,j.TotalGW,j.TotalContainer FROM (" & SQLSelectJobReport() & sqlW & ") j  ORDER BY j.CSCode DESC"
                     Case "JOBSHP"
                         sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
-                        sqlM = SQLSelectJobReport() & sqlW & " ORDER BY j.ShippingEmp DESC"
-                        Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
-                        json = JsonConvert.SerializeObject(oData)
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.DocDate,j.DutyDate,j.ShippingEmp,j.InvProduct,j.InvProductQty,j.TotalGW,j.TotalContainer FROM (" & SQLSelectJobReport() & sqlW & ") j  ORDER BY j.ShippingEmp DESC"
                     Case "JOBTYPE"
                         sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
-                        sqlM = SQLSelectJobReport() & sqlW & " ORDER BY j.JobType,j.CustCode,j.ShipBy,j.DocDate DESC"
-                        Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
-                        json = JsonConvert.SerializeObject(oData)
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.JobTypeName,j.ShipByName,j.DutyDate,j.InvProduct,j.InvProductQty,j.TotalGW,j.TotalContainer FROM (" & SQLSelectJobReport() & sqlW & ") j  ORDER BY j.JobType,j.CustCode,j.ShipBy,j.DocDate DESC"
                     Case "JOBSHIPBY"
                         sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
-                        sqlM = SQLSelectJobReport() & sqlW & " ORDER BY j.ShipBy,j.CustCode,j.JobType,j.DocDate DESC"
-                        Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
-                        json = JsonConvert.SerializeObject(oData)
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.JobTypeName,j.ShipByName,j.DutyDate,j.InvProduct,j.InvProductQty,j.TotalGW,j.TotalContainer FROM (" & SQLSelectJobReport() & sqlW & ") j  ORDER BY j.ShipBy,j.CustCode,j.JobType,j.DocDate DESC"
                     Case "JOBCUST"
                         sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
-                        sqlM = SQLSelectJobReport() & sqlW & " ORDER BY j.CustCode,j.DutyDate DESC"
-                        Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
-                        json = JsonConvert.SerializeObject(oData)
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.DocDate,j.DutyDate,j.CustCode,j.InvProduct,j.InvProductQty,j.TotalGW,j.TotalContainer FROM (" & SQLSelectJobReport() & sqlW & ") j  ORDER BY j.CustCode,j.DutyDate DESC"
                     Case "JOBPORT"
                         sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
-                        sqlM = SQLSelectJobReport() & sqlW & " ORDER BY j.ClearPort,j.CustCode,j.DutyDate DESC"
-                        Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
-                        json = JsonConvert.SerializeObject(oData)
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.DocDate,j.DutyDate,j.ClearPort,j.InvProduct,j.InvProductQty,j.TotalGW,j.TotalContainer FROM (" & SQLSelectJobReport() & sqlW & ") j  ORDER BY j.ClearPort,j.CustCode,j.DutyDate DESC"
                     Case "JOBADV"
-
+                        sqlW = GetSQLCommand(cliteria, "c.PaymentDate", "c.CustCode", "a.ForJNo", "c.ReqBy", "a.VenCode", "c.DocStatus", "a.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT t.PaymentDate,t.AdvNo,t.JobNo,t.ReqBy,t.SDescription,t.VenderCode,t.AdvNet,t.UsedAmount,t.AdvBalance FROM (" & SQLSelectAdvForClear() & sqlW & ") t ORDER BY t.PaymentDate,t.AdvNo"
                     Case "JOBVOLUME"
-
+                        sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.CSCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.*,c.NameThai FROM (" & SQLSelectJobCount(sqlW, "j.CustCode") & ") j INNER JOIN Mas_Company c ON j.CustCode=c.CustCode ORDER BY c.NameThai"
                     Case "JOBSTATUS"
-
+                        sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.ManagerCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.*,c.TName FROM (" & SQLSelectJobCount(sqlW, "j.CSCode") & ") j INNER JOIN Mas_User c ON j.CSCode=c.UserID ORDER BY c.TName"
                     Case "JOBSALES"
-
+                        sqlW = GetSQLCommand(cliteria, "j.DocDate", "j.CustCode", "j.JNo", "j.ManagerCode", "j.AgentCode", "j.JobStatus", "j.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT j.*,c.TName FROM (" & SQLSelectJobCount(sqlW, "j.ManagerCode") & ") j INNER JOIN Mas_User c ON j.ManagerCode=c.UserID ORDER BY c.TName"
                     Case "JOBCOMM"
 
                     Case "ADVDAILY"
@@ -196,9 +197,11 @@ Namespace Controllers
                     Case "JOURNAL"
 
                 End Select
-                Return Content("{""result"":" & json & ",""msg"":""OK""}")
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
+                Dim json As String = JsonConvert.SerializeObject(oData)
+                Return Content("{""result"":" & json & ",""msg"":""OK"",""sql"":""" & sqlW & """}")
             Catch ex As Exception
-                Return Content("{""result"":[],""msg"":""" & ex.Message & """}")
+                Return Content("{""result"":[],""msg"":""" & ex.Message & """,""sql"":""" & sqlW & """}")
             End Try
         End Function
     End Class

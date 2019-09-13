@@ -508,7 +508,7 @@ b.IsLtdAdv50Tavi,a.PayChqTo as Pay50TaviTo,a.Doc50Tavi as NO50Tavi,NULL as Date5
 FOR XML PATH(''),type).value('.','nvarchar(max)'),1,1,''
 )) as AirQtyStep,q.CalculateType as StepSub,
 a.ForJNo as JobNo,a.IsChargeVAT as VATType,a.VATRate,a.Rate50Tavi as Tax50TaviRate,q.QNo,
-c.DocStatus,c.EmpCode
+c.DocStatus,c.AdvBy,c.EmpCode as ReqBy,c.PaymentDate,c.CustCode
 FROM Job_AdvDetail a LEFT JOIN Job_SrvSingle b on a.SICode=b.SICode
 INNER JOIN Job_AdvHeader c on a.BranchCode=c.BranchCode and a.AdvNo=c.AdvNo 
 left join Job_Order j on a.BranchCode=j.BranchCode and a.ForJNo=j.JNo
@@ -1445,6 +1445,26 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
         Catch ex As Exception
             Return False
         End Try
+    End Function
+    Public Function SQLSelectJobCount(tsqlW As String, tGroup As String) As String
+        Dim oCfg = Main.GetDataConfig("JOB_STATUS")
+        Dim sqlCheckStatus As String = ""
+        For Each cfg In oCfg
+            sqlCheckStatus &= ",SUM("
+            sqlCheckStatus &= "CASE WHEN j.JobStatus=" & Convert.ToInt16(cfg.ConfigKey) & " THEN 1 ELSE 0 END"
+            sqlCheckStatus &= ") as '" & cfg.ConfigValue & "'"
+        Next
+        If sqlCheckStatus = "" Then
+            sqlCheckStatus = ",COUNT(*) as TotalJob"
+        End If
+        Dim sql = "
+SELECT " & tGroup & "
+" & sqlCheckStatus & "
+FROM Job_Order j {0}
+GROUP BY " & tGroup
+        sql = String.Format(sql, tsqlW)
+        Return sql
+
     End Function
     Public Function SQLDashboard3(tSqlW As String) As String
         Dim oCfg = Main.GetDataConfig("JOB_STATUS")

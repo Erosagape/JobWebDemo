@@ -278,7 +278,7 @@
     }
     function SetData() {        
         let str = '[' + browseWhat + ']';
-        if (cliterias.length > 0) {
+        if (cliterias.length > 0 && $('#selOption').val() == "OR") {
             str = $('#selOption').val() + str;
         }
         cliterias.push(str + '' + $('#selCliteria').val() + $('#txtValue').val());
