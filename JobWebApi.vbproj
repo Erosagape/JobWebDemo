@@ -277,6 +277,7 @@
     <Content Include="Scripts\Func\lang.js" />
     <Content Include="Scripts\Func\menu.js" />
     <Content Include="Scripts\Func\popup.js" />
+    <Content Include="Scripts\Func\query.xml" />
     <Content Include="Scripts\Func\reports.js" />
     <Content Include="Scripts\Func\util.js" />
     <Content Include="Scripts\i18n\defaults-ar_AR.js" />
@@ -452,6 +453,7 @@
     <Compile Include="Models\CVoucher.vb" />
     <Compile Include="Models\CVoucherDtl.vb" />
     <Compile Include="Models\CVoucherSub.vb" />
+    <Compile Include="Models\CWebLogin.vb" />
     <Compile Include="Models\CWHTaxDetail.vb" />
     <Compile Include="Models\CWHTaxHeader.vb" />
     <Compile Include="Models\cXMLData.vb" />
@@ -488,6 +490,7 @@
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
+    <None Include="My Project\PublishProfiles\devtest.pubxml" />
     <None Include="My Project\PublishProfiles\jobbeta.pubxml" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -24,10 +24,9 @@ Namespace Controllers
             Return GetView("Role", "MODULE_ADM")
         End Function
         Function GetDatabase() As ActionResult
-            Dim company As String = My.MySettings.Default.LicenseTo
             Dim companyName As String = ""
-            Dim oData = Main.GetDatabaseList(company, "JOBSHIPPING")
-            Using tb As DataTable = Main.GetDatabaseProfile(company)
+            Dim oData = Main.GetDatabaseList(My.MySettings.Default.LicenseTo, "JOBSHIPPING")
+            Using tb As DataTable = Main.GetDatabaseProfile(My.MySettings.Default.LicenseTo)
                 If tb.Rows.Count > 0 Then
                     companyName = tb.Rows(0)("CustName").ToString()
                 End If
@@ -403,53 +402,115 @@ Namespace Controllers
         End Function
         Function SetLogin() As ActionResult
             Try
-
+                Dim bGuest = False
+                If Not IsNothing(Request.QueryString("Type")) Then
+                    bGuest = (Request.QueryString("Type").ToString() = "Guest")
+                End If
                 Dim dbID As String = "1"
                 If Not IsNothing(Request.QueryString("Database")) Then
                     dbID = Request.QueryString("Database").ToString
                 End If
-                Session("DatabaseID") = dbID
                 'Load Connections by Database which selected
                 Dim dbConn As String() = Main.GetDatabaseConnection(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", dbID)
-                Session("ConnJob") = dbConn(0)
-                Session("ConnMas") = dbConn(1)
-                Main.SetDatabaseMaster(Session("ConnMas").ToString)
-                Main.SetDatabaseJob(Session("ConnJob").ToString)
-                'check user
-                Dim chk As Integer = 0
-                Dim tSqlw As String = " WHERE UserID<>'' "
-                If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND UserID='{0}'", Request.QueryString("Code").ToString)
-                    chk += 1
-                End If
-                If Not IsNothing(Request.QueryString("Pass")) Then
-                    tSqlw &= String.Format("AND UPassword='{0}'", Request.QueryString("Pass").ToString)
-                    chk += 1
-                End If
-                'Load License Name
-                Using tbLicense = Main.GetDatabaseProfile(My.MySettings.Default.LicenseTo.ToString)
-                    If tbLicense.Rows.Count > 0 Then
-                        Session("CurrLicense") = tbLicense.Rows(0)("CustName").ToString & " / " & dbID
-                    Else
-                        Return Content("[]", jsonContent)
-                    End If
-                End Using
-
-                Dim oData = New CUser(jobWebConn).GetData(tSqlw)
-                If chk = 2 And oData.Count > 0 Then
-                    Session("CurrUser") = oData(0).UserID
-                    Session("UserProfiles") = oData(0)
-                    LoadCompanyProfile()
-                    Main.SaveLog(ViewBag.LICENSE_NAME, ViewBag.SESSION_ID, "LOGIN", oData(0).TName, DateTime.UtcNow.ToString())
-                Else
-                    Session("CurrUser") = ""
+                Main.SetDatabaseMaster(dbConn(1))
+                Main.SetDatabaseJob(dbConn(0))
+                If bGuest Then
+                    Session("CurrLicense") = "Guest / " & dbID
+                    Session("CurrUser") = "Guest"
                     Session("UserProfiles") = Nothing
+                    Session("DatabaseID") = dbID
+                    Session("ConnJob") = dbConn(0)
+                    Session("ConnMas") = dbConn(1)
+                    Session("CurrentLang") = "TH"
+                    Dim jsonG = "{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[{ ""user"":""Guest"" }],""database_job"":""" & jobWebConn.Replace("\", "\\") & """,""database_mas"":""" & jobMasConn.Replace("\", "\\") & """,""database"":""" & dbID & """,""license_to"":""Guest""}}"
+                    Return Content(jsonG, jsonContent)
+                Else
+                    'check user
+                    Dim chk As Integer = 0
+                    Dim tSqlw As String = " WHERE UserID<>'' "
+                    If Not IsNothing(Request.QueryString("Code")) Then
+                        tSqlw &= String.Format("AND UserID='{0}'", Request.QueryString("Code").ToString)
+                        chk += 1
+                    End If
+                    If Not IsNothing(Request.QueryString("Pass")) Then
+                        tSqlw &= String.Format("AND UPassword='{0}'", Request.QueryString("Pass").ToString)
+                        chk += 1
+                    End If
+                    'Load License Name
+                    Using tbLicense = Main.GetDatabaseProfile(My.MySettings.Default.LicenseTo.ToString)
+                        If tbLicense.Rows.Count > 0 Then
+                            Session("CurrLicense") = tbLicense.Rows(0)("CustName").ToString & " / " & dbID
+                        Else
+                            Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""License " & My.MySettings.Default.LicenseTo.ToString & " Not Found""}}", jsonContent)
+                        End If
+                    End Using
+
+                    Dim oData = New CUser(jobWebConn).GetData(tSqlw)
+                    If chk = 2 And oData.Count > 0 Then
+                        'Load Profiles
+                        Using tbProfiles = Main.GetApplicationProfile(My.MySettings.Default.LicenseTo.ToString)
+                            If tbProfiles.Rows.Count > 0 Then
+                                If Convert.ToDateTime(tbProfiles.Rows(0)("ExpireDate")) < DateTime.Today Then
+                                    Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""License Expired On Date " & tbProfiles.Rows(0)("ExpireDate").ToString & """}}", jsonContent)
+                                Else
+                                    Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+                                    Dim oCount = New CWebLogin(cnMas).GetData(" WHERE CustID='{0}' AND AppID='JOBSHIPPING'")
+                                    If oCount.Count > tbProfiles.Rows(0)("LoginCount") Then
+                                        Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""Login over limit =" & tbProfiles.Rows(0)("LoginCount").ToString & """}}", jsonContent)
+                                    Else
+                                        Dim oLogin = New CWebLogin(cnMas).GetData(String.Format(" WHERE CustID='{0}' AND AppID='JOBSHIPPING' AND UserLogIN='{1}'", My.MySettings.Default.LicenseTo.ToString, oData(0).UserID))
+                                        If oLogin.Count > 0 Then
+                                            Dim oOld = oLogin(0)
+                                            If Session.SessionID <> oOld.SessionID Then
+                                                If oOld.ExpireDateTime < DateTime.Now Then
+                                                Else
+                                                    Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""Duplicate Login Session Please wait until " & oOld.ExpireDateTime & """}}", jsonContent)
+                                                End If
+                                                oOld.LoginDateTime = DateTime.Now
+                                                oOld.ExpireDateTime = DateTime.Now.AddMinutes(20)
+                                                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, Session.SessionID, "LOGIN", oData(0).TName, DateTime.UtcNow.ToString())
+                                            End If
+                                            oOld.SessionID = Session.SessionID
+                                            oOld.FromIP = Request.UserHostAddress
+                                            oOld.SaveData(String.Format(" WHERE CustID='{0}' AND AppID='{1}' AND UserLogIN='{2}'", oOld.CustID, oOld.AppID, oOld.UserLogIN))
+                                        Else
+                                            Dim oNew = New CWebLogin(cnMas)
+                                            oNew.CustID = My.MySettings.Default.LicenseTo.ToString
+                                            oNew.AppID = "JOBSHIPPING"
+                                            oNew.UserLogIN = oData(0).UserID
+                                            oNew.SessionID = Session.SessionID
+                                            oNew.FromIP = Request.UserHostAddress
+                                            oNew.LoginDateTime = DateTime.Now
+                                            oNew.ExpireDateTime = DateTime.Now.AddMinutes(20)
+                                            oNew.SaveData(String.Format(" WHERE CustID='{0}' AND AppID='{1}' AND UserLogIN='{2}'", oNew.CustID, oNew.AppID, oNew.UserLogIN))
+                                            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, Session.SessionID, "LOGIN", oData(0).TName, DateTime.UtcNow.ToString())
+                                        End If
+                                    End If
+                                End If
+                            Else
+                                Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""License " & My.MySettings.Default.LicenseTo.ToString & " Not Found For JOBSHIPPING""}}", jsonContent)
+                            End If
+                        End Using
+                        Session("CurrUser") = oData(0).UserID
+                        Session("UserProfiles") = oData(0)
+                        Session("DatabaseID") = dbID
+                        Session("ConnJob") = dbConn(0)
+                        Session("ConnMas") = dbConn(1)
+                        LoadCompanyProfile()
+                        Dim jsonS As String = JsonConvert.SerializeObject(oData)
+                        jsonS = "{""user"":{""session_id"":""" & Session.SessionID & """,""data"":" & jsonS & ",""database_job"":""" & jobWebConn.Replace("\", "\\") & """,""database_mas"":""" & jobMasConn.Replace("\", "\\") & """,""database"":""" & ViewBag.DATABASE & """,""license_to"":""" & ViewBag.LICENSE_NAME & """}}"
+                        Return Content(jsonS, jsonContent)
+                    Else
+                        Session("CurrUser") = ""
+                        Session("UserProfiles") = Nothing
+                        Session("DatabaseID") = "0"
+                        Session("ConnJob") = ""
+                        Session("ConnMas") = ""
+                        Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""User or Password Incorrect""}}", jsonContent)
+                    End If
                 End If
-                Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""user"":{""session_id"":""" & Session.SessionID & """,""data"":" & json & ",""database_job"":""" & jobWebConn.Replace("\", "\\") & """,""database_mas"":""" & jobMasConn.Replace("\", "\\") & """,""database"":""" & ViewBag.DATABASE & """,""license_to"":""" & ViewBag.LICENSE_NAME & """}}"
-                Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
+                Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function RemovePicture() As ActionResult

@@ -40,7 +40,7 @@ function CheckPassword(db, user, ev) {
                     if (r.user.data.length > 0) {
                         ev();
                     } else {
-                        ShowMessage('User Or Password Incorrect');
+                        ShowMessage(r.user.message);
                     }
                 });
             }

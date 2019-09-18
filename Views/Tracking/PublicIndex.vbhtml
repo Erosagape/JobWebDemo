@@ -57,17 +57,19 @@ End Code
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     let path = '/';
+    let dbID = getQueryString("db") == '' ? '0' : getQueryString("db");
+
     google.charts.load("current", { packages: ["corechart"] });
     window.onresize = () => {
         drawChart();
     }
     QuickCallback(function () {
         SetLOVs();
-    });
+    },dbID);
     $('#txtTaxNumber').focusout(function () {
         QuickCallback(function () {
             ShowCompanyByTax(path, $('#txtTaxNumber').val(), '#txtCustName');
-        });
+        },dbID);
     });
     function SetLOVs() {
         $.get(path + 'Config/ListValue?ID=tbX&Head=cpX&FLD=code,key,name', function (response) {
@@ -83,7 +85,7 @@ End Code
             case 'branch':
                 QuickCallback(function () {
                     SetGridBranch(path, '#tbBranch', '#frmSearchBranch', ReadBranch);
-                });
+                },dbID);
                 break;
         }
     }
@@ -248,7 +250,7 @@ End Code
                 responsive:true
             });
             drawChart();
-        });
+        },dbID);
     }
     function ReadBranch(dt) {
         $('#txtBranchCode').val(dt.Code);

@@ -2,6 +2,7 @@
 Public Class CXMLData
     Private dataPath As String
     Private msgError As String
+    Private oXML As XmlDocument
     Public ReadOnly Property IsError As String
         Get
             Return msgError
@@ -11,11 +12,14 @@ Public Class CXMLData
         dataPath = ptPath
         msgError = ""
     End Sub
-    Public Function getJobXML() As XmlDocument
+    Public Function getData(nodeName As String) As XmlNodeList
+        Return oXML.SelectNodes(nodeName)
+    End Function
+    Public Function getXML() As XmlDocument
         msgError = ""
-        Dim oXml As New XmlDocument
         Try
-            oXml.Load(dataPath)
+            oXML = New XmlDocument
+            oXML.Load(dataPath)
         Catch ex As Exception
             msgError = ex.Message
         End Try

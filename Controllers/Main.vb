@@ -4,13 +4,16 @@ Module Main
     Friend Const jsonContent As String = "application/json;charset=UTF-8"
     Friend Const xmlContent As String = "application/xml;charset=UTF-8"
     Friend Const textContent As String = "text/html"
-    Friend Const jobDataPath As String = "~/App_Data/job_data.xml"
-    Friend Const logoApp As String = "logo-tawan.jpg"
-    Friend Const logoRep As String = "logo-idl.jpg"
     Friend Const jobPrefix As String = "[J][S]"
     Friend Const advPrefix As String = "ADV"
     Friend Const clrPrefix As String = "CLR"
     Friend Const invPrefix As String = "INV-"
+    Friend Const billPrefix As String = "BL-"
+    Friend Const payPrefix As String = "PAY-"
+    Friend Const whtPrefix As String = "WT-"
+    Friend Const costPrefix As String = "CST-"
+    Friend Const expPrefix As String = "ACC-"
+    Friend Const servPrefix As String = "SRV-"
     Friend jobWebConn As String = ""
     Friend jobMasConn As String = ""
     Friend Function GetDBDate(pDate As Date, Optional pTodayAsDefault As Boolean = False) As Object
@@ -129,20 +132,8 @@ Module Main
     Friend Function SetAuthorizeFromRole(uname As String) As String
         Dim msg As String = ""
         Try
-            Dim SQL As String = "
-SELECT a.UserID,SUBSTRING(b.ModuleID,1,CHARINDEX('/',b.ModuleID)-1) as ModuleCode,
-SUBSTRING(b.ModuleID,CHARINDEX('/',b.ModuleID)+1,50) as ModuleFunc,
-(CASE WHEN MAX(CASE WHEN CHARINDEX('M',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'M' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('E',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'E' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('I',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'I' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('R',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'R' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('D',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'D' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('P',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'P' ELSE '' END) 
- as Authorize
-FROM Mas_UserRolePolicy b,Mas_UserRoleDetail a
-WHERE a.RoleID=b.RoleID {0}
-GROUP BY a.UserID,b.ModuleID
-"
+            Dim SQL As String = SQLSelectRoleAll()
+
             If uname <> "" Then
                 SQL = String.Format(SQL, " AND a.UserID='" & uname & "'")
             Else
@@ -170,20 +161,8 @@ GROUP BY a.UserID,b.ModuleID
     Friend Function SetAuthorizeFromPolicy(roleid As String) As String
         Dim msg As String = ""
         Try
-            Dim SQL As String = "
-SELECT a.UserID,SUBSTRING(b.ModuleID,1,CHARINDEX('/',b.ModuleID)-1) as ModuleCode,
-SUBSTRING(b.ModuleID,CHARINDEX('/',b.ModuleID)+1,50) as ModuleFunc,
-(CASE WHEN MAX(CASE WHEN CHARINDEX('M',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'M' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('E',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'E' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('I',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'I' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('R',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'R' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('D',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'D' ELSE '' END) +
-(CASE WHEN MAX(CASE WHEN CHARINDEX('P',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'P' ELSE '' END) 
- as Authorize
-FROM Mas_UserRolePolicy b,Mas_UserRoleDetail a
-WHERE a.RoleID=b.RoleID {0}
-GROUP BY a.UserID,b.ModuleID
-"
+            Dim SQL As String = SQLSelectRoleAll()
+
             If roleid <> "" Then
                 SQL = String.Format(SQL, " AND b.RoleID='" & roleid & "'")
             Else
@@ -1274,6 +1253,25 @@ WHERE cd.BranchCode='{0}' AND cd.JobNo='{1}'
 "
         Return String.Format(sql, branch, job)
     End Function
+    Function SQLSelectSumReceipt(sqlw As String) As String
+        Dim sql As String = "
+SELECT dbo.Job_Order.BranchCode, dbo.Job_Order.JNo, dbo.Job_Order.InvNo, dbo.Job_Order.CustCode, dbo.Job_Order.ManagerCode, dbo.Job_Order.CSCode, SUM(dbo.Job_ReceiptDetail.Net) AS SumReceipt,
+dbo.Job_Order.Commission, dbo.Job_ReceiptDetail.InvoiceNo, dbo.Job_ReceiptDetail.ReceiptNo, SUM(dbo.Job_ReceiptDetail.Net) * (dbo.Job_Order.Commission * 0.01) AS TotalComm
+FROM dbo.Job_ClearDetail INNER JOIN
+ dbo.Job_ClearHeader ON dbo.Job_ClearDetail.BranchCode = dbo.Job_ClearHeader.BranchCode INNER JOIN
+ dbo.Job_ReceiptDetail ON dbo.Job_ClearDetail.BranchCode = dbo.Job_ReceiptDetail.BranchCode AND 
+ dbo.Job_ClearDetail.LinkItem = dbo.Job_ReceiptDetail.InvoiceItemNo AND dbo.Job_ClearDetail.LinkBillNo = dbo.Job_ReceiptDetail.InvoiceNo INNER JOIN
+ dbo.Job_ReceiptHeader ON dbo.Job_ReceiptDetail.BranchCode = dbo.Job_ReceiptHeader.BranchCode AND 
+ dbo.Job_ReceiptDetail.ReceiptNo = dbo.Job_ReceiptHeader.ReceiptNo INNER JOIN
+ dbo.Job_Order ON dbo.Job_ClearDetail.BranchCode = dbo.Job_Order.BranchCode AND dbo.Job_ClearDetail.JobNo = dbo.Job_Order.JNo INNER JOIN
+ dbo.Job_InvoiceHeader ON dbo.Job_ReceiptDetail.BranchCode = dbo.Job_InvoiceHeader.BranchCode AND 
+ dbo.Job_ReceiptDetail.InvoiceNo = dbo.Job_InvoiceHeader.DocNo
+WHERE (ISNULL(dbo.Job_InvoiceHeader.CancelProve, '') = '') AND (ISNULL(dbo.Job_ReceiptHeader.ReceiveRef, '') <> '') AND (dbo.Job_ClearHeader.DocStatus <> 99)  {0}
+GROUP BY dbo.Job_Order.BranchCode, dbo.Job_Order.JNo, dbo.Job_Order.InvNo, dbo.Job_Order.CustCode, dbo.Job_Order.ManagerCode, dbo.Job_Order.CSCode, dbo.Job_Order.Commission, 
+ dbo.Job_ReceiptDetail.InvoiceNo, dbo.Job_ReceiptDetail.ReceiptNo
+"
+        Return String.Format(sql, sqlw)
+    End Function
     Function SQLSelectReceiptReport() As String
         Dim sql As String = "
 SELECT rh.*,
@@ -1400,6 +1398,11 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
     Function GetDatabaseProfile(pCustomer As String) As DataTable
         Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
         Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomer WHERE CustID='{0}' ", pCustomer))
+        Return tb
+    End Function
+    Function GetApplicationProfile(pCustomer As String) As DataTable
+        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+        Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT a.*,b.SubscriptionName,b.Edition,b.BeginDate,b.ExpireDate,b.LoginCount FROM TWTCustomerApp a INNER JOIN TWTSubscription b ON a.SubscriptionID=b.SubScriptionID WHERE a.CustID='{0}' AND a.AppID='JOBSHIPPING' ", pCustomer))
         Return tb
     End Function
     Function GetDatabaseConnection(pCustomer As String, pApp As String, pSeq As String) As String()
@@ -1651,6 +1654,33 @@ FROM Job_GLHeader a LEFT JOIN (
     FROM Job_GLDetail GROUP BY BranchCode,GLRefNo
 ) b
 ON a.BranchCode=b.BranchCode AND a.GLRefNo=b.GLRefNo
+"
+        Return sql
+    End Function
+    Function SQLSelectRoleAll() As String
+        Return "
+SELECT a.UserID,SUBSTRING(b.ModuleID,1,CHARINDEX('/',b.ModuleID)-1) as ModuleCode,
+SUBSTRING(b.ModuleID,CHARINDEX('/',b.ModuleID)+1,50) as ModuleFunc,
+(CASE WHEN MAX(CASE WHEN CHARINDEX('M',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'M' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('E',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'E' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('I',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'I' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('R',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'R' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('D',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'D' ELSE '' END) +
+(CASE WHEN MAX(CASE WHEN CHARINDEX('P',b.Author)>=0 THEN 1 ELSE 0 END)=1 THEN 'P' ELSE '' END) 
+ as Authorize
+FROM Mas_UserRolePolicy b,Mas_UserRoleDetail a
+WHERE a.RoleID=b.RoleID {0}
+GROUP BY a.UserID,b.ModuleID
+"
+    End Function
+    Function SQLSelectBillReport() As String
+        Dim sql = "
+SELECT h.BranchCode, h.BillAcceptNo, h.BillDate, h.CustCode, h.CustBranch, h.BillRecvBy, h.BillRecvDate, h.DuePaymentDate, h.BillRemark, h.CancelReson, 
+h.CancelProve, h.CancelDate, h.CancelTime, h.EmpCode, h.RecDateTime, h.TotalCustAdv, h.TotalAdvance, h.TotalChargeVAT, h.TotalChargeNonVAT, h.TotalVAT, 
+h.TotalWH, h.TotalDiscount, h.TotalNet, d.ItemNo, d.InvNo, d.AmtAdvance, d.AmtChargeNonVAT, d.AmtChargeVAT, d.AmtWH, d.AmtVAT, d.AmtTotal, d.CurrencyCode, 
+d.ExchangeRate, d.AmtCustAdvance, d.AmtForeign, d.InvDate, d.RefNo, d.AmtVATRate, d.AmtWHRate, d.AmtDiscount, d.AmtDiscRate
+FROM dbo.Job_BillAcceptHeader AS h INNER JOIN
+dbo.Job_BillAcceptDetail AS d ON h.BranchCode = d.BranchCode
 "
         Return sql
     End Function

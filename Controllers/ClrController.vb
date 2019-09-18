@@ -513,11 +513,11 @@ Namespace Controllers
                         End If
                         Select Case data.ClearType
                             Case 2
-                                data.AddNew("TEXP" & data.ClrDate.ToString("yyMM") & "-_____")
+                                data.AddNew(costPrefix & data.ClrDate.ToString("yyMM") & "_____")
                             Case 3
-                                data.AddNew("TSRV" & data.ClrDate.ToString("yyMM") & "-_____")
+                                data.AddNew(servPrefix & data.ClrDate.ToString("yyMM") & "_____")
                             Case Else
-                                data.AddNew(clrPrefix & data.ClrDate.ToString("yyMM") & "-_____")
+                                data.AddNew(clrPrefix & data.ClrDate.ToString("yyMM") & "_____")
                         End Select
 
                     End If

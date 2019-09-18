@@ -118,7 +118,7 @@ Namespace Controllers
                         Return Content("{""result"":{""data"":null,""msg"":""Please Enter Branch""}}", jsonContent)
                     End If
                     If "" & data.DocNo = "" Then
-                        data.AddNew("PAY-" & Now.ToString("yyMM") & "-____")
+                        data.AddNew(payPrefix & Now.ToString("yyMM") & "-____")
                     End If
                     data.SetConnect(jobWebConn)
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' ", data.BranchCode, data.DocNo))
@@ -1146,7 +1146,7 @@ Namespace Controllers
                         If data.DocDate = DateTime.MinValue Then
                             data.DocDate = Today.Date
                         End If
-                        data.AddNew("WT-" & data.DocDate.ToString("yyMM") & "-____")
+                        data.AddNew(whtPrefix & data.DocDate.ToString("yyMM") & "-____")
                     End If
 
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND DocNo='{1}' ", data.BranchCode, data.DocNo))
@@ -1458,7 +1458,7 @@ Namespace Controllers
                         If data.BillDate = DateTime.MinValue Then
                             data.BillDate = Today.Date
                         End If
-                        data.AddNew("BL-" & data.BillDate.ToString("yyMM") & "____")
+                        data.AddNew(billPrefix & data.BillDate.ToString("yyMM") & "____")
                     End If
                     Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND BillAcceptNo='{1}' ", data.BranchCode, data.BillAcceptNo))
                     Dim json = "{""result"":{""data"":""" & data.BillAcceptNo & """,""msg"":""" & msg & """}}"

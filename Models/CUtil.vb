@@ -39,7 +39,7 @@ Public Class CUtil
         End Using
         Return Message
     End Function
-    Public Function GetTableFromSQL(pSQL As String) As DataTable
+    Public Function GetTableFromSQL(pSQL As String, Optional saveLog As Boolean = False) As DataTable
         Message = "OK"
         Dim dt As New DataTable
         Using cn As New SqlConnection(m_ConnStr)
@@ -53,7 +53,9 @@ Public Class CUtil
                 Message = "[ERROR]" & ex.Message
             End Try
         End Using
-        Main.SaveLog("TAWAN", "JOBSHIPING", m_ConnStr, Message, pSQL)
+        If saveLog Then
+            Main.SaveLog("TAWAN", "JOBSHIPING", m_ConnStr, Message, pSQL)
+        End If
         Return dt
     End Function
 End Class

@@ -149,27 +149,49 @@ Namespace Controllers
                         If sqlW <> "" Then sqlW = " WHERE " & sqlW
                         sqlM = "SELECT j.*,c.TName FROM (" & SQLSelectJobCount(sqlW, "j.ManagerCode") & ") j INNER JOIN Mas_User c ON j.ManagerCode=c.UserID ORDER BY c.TName"
                     Case "JOBCOMM"
-
+                        sqlW = GetSQLCommand(cliteria, "dbo.Job_ReceiptHeader.ReceiptDate", "dbo.Job_Order.CustCode", "dbo.Job_Order.JNo", "dbo.Job_Order.ManagerCode", "dbo.Job_Order.AgentCode", "dbo.Job_Order.JobStatus", "dbo.Job_Order.BranchCode")
+                        If sqlW <> "" Then sqlW = " AND " & sqlW
+                        sqlM = "SELECT j.JNo,j.InvNo,j.ManagerCode,j.CustCode,j.CSCode,j.ReceiptNo,j.SumReceipt,j.TotalComm FROM (" & SQLSelectSumReceipt(sqlW) & ") j ORDER BY j.JNo,j.ReceiptNo"
                     Case "ADVDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "a.PaymentDate", "a.CustCode", "d.ForJNo", "a.ReqBy", "d.VenCode", "a.DocStatus", "a.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT ad.AdvNo,ad.PaymentDate,ad.ReqBy,ad.SDescription,ad.ForJNo,ad.AdvPayAmount,ad.Charge50Tavi FROM (" & SQLSelectAdvDetail() & sqlW & ") ad  ORDER BY ad.PaymentDate,ad.AdvNo"
                     Case "EXPDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "h.DocDate", "", "d.ForJNo", "h.EmpCode", "h.VenCode", "", "h.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT pa.DocNo,pa.DocDate,pa.VenCode,pa.RefNo,pa.SDescription,pa.Total FROM (" & SQLSelectPaymentReport() & sqlW & ") pa ORDER BY pa.DocDate,pa.DocNo"
                     Case "RCPDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "rh.ReceiptDate", "rh.CustCode", "ih.RefNo", "rh.EmpCode", "", "", "rh.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE rh.TotalVAT=0 AND " & sqlW
+                        sqlM = "SELECT rc.ReceiptNo,rc.ReceiptDate,rc.CustCode,rc.InvoiceNo,rc.JobNo,rc.ClrNo,rc.AdvNo,rc.SDescription,rc.Net,rd.PRVoucher FROM (" & SQLSelectReceiptReport() & sqlW & ") rc ORDER BY rc.ReceiptDate,rc.ReceiptNo"
                     Case "TAXDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "rh.ReceiptDate", "rh.CustCode", "ih.RefNo", "rh.EmpCode", "", "", "rh.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE rh.TotalVAT>0 AND " & sqlW
+                        sqlM = "SELECT rc.ReceiptNo,rc.ReceiptDate,rc.CustCode,rc.InvoiceNo,rc.JobNo,rc.ClrNo,rc.AdvNo,rc.SDescription,rc.Net,rd.PRVoucher FROM (" & SQLSelectReceiptReport() & sqlW & ") rc ORDER BY rc.ReceiptDate,rc.ReceiptNo"
                     Case "CASHDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "h.VoucherDate", "h.CustCode", "d.ForJNo", "h.RecUser", "r.CmpCode", "", "h.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE (d.ChqAmount >0 OR d.CashAmount>0) AND " & sqlW
+                        sqlM = "SELECT vc.PRVoucher,vc.VoucherDate,vc.BookCode,vc.ChqNo,vc.ChqDate,vc.RecvBank,vc.CashAmount+vc.ChqAmount as Total,vc.DRefNo FROM (" & SQLSelectVoucher() & sqlW & ") vc ORDER BY vc.VoucherDate,vc.PRVoucher"
                     Case "CLRDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "h.ClrDate", "j.CustCode", "j.JNo", "h.EmpCode", "d.VenCode", "h.DocStatus", "h.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE h.DocStatus<>99 " & sqlW
+                        sqlM = "SELECT cl.ClrNo,cl.ClrDate,cl.SDescription,cl.AdvNO,cl.JobNo,cl.AdvNet,cl.ClrNet,cl.Tax50Tavi,cl.SlipNo FROM (" & SQLSelectClrDetail() & sqlW & ") cl ORDER BY cl.ClrDate,cl.ClrNo"
                     Case "INVDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "ih.DocDate", "ih.CustCode", "ih.RefNo", "ih.EmpCode", "", "", "ih.BranchCode")
+                        If sqlW <> "" Then sqlW = " AND " & sqlW
+                        sqlM = "SELECT inv.DocNo,inv.DocDate,inv.SDescription,inv.Amt,inv.AmtVat,inv.AmtCredit,inv.TotalNet,inv.CreditNet,inv.ReceivedNet FROM (" & SQLSelectInvReport(sqlW) & ") inv ORDER BY inv.DocDate,inv.DocNo"
                     Case "BILLDAILY"
-
+                        sqlW = GetSQLCommand(cliteria, "h.BillDate", "h.CustCode", "", "h.EmpCode", "", "", "h.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE " & sqlW
+                        sqlM = "SELECT bl.BillAcceptNo,bl.BillDate,bl.CustCode,bl.InvNo,bl.AmtAdvance,bl.AmtChargeNonVAT,bl.AmtChargeVAT,bl.AmtVAT,bl.AmtWH,bl.AmtTotal FROM (" & SQLSelectBillReport() & ") bl ORDER BY bl.BillDate,bl.BillAcceptNo"
                     Case "JOBCOST"
-
+                        sqlW = GetSQLCommand(cliteria, "h.ClrDate", "j.CustCode", "j.JNo", "h.EmpCode", "d.VenCode", "h.DocStatus", "h.BranchCode")
+                        If sqlW <> "" Then sqlW = " WHERE h.DocStatus<>99 AND d.BCost>0 AND " & sqlW
+                        sqlM = "SELECT cl.ClrNo,cl.ClrDate,cl.SDescription,cl.AdvNO,cl.JobNo,cl.AdvNet,cl.ClrNet,cl.Tax50Tavi,cl.SlipNo FROM (" & SQLSelectClrDetail() & sqlW & ") cl ORDER BY cl.ClrDate,cl.ClrNo"
                     Case "BOOKBAL"
-
+                        sqlW = GetSQLCommand(cliteria, "a.VoucherDate", "", "", "b.RecUser", "", "", "b.BranchCode")
+                        If sqlW <> "" Then sqlW = " AND " & sqlW
+                        sqlM = "SELECT bk.BookCode,bk.LimitBalance,bk.SumCashOnhand,bk.SumChqClear,bk.SumChqOnhand,bk.SumCredit+bk.SumChkReturn as SumCreditable FROM (" & String.Format(SQLSelectBookAccBalance(), sqlW) & ") bk ORDER BY "
                     Case "VATSALES"
 
                     Case "VATBUY"
@@ -197,7 +219,7 @@ Namespace Controllers
                     Case "JOURNAL"
 
                 End Select
-                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM)
+                Dim oData = New CUtil(jobWebConn).GetTableFromSQL(sqlM, True)
                 Dim json As String = JsonConvert.SerializeObject(oData)
                 Return Content("{""result"":" & json & ",""msg"":""OK"",""sql"":""" & sqlW & """}")
             Catch ex As Exception

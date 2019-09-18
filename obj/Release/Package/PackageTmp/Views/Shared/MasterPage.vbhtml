@@ -312,7 +312,7 @@
                 if (r.user.data.length > 0) {
                     location.reload();
                 } else {
-                    ShowMessage('User ID or Password Incorrect');
+                    ShowMessage(r.user.message);
                 }
             });
     }

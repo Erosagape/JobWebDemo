@@ -277,7 +277,7 @@ Namespace Controllers
                 Dim AuthorizeStr As String = Main.GetAuthorize(ViewBag.User, "MODULE_ADV", "Index")
                 If Not IsNothing(data) Then
                     data.SetConnect(jobWebConn)
-                    Dim prefix As String = "TACC"
+                    Dim prefix As String = expPrefix
                     If data.AdvNo = "" Then
                         If AuthorizeStr.IndexOf("I") < 0 Then
                             Return Content("{""result"":{""data"":null,""msg"":""You are not allow to add advance""}}", jsonContent)
