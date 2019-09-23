@@ -1361,58 +1361,71 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
         Return formatStr
     End Function
     Function SaveLog(cust As String, app As String, modl As String, action As String, msg As String) As String
-        Dim clientIP = HttpContext.Current.Request.UserHostAddress
-        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
-        Dim oLog As New CLog(cnMas)
-        oLog.AppID = app
-        oLog.CustID = cust & "(" & clientIP & ")"
-        oLog.ModuleName = modl
-        oLog.LogAction = action
-        oLog.Message = msg
-        Return oLog.SaveData(" WHERE LogID=0 ")
+        Try
+            Dim clientIP = HttpContext.Current.Request.UserHostAddress
+            Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
+            Dim oLog As New CLog(cnMas)
+            oLog.AppID = app
+            oLog.CustID = cust & "(" & clientIP & ")"
+            oLog.ModuleName = modl
+            oLog.LogAction = action
+            oLog.Message = msg
+            Return oLog.SaveData(" WHERE LogID=0 ")
+        Catch ex As Exception
+            Return "[ERROR] : " & ex.Message
+        End Try
     End Function
     Function SaveLogFromObject(cust As String, app As String, modl As String, action As String, obj As Object) As String
         Dim clientIP = HttpContext.Current.Request.UserHostAddress
-        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
-        Dim oLog As New CLog(cnMas)
-        oLog.AppID = app
-        oLog.CustID = cust & "(" & clientIP & ")"
-        oLog.ModuleName = modl
-        oLog.LogAction = action
-        oLog.Message = JsonConvert.SerializeObject(obj)
-        Return oLog.SaveData(" WHERE LogID=0 ")
+        Try
+            Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
+            Dim oLog As New CLog(cnMas)
+            oLog.AppID = app
+            oLog.CustID = cust & "(" & clientIP & ")"
+            oLog.ModuleName = modl
+            oLog.LogAction = action
+            oLog.Message = JsonConvert.SerializeObject(obj)
+            Return oLog.SaveData(" WHERE LogID=0 ")
+        Catch ex As Exception
+            Return "[ERROR] :" & ex.Message
+        End Try
     End Function
     Function GetDatabaseList(pCustomer As String, pApp As String) As List(Of String)
         Dim db = New List(Of String)
-        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
-        Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomerApp WHERE CustID='{0}' AND AppID='{1}' ", pCustomer, pApp))
-        If tb.Rows.Count > 0 Then
-            For Each dr As DataRow In tb.Rows
-                db.Add(dr("WebTranDB").ToString())
-            Next
-        Else
-            db.Add("jobdemo")
-        End If
+        Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
+        Try
+            Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomerApp WHERE CustID='{0}' AND AppID='{1}' ", pCustomer, pApp))
+            If tb.Rows.Count > 0 Then
+                For Each dr As DataRow In tb.Rows
+                    db.Add(dr("WebTranDB").ToString())
+                Next
+            End If
+        Catch ex As Exception
+        End Try
         Return db
     End Function
     Function GetDatabaseProfile(pCustomer As String) As DataTable
-        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+        Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
         Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomer WHERE CustID='{0}' ", pCustomer))
         Return tb
     End Function
     Function GetApplicationProfile(pCustomer As String) As DataTable
-        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+        Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
         Dim tb = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT a.*,b.SubscriptionName,b.Edition,b.BeginDate,b.ExpireDate,b.LoginCount FROM TWTCustomerApp a INNER JOIN TWTSubscription b ON a.SubscriptionID=b.SubScriptionID WHERE a.CustID='{0}' AND a.AppID='JOBSHIPPING' ", pCustomer))
         Return tb
     End Function
     Function GetDatabaseConnection(pCustomer As String, pApp As String, pSeq As String) As String()
-        Dim db = New String() {ConfigurationManager.ConnectionStrings("JobWebConnectionStringR").ConnectionString.ToString, ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.ToString}
-        Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
-        Using tb As DataTable = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomerApp WHERE CustID='{0}' AND AppID='{1}' AND Seq='{2}'", pCustomer, pApp, pSeq))
-            If tb.Rows.Count > 0 Then
-                db = New String() {tb.Rows(0)("WebTranConnect").ToString, tb.Rows(0)("WebMasConnect").ToString}
-            End If
-        End Using
+        Dim db = New String() {ConfigurationManager.ConnectionStrings("JobWebConnectionString").ConnectionString.ToString, ConfigurationManager.ConnectionStrings("JobMasConnectionString").ConnectionString.ToString}
+        Try
+            Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
+            Using tb As DataTable = New CUtil(cnMas).GetTableFromSQL(String.Format("SELECT * FROM TWTCustomerApp WHERE CustID='{0}' AND AppID='{1}' AND Seq='{2}'", pCustomer, pApp, pSeq))
+                If tb.Rows.Count > 0 Then
+                    db = New String() {tb.Rows(0)("WebTranConnect").ToString, tb.Rows(0)("WebMasConnect").ToString}
+                End If
+            End Using
+        Catch ex As Exception
+
+        End Try
         Return db
     End Function
     Function SetDatabaseMaster(pDBName As String) As Boolean

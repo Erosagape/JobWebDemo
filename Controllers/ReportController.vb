@@ -14,6 +14,9 @@ Namespace Controllers
         Function Import() As ActionResult
             Return GetView("Import", "MODULE_REP")
         End Function
+        Function ImportFile() As ActionResult
+            Return GetView("ImportFile")
+        End Function
         Function Export() As ActionResult
             Return GetView("Export", "MODULE_REP")
         End Function

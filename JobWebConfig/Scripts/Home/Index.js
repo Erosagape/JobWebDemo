@@ -6,5 +6,8 @@
         case 'customers':
             window.open('/home/customers', '','');
             break;
+        case 'users':
+            window.open('/home/users', '', '');
+            break;
     }
 }

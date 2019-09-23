@@ -400,6 +400,44 @@ Namespace Controllers
             Session("CurrentLang") = data
             Return Content(data, textContent)
         End Function
+        Function TestDatabase() As ActionResult
+            Try
+                Dim dbID As String = "1"
+                If Not IsNothing(Request.QueryString("Database")) Then
+                    dbID = Request.QueryString("Database").ToString
+                End If
+                'Load Connections by Database which selected
+                Dim dbConn As String() = Main.GetDatabaseConnection(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", dbID)
+                Main.SetDatabaseMaster(dbConn(1))
+                Main.SetDatabaseJob(dbConn(0))
+                Dim jobResult = "OK"
+                Try
+                    Dim cn As SqlClient.SqlConnection = New SqlClient.SqlConnection(jobWebConn)
+                    cn.Open()
+                Catch ex As Exception
+                    jobResult = ex.Message
+                End Try
+                Dim masResult = "OK"
+                Try
+                    Dim cn As SqlClient.SqlConnection = New SqlClient.SqlConnection(jobMasConn)
+                    cn.Open()
+                Catch ex As Exception
+                    masResult = ex.Message
+                End Try
+                Dim tawanResult = "OK"
+                Try
+                    Dim cn As SqlClient.SqlConnection = New SqlClient.SqlConnection(ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString)
+                    cn.Open()
+                Catch ex As Exception
+                    tawanResult = ex.Message
+                End Try
+                Dim msg As String = "DBID=" & dbID & ";CONJOB=" & jobWebConn & ";CONMAS=" & jobMasConn & ";JOBTEST=" & jobResult & ";MASTEST=" & masResult & ";TAWANTEST=" & tawanResult & ";"
+                Return Content("{""result"":{""session_id"":""" & Session.SessionID & """,""message"":""" & msg & """}}", jsonContent)
+
+            Catch ex As Exception
+                Return Content("{""result"":{""session_id"":""" & Session.SessionID & """,""message"":""" & ex.Message & """}}", jsonContent)
+            End Try
+        End Function
         Function SetLogin() As ActionResult
             Try
                 Dim bGuest = False
@@ -453,7 +491,7 @@ Namespace Controllers
                                 If Convert.ToDateTime(tbProfiles.Rows(0)("ExpireDate")) < DateTime.Today Then
                                     Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""License Expired On Date " & tbProfiles.Rows(0)("ExpireDate").ToString & """}}", jsonContent)
                                 Else
-                                    Dim cnMas = ConfigurationManager.ConnectionStrings("JobMasConnectionStringR").ConnectionString.Replace("jobmaster", "tawancust")
+                                    Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
                                     Dim oCount = New CWebLogin(cnMas).GetData(" WHERE CustID='{0}' AND AppID='JOBSHIPPING'")
                                     If oCount.Count > tbProfiles.Rows(0)("LoginCount") Then
                                         Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""Login over limit =" & tbProfiles.Rows(0)("LoginCount").ToString & """}}", jsonContent)
@@ -537,7 +575,342 @@ Namespace Controllers
             End If
             Return Content(msg, textContent)
         End Function
-        Function ImportData() As ActionResult
+        Function ImportData(<FromBody> data As CJsonData) As ActionResult
+            Try
+                Dim msg As String = "{""result"":"""
+
+                Select Case data.source
+                    Case "CBranch"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CBranch)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [Code]='{0}'", oData.Code))
+                        Next
+                    Case "CAdvDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CAdvDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND AdvNo='{1}' AND ItemNo={2} ", oData.BranchCode, oData.AdvNo, oData.ItemNo))
+                        Next
+                    Case "CAdvHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CAdvHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND AdvNo='{1}' ", oData.BranchCode, oData.AdvNo))
+                        Next
+                    Case "CBank"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CBank)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [Code]='{0}' ", oData.Code))
+                        Next
+                    Case "CBillDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CBillDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND BillAcceptNo='{1}' AND ItemNo={2} ", oData.BranchCode, oData.BillAcceptNo, oData.ItemNo))
+                        Next
+                    Case "CBillHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CBillHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND BillAcceptNo='{1}' ", oData.BranchCode, oData.BillAcceptNo))
+                        Next
+                    Case "CBookAccount"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CBookAccount)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND BookCode='{1}' ", oData.BranchCode, oData.BookCode))
+                        Next
+                    Case "CBudgetPolicy"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CBudgetPolicy)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND JobType={1} AND ShipBy={2} AND SICode='{3}' ", oData.BranchCode, oData.JobType, oData.ShipBy, oData.SICode))
+                        Next
+                    Case "CClrDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CClrDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND ClrNo='{1}' AND ItemNo={2} ", oData.BranchCode, oData.ClrNo, oData.ItemNo))
+                        Next
+                    Case "CClrHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CClrHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND ClrNo='{1}' ", oData.BranchCode, oData.ClrNo))
+                        Next
+                    Case "CCompany"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCompany)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [CustCode]='{0}' AND Branch='{1}' ", oData.CustCode, oData.Branch))
+                        Next
+                    Case "CConfig"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CConfig)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData
+                        Next
+                    Case "CCompanyContact"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCompanyContact)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [CustCode]='{0}' AND [Branch]='{1}' AND ItemNo={2} ", oData.CustCode, oData.Branch, oData.ItemNo))
+                        Next
+                    Case "CCountry"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCountry)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [CTYCODE]='{0}' ", oData.CTYCODE))
+                        Next
+                    Case "CCNDNHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCNDNHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' ", oData.BranchCode, oData.DocNo))
+                        Next
+                    Case "CCNDNDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCNDNDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' AND ItemNo='{2}' ", oData.BranchCode, oData.DocNo, oData.ItemNo))
+                        Next
+                    Case "CCurrency"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCurrency)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [Code]='{0}' ", oData.Code))
+                        Next
+                    Case "CCustomsPort"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCustomsPort)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [AreaCode]='{0}' ", oData.AreaCode))
+                        Next
+                    Case "CCustomsUnit"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CCustomsUnit)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [Code]='{0}' ", oData.Code))
+                        Next
+                    Case "CDeclareType"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CDeclareType)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [Type]='{0}' ", oData.Type))
+                        Next
+                    Case "CInterPort"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CInterPort)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [PortCode]='{0}' AND [CountryCode]='{1}' ", oData.PortCode, oData.CountryCode))
+                        Next
+                    Case "CInvDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CInvDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' AND ItemNo='{2}' ", oData.BranchCode, oData.DocNo, oData.ItemNo))
+                        Next
+                    Case "CInvHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CInvHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' ", oData.BranchCode, oData.DocNo))
+                        Next
+                    Case "CJobOrder"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CJobOrder)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND [JNo]='{1}' ", oData.BranchCode, oData.JNo))
+                        Next
+                    Case "CPayDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CPayDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' AND ItemNo='{2}' ", oData.BranchCode, oData.DocNo, oData.ItemNo))
+                        Next
+                    Case "CPayHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CPayHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' ", oData.BranchCode, oData.DocNo))
+                        Next
+                    Case "CQuoItem"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CQuoItem)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND QNo='{1}' AND SeqNo={2} AND ItemNo={3} ", oData.BranchCode, oData.QNo, oData.SeqNo, oData.ItemNo))
+                        Next
+                    Case "CQuoDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CQuoDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND QNo='{1}' AND SeqNo={2} ", oData.BranchCode, oData.QNo, oData.SeqNo))
+                        Next
+                    Case "CQuoHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CQuoHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND QNo='{1}' ", oData.BranchCode, oData.QNo))
+                        Next
+                    Case "CRcpDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CRcpDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND ReceiptNo='{1}' AND ItemNo={2} ", oData.BranchCode, oData.ReceiptNo, oData.ItemNo))
+                        Next
+                    Case "CRcpHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CRcpHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND ReceiptNo='{1}' ", oData.BranchCode, oData.ReceiptNo))
+                        Next
+                    Case "CUserRole"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CUserRole)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [RoleID]='{0}' ", oData.RoleID))
+                        Next
+                    Case "CUserRolePolicy"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CUserRolePolicy)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [RoleID]='{0}' AND [ModuleID]='{1}' ", oData.RoleID, oData.ModuleID))
+                        Next
+                    Case "CUserRoleDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CUserRoleDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [RoleID]='{0}' AND UserID='{1}' ", oData.RoleID, oData.UserID))
+                        Next
+                    Case "CServiceCode"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CServiceCode)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [SICode]='{0}' ", oData.SICode))
+                        Next
+                    Case "CServiceGroup"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CServiceGroup)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [GroupCode]='{0}' ", oData.GroupCode))
+                        Next
+                    Case "CServUnit"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CServUnit)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [UnitType]='{0}' ", oData.UnitType))
+                        Next
+                    Case "CUser"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CUser)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [UserID]='{0}' ", oData.UserID))
+                        Next
+                    Case "CUserAuth"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CUserAuth)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [AppID]='{0}' AND MenuID='{1}' AND UserID='{2}' ", oData.AppID, oData.MenuID, oData.UserID))
+                        Next
+                    Case "CVender"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CVender)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [VenCode]='{0}' ", oData.VenCode))
+                        Next
+                    Case "CVessel"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CVessel)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [RegsNumber]='{0}' ", oData.RegsNumber))
+                        Next
+                    Case "CVoucher"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CVoucher)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND [ControlNo]='{1}' ", oData.BranchCode, oData.ControlNo))
+                        Next
+                    Case "CVoucherSub"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CVoucherSub)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND [ControlNo]='{1}' AND ItemNo={2} ", oData.BranchCode, oData.ControlNo, oData.ItemNo))
+                        Next
+                    Case "CVoucherDoc"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CVoucherDoc)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND [ControlNo]='{1}' AND ItemNo={2}", oData.BranchCode, oData.ControlNo, oData.ItemNo))
+                        Next
+                    Case "CWHTaxDetail"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CWHTaxDetail)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' AND ItemNo='{2}' ", oData.BranchCode, oData.DocNo, oData.ItemNo))
+                        Next
+                    Case "CWHTaxHeader"
+                        For Each o In data.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CWHTaxHeader)(oArr)
+                            oData.SetConnect(jobWebConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' ", oData.BranchCode, oData.DocNo))
+                        Next
+                End Select
+                msg &= """}"
+                Return Content(msg, jsonContent)
+
+            Catch ex As Exception
+                Return Content("{""result"":""" & ex.Message & """}", jsonContent)
+            End Try
+        End Function
+        Function ImportFromFile() As ActionResult
             Dim path As String = ""
             If Not Request.QueryString("Path") Is Nothing Then
                 path = Request.QueryString("Path").ToString
@@ -871,6 +1244,20 @@ Namespace Controllers
                             Dim oData = JsonConvert.DeserializeObject(Of CWHTaxHeader)(oArr)
                             oData.SetConnect(jobWebConn)
                             msg &= "\n" & oData.SaveData(String.Format(" WHERE [BranchCode]='{0}' AND DocNo='{1}' ", oData.BranchCode, oData.DocNo))
+                        Next
+                    Case "CProvince"
+                        For Each o In obj.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CProvince)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [ProvinceCode]='{0}' ", oData.ProvinceCode))
+                        Next
+                    Case "CProvinceSub"
+                        For Each o In obj.data
+                            Dim oArr = JsonConvert.SerializeObject(o)
+                            Dim oData = JsonConvert.DeserializeObject(Of CProvinceSub)(oArr)
+                            oData.SetConnect(jobMasConn)
+                            msg &= "\n" & oData.SaveData(String.Format(" WHERE [id]={0} ", oData.id))
                         Next
                 End Select
                 msg &= """}"

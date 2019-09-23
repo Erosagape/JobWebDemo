@@ -13,6 +13,11 @@ Public Class HomeController
         ViewBag.User = "System"
         Return View()
     End Function
+    Function Users() As ActionResult
+        ViewBag.Title = "Users Management"
+        ViewBag.User = "System"
+        Return View()
+    End Function
     Function Customers() As ActionResult
         ViewBag.Title = "Customers Management"
         ViewBag.User = "System"
@@ -36,6 +41,56 @@ Public Class HomeController
         Else
             Return Content("Data Not Found", textContent)
         End If
+    End Function
+    Function GetUser() As ActionResult
+        Try
+            Dim tSqlw As String = " WHERE TWTUserID<>'' "
+            If Not IsNothing(Request.QueryString("Code")) Then
+                tSqlw &= String.Format("AND TWTUserID ='{0}'", Request.QueryString("Code").ToString)
+            End If
+            Dim oData = New CUser(Main.GetConnection()).GetData(tSqlw)
+            Dim json As String = JsonConvert.SerializeObject(oData)
+            json = "{""user"":{""data"":" & json & "}}"
+            Return Content(json, jsonContent)
+        Catch ex As Exception
+            Return Content("{""user"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+        End Try
+    End Function
+    Function SetUser(<FromBody()> data As CUser) As ActionResult
+        Try
+            If Not IsNothing(data) Then
+                If "" & data.TWTUserID = "" Then
+                    Return Content("{""result"":{""data"":null,""msg"":""Please Enter Data""}}", jsonContent)
+                End If
+                data.SetConnect(Main.GetConnection())
+                Dim msg = data.SaveData(String.Format(" WHERE TWTUserID='{0}' ", data.TWTUserID))
+                Dim json = "{""user"":{""data"":""" & data.TWTUserID & """,""msg"":""" & msg & """}}"
+                Return Content(json, jsonContent)
+            Else
+                Dim json = "{""user"":{""data"":[],""msg"":""No Data To Save""}}"
+                Return Content(json, jsonContent)
+            End If
+        Catch ex As Exception
+            Dim json = "{""user"":{""data"":[],""msg"":""" & ex.Message & """}}"
+            Return Content(json, jsonContent)
+        End Try
+    End Function
+    Function DelUser() As ActionResult
+        Try
+            Dim tSqlw As String = " WHERE TWTUserID<>'' "
+            If Not IsNothing(Request.QueryString("Code")) Then
+                tSqlw &= String.Format("AND TWTUserID Like '{0}'", Request.QueryString("Code").ToString)
+            Else
+                Return Content("{""user"":{""msg"":""Please Select Some Data"",""data"":[]}}", jsonContent)
+            End If
+            Dim oData As New CUser(Main.GetConnection())
+            Dim msg = oData.DeleteData(tSqlw)
+
+            Dim json = "{""user"":{""msg"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
+            Return Content(json, jsonContent)
+        Catch ex As Exception
+            Return Content("{""user"":{""msg"":""" & ex.Message & """,""data"":[]}}", jsonContent)
+        End Try
     End Function
     Function GetCustomer() As ActionResult
         Try

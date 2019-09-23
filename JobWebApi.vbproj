@@ -492,6 +492,8 @@
     </None>
     <None Include="My Project\PublishProfiles\devtest.pubxml" />
     <None Include="My Project\PublishProfiles\jobbeta.pubxml" />
+    <None Include="My Project\PublishProfiles\job_apl.pubxml" />
+    <None Include="My Project\PublishProfiles\servertawan.pubxml" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>
@@ -604,7 +606,7 @@
     <Content Include="Views\Master\CustomsUnit.vbhtml" />
     <Content Include="Views\Master\Vessel.vbhtml" />
     <Content Include="Views\Master\CompanyContact.vbhtml" />
-    <Content Include="Views\Report\Import.vbhtml" />
+    <Content Include="Views\Report\ImportFile.vbhtml" />
     <Content Include="Views\Report\Export.vbhtml" />
     <Content Include="Views\Shared\MasterPage.vbhtml" />
     <Content Include="Views\Menu\_Index.vbhtml" />
@@ -615,6 +617,7 @@
     <Content Include="Views\Master\AccountCode.vbhtml" />
     <Content Include="Views\Tracking\_Index.vbhtml" />
     <Content Include="Views\Tracking\PublicIndex.vbhtml" />
+    <Content Include="Views\Report\Import.vbhtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

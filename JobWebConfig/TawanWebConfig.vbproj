@@ -162,6 +162,7 @@
     </Compile>
     <Compile Include="Models\CApp.vb" />
     <Compile Include="Models\CCustomer.vb" />
+    <Compile Include="Models\CUser.vb" />
     <Compile Include="Models\CUtil.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -210,7 +211,7 @@
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
-    <None Include="My Project\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="My Project\PublishProfiles\tawanasp.pubxml" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>
@@ -310,6 +311,7 @@
     <Content Include="Scripts\Home\Apps.js" />
     <Content Include="Scripts\Home\Customers.js" />
     <Content Include="Scripts\Home\Index.js" />
+    <Content Include="Scripts\Home\Users.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -318,6 +320,7 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Views\Home\Apps.vbhtml" />
     <Content Include="Views\Home\Customers.vbhtml" />
+    <Content Include="Views\Home\Users.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

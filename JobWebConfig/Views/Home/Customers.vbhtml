@@ -3,7 +3,7 @@
 End Code
 
 <div id="dvForm">
-    <div style="display:flex;flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column">
 
         <div style="flex:1">CustID :<br /><input type="text" id="txtCustID" class="form-control"></div>
         <div style="flex:1">CustName :<br /><input type="text" id="txtCustName" class="form-control"></div>
