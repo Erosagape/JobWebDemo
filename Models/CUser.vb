@@ -286,11 +286,13 @@ Public Class CUser
                             stepFld = 26 : dr("DeptID") = Me.DeptID
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUser", "SaveData", Me)
                             msg = String.Format("Save user {0} Complete", Me.UserID)
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUser", "SaveData", ex.Message)
                 msg = "[STEP]=" & stepFld & " :" & ex.Message
             End Try
         End Using
@@ -428,10 +430,12 @@ Public Class CUser
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUser", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUser", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

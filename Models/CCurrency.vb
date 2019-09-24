@@ -75,11 +75,13 @@ Public Class CCurrency
                             dr("LastUpdate") = Me.LastUpdate
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCurrency", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCurrency", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -134,10 +136,12 @@ Public Class CCurrency
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCurrency", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCurrency", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

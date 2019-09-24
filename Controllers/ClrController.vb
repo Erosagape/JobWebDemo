@@ -73,6 +73,7 @@ Namespace Controllers
                 End If
                 Return New HttpResponseMessage(HttpStatusCode.BadRequest)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "ApproveClearing", "ERROR", ex.Message)
                 Return New HttpResponseMessage(HttpStatusCode.BadRequest)
             End Try
         End Function
@@ -218,6 +219,7 @@ Namespace Controllers
                 Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & "}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetClearingReport", "ERROR", ex.Message)
                 Return Content("{""data"":[],""msg"":""" & ex.Message & """}", jsonContent)
             End Try
 
@@ -298,6 +300,7 @@ Namespace Controllers
                 Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetClearingSum", "ERROR", ex.Message)
                 Return Content("{""clr"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
@@ -358,55 +361,61 @@ Namespace Controllers
                 Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetClearingGrid", "ERROR", ex.Message)
                 Return Content("{""clr"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
         Function GetAdvForClear() As ActionResult
-
-            Dim tSqlW As String = " WHERE (a.AdvNet-ISNULL(d.TotalCleared,0))>0 AND c.DocStatus IN('3','4') "
-            If Not IsNothing(Request.QueryString("Show")) Then
-                If Request.QueryString("Show").ToString = "NOCLR" Then
-                    tSqlW = " WHERE d.AdvNo IS NULL AND c.DocStatus IN('2','3') "
+            Try
+                Dim tSqlW As String = " WHERE (a.AdvNet-ISNULL(d.TotalCleared,0))>0 AND c.DocStatus IN('3','4') "
+                If Not IsNothing(Request.QueryString("Show")) Then
+                    If Request.QueryString("Show").ToString = "NOCLR" Then
+                        tSqlW = " WHERE d.AdvNo IS NULL AND c.DocStatus IN('2','3') "
+                    End If
+                    If Request.QueryString("Show").ToString = "CLR" Then
+                        tSqlW = " WHERE d.AdvNo IS NOT NULL AND c.DocStatus IN('4','5') "
+                    End If
+                    If Request.QueryString("Show").ToString = "ALL" Then
+                        tSqlW = " WHERE c.DocStatus>0 "
+                    End If
                 End If
-                If Request.QueryString("Show").ToString = "CLR" Then
-                    tSqlW = " WHERE d.AdvNo IS NOT NULL AND c.DocStatus IN('4','5') "
+
+                If Not IsNothing(Request.QueryString("BranchCode")) Then
+                    Dim Branch = Request.QueryString("BranchCode")
+                    tSqlW &= String.Format(" AND c.BranchCode='{0}'", Branch)
                 End If
-                If Request.QueryString("Show").ToString = "ALL" Then
-                    tSqlW = " WHERE c.DocStatus>0 "
+
+                If Not IsNothing(Request.QueryString("JobNo")) Then
+                    tSqlW &= " AND a.ForJNo='" & Request.QueryString("JobNo") & "' "
                 End If
-            End If
+                If Not IsNothing(Request.QueryString("JType")) Then
+                    tSqlW &= " AND c.JobType=" & Request.QueryString("JType") & ""
+                End If
+                If Not IsNothing(Request.QueryString("CFrom")) Then
+                    tSqlW &= " AND c.EmpCode IN(SELECT UserID FROM Mas_User WHERE DeptID='" & Request.QueryString("CFrom") & "')"
+                End If
+                If Not IsNothing(Request.QueryString("ReqBy")) Then
+                    tSqlW &= " AND c.EmpCode='" & Request.QueryString("ReqBy") & "'"
+                End If
+                If Not IsNothing(Request.QueryString("DateFrom")) Then
+                    tSqlW &= " AND c.AdvDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
+                End If
+                If Not IsNothing(Request.QueryString("DateTo")) Then
+                    tSqlW &= " AND c.AdvDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
+                End If
+                If Not IsNothing(Request.QueryString("Status")) Then
+                    tSqlW &= " AND c.DocStatus='" & Request.QueryString("Status") & "' "
+                End If
+                Dim sql As String = SQLSelectAdvForClear() & "{0}"
 
-            If Not IsNothing(Request.QueryString("BranchCode")) Then
-                Dim Branch = Request.QueryString("BranchCode")
-                tSqlW &= String.Format(" AND c.BranchCode='{0}'", Branch)
-            End If
+                Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
+                Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
+                Return Content(json, jsonContent)
 
-            If Not IsNothing(Request.QueryString("JobNo")) Then
-                tSqlW &= " AND a.ForJNo='" & Request.QueryString("JobNo") & "' "
-            End If
-            If Not IsNothing(Request.QueryString("JType")) Then
-                tSqlW &= " AND c.JobType=" & Request.QueryString("JType") & ""
-            End If
-            If Not IsNothing(Request.QueryString("CFrom")) Then
-                tSqlW &= " AND c.EmpCode IN(SELECT UserID FROM Mas_User WHERE DeptID='" & Request.QueryString("CFrom") & "')"
-            End If
-            If Not IsNothing(Request.QueryString("ReqBy")) Then
-                tSqlW &= " AND c.EmpCode='" & Request.QueryString("ReqBy") & "'"
-            End If
-            If Not IsNothing(Request.QueryString("DateFrom")) Then
-                tSqlW &= " AND c.AdvDate>='" & Request.QueryString("DateFrom") & " 00:00:00'"
-            End If
-            If Not IsNothing(Request.QueryString("DateTo")) Then
-                tSqlW &= " AND c.AdvDate<='" & Request.QueryString("DateTo") & " 23:59:00'"
-            End If
-            If Not IsNothing(Request.QueryString("Status")) Then
-                tSqlW &= " AND c.DocStatus='" & Request.QueryString("Status") & "' "
-            End If
-            Dim sql As String = SQLSelectAdvForClear() & "{0}"
-
-            Dim oData As DataTable = New CUtil(jobWebConn).GetTableFromSQL(String.Format(sql, tSqlW))
-            Dim json = "{""clr"":{""data"":" & JsonConvert.SerializeObject(oData.AsEnumerable().ToList()) & ",""msg"":""" & tSqlW & """}}"
-            Return Content(json, jsonContent)
+            Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetAdvForClear", "ERROR", ex.Message)
+                Return Content("{""clr"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
+            End Try
         End Function
         Function GetNewClearHeader() As ActionResult
             ViewBag.User = Session("CurrUser").ToString()
@@ -491,6 +500,7 @@ Namespace Controllers
                 json = "{""clr"":{""header"":" & json & ",""detail"":" & jsonD & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetClearing", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -531,6 +541,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetClrHeader", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -565,6 +576,7 @@ Namespace Controllers
                 Dim json = "{""clr"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelClearing", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -592,6 +604,7 @@ Namespace Controllers
                 json = "{""clr"":{""detail"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetClrDetail", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -613,6 +626,7 @@ Namespace Controllers
                 Dim json = "{""result"":{""msg"":""" & icount & " row saved! (Clearing No=" + clrno + ")"",""data"":""" & clrno & """,""detail"":[" & JsonConvert.SerializeObject(obj) & "]}}"
                 Return Content(Json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SaveClearDetail", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """,""detail"":[]}}"
                 Return Content(json, jsonContent)
             End Try
@@ -644,6 +658,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetClrDetail", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -683,6 +698,7 @@ Namespace Controllers
                 Dim json = "{""clr"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelClrDetail", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function

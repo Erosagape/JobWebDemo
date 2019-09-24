@@ -505,6 +505,7 @@ Public Class CInvHeader
                             dr("DiscountCal") = Me.DiscountCal
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvHeader", "SaveData", Me)
                             If Me.CancelProve <> "" Then
                                 CancelData(cn)
                             End If
@@ -514,6 +515,7 @@ Public Class CInvHeader
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvHeader", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -697,11 +699,13 @@ Public Class CInvHeader
                     cm.CommandText = Sql
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvHeader", "UpdateClrDetail", cm.CommandText)
                 End If
             End Using
 
             msg = "Cancel Complete"
         Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvHeader", "CancelData", ex.Message)
             msg = ex.Message
         End Try
         Return msg
@@ -716,6 +720,7 @@ Public Class CInvHeader
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvHeader", "DeleteData", cm.CommandText)
                 End Using
                 If Me.DocNo <> "" Then
                     msg = CancelData(cn)
@@ -723,6 +728,7 @@ Public Class CInvHeader
                     msg = "Delete Complete"
                 End If
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvHeader", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

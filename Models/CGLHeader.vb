@@ -186,11 +186,13 @@ Public Class CGLHeader
                             dr("CancelReason") = Me.CancelReason
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLHeader", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLHeader", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -277,10 +279,12 @@ Public Class CGLHeader
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLHeader", "DeleteData", cm.CommandText)
                 End Using
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLHeader", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

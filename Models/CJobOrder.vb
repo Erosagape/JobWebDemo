@@ -1072,6 +1072,7 @@ Public Class CJobOrder
                             End Try
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CJobOrder", "SaveData", Me)
                             pass = "11"
                             msg = "Save " & Me.JNo & " Complete"
                         End Using
@@ -1079,6 +1080,7 @@ Public Class CJobOrder
 
                 End Using
             Catch e As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CJobOrder", "SaveData", e.Message)
                 msg = "[error" & pass & "]" & e.Message
             End Try
         End Using

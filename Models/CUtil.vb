@@ -31,10 +31,12 @@ Public Class CUtil
                     cm.CommandText = pSQL
                     cm.CommandType = CommandType.Text
                     Message &= " Row(s)=" & cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", cn.ConnectionString, Message, pSQL)
                 End Using
 
             Catch ex As Exception
                 Message = "[ERROR]" & ex.Message
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "ExecuteSQL", Message, pSQL)
             End Try
         End Using
         Return Message
@@ -54,7 +56,7 @@ Public Class CUtil
             End Try
         End Using
         If saveLog Then
-            Main.SaveLog("TAWAN", "JOBSHIPING", m_ConnStr, Message, pSQL)
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPING", "GetTableFromSQL", Message, pSQL)
         End If
         Return dt
     End Function

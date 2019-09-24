@@ -92,7 +92,7 @@ function ClearData() {
     $('#txtCustTelFaxMobile').val('');
     $('#txtBeginDate').val('');
     $('#txtExpireDate').val('');
-    $('#txtActive').val('');
+    $('#txtActive').val('0');
     $('#txtCustRemark').val('');
     $('#txtCustMessage').val('');
 }

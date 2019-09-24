@@ -107,11 +107,13 @@ Public Class CCompanyContact
                             dr("Phone") = Me.Phone
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCompanyContact", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCompanyContact", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -171,10 +173,12 @@ Public Class CCompanyContact
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCompanyContact", "DeleteData", cm.CommandText)
                 End Using
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CCompanyContact", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

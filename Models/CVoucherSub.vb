@@ -362,11 +362,13 @@ Public Class CVoucherSub
                             dr("ForJNo") = Me.ForJNo
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucherSub", "SaveData", Me)
                             msg = Me.PRVoucher
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucherSub", "SaveData", ex.Message)
                 msg = "[ERROR] " & ex.Message
             End Try
         End Using
@@ -518,10 +520,12 @@ Public Class CVoucherSub
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucherSub", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucherSub", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

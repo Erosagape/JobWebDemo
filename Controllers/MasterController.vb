@@ -76,6 +76,7 @@ Namespace Controllers
                 json = "{""accountcode"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetAccountCode", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -94,6 +95,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetAccountCode", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -112,6 +114,7 @@ Namespace Controllers
                 Dim json = "{""accountcode"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelAccountCode", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -132,6 +135,7 @@ Namespace Controllers
                 json = "{""companycontact"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetCompanyContact", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -149,6 +153,7 @@ Namespace Controllers
                 json = "{""province"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetProvince", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -167,6 +172,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetProvince", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -185,6 +191,7 @@ Namespace Controllers
                 Dim json = "{""province"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelProvince", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -199,6 +206,7 @@ Namespace Controllers
                 json = "{""province"":{""detail"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetProvinceSub", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -217,6 +225,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetProvinceSub", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -235,6 +244,7 @@ Namespace Controllers
                 Dim json = "{""province"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelProvinceSub", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -253,6 +263,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetCompanyContact", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -277,6 +288,7 @@ Namespace Controllers
                 Dim json = "{""companycontact"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelCompanyContact", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -295,6 +307,7 @@ Namespace Controllers
                 json = "{""vessel"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetVessel", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -313,6 +326,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetVessel", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -331,6 +345,7 @@ Namespace Controllers
                 Dim json = "{""vessel"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelVessel", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -346,6 +361,7 @@ Namespace Controllers
                 json = "{""servicegroup"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetServiceGroup", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -383,6 +399,7 @@ AND b.IsApplyPolicy=1
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetServiceGroup", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -401,6 +418,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""servicegroup"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelServiceGroup", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -415,6 +433,7 @@ AND b.IsApplyPolicy=1
                 json = "{""bank"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetBank", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -433,6 +452,7 @@ AND b.IsApplyPolicy=1
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetBank", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -451,6 +471,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""bank"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelBank", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -468,6 +489,7 @@ AND b.IsApplyPolicy=1
                 json = "{""bookaccount"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetBookAccount", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -485,6 +507,7 @@ AND b.IsApplyPolicy=1
                 json = "{""bookaccount"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetBookBalance", "ERROR", ex.Message)
                 Return Content("{""bookaccount"":{""data"":[],""msg"":" & ex.Message & "}}", jsonContent)
             End Try
         End Function
@@ -503,6 +526,7 @@ AND b.IsApplyPolicy=1
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetBookAccount", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -524,6 +548,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""bookaccount"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelBookAccount", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -541,6 +566,7 @@ AND b.IsApplyPolicy=1
                 json = "{""interport"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetInterPort", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -562,6 +588,7 @@ AND b.IsApplyPolicy=1
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetInterPort", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -585,6 +612,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""interport"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelInterPort", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -602,6 +630,7 @@ AND b.IsApplyPolicy=1
                 Return Content(json, jsonContent)
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetCustomsPort", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -622,6 +651,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetCustomsPort", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -642,6 +672,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""RFARS"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelCustomsPort", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
 
@@ -663,6 +694,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetDeclareType", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -683,6 +715,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""RFDCT"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelDeclareType", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
 
@@ -703,6 +736,7 @@ AND b.IsApplyPolicy=1
                 Return Content(json, jsonContent)
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetServUnit", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -723,6 +757,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetServUnit", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -743,6 +778,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""servunit"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelServUnit", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
 
@@ -758,6 +794,7 @@ AND b.IsApplyPolicy=1
                 json = "{""RFDCT"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetDeclareType", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
 
@@ -774,6 +811,7 @@ AND b.IsApplyPolicy=1
                 json = "{""currency"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetCurrency", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
 
@@ -795,6 +833,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetCurrency", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -815,6 +854,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""currency"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelCurrency", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
 
@@ -833,6 +873,7 @@ AND b.IsApplyPolicy=1
                 json = "{""user"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetUser", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -844,6 +885,7 @@ AND b.IsApplyPolicy=1
                 json = "{""company"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetNewCompany", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -855,6 +897,7 @@ AND b.IsApplyPolicy=1
                 json = "{""user"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetNewUser", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -866,6 +909,7 @@ AND b.IsApplyPolicy=1
                 json = "{""vender"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetNewVender", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -881,6 +925,7 @@ AND b.IsApplyPolicy=1
                 Return Content(json, jsonContent)
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetCountry", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -901,6 +946,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetCountry", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -921,6 +967,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""country"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelCountry", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
 
@@ -947,6 +994,7 @@ AND b.IsApplyPolicy=1
                 json = "{""company"":{""data"":" & json & ",""contact"":" & jsonc & "},""sql"":""" & tSqlw & """}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetCompany", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -961,23 +1009,7 @@ AND b.IsApplyPolicy=1
                 json = "{""vender"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("[]", jsonContent)
-            End Try
-        End Function
-        Function _GetInterPort() As ActionResult
-            Try
-                Dim tSqlw As String = " WHERE CountryCode<>'' "
-                If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format(" AND PortCode='{0}'", Request.QueryString("Code").ToString)
-                End If
-                If Not IsNothing(Request.QueryString("Key")) Then
-                    tSqlw &= String.Format(" AND CountryCode='{0}'", Request.QueryString("Key").ToString)
-                End If
-                Dim oData = New CInterPort(jobMasConn).GetData(tSqlw)
-                Dim json As String = JsonConvert.SerializeObject(oData)
-                json = "{""interport"":{""data"":" & json & "}}"
-                Return Content(json, jsonContent)
-            Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetVender", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -993,6 +1025,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""servicecode"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelServiceCode", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1010,6 +1043,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""vender"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelVender", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1030,6 +1064,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""company"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelCompany", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1048,6 +1083,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""user"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelUser", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1076,6 +1112,7 @@ AND b.IsApplyPolicy=1
                 json = "{""servicecode"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetServiceCode", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1088,6 +1125,7 @@ AND b.IsApplyPolicy=1
                 json = "{""servicecode"":{""data"":[" & json & "],""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetNewServiceCode", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1108,6 +1146,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetCompany", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1130,6 +1169,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetVender", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1152,6 +1192,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetUser", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1173,6 +1214,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetServicecode", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1188,6 +1230,7 @@ AND b.IsApplyPolicy=1
                 json = "{""branch"":{""data"":""" & json & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetBranch", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1207,6 +1250,7 @@ AND b.IsApplyPolicy=1
                 End If
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetBranch", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1227,6 +1271,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""branch"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelBranch", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1248,6 +1293,7 @@ AND b.IsApplyPolicy=1
                 json = "{""budgetpolicy"":{""data"":" & json & ",""msg"":""OK""}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetServiceBudget", "ERROR", ex.Message)
                 Return Content("{""budgetpolicy"":{""data"":[],""msg"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
@@ -1265,6 +1311,7 @@ AND b.IsApplyPolicy=1
                 json = "{""budgetpolicy"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetBudgetPolicy", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1283,6 +1330,7 @@ AND b.IsApplyPolicy=1
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetBudgetPolicy", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1301,6 +1349,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""budgetpolicy"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelBudgetPolicy", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1315,6 +1364,7 @@ AND b.IsApplyPolicy=1
                 json = "{""customsunit"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetCustomsUnit", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1333,6 +1383,7 @@ AND b.IsApplyPolicy=1
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetCustomsUnit", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1351,6 +1402,7 @@ AND b.IsApplyPolicy=1
                 Dim json = "{""customsunit"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelCustomsUnit", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function

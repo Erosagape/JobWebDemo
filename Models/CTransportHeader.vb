@@ -256,11 +256,13 @@ Public Class CTransportHeader
                             dr("PaymentBy") = Me.PaymentBy
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CTransportHeader", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CTransportHeader", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -390,11 +392,13 @@ Public Class CTransportHeader
                     If Me.JNo <> "" Then
                         cm.CommandText = String.Format("DELETE FROM Job_LoadInfoDetail WHERE BranchCode='{0}' AND JNo='{1}'", Me.BranchCode, Me.JNo)
                         cm.ExecuteNonQuery()
+                        Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CTransportHeader", "DeleteData", cm.CommandText)
                     End If
                 End Using
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CTransportHeader", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

@@ -24,15 +24,20 @@ Namespace Controllers
             Return GetView("Role", "MODULE_ADM")
         End Function
         Function GetDatabase() As ActionResult
-            Dim companyName As String = ""
-            Dim oData = Main.GetDatabaseList(My.MySettings.Default.LicenseTo, "JOBSHIPPING")
-            Using tb As DataTable = Main.GetDatabaseProfile(My.MySettings.Default.LicenseTo)
-                If tb.Rows.Count > 0 Then
-                    companyName = tb.Rows(0)("CustName").ToString()
-                End If
-            End Using
-            Dim json = "{""database"":" & JsonConvert.SerializeObject(oData) & ",""company"":""" & companyName & """}"
-            Return Content(json, jsonContent)
+            Try
+                Dim companyName As String = ""
+                Dim oData = Main.GetDatabaseList(My.MySettings.Default.LicenseTo, "JOBSHIPPING")
+                Using tb As DataTable = Main.GetDatabaseProfile(My.MySettings.Default.LicenseTo)
+                    If tb.Rows.Count > 0 Then
+                        companyName = tb.Rows(0)("CustName").ToString()
+                    End If
+                End Using
+                Dim json = "{""database"":" & JsonConvert.SerializeObject(oData) & ",""company"":""" & companyName & """}"
+                Return Content(json, jsonContent)
+            Catch ex As Exception
+                Return Content("[]", jsonContent)
+            End Try
+
         End Function
         Function GetJSONResult(data As CResult) As ActionResult
             Dim tSQL As String = data.Source
@@ -153,6 +158,7 @@ Namespace Controllers
                 json = "{""userauth"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetUserAuth", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -177,6 +183,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetUserAuth", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -201,6 +208,7 @@ Namespace Controllers
                 Dim json = "{""userauth"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelUserAuth", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -228,6 +236,7 @@ Namespace Controllers
                 json = "{""config"":{""data"":[" & json & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetList", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -240,6 +249,7 @@ Namespace Controllers
                 Dim json = "{""config"":{""result"":""" & msg & """}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelConfig", "ERROR", ex.Message)
                 Dim json = "{""config"":{""result"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -282,6 +292,7 @@ Namespace Controllers
                 json = "{""config"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetConfig", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -296,6 +307,7 @@ Namespace Controllers
                 json = "{""branch"":{""data"":" & json & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetBranch", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -548,6 +560,7 @@ Namespace Controllers
                     End If
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetLogin", "ERROR", ex.Message)
                 Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
@@ -907,6 +920,7 @@ Namespace Controllers
                 Return Content(msg, jsonContent)
 
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "ImportData", "ERROR", ex.Message)
                 Return Content("{""result"":""" & ex.Message & """}", jsonContent)
             End Try
         End Function
@@ -1263,6 +1277,7 @@ Namespace Controllers
                 msg &= """}"
                 Return Content(msg, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "ImportFromFile", "ERROR", ex.Message)
                 Return Content("{""result"":""" & ex.Message & """}", jsonContent)
             End Try
         End Function
@@ -1328,6 +1343,7 @@ Namespace Controllers
                     End If
                 Next
             Catch e As Exception
+
                 msg = "[Error] " + e.Message
             End Try
             If msg = "" Then msg = "[Error] No File To Upload"
@@ -1366,6 +1382,7 @@ Namespace Controllers
                 json = "{""userrole"":{""data"":" & json & ",""detail"":" + jsonD + "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetUserRole", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1392,20 +1409,7 @@ Namespace Controllers
                 Dim json As String = "{""userrole"":{""policy"":" & jsonD & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
-                Return Content("{""userrole"":{""policy"":[],""message"":""" & ex.Message & """}}", jsonContent)
-            End Try
-
-        End Function
-        Function GetUserRolePolicyTest() As ActionResult
-            Try
-                Dim tSqlw As String = " WHERE ModuleID<>'' "
-                If Not IsNothing(Request.QueryString("Code")) Then
-                    tSqlw &= String.Format("AND RoleID ='{0}'", Request.QueryString("Code").ToString)
-                End If
-                Dim oData = New CUserRolePolicy(jobWebConn).GetData(tSqlw)
-                Dim json As String = "{""userrole"":{""policy"":" & JsonConvert.SerializeObject(oData) & "}}"
-                Return Content(json, jsonContent)
-            Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetUserRolePolicy", "ERROR", ex.Message)
                 Return Content("{""userrole"":{""policy"":[],""message"":""" & ex.Message & """}}", jsonContent)
             End Try
 
@@ -1444,6 +1448,7 @@ Namespace Controllers
                 Dim json As String = "{""userrole"":{""detail"":" & jsonD & "}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetUserRoleDetail", "ERROR", ex.Message)
                 Return Content("{""userrole"":{""msg"":" & ex.Message & "}}", jsonContent)
             End Try
         End Function
@@ -1462,6 +1467,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetUserRole", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1488,6 +1494,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetUserRoleDetail", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """,""log"":null}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1514,6 +1521,7 @@ Namespace Controllers
                     Return Content(json, jsonContent)
                 End If
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetUserRolePolicy", "ERROR", ex.Message)
                 Dim json = "{""result"":{""data"":null,""msg"":""" & ex.Message & """}}"
                 Return Content(json, jsonContent)
             End Try
@@ -1533,6 +1541,7 @@ Namespace Controllers
                 Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelUserRole", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1559,6 +1568,7 @@ Namespace Controllers
                 Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelUserRoleDetail", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1582,6 +1592,7 @@ Namespace Controllers
                 Dim json = "{""userrole"":{""result"":""" & msg & """,""data"":[" & JsonConvert.SerializeObject(oData) & "]}}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "DelUserRolePolicy", "ERROR", ex.Message)
                 Return Content("[]", jsonContent)
             End Try
         End Function
@@ -1597,6 +1608,7 @@ Namespace Controllers
                 Dim json = "{""data"":" & JsonConvert.SerializeObject(oData.Rows) & ",""msg"":""""}"
                 Return Content(json, jsonContent)
             Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetTable", "ERROR", ex.Message)
                 Return Content("{""data"":[],""msg"":""" & ex.Message & """}", jsonContent)
             End Try
         End Function

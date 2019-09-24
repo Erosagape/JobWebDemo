@@ -127,12 +127,14 @@ Public Class CGLDetail
                             dr("EntryBy") = Me.EntryBy
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLDetail", "SaveData", Me)
                             UpdateTotal(cn)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLDetail", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -198,11 +200,13 @@ Public Class CGLDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLDetail", "DeleteData", cm.CommandText)
                 End Using
                 UpdateTotal(cn)
                 cn.Close()
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLDetail", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -215,6 +219,7 @@ Public Class CGLDetail
             cm.CommandText = sql & If(Me.GLRefNo <> "", " WHERE a.BranchCode='" + Me.BranchCode + "' and a.GLRefNo='" + Me.GLRefNo + "'", "")
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CGLDetail", "UpdateTotal", cm.CommandText)
         End Using
     End Sub
 End Class

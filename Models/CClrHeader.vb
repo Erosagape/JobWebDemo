@@ -367,11 +367,13 @@ Public Class CClrHeader
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             UpdateTotal(cn)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CClrHeader", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CClrHeader", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -514,10 +516,12 @@ Public Class CClrHeader
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CClrHeader", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CClrHeader", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -529,11 +533,12 @@ Public Class CClrHeader
             cm.CommandText = sql + " WHERE a.BranchCode='" + Me.BranchCode + "' and a.ClrNo='" + Me.ClrNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
-
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CClrHeader", "UpdateClrHeader", cm.CommandText)
             sql = Main.SQLUpdateAdvStatus
             cm.CommandText = sql + " WHERE adv.BranchCode='" + Me.BranchCode + "' and adv.AdvNo IN(SELECT AdvNO FROM Job_ClearDetail WHERE BranchCode='" + Me.BranchCode + "' AND ClrNo='" + Me.ClrNo + "' AND AdvNo IS NOT NULL)"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CClrHeader", "UpdateAdvStatus", cm.CommandText)
         End Using
     End Sub
 End Class

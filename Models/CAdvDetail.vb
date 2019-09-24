@@ -272,11 +272,13 @@ Public Class CAdvDetail
                             If da.Update(dt) > 0 Then
                                 UpdateTotal(cn)
                             End If
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvDetail", "SaveData", Me)
                             msg = String.Format("Save '{0}' Item {1} Complete", Me.AdvNo, Me.ItemNo)
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvDetail", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -289,6 +291,7 @@ Public Class CAdvDetail
             cm.CommandText = sql & " WHERE b.BranchCode='" + Me.BranchCode + "' and b.AdvNo='" + Me.AdvNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvDetail", "UpdateTotal", cm.CommandText)
         End Using
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CAdvDetail)
@@ -388,11 +391,13 @@ Public Class CAdvDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvDetail", "DeleteData", cm.CommandText)
                 End Using
                 UpdateTotal(cn)
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvDetail", "DeleteData", ex.Message)
                 msg = "[exception] " + ex.Message
             End Try
         End Using

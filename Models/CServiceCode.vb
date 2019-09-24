@@ -217,10 +217,12 @@ Public Class CServiceCode
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CServiceCode", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CServiceCode", "DeleteData", ex.Message)
                 msg = "[exception] " + ex.Message
             End Try
         End Using
@@ -261,6 +263,7 @@ Public Class CServiceCode
                             dr("IsUsedCoSlip") = Me.IsUsedCoSlip
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             If da.Update(dt) > 0 Then
+                                Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CServiceCode", "SaveData", Me)
                                 msg = "Save " & Me.SICode & " Complete"
                             Else
                                 msg = "Save Failed"
@@ -269,6 +272,7 @@ Public Class CServiceCode
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CServiceCode", "SaveData", ex.Message)
                 msg = "[exception] " + ex.Message
             End Try
         End Using

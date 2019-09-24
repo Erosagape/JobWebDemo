@@ -190,11 +190,13 @@ Public Class CVoucher
                             End If
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucher", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucher", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -298,10 +300,12 @@ Public Class CVoucher
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucher", "DeleteData", cm.CommandText)
                 End Using
                 Me.CancelData()
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CVoucher", "DeleteData", ex.Message)
                 msg = "[ERROR]" & ex.Message
             End Try
         End Using

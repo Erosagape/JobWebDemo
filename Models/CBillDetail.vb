@@ -228,10 +228,12 @@ Public Class CBillDetail
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             msg = UpdateTotal(cn)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CBillDetail", "SaveData", Me)
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CBillDetail", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -327,6 +329,7 @@ Public Class CBillDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CBillDetail", "DeleteData", cm.CommandText)
                 End Using
                 If Me.BillAcceptNo <> "" Then
                     CancelDocument(cn)
@@ -346,6 +349,7 @@ Public Class CBillDetail
             cm.CommandText = sql & If(Me.InvNo <> "", " AND a.DocNo='" + Me.InvNo + "'", "")
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CBillDetail", "UpdateBillToInv", cm.CommandText)
         End Using
     End Sub
     Function UpdateTotal(cn As SqlConnection) As String
@@ -355,10 +359,12 @@ Public Class CBillDetail
             cm.CommandText = sql & If(Me.InvNo <> "", " AND a.DocNo='" + Me.InvNo + "'", "")
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CBillDetail", "UpdateBillToInv", cm.CommandText)
 
             sql = SQLUpdateBillHeader(Me.BranchCode, Me.BillAcceptNo)
             cm.CommandText = sql
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CBillDetail", "UpdateTotal", cm.CommandText)
         End Using
         Return "Save " & Me.BillAcceptNo & " Complete!"
     End Function

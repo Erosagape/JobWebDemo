@@ -459,11 +459,13 @@ Public Class CAdvHeader
                             If da.Update(dt) > 0 Then
                                 UpdateTotal(cn)
                             End If
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvHeader", "SaveData", Me)
                             msg = String.Format("Save '{0}' Complete", Me.AdvNo)
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvHeader", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -476,6 +478,7 @@ Public Class CAdvHeader
             cm.CommandText = sql & " WHERE b.BranchCode='" + Me.BranchCode + "' and b.AdvNo='" + Me.AdvNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvHeader", "UpdateTotal", cm.CommandText)
         End Using
     End Sub
     Public Function GetData(pSQLWhere As String) As List(Of CAdvHeader)
@@ -627,6 +630,7 @@ Public Class CAdvHeader
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CAdvHeader", "DeleteData", ex.Message)
                 msg = "[exception] " + ex.Message
             End Try
         End Using

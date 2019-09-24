@@ -368,11 +368,13 @@ Public Class CInvDetail
                             If da.Update(dt) > 0 Then
                                 UpdateTotal(cn)
                             End If
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvDetail", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvDetail", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -384,6 +386,7 @@ Public Class CInvDetail
             cm.CommandText = sql + " WHERE h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvDetail", "UpdateInvHeader", cm.CommandText)
             If Me.ClrNoList <> "" Then
                 If Me.DocNo <> "" And Me.ItemNo <> 0 Then
                     sql = String.Format("UPDATE Job_ClearDetail SET LinkBillNo='{0}',LinkItem={1}", Me.DocNo, Me.ItemNo)
@@ -391,6 +394,7 @@ Public Class CInvDetail
                     cm.CommandText = sql
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvDetail", "UpdateClrDetail", cm.CommandText)
                 End If
             End If
         End Using
@@ -524,6 +528,7 @@ Public Class CInvDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvDetail", "DeleteInvDetail", cm.CommandText)
                     If Me.DocNo <> "" And Me.ItemNo <> 0 Then
                         Dim Sql = "UPDATE Job_ClearDetail SET LinkBillNo=null,LinkItem=0"
                         Sql &= String.Format(" WHERE BranchCode='{0}' AND LinkBillNo='{1}' And LinkItem={2}", Me.BranchCode, Me.DocNo, Me.ItemNo)
@@ -531,12 +536,14 @@ Public Class CInvDetail
                         cm.CommandText = Sql
                         cm.CommandType = CommandType.Text
                         cm.ExecuteNonQuery()
+                        Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvDetail", "UpdateClrDetail", cm.CommandText)
                     End If
                 End Using
                 UpdateTotal(cn)
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CInvDetail", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

@@ -32,6 +32,7 @@ Public Class CConfig
                             dr(2) = Me.ConfigValue
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             If da.Update(dt) > 0 Then
+                                Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CConfig", "SaveData", Me)
                                 bComplete = True
                             End If
                         End Using
@@ -40,6 +41,7 @@ Public Class CConfig
 
             End Using
         Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CConfig", "SaveData", ex.Message)
         End Try
         Return bComplete
     End Function
@@ -51,11 +53,13 @@ Public Class CConfig
                 Using cm = New SqlCommand("DELETE FROM Mas_Config " & pSqlWhere, cn)
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CConfig", "DeleteData", cm.CommandText)
                 End Using
 
             End Using
             Return "Delete Data Complete"
         Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CConfig", "DeleteData", ex.Message)
             Return String.Format("[exception] {0}", ex.Message)
         End Try
     End Function

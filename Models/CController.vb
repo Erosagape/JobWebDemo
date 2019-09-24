@@ -10,7 +10,7 @@ Public Class CController
                 Case "DatabaseID"
                     Session(sName) = "1"
                 Case "CurrLicense"
-                    Session(sName) = "Anonymous"
+                    Session(sName) = "Guest"
                 Case "ConnJob"
                     Session(sName) = ""
                 Case "ConnMas"

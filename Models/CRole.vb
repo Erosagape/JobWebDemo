@@ -56,11 +56,13 @@ Public Class CUserRole
                             dr("RoleGroup") = Me.RoleGroup
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRole", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRole", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -102,15 +104,15 @@ Public Class CUserRole
         Using cn As New SqlConnection(m_ConnStr)
             Try
                 cn.Open()
-
                 Using cm As New SqlCommand("DELETE FROM Mas_UserRole" + pSQLWhere, cn)
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRole", "DeleteData", cm.CommandText)
                 End Using
-
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRole", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -163,11 +165,13 @@ Public Class CUserRoleDetail
                             dr("UserID") = Me.UserID
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRoleDetail", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRoleDetail", "SaveData", ex.Message)
                 msg = "[ERROR]:" & ex.Message
             End Try
         End Using
@@ -211,13 +215,16 @@ Public Class CUserRoleDetail
                     cm.CommandType = CommandType.Text
                     If Me.UserID <> "" And Me.RoleID <> "" Then
                         cm.ExecuteNonQuery()
+                        Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRoleDetail", "DeleteData", cm.CommandText)
                     End If
                     cm.CommandText = "DELETE FROM Mas_UserRoleDetail" + pSQLWhere
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRoleDetail", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRoleDetail", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -280,11 +287,13 @@ Public Class CUserRolePolicy
                             dr("Author") = Me.Author
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRolePolicy", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRolePolicy", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -331,10 +340,12 @@ Public Class CUserRolePolicy
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRolePolicy", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserRolePolicy", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

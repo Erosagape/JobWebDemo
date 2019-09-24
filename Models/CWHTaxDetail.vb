@@ -149,11 +149,13 @@ Public Class CWHTaxDetail
                             If da.Update(dt) > 0 Then
                                 UpdateTotal(cn)
                             End If
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CWHTaxDetail", "SaveData", Me)
                             msg = "Save Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CWHTaxDetail", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -225,10 +227,12 @@ Public Class CWHTaxDetail
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CWHTaxDetail", "DeleteData", cm.CommandText)
                 End Using
 
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CWHTaxDetail", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -241,6 +245,7 @@ Public Class CWHTaxDetail
             cm.CommandText = sql + " and h.BranchCode='" + Me.BranchCode + "' and h.DocNo='" + Me.DocNo + "'"
             cm.CommandType = CommandType.Text
             cm.ExecuteNonQuery()
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CWHTaxDetail", "UpdateTotal", cm.CommandText)
         End Using
     End Sub
 End Class

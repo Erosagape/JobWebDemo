@@ -66,11 +66,13 @@ Public Class CUserAuth
                             dr("Author") = Me.Author
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
+                            Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserAuth", "SaveData", Me)
                             msg = "Save Authorize of " & Me.MenuID & " For " & Me.UserID & " As '" & Me.Author & "' Complete"
                         End Using
                     End Using
                 End Using
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserAuth", "SaveData", ex.Message)
                 msg = ex.Message
             End Try
         End Using
@@ -121,10 +123,11 @@ Public Class CUserAuth
                     cm.CommandTimeout = 0
                     cm.CommandType = CommandType.Text
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserAuth", "DeleteData", cm.CommandText)
                 End Using
-
                 msg = "Delete Complete"
             Catch ex As Exception
+                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CUserAuth", "DeleteData", ex.Message)
                 msg = ex.Message
             End Try
         End Using

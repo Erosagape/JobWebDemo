@@ -54,6 +54,7 @@ Module Main
                 End Using
             End Using
         Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "GetValueSQL", "ERROR", ex.Message & "=>" & sql & " (" & conn & ")")
             ret.IsError = True
             ret.Result = ex.Message
         End Try
@@ -107,7 +108,7 @@ Module Main
 
             End Using
         Catch ex As Exception
-
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "GetMaxByMask", "ERROR", ex.Message)
         End Try
         If retStr = "" Then
             Dim j As Integer = sFormat.Count(Function(c As Char) c = "_")
@@ -133,7 +134,6 @@ Module Main
         Dim msg As String = ""
         Try
             Dim SQL As String = SQLSelectRoleAll()
-
             If uname <> "" Then
                 SQL = String.Format(SQL, " AND a.UserID='" & uname & "'")
             Else
@@ -154,6 +154,7 @@ Module Main
             Next
             Return msg & iRow & " Processed"
         Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "SetAuthorizeFromRole", "ERROR", ex.Message)
             Return "[ERROR] SetAuthorizeByRole:" + ex.Message
         End Try
     End Function
@@ -183,6 +184,7 @@ Module Main
             Next
             Return msg & iRow & " Processed"
         Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "SetAuthorizeByRole", "ERROR", ex.Message)
             Return "[ERROR] SetAuthorizeByRole:" + ex.Message
         End Try
     End Function
@@ -195,11 +197,12 @@ Module Main
                     cm.CommandType = CommandType.Text
                     cm.CommandText = SQL
                     cm.ExecuteNonQuery()
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "DBExecute", conn, SQL)
                 End Using
-
             End Using
             Return "OK"
         Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "DBExecute", "ERROR", ex.Message)
             Return "[ERROR]" & ex.Message
         End Try
     End Function
@@ -1372,7 +1375,8 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
             oLog.Message = msg
             Return oLog.SaveData(" WHERE LogID=0 ")
         Catch ex As Exception
-            Return "[ERROR] : " & ex.Message
+            Dim str = "[ERROR] : " & ex.Message
+            Return str
         End Try
     End Function
     Function SaveLogFromObject(cust As String, app As String, modl As String, action As String, obj As Object) As String
@@ -1387,7 +1391,8 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
             oLog.Message = JsonConvert.SerializeObject(obj)
             Return oLog.SaveData(" WHERE LogID=0 ")
         Catch ex As Exception
-            Return "[ERROR] :" & ex.Message
+            Dim str = "[ERROR] : " & ex.Message
+            Return str
         End Try
     End Function
     Function GetDatabaseList(pCustomer As String, pApp As String) As List(Of String)
@@ -1401,6 +1406,7 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
                 Next
             End If
         Catch ex As Exception
+
         End Try
         Return db
     End Function
