@@ -254,6 +254,19 @@ Namespace Controllers
                 Return Content(json, jsonContent)
             End Try
         End Function
+        Function GetCountLogin() As ActionResult
+            Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
+            Dim oCount = New CWebLogin(cnMas).GetData(String.Format(" WHERE CustID='{0}' AND AppID='JOBSHIPPING'", My.MySettings.Default.LicenseTo.ToString))
+            Return Content(JsonConvert.SerializeObject(oCount), jsonContent)
+        End Function
+        Function GetCompanyData() As ActionResult
+            Dim tbProfile = Main.GetApplicationProfile(My.MySettings.Default.LicenseTo.ToString)
+            Dim json = "[]"
+            If tbProfile.Rows.Count > 0 Then
+                json = JsonConvert.SerializeObject(tbProfile.Rows(0))
+            End If
+            Return Content("{""data"":" & json & "}", jsonContent)
+        End Function
         Function GetCurrentProfile() As ActionResult
             LoadCompanyProfile()
             Dim json = "{""data"":{"
@@ -379,29 +392,24 @@ Namespace Controllers
             Return Content(json, jsonContent)
         End Function
         Function SetLogOut() As ActionResult
-            Session("CurrUser") = Nothing
-            Session("UserProfiles") = Nothing
-            Session("DatabaseID") = Nothing
-            Session("CurrLicense") = Nothing
-            Session("ConnJob") = Nothing
-            Session("ConnMas") = Nothing
-            Session("CurrForm") = Nothing
-            Session("CurrRights") = Nothing
-            Session("CurrentLang") = Nothing
-            Session("CurrBranch") = Nothing
-            Session("CurrBranchName") = Nothing
-            Session("CompanyLogo") = Nothing
-            Session("CompanyName") = Nothing
-            Session("CompanyFax") = Nothing
-            Session("CompanyTel") = Nothing
-            Session("CompanyEmail") = Nothing
-            Session("CompanyAddr1") = Nothing
-            Session("CompanyAddr2") = Nothing
-            Session("Currency") = Nothing
-            Session("VatRate") = Nothing
-            Session("CreditDays") = Nothing
-            Session("TaxNumber") = Nothing
-            Session("TaxBranch") = Nothing
+            Dim userID As String
+
+            If Not Request.QueryString("Code") Is Nothing Then
+                userID = Request.QueryString("Code").ToString
+            Else
+                userID = GetSession("CurrUser")
+            End If
+            If userID <> "" Then
+                Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
+                Dim oLogin = New CWebLogin(cnMas).GetData(String.Format(" WHERE CustID='{0}' AND AppID='JOBSHIPPING' AND UserLogIN='{1}'", My.MySettings.Default.LicenseTo.ToString, userID))
+                If oLogin.Count > 0 Then
+                    Dim oUser = oLogin(0)
+                    oUser.ExpireDateTime = DateTime.Now
+                    oUser.SaveData(String.Format(" WHERE CustID='{0}' AND AppID='JOBSHIPPING' AND UserLogIN='{1}'", My.MySettings.Default.LicenseTo.ToString, userID))
+                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, Session.SessionID, "LOGOUT", userID, DateTime.UtcNow.ToString())
+                End If
+            End If
+            ClearSession()
             Return Content("Y", textContent)
         End Function
         Function GetLanguage() As ActionResult
@@ -464,6 +472,7 @@ Namespace Controllers
                 Dim dbConn As String() = Main.GetDatabaseConnection(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", dbID)
                 Main.SetDatabaseMaster(dbConn(1))
                 Main.SetDatabaseJob(dbConn(0))
+
                 If bGuest Then
                     Session("CurrLicense") = "Guest / " & dbID
                     Session("CurrUser") = "Guest"
@@ -504,8 +513,8 @@ Namespace Controllers
                                     Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""License Expired On Date " & tbProfiles.Rows(0)("ExpireDate").ToString & """}}", jsonContent)
                                 Else
                                     Dim cnMas = ConfigurationManager.ConnectionStrings("TawanConnectionString").ConnectionString
-                                    Dim oCount = New CWebLogin(cnMas).GetData(" WHERE CustID='{0}' AND AppID='JOBSHIPPING'")
-                                    If oCount.Count > tbProfiles.Rows(0)("LoginCount") Then
+                                    Dim oCount = New CWebLogin(cnMas).GetData(String.Format(" WHERE CustID='{0}' AND AppID='JOBSHIPPING'", My.MySettings.Default.LicenseTo.ToString))
+                                    If oCount.Count > Convert.ToInt32(tbProfiles.Rows(0)("LoginCount").ToString()) Then
                                         Return Content("{""user"":{""session_id"":""" & Session.SessionID & """,""data"":[],""message"":""Login over limit =" & tbProfiles.Rows(0)("LoginCount").ToString & """}}", jsonContent)
                                     Else
                                         Dim oLogin = New CWebLogin(cnMas).GetData(String.Format(" WHERE CustID='{0}' AND AppID='JOBSHIPPING' AND UserLogIN='{1}'", My.MySettings.Default.LicenseTo.ToString, oData(0).UserID))
@@ -518,7 +527,7 @@ Namespace Controllers
                                                 End If
                                                 oOld.LoginDateTime = DateTime.Now
                                                 oOld.ExpireDateTime = DateTime.Now.AddMinutes(20)
-                                                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, Session.SessionID, "LOGIN", oData(0).TName, DateTime.UtcNow.ToString())
+                                                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, Session.SessionID, "LOGIN", oData(0).UserID, DateTime.UtcNow.ToString())
                                             End If
                                             oOld.SessionID = Session.SessionID
                                             oOld.FromIP = Request.UserHostAddress
@@ -533,7 +542,7 @@ Namespace Controllers
                                             oNew.LoginDateTime = DateTime.Now
                                             oNew.ExpireDateTime = DateTime.Now.AddMinutes(20)
                                             oNew.SaveData(String.Format(" WHERE CustID='{0}' AND AppID='{1}' AND UserLogIN='{2}'", oNew.CustID, oNew.AppID, oNew.UserLogIN))
-                                            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, Session.SessionID, "LOGIN", oData(0).TName, DateTime.UtcNow.ToString())
+                                            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, Session.SessionID, "LOGIN", oData(0).UserID, DateTime.UtcNow.ToString())
                                         End If
                                     End If
                                 End If

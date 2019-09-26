@@ -1,0 +1,17 @@
+***สรุปขั้นตอนการสร้าง Web App สำหรับระบบ jobonline**
+-----------------------------------------
+***กรณี host ใหม่ ต้องสร้าง database 2 ตัว นี้ก่อน***
+
+1.jobmaster เก็บ master files ใช้ script ชื่อscript_database_mas.sql
+2.weblicense เก็บ customers data บน host ใช้ script ชื่อ script_database_weblicense.sql
+
+-----------------------------------------------
+วิธีการเพิ่ม subdomain สำหรับลุกค้าใหม่
+
+1. ให้ copy code jobonline ขึ้น web ใน folder subdomain ที่สร้าง
+2. สร้าง Database job_xxx บน  web ใช้ script ชื่อ script_database_job.sql สร้างโครงสร้างและข้อมูลเริ่มต้น
+3. เปลี่ยน connectionstring ใน web.config ให้ชี้ตาม database ที่สร้างไว้
+4. เปลี่ยน licenseto ใน web.config
+5. เพิ่ม data ใน table TWTCustomer ให้รหัสลูกค้าตรงกับ licenseto 
+6. เพิ่ม data ของ  app JOBSHIPPING ใน  TWTCustomerApp กำหนด job connection string ตามที่ระบุไว้ใน web.config / master connection string ตามที่ระบุไว้ใน web.config
+

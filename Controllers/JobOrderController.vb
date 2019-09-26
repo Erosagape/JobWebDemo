@@ -932,21 +932,56 @@ Namespace Controllers
                 Return Content("{""job"":{""data"":[],""status"":""N"",""result"":""" & ex.Message & """}}", jsonContent)
             End Try
         End Function
-        Function SaveJobData(<FromBody()> ByVal data As CJobOrder) As ActionResult
-            If Not IsNothing(data) Then
-                data.SetConnect(jobWebConn)
-                If data.JNo = "" Then
-                    data.AddNew(GetJobPrefix(data) & DateTime.Now.ToString("yyMM") & "____", False)
+        Function TestSetJobData() As ActionResult
+            Dim data = New CJobOrder(jobWebConn).GetData(" WHERE BranchCode='00' AND JNo='IA19090014'")(0)
+            Try
+                Data.SetConnect(jobWebConn)
+                If Data.BranchCode = "" Then
+                    Return Content("{""msg"":""Please select Branch""}", jsonContent)
                 End If
+                If Data.JNo = "" Then
+                    Return Content("{""msg"":""Please select JobNo""}", jsonContent)
+                End If
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetJobOrder", "Save", JsonConvert.SerializeObject(Data))
                 Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", data.BranchCode, data.JNo))
-                'Dim msg = JsonConvert.SerializeObject(data)
-                Return Content(msg, textContent)
-            Else
-                Return Content("No data to save", textContent)
-            End If
+                Return Content("{""msg"":""" & msg & """,""data"":" & JsonConvert.SerializeObject(data) & "}", jsonContent)
+
+            Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetJobOrder", "ERROR", ex.Message)
+                Dim json = "{""msg"":""" & ex.Message & """,""data"":" & JsonConvert.SerializeObject(data) & "}"
+                Return Content(json, jsonContent)
+            End Try
+        End Function
+
+        Function SetJobData(<FromBody()> ByVal data As CJobOrder) As ActionResult
+            Try
+                If Not IsNothing(data) Then
+                    data.SetConnect(jobWebConn)
+                    If data.BranchCode = "" Then
+                        Return Content("{""msg"":""Please select Branch""}", jsonContent)
+                    End If
+                    If data.JNo = "" Then
+                        Return Content("{""msg"":""Please select JobNo""}", jsonContent)
+                    End If
+                    Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetJobOrder", "Save", JsonConvert.SerializeObject(data))
+                    Dim msg = data.SaveData(String.Format(" WHERE BranchCode='{0}' AND JNo='{1}'", data.BranchCode, data.JNo))
+                    Return Content("{""msg"":""" & msg & """}", jsonContent)
+                Else
+                    Return Content("{""msg"":""No data to save""}", jsonContent)
+                End If
+
+            Catch ex As Exception
+                Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "SetJobOrder", "ERROR", ex.Message)
+                Dim json = "{""msg"":""" & ex.Message & """}"
+                Return Content(json, jsonContent)
+            End Try
         End Function
         Function UpdateJobStatus() As ActionResult
             Dim tSqlW As String = ""
+            Dim bLog As Boolean = True
+            If Not IsNothing(Request.QueryString("NoLog")) Then
+                bLog = If(Request.QueryString("NoLog").ToString = "Y", False, True)
+            End If
             If Not IsNothing(Request.QueryString("JType")) Then
                 tSqlW &= " AND j.JobType=" & Request.QueryString("JType") & ""
             End If
@@ -974,7 +1009,7 @@ Namespace Controllers
             If Not IsNothing(Request.QueryString("TaxNumber")) Then
                 tSqlW &= " AND j.CustCode IN(SELECT CustCode FROM Mas_Company WHERE TaxNumber='" & Request.QueryString("TaxNumber") & "')"
             End If
-            Dim tResult = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(tSqlW))
+            Dim tResult = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(tSqlW), bLog)
             Return Content(tResult, textContent)
         End Function
         Function GetDashboardSQL() As ActionResult
@@ -1135,8 +1170,8 @@ Namespace Controllers
             End Try
         End Function
         Function GetDashboard() As ActionResult
-            Dim msg As String = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(""))
             Try
+                Dim msg As String = New CUtil(jobWebConn).ExecuteSQL(SQLUpdateJobStatus(""), False)
                 Dim tSqlw1 As String = ""
                 Dim bCheck As Boolean = False
                 If Not Request.QueryString("Period") Is Nothing Then
@@ -1234,7 +1269,7 @@ Namespace Controllers
                 Return Content("{""result"":[{""data1"":[" & json1 & "],""data2"":[" & json2 & "],""data3"":[" & json3 & "]}]}", jsonContent)
             Catch ex As Exception
                 Main.SaveLog(GetSession("CurrLicense").ToString(), "JOBSHIPPING", "GetDashboard", "ERROR", ex.Message)
-                Return Content("{""result"":[],""msg"":""" & msg & " " & ex.Message & """}", jsonContent)
+                Return Content("{""result"":[],""msg"":""" & ex.Message & """}", jsonContent)
             End Try
         End Function
     End Class

@@ -1,10 +1,4 @@
-﻿@ModelType System.Web.Mvc.HandleErrorInfo
-
-@Code
-    Layout = Nothing
-End Code
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -12,9 +6,8 @@ End Code
 </head>
 <body>
     <hgroup>
-        <h1 class="text-danger">Error.</h1>
-        <h2 class="text-danger">An error occurred while processing your request.</h2>
+        <h1>Error.</h1>
+        <h2>An error occurred while processing your request.</h2>
     </hgroup>
 </body>
 </html>
-

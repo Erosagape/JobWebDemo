@@ -14,7 +14,7 @@ End Code
     <textarea id="txtContents" style="width:100%;height:100%;"></textarea>
 </div>
 <script type="text/javascript">
-    let path = '/';
+    let path = '@Url.Content("~")';
     let saveTo = 'Resource/Export';
     LoadFileList();
     $('#btnShow').on('click', ShowFiles);

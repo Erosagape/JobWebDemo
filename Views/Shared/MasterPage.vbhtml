@@ -29,7 +29,7 @@
     <div class="w3-sidebar w3-bar-block w3-animate-left" style="display:none;z-index:5" id="mySidebar">
         <div class="w3-sidebar w3-bar-block w3-indigo w3-card" style="width:250px;">
             <div style="width:100%;text-align:center;background-color:white">
-                <img src="~/Resource/logo-tawan.jpg" onclick="SetLogout()" style="width:150px;padding:5px 5px 5px 5px;" />
+                <img id="imgMenu" src="~/Resource/logo-tawan.jpg" onclick="SetLogout()" style="width:150px;padding:5px 5px 5px 5px;" />
             </div>
             <div style="width:100%;text-align:center;background-color:white;color:black">
                 <a href="#" onclick="SetLogin()"><label id="lblUserID">Please Login</label></a>
@@ -218,7 +218,7 @@
                 <div Class="panel-heading w3-indigo">
                     <div Class="panel-title" style="display:flex">
                         <div>
-                            <img src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="w3_open();" />
+                            <img id="imgCompany" src="~/Resource/logo-tawan.jpg" style="width:100px" onclick="w3_open();" />
                         </div>
                         <div style="margin-left:10px">
                             <h4><label id="lblTitle" onclick="OpenContact()">@ViewBag.Title</label></h4>
@@ -233,7 +233,7 @@
         </div>
     </div>
     <div id="dvCommands" class="w3-indigo" style="text-align:center;bottom:0;position:fixed;line-height:50px;width:100%;padding-left:5px">
-        <label id="lblLicenseName" onclick="CheckDatabase()">@ViewBag.LICENSE_NAME</label>            
+        <label id="lblLicenseName" onclick="CheckDatabase()">@ViewBag.LICENSE_NAME</label>
     </div>
     <div id="dvWaiting" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
         <div class="vertical-alignment-helper">
@@ -244,7 +244,7 @@
             </div>
         </div>
     </div>
-    <div id="dvLogin"  class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div id="dvLogin" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1">
         <div class="vertical-alignment-helper">
             <div class="modal-dialog vertical-align-center">
                 <div class="modal-content">
@@ -272,7 +272,7 @@
     let dbMas = '@ViewBag.CONNECTION_MAS';
     let dbJob = '@ViewBag.CONNECTION_JOB';
     let userLang = '@ViewBag.PROFILE_DEFAULT_LANG';
-    
+
     if (userLang !== 'EN' && userLang !== '') {
         $('#cboLanguage').val(userLang);
         ChangeLanguage(userLang, $('#lblModule').text());
@@ -326,6 +326,8 @@
         if (userID === '') {
             CheckSession();
         } else {
+            $('#imgMenu').attr('src','/Resource/@ViewBag.PROFILE_LOGO');
+            $('#imgCompany').attr('src','/Resource/@ViewBag.PROFILE_LOGO');
             $('#lblUserID').text('@ViewBag.UserName');
             $('#lblLicenseName').text('@ViewBag.LICENSE_NAME');
         }

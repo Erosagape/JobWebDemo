@@ -1049,7 +1049,7 @@ End Code
         dr.CancelDate = CDateTH($('#txtCancelDate').val());
         dr.CancelReson=$('#txtCancelReason').val();
 
-        dr.consigneecode=$('#txtConsignee').val();
+        dr.Consigneecode=$('#txtConsignee').val();
 
         dr.ProjectName=$('#txtProjectName').val();
         dr.InvProduct=$('#txtInvProduct').val();
@@ -1209,12 +1209,12 @@ End Code
             let jsonText = JSON.stringify({ data: obj });
             //ShowMessage(jsonText);
             $.ajax({
-                url: "@Url.Action("SaveJobData", "JobOrder")",
+                url: "@Url.Action("SetJobData", "JobOrder")",
                 type: "POST",
                 contentType: "application/json",
                 data: jsonText,
-                success: function (response) {
-                    ShowMessage(response);
+                success: function (r) {
+                    ShowMessage(r.msg);
                 },
                 error: function (e) {
                     ShowMessage(e);

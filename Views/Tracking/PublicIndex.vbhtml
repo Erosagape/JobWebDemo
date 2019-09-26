@@ -56,7 +56,7 @@ End Code
 <div id="dvLOVs"></div>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-    let path = '/';
+    let path = '@Url.Content("~")';
     let dbID = getQueryString("db") == '' ? '0' : getQueryString("db");
 
     google.charts.load("current", { packages: ["corechart"] });

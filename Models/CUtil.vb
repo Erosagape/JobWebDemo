@@ -20,7 +20,7 @@ Public Class CUtil
     Public Sub SetConnect(pConnStr As String)
         m_ConnStr = pConnStr
     End Sub
-    Public Function ExecuteSQL(pSQL As String) As String
+    Public Function ExecuteSQL(pSQL As String, Optional bLog As Boolean = True) As String
         Message = "OK"
         Dim dt As New DataTable
         Using cn As New SqlConnection(m_ConnStr)
@@ -31,7 +31,7 @@ Public Class CUtil
                     cm.CommandText = pSQL
                     cm.CommandType = CommandType.Text
                     Message &= " Row(s)=" & cm.ExecuteNonQuery()
-                    Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", cn.ConnectionString, Message, pSQL)
+                    If bLog Then Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "ExecuteSQL", Message, pSQL)
                 End Using
 
             Catch ex As Exception

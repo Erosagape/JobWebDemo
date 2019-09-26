@@ -73,9 +73,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.JobWebApi.My.MySettings
+        Friend ReadOnly Property Settings() As Global.jobonline.My.MySettings
             Get
-                Return Global.JobWebApi.My.MySettings.Default
+                Return Global.jobonline.My.MySettings.Default
             End Get
         End Property
     End Module

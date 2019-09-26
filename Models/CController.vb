@@ -2,6 +2,31 @@
 
 Public Class CController
     Inherits Controller
+    Friend Sub ClearSession()
+        Session("CurrUser") = Nothing
+        Session("UserProfiles") = Nothing
+        Session("DatabaseID") = Nothing
+        Session("CurrLicense") = Nothing
+        Session("ConnJob") = Nothing
+        Session("ConnMas") = Nothing
+        Session("CurrForm") = Nothing
+        Session("CurrRights") = Nothing
+        Session("CurrentLang") = Nothing
+        Session("CurrBranch") = Nothing
+        Session("CurrBranchName") = Nothing
+        Session("CompanyLogo") = Nothing
+        Session("CompanyName") = Nothing
+        Session("CompanyFax") = Nothing
+        Session("CompanyTel") = Nothing
+        Session("CompanyEmail") = Nothing
+        Session("CompanyAddr1") = Nothing
+        Session("CompanyAddr2") = Nothing
+        Session("Currency") = Nothing
+        Session("VatRate") = Nothing
+        Session("CreditDays") = Nothing
+        Session("TaxNumber") = Nothing
+        Session("TaxBranch") = Nothing
+    End Sub
     Friend Function GetSession(sName As String) As String
         If IsNothing(Session(sName)) Then
             Select Case sName

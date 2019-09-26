@@ -934,9 +934,8 @@ Public Class CJobOrder
     End Sub
     Public Function SaveData(pSQLWhere As String) As String
         Dim msg As String = ""
-        Dim pass As String = ""
-        Using cn As New SqlConnection(m_ConnStr)
-            Try
+        Try
+            Using cn As New SqlConnection(m_ConnStr)
                 cn.Open()
                 Using da As New SqlDataAdapter("SELECT * FROM Job_Order" & pSQLWhere, cn)
                     Using cb As New SqlCommandBuilder(da)
@@ -944,146 +943,128 @@ Public Class CJobOrder
                             da.Fill(dt)
                             Dim dr As DataRow = dt.NewRow
                             If dt.Rows.Count > 0 Then dr = dt.Rows(0)
-                            Try
-                                pass = "0"
-                                dr("BranchCode") = Me.BranchCode
-                                dr("JNo") = Me.JNo
-                                dr("JRevise") = Me.JRevise
-                                dr("ConfirmDate") = Main.GetDBDate(Me.ConfirmDate)
-                                pass = "1"
-                                dr("CPolicyCode") = Me.CPolicyCode
-                                dr("DocDate") = Main.GetDBDate(Me.DocDate, True)
-                                pass = "2"
-                                dr("CustCode") = Me.CustCode
-                                dr("CustBranch") = Me.CustBranch
-                                dr("CustContactName") = Me.CustContactName
-                                dr("QNo") = Me.QNo
-                                dr("Revise") = Me.Revise
-                                dr("ManagerCode") = Me.ManagerCode
-                                dr("CSCode") = Me.CSCode
-                                dr("Description") = Me.Description
-                                dr("TRemark") = Me.TRemark
-                                dr("JobStatus") = Me.JobStatus
-                                dr("JobType") = Me.JobType
-                                dr("ShipBy") = Me.ShipBy
-                                dr("InvNo") = Me.InvNo
-                                dr("InvTotal") = Me.InvTotal
-                                dr("InvProduct") = Me.InvProduct
-                                dr("InvCountry") = Me.InvCountry
-                                dr("InvFCountry") = Me.InvFCountry
-                                dr("InvInterPort") = Me.InvInterPort
-                                dr("InvProductQty") = Me.InvProductQty
-                                dr("InvProductUnit") = Me.InvProductUnit
-                                dr("InvCurUnit") = Me.InvCurUnit
-                                dr("InvCurRate") = Me.InvCurRate
-                                dr("ImExDate") = Main.GetDBDate(Me.ImExDate)
-                                pass = "3"
+                            dr("BranchCode") = Me.BranchCode
+                            dr("JNo") = Me.JNo
+                            dr("JRevise") = Me.JRevise
+                            dr("ConfirmDate") = Main.GetDBDate(Me.ConfirmDate)
+                            dr("CPolicyCode") = Me.CPolicyCode
+                            dr("DocDate") = Main.GetDBDate(Me.DocDate, True)
+                            dr("CustCode") = Me.CustCode
+                            dr("CustBranch") = Me.CustBranch
+                            dr("CustContactName") = Me.CustContactName
+                            dr("QNo") = Me.QNo
+                            dr("Revise") = Me.Revise
+                            dr("ManagerCode") = Me.ManagerCode
+                            dr("CSCode") = Me.CSCode
+                            dr("Description") = Me.Description
+                            dr("TRemark") = Me.TRemark
+                            dr("JobStatus") = Me.JobStatus
+                            dr("JobType") = Me.JobType
+                            dr("ShipBy") = Me.ShipBy
+                            dr("InvNo") = Me.InvNo
+                            dr("InvTotal") = Me.InvTotal
+                            dr("InvProduct") = Me.InvProduct
+                            dr("InvCountry") = Me.InvCountry
+                            dr("InvFCountry") = Me.InvFCountry
+                            dr("InvInterPort") = Me.InvInterPort
+                            dr("InvProductQty") = Me.InvProductQty
+                            dr("InvProductUnit") = Me.InvProductUnit
+                            dr("InvCurUnit") = Me.InvCurUnit
+                            dr("InvCurRate") = Me.InvCurRate
+                            dr("ImExDate") = Main.GetDBDate(Me.ImExDate)
 
-                                dr("BLNo") = Me.BLNo
-                                dr("BookingNo") = Me.BookingNo
-                                dr("ClearPort") = Me.ClearPort
-                                dr("ClearPortNo") = Me.ClearPortNo
-                                dr("ClearDate") = Main.GetDBDate(Me.ClearDate)
-                                dr("LoadDate") = Main.GetDBDate(Me.LoadDate)
-                                pass = "4"
+                            dr("BLNo") = Me.BLNo
+                            dr("BookingNo") = Me.BookingNo
+                            dr("ClearPort") = Me.ClearPort
+                            dr("ClearPortNo") = Me.ClearPortNo
+                            dr("ClearDate") = Main.GetDBDate(Me.ClearDate)
+                            dr("LoadDate") = Main.GetDBDate(Me.LoadDate)
 
-                                dr("ForwarderCode") = Me.ForwarderCode
-                                dr("AgentCode") = Me.AgentCode
-                                dr("VesselName") = Me.VesselName
-                                dr("ETDDate") = Main.GetDBDate(Me.ETDDate)
-                                dr("ETADate") = Main.GetDBDate(Me.ETADate)
+                            dr("ForwarderCode") = Me.ForwarderCode
+                            dr("AgentCode") = Me.AgentCode
+                            dr("VesselName") = Me.VesselName
+                            dr("ETDDate") = Main.GetDBDate(Me.ETDDate)
+                            dr("ETADate") = Main.GetDBDate(Me.ETADate)
 
-                                pass = "5"
-                                dr("ETTime") = Me.ETTime
-                                dr("FNetPrice") = Me.FNetPrice
-                                dr("BNetPrice") = Me.BNetPrice
-                                dr("CancelReson") = Me.CancelReson
-                                dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
+                            dr("ETTime") = Me.ETTime
+                            dr("FNetPrice") = Me.FNetPrice
+                            dr("BNetPrice") = Me.BNetPrice
+                            dr("CancelReson") = Me.CancelReson
+                            dr("CancelDate") = Main.GetDBDate(Me.CancelDate)
 
-                                pass = "6"
-                                dr("CancelProve") = Me.CancelProve
-                                dr("CancelProveDate") = Main.GetDBDate(Me.CancelProveDate)
-                                dr("CloseJobDate") = Main.GetDBDate(Me.CloseJobDate)
+                            dr("CancelProve") = Me.CancelProve
+                            dr("CancelProveDate") = Main.GetDBDate(Me.CancelProveDate)
+                            dr("CloseJobDate") = Main.GetDBDate(Me.CloseJobDate)
 
-                                pass = "7"
-                                dr("CloseJobBy") = Me.CloseJobBy
-                                dr("DeclareType") = Me.DeclareType
-                                dr("DeclareNumber") = Me.DeclareNumber
-                                dr("DeclareStatus") = Me.DeclareStatus
-                                dr("TyAuthorSp") = Me.TyAuthorSp
-                                dr("Ty19BIS") = Me.Ty19BIS
-                                dr("TyClearTax") = Me.TyClearTax
-                                dr("TyClearTaxReson") = Me.TyClearTaxReson
-                                dr("EstDeliverDate") = Main.GetDBDate(Me.EstDeliverDate)
+                            dr("CloseJobBy") = Me.CloseJobBy
+                            dr("DeclareType") = Me.DeclareType
+                            dr("DeclareNumber") = Me.DeclareNumber
+                            dr("DeclareStatus") = Me.DeclareStatus
+                            dr("TyAuthorSp") = Me.TyAuthorSp
+                            dr("Ty19BIS") = Me.Ty19BIS
+                            dr("TyClearTax") = Me.TyClearTax
+                            dr("TyClearTaxReson") = Me.TyClearTaxReson
+                            dr("EstDeliverDate") = Main.GetDBDate(Me.EstDeliverDate)
 
-                                pass = "8"
-                                dr("TotalContainer") = Me.TotalContainer
-                                dr("DutyDate") = Main.GetDBDate(Me.DutyDate)
+                            dr("TotalContainer") = Me.TotalContainer
+                            dr("DutyDate") = Main.GetDBDate(Me.DutyDate)
 
-                                dr("DutyAmount") = Me.DutyAmount
-                                dr("DutyCustPayOther") = Me.DutyCustPayOther
-                                dr("DutyCustPayChqAmt") = Me.DutyCustPayChqAmt
-                                dr("DutyCustPayBankAmt") = Me.DutyCustPayBankAmt
-                                dr("DutyCustPayEPAYAmt") = Me.DutyCustPayEPAYAmt
-                                dr("DutyCustPayCardAmt") = Me.DutyCustPayCardAmt
-                                dr("DutyCustPayCashAmt") = Me.DutyCustPayCashAmt
-                                dr("DutyCustPayOtherAmt") = Me.DutyCustPayOtherAmt
-                                dr("DutyLtdPayOther") = Me.DutyLtdPayOther
-                                dr("DutyLtdPayChqAmt") = Me.DutyLtdPayChqAmt
-                                dr("DutyLtdPayEPAYAmt") = Me.DutyLtdPayEPAYAmt
-                                dr("DutyLtdPayCashAmt") = Me.DutyLtdPayCashAmt
-                                dr("DutyLtdPayOtherAmt") = Me.DutyLtdPayOtherAmt
-                                dr("ConfirmChqDate") = Main.GetDBDate(Me.ConfirmChqDate)
-                                pass = "9"
+                            dr("DutyAmount") = Me.DutyAmount
+                            dr("DutyCustPayOther") = Me.DutyCustPayOther
+                            dr("DutyCustPayChqAmt") = Me.DutyCustPayChqAmt
+                            dr("DutyCustPayBankAmt") = Me.DutyCustPayBankAmt
+                            dr("DutyCustPayEPAYAmt") = Me.DutyCustPayEPAYAmt
+                            dr("DutyCustPayCardAmt") = Me.DutyCustPayCardAmt
+                            dr("DutyCustPayCashAmt") = Me.DutyCustPayCashAmt
+                            dr("DutyCustPayOtherAmt") = Me.DutyCustPayOtherAmt
+                            dr("DutyLtdPayOther") = Me.DutyLtdPayOther
+                            dr("DutyLtdPayChqAmt") = Me.DutyLtdPayChqAmt
+                            dr("DutyLtdPayEPAYAmt") = Me.DutyLtdPayEPAYAmt
+                            dr("DutyLtdPayCashAmt") = Me.DutyLtdPayCashAmt
+                            dr("DutyLtdPayOtherAmt") = Me.DutyLtdPayOtherAmt
+                            dr("ConfirmChqDate") = Main.GetDBDate(Me.ConfirmChqDate)
 
-                                dr("CancelProveTime") = Main.GetDBTime(Me.CancelProveTime)
-                                dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
-                                dr("CloseJobTime") = Main.GetDBTime(Me.CloseJobTime)
-                                dr("ETTime") = Main.GetDBTime(Me.ETTime)
+                            dr("CancelProveTime") = Main.GetDBTime(Me.CancelProveTime)
+                            dr("CancelTime") = Main.GetDBTime(Me.CancelTime)
+                            dr("CloseJobTime") = Main.GetDBTime(Me.CloseJobTime)
+                            dr("ETTime") = Main.GetDBTime(Me.ETTime)
 
-                                pass = "10"
+                            dr("ShippingEmp") = Me.ShippingEmp
+                            dr("ShippingCmd") = Me.ShippingCmd
+                            dr("TotalGW") = Me.TotalGW
+                            dr("GWUnit") = Me.GWUnit
+                            dr("TSRequest") = Me.TSRequest
+                            dr("ShipmentType") = Me.ShipmentType
+                            dr("ReadyToClearDate") = Main.GetDBDate(Me.ReadyToClearDate)
 
-                                dr("ShippingEmp") = Me.ShippingEmp
-                                dr("ShippingCmd") = Me.ShippingCmd
-                                dr("TotalGW") = Me.TotalGW
-                                dr("GWUnit") = Me.GWUnit
-                                dr("TSRequest") = Me.TSRequest
-                                dr("ShipmentType") = Me.ShipmentType
-                                dr("ReadyToClearDate") = Main.GetDBDate(Me.ReadyToClearDate)
-
-                                dr("Commission") = Me.Commission
-                                dr("CommPayTo") = Me.CommPayTo
-                                dr("ProjectName") = Me.ProjectName
-                                dr("MVesselName") = Me.MVesselName
-                                dr("TotalNW") = Me.TotalNW
-                                dr("Measurement") = Me.Measurement
-                                dr("CustRefNO") = Me.CustRefNO
-                                dr("TotalQty") = Me.TotalQty
-                                dr("HAWB") = Me.HAWB
-                                dr("MAWB") = Me.MAWB
-                                dr("consigneecode") = Me.Consigneecode
-                                dr("privilegests") = Me.Privilegests
-                                dr("DeliveryTo") = Me.DeliveryTo
-                                dr("DeliveryNo") = Me.DeliveryNo
-                                dr("DeliveryAddr") = Me.DeliveryAddr
-                                pass = "11"
-                            Catch ex As Exception
-                                msg = "[exception]:" & ex.Message
-                            End Try
+                            dr("Commission") = Me.Commission
+                            dr("CommPayTo") = Me.CommPayTo
+                            dr("ProjectName") = Me.ProjectName
+                            dr("MVesselName") = Me.MVesselName
+                            dr("TotalNW") = Me.TotalNW
+                            dr("Measurement") = Me.Measurement
+                            dr("CustRefNO") = Me.CustRefNO
+                            dr("TotalQty") = Me.TotalQty
+                            dr("HAWB") = Me.HAWB
+                            dr("MAWB") = Me.MAWB
+                            dr("consigneecode") = Me.Consigneecode
+                            dr("privilegests") = Me.Privilegests
+                            dr("DeliveryTo") = Me.DeliveryTo
+                            dr("DeliveryNo") = Me.DeliveryNo
+                            dr("DeliveryAddr") = Me.DeliveryAddr
                             If dr.RowState = DataRowState.Detached Then dt.Rows.Add(dr)
                             da.Update(dt)
                             Main.SaveLogFromObject(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CJobOrder", "SaveData", Me)
-                            pass = "11"
                             msg = "Save " & Me.JNo & " Complete"
                         End Using
                     End Using
 
                 End Using
-            Catch e As Exception
-                Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CJobOrder", "SaveData", e.Message)
-                msg = "[error" & pass & "]" & e.Message
-            End Try
-        End Using
+            End Using
+        Catch e As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "CJobOrder", "SaveData", e.Message)
+            msg = "[error]" & e.Message
+        End Try
         Return msg
     End Function
     Public Function GetData(Optional pSQLWhere As String = "") As List(Of CJobOrder)

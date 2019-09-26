@@ -419,15 +419,14 @@ End Code
                 }
                 if (r.job.status == "Y") {
                     let data = r.job.data;
-
                     data.CustCode = $('#txtCustCode').val();
                     data.CustBranch = $('#txtCustBranch').val();
                     data.CSCode = $('#txtCSCode').val();
                     data.DocDate = CDateTH($('#txtJobDate').val());
-                    data.consigneecode = $('#txtConsignee').val();
+                    data.Consigneecode = $('#txtConsignee').val();
                     data.CustContactName = $('#txtContactPerson').val();
                     data.QNo = $('#txtQNo').val();
-                    data.Revise = $('#txtRevise').val();
+                    data.Revise = CNum($('#txtRevise').val());
                     data.InvNo = $('#txtCustInv').val();
                     data.CustRefNO = $('#txtCustPO').val();
                     data.HAWB = $('#txtHAWB').val();
@@ -448,14 +447,14 @@ End Code
         let jsonString = JSON.stringify({ data: obj });
         //ShowMessage(jsonString);
         $.ajax({
-            url: "@Url.Action("SaveJobData", "JobOrder")",
+            url: "@Url.Action("SetJobData", "JobOrder")",
             type: "POST",
             contentType: "application/json",
             data: jsonString,
-            success: function (response) {
+            success: function (r) {
                 //ShowMessage(response);
                 $('#txtJNo').val(obj.JNo);
-                $('#dvResp').html(response);
+                $('#dvResp').html(r.msg);
                 $('#frmShowJob').modal('show');
             }
         });

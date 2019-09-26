@@ -8,7 +8,7 @@ End Code
     <textarea id="txtContents" style="width:100%;height:100%;"></textarea>
 </div>
 <script type="text/javascript">
-    let path = '/';
+    let path = '@Url.Content("~")';
     $('#btnImport').on('click', ProcessFile);
     function ProcessFile() {
         let cname = $('#txtClassName').val();

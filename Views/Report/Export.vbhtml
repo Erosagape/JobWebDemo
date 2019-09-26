@@ -19,7 +19,7 @@ End Code
     </div>
 </div>
 <script type="text/javascript">
-    let path = '/';
+    let path = '@Url.Content("~")';
     let table = "";
     $('#cboDBType').on('click', LoadTables);
     LoadTables();

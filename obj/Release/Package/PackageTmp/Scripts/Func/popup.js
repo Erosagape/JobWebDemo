@@ -48,7 +48,14 @@ function CheckPassword(db, user, ev) {
     });
 }
 function ShowMessage(str) {
-    bootbox.alert(str);
+    try
+    {
+        bootbox.alert(str);
+    }
+    catch
+    {
+        alert(str);
+    }
 }
 function ShowConfirm(str,func) {
     bootbox.confirm(str, func);

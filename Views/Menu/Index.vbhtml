@@ -24,7 +24,7 @@ Last Update : <label id="lblLastUpdate">@DateTime.Now().ToString("dd/MM/yyyy HH:
 <script type="text/javascript" src="~/Scripts/Func/combo.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-    var path = '/';
+    var path = '@Url.Content("~")';
     window.onload = function () {
         loadCombos(path, 'SHIP_BY=#cboShipBy,JOB_TYPE=#cboJobType');
     }

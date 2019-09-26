@@ -62,15 +62,20 @@ Module Main
     End Function
 
     Friend Function GetValueConfig(sCode As String, sKey As String, Optional sDef As String = "") As String
-        Dim tSqlw As String = " WHERE ConfigCode<>'' "
-        If sCode <> "" Then tSqlw &= String.Format("AND ConfigCode='{0}'", sCode)
-        tSqlw &= String.Format("AND ISNULL(ConfigKey,'')='{0}'", sKey)
-        Dim oData = New CConfig(jobWebConn).GetData(tSqlw)
-        If oData.Count > 0 Then
-            Return oData(0).ConfigValue
-        Else
+        Try
+            Dim tSqlw As String = " WHERE ConfigCode<>'' "
+            If sCode <> "" Then tSqlw &= String.Format("AND ConfigCode='{0}'", sCode)
+            tSqlw &= String.Format("AND ISNULL(ConfigKey,'')='{0}'", sKey)
+            Dim oData = New CConfig(jobWebConn).GetData(tSqlw)
+            If oData.Count > 0 Then
+                Return oData(0).ConfigValue
+            Else
+                Return sDef
+            End If
+        Catch ex As Exception
+            Main.SaveLog(My.MySettings.Default.LicenseTo.ToString, "JOBSHIPPING", "GetValueConfig", "ERROR", ex.Message)
             Return sDef
-        End If
+        End Try
     End Function
     Friend Function GetDataConfig(sCode As String) As List(Of CConfig)
         Dim tSqlw As String = " WHERE ConfigCode<>'' "
@@ -1358,9 +1363,9 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
         Dim jobType As String = GetValueConfig("JOB_TYPE", data.JobType.ToString("00"))
         Dim shipBy As String = GetValueConfig("SHIP_BY", data.ShipBy.ToString("00"))
         Dim Customer As String = data.CustCode
-        formatStr = formatStr.Replace("[J]", jobType.Substring(0, 1))
-        formatStr = formatStr.Replace("[S]", shipBy.Substring(0, 1))
-        formatStr = formatStr.Replace("[C]", Customer.Substring(0, 3))
+        If jobType <> "" Then formatStr = formatStr.Replace("[J]", jobType.Substring(0, 1))
+        If shipBy <> "" Then formatStr = formatStr.Replace("[S]", shipBy.Substring(0, 1))
+        If Customer <> "" Then formatStr = formatStr.Replace("[C]", Customer.Substring(0, 3))
         Return formatStr
     End Function
     Function SaveLog(cust As String, app As String, modl As String, action As String, msg As String) As String
@@ -1391,6 +1396,7 @@ dbo.Job_PaymentDetail AS d ON h.BranchCode = d.BranchCode AND h.DocNo = d.DocNo
             oLog.Message = JsonConvert.SerializeObject(obj)
             Return oLog.SaveData(" WHERE LogID=0 ")
         Catch ex As Exception
+            Main.SaveLog(cust, app, modl, "SaveLogFromObject", ex.Message)
             Dim str = "[ERROR] : " & ex.Message
             Return str
         End Try

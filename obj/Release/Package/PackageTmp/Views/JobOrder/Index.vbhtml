@@ -228,7 +228,7 @@ End Code
             if (str.length > 0) str += '&';
             str += 'Status=' + $('#cboStatus').val();
         }
-        return '?' + str;
+        return '?NoLog=Y&' + str;
     }
     function OpenJob() {
         $.get(path + 'joborder/updatejobstatus?BranchCode=' + $('#cboBranch').val() + '&JNo=' + $('#txtJobNo').val(), function (r) {
