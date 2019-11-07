@@ -65,8 +65,8 @@ Public Class frmGenCode
             If dc.ColumnName.IndexOf("date", StringComparison.InvariantCultureIgnoreCase) = dc.ColumnName.Length - 4 And dc.ColumnName.Length > 4 Then
                 strType = "Date"
             End If
-            strHtml &= vbCrLf & vbTab & "<div class=""col-sm-1"">"
-            strHtml &= vbCrLf & "" & dc.ColumnName & " :<br/><div style=""display:flex"">"
+            strHtml &= vbCrLf & vbTab & "<div class=""row""><div class=""col-sm-1"">"
+            strHtml &= vbCrLf & "<label id=""lbl" & dc.ColumnName & """>" & dc.ColumnName & "</label> :<br/><div style=""display:flex"">"
             Select Case strType
                 Case "Double"
                     strPrivate &= "Private m_" & dc.ColumnName & " as Double"
@@ -167,7 +167,7 @@ Public Class frmGenCode
 
                     strWriter &= "dr(""" & dc.ColumnName & """)=me." & dc.ColumnName & ""
             End Select
-            strHtml &= "</div></div>"
+            strHtml &= "</div></div></div>"
             strProperty &= vbCrLf & "End Property"
             strPrivate &= strProperty
             strGet &= vbCrLf & "Dim v" & dc.ColumnName & "=obj." & dc.ColumnName & ""
